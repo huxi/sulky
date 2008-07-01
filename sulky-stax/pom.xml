@@ -8,6 +8,11 @@
 	<name>Sulky StaX Utilities</name>
 	<url>http://sulky.huxhorn.de/stax</url>
 	
+	<scm>
+		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-stax</connection>
+		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-stax</developerConnection>
+		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-stax/</url>
+	</scm>
 
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>

@@ -8,7 +8,12 @@
 	<packaging>pom</packaging>
 	<name>Sulky master pom file</name>
 	<url>http://sulky.huxhorn.de</url>
-	
+	<scm>
+		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk</connection>
+		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk</developerConnection>
+		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/</url>
+	</scm>
+
 	<modules>
 		<module>sulky-parent</module>
 		<module>sulky-generics</module>
