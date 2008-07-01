@@ -8,6 +8,11 @@
 	<packaging>jar</packaging>
 	<name>Sulky Swing</name>
 	<url>http://sulky.huxhorn.de/swing</url>
+	<scm>
+		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-swing</connection>
+		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-swing</developerConnection>
+		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-swing/</url>
+	</scm>
 	
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>

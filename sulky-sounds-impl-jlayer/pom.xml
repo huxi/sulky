@@ -7,8 +7,14 @@
 	<version>${parent.version}</version>
 	<packaging>jar</packaging>
 	<name>Sulky Sounds Implementation - JLayer</name>
-	<url>http://sulky.huxhorn.de/io</url>
+	<url>http://sulky.huxhorn.de/sounds-impl-jlayer</url>
 	
+	<scm>
+		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-sounds-impl-jlayer</connection>
+		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-sounds-impl-jlayer</developerConnection>
+		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-sounds-impl-jlayer/</url>
+	</scm>
+
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>

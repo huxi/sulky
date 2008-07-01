@@ -7,8 +7,14 @@
 	<version>${parent.version}</version>
 	<packaging>jar</packaging>
 	<name>Sulky Sounds API</name>
-	<url>http://sulky.huxhorn.de/io</url>
+	<url>http://sulky.huxhorn.de/sounds-api</url>
 	
+	<scm>
+		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-sounds-api</connection>
+		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-sounds-api</developerConnection>
+		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-sounds-api/</url>
+	</scm>
+
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>
