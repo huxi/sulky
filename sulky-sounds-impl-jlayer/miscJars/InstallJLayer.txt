@@ -1,0 +1,2 @@
+Execute the following line:
+mvn install:install-file -Dpackaging=jar -DcreateChecksum=true -DgeneratePom=true -DgroupId=javazoom -DartifactId=jlayer -Dversion=1.0 -Dfile=jl1.0.jar
