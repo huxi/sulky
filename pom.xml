@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.master</artifactId>
-<!-- SV --><version>0.9.2-SNAPSHOT</version>
+<!-- SV --><version>0.9.2</version>
 	<packaging>pom</packaging>
 	<name>Sulky master pom file</name>
 	<url>http://sulky.huxhorn.de</url>
@@ -13,6 +13,17 @@
 		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk</developerConnection>
 		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/</url>
 	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>sulky-repos</id>
+			<url>scp://shell.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>
+		</repository>
+		<snapshotRepository>
+			<id>sulky-snapshot-repos</id>
+			<url>scp://shell.sourceforge.net/home/groups/s/su/sulky/htdocs/snapshot-repository</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<modules>
 		<module>sulky-parent</module>
