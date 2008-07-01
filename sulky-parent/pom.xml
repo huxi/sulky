@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.parent</artifactId>
-<!-- SV --><version>0.9.2</version>
+<!-- SV --><version>0.9.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Sulky parent pom file</name>
 	<url>http://sulky.huxhorn.de</url>
