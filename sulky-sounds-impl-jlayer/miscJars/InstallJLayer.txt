@@ -1,2 +1,4 @@
 Execute the following line:
-mvn install:install-file -Dpackaging=jar -DcreateChecksum=true -DgeneratePom=true -DgroupId=javazoom -DartifactId=jlayer -Dversion=1.0 -Dfile=jl1.0.jar
+mvn install:install-file -Dpackaging=jar -DcreateChecksum=true -DgeneratePom=true -DgroupId=de.huxhorn.sulky -DartifactId=de.huxhorn.sulky.3rdparty.jlayer -Dversion=1.0 -Dfile=jl1.0.jar
+
+mvn deploy:deploy-file -Durl=scp://shell.sourceforge.net/home/groups/s/su/sulky/htdocs/repository -DrepositoryId=sulky-repos -Dfile=jl1.0.jar -DpomFile=jlayer-pom.xml

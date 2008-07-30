@@ -29,7 +29,7 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
+	
 	<distributionManagement>
 		<repository>
 			<id>sulky-repos</id>
@@ -235,6 +235,7 @@
 		</dependencies>
 	</dependencyManagement>
 	
+	<!--
 	<repositories>
 		<repository>
 			<id>central</id>
@@ -280,7 +281,6 @@
 			</releases>
 		</pluginRepository>
 		<pluginRepository>
-			<!-- maven-buildnumber-plugin -->
 			<id>tlc</id>
 			<name>TLC Repository</name>
 			<url>http://commons.ucalgary.ca/pub/m2</url>
@@ -310,6 +310,7 @@
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
+	-->
 	
 	<developers>
 		<developer>
@@ -419,12 +420,35 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.2-SNAPSHOT</version>
+				<version>2.2</version>
 				<configuration>
-					<keepingRootDirectories>true</keepingRootDirectories>
+					<failOnError>false</failOnError>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			
+			<!--
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>maven-buildnumber-plugin</artifactId>
@@ -446,6 +470,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -486,8 +511,8 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-idea-plugin</artifactId>
-				<version>2.2-SNAPSHOT</version>
-				<!-- <version>2.1</version> -->
+				<version>2.1</version>
+				<!-- <version>2.2-SNAPSHOT</version> -->
 				<!--
 				<configuration>
 					<downloadSources>true</downloadSources>
