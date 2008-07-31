@@ -7,6 +7,7 @@
 	<version>${parent.version}</version>
 	<packaging>jar</packaging>
 	<name>Sulky Conditions</name>
+	<description>This file is part of the sulky modules. It contains the definition of conditions and the implementation of some purpose conditions.</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 
 	<scm>
