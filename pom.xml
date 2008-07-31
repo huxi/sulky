@@ -7,7 +7,7 @@
 <!-- SV --><version>0.9.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Sulky master pom file</name>
-	<url>http://sulky.huxhorn.de</url>
+	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 	<scm>
 		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk</connection>
 		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk</developerConnection>
@@ -15,6 +15,10 @@
 	</scm>
 
 	<distributionManagement>
+		<site>
+			<id>sulky.huxhorn.de</id>
+			<url>scp://huxhorn.de/kunden/homepages/37/d18379763/htdocs/sulky/projects/${pom.artifactId}</url>
+		</site>
 		<repository>
 			<id>sulky-repos</id>
 			<url>scp://shell.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>

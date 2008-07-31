@@ -6,7 +6,7 @@
 	<version>${parent.version}</version>
 	<packaging>jar</packaging>
 	<name>Sulky Generics</name>
-	<url>http://sulky.huxhorn.de/generics</url>
+	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 	
 	<scm>
 		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-generics</connection>

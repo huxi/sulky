@@ -6,7 +6,7 @@
 <!-- SV --><version>0.9.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Sulky parent pom file</name>
-	<url>http://sulky.huxhorn.de</url>
+	<url>http://sulky.huxhorn.de/projects/</url>
 	
 	<scm>
 		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-parent</connection>
@@ -16,7 +16,9 @@
 	
 	<properties>
 		<sulkyVersion>${pom.version}</sulkyVersion>
+		<!--
 		<springVersion>2.0.3</springVersion>
+		-->
 		<commonsLoggingVersion>1.1</commonsLoggingVersion>
 		<slf4jVersion>1.5.0</slf4jVersion>
 		<logbackVersion>0.9.9</logbackVersion>
@@ -29,8 +31,13 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	
+
+  
 	<distributionManagement>
+		<site>
+			<id>sulky.huxhorn.de</id>
+			<url>scp://huxhorn.de/kunden/homepages/37/d18379763/htdocs/sulky/projects/</url>
+		</site>
 		<repository>
 			<id>sulky-repos</id>
 			<url>scp://shell.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>
@@ -139,9 +146,10 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>3.8.2</version>
+				<version>4.4</version>
 			</dependency>
 			
+			<!--
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring</artifactId>
@@ -203,6 +211,7 @@
 				<artifactId>spring-modules-cache</artifactId>
 				<version>${springModulesVersion}</version>
 			</dependency>
+			-->
 			
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -417,6 +426,13 @@
 	</reporting>
 	
 	<build>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-ssh</artifactId>
+				<version>1.0-beta-2</version>
+			</extension>
+		</extensions>
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -447,30 +463,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-			<!--
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>maven-buildnumber-plugin</artifactId>
-				<version>0.9.4</version>
-				<configuration>
-					<format>{0,date,yyyy-MM-dd'T'HH:mm:ss}</format>
-					<items>
-						<item>timestamp</item>
-					</items>
-					<doCheck>false</doCheck>
-					<doUpdate>false</doUpdate>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>validate</phase>
-						<goals>
-							<goal>create</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

@@ -7,7 +7,7 @@
 	<version>${parent.version}</version>
 	<packaging>jar</packaging>
 	<name>Sulky Buffers</name>
-	<url>http://sulky.huxhorn.de/buffers</url>
+	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 	
 	<scm>
 		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-buffers</connection>
