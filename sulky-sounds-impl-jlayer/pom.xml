@@ -6,6 +6,7 @@
 	<version>${parent.version}</version>
 	<packaging>jar</packaging>
 	<name>Sulky Sounds Implementation - JLayer</name>
+	<description>This file is part of the sulky modules. It contains an implementation of the simple sound interface using JLayer.</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 	
 	<scm>

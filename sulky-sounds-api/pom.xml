@@ -7,6 +7,7 @@
 	<version>${parent.version}</version>
 	<packaging>jar</packaging>
 	<name>Sulky Sounds API</name>
+	<description>This file is part of the sulky modules. It contains a simple sound interface definition.</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 	
 	<scm>

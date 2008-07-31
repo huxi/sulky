@@ -6,6 +6,7 @@
 	<version>${parent.version}</version>
 	<packaging>jar</packaging>
 	<name>Sulky Generics</name>
+	<description>This file is part of the sulky modules. It contains several interfaces that use generics. There's a general definition of Serializer/Deserializer and a simple implementation using object serialization.</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 	
 	<scm>

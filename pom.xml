@@ -7,6 +7,7 @@
 <!-- SV --><version>0.9.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Sulky master pom file</name>
+	<description>This file is part of the sulky modules. It's the master pom file that is used to build all other modules.</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 	<scm>
 		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk</connection>
