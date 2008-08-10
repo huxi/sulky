@@ -379,10 +379,6 @@ public class SerializingFileBuffer<E>
 		return bufferSize;
 	}
 
-	/**
-	 * @param offset
-	 * @return the size of the element at the given offset(!!!).
-	 */
 	private long internalReadElementSize(RandomAccessFile randomSerializeFile, long offset)
 			throws IOException
 	{
@@ -393,14 +389,14 @@ public class SerializingFileBuffer<E>
 	private void setSerializeFile(File serializeFile)
 	{
 		prepareFile(serializeFile);
-		if(logger.isDebugEnabled()) logger.debug("serializeFile="+serializeFile.getAbsolutePath());
+//		if(logger.isDebugEnabled()) logger.debug("serializeFile="+serializeFile.getAbsolutePath());
 		this.serializeFile=serializeFile;
 	}
 
 	private void setSerializeIndexFile(File serializeIndexFile)
 	{
 		prepareFile(serializeIndexFile);
-		if(logger.isDebugEnabled()) logger.debug("serializeIndexFile="+serializeIndexFile.getAbsolutePath());
+		//if(logger.isDebugEnabled()) logger.debug("serializeIndexFile="+serializeIndexFile.getAbsolutePath());
 		this.serializeIndexFile=serializeIndexFile;
 	}
 
