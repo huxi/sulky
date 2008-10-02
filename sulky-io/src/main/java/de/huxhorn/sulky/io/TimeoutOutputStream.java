@@ -24,14 +24,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TimeoutOutputStream extends OutputStream
 {
-	private OutputStream stream;
+	private final OutputStream stream;
 	private int timeout;
 	private AtomicLong operationStartTime;
 	private AtomicBoolean closed;
+	private Thread watchdogThread;
+	private boolean watchdogThreadRunning;
 
 
 	public TimeoutOutputStream(OutputStream stream, int timeout)
 	{
+		watchdogThreadRunning=false;
 		if(stream==null)
 		{
 			throw new NullPointerException("stream must not be null!");
@@ -46,36 +49,69 @@ public class TimeoutOutputStream extends OutputStream
 		closed=new AtomicBoolean(false);
 
 		Runnable timeoutRunnable=new TimeoutRunnable();
-		Thread t=new Thread(timeoutRunnable, "TimeoutOutputStream Watchdog-Thread");
-		t.start();
+		watchdogThread =new Thread(timeoutRunnable, "TimeoutOutputStream Watchdog-Thread");
+		watchdogThread.start();
+		Thread.yield(); // give the watchdog thread a chance to start...		
 	}
 
 	public void write(byte b[]) throws IOException
 	{
-		operationStartTime.set(System.currentTimeMillis());
-		stream.write(b);
-		operationStartTime.set(-1);
+		try
+		{
+			operationStartTime.set(System.currentTimeMillis());
+			stream.write(b);
+			operationStartTime.set(-1);
+		}
+		catch(IOException ex)
+		{
+			internalClose();
+			throw ex;
+		}
 	}
 
 	public void write(byte b[], int off, int len) throws IOException
 	{
-		operationStartTime.set(System.currentTimeMillis());
-		stream.write(b, off, len);
-		operationStartTime.set(-1);
+		try
+		{
+			operationStartTime.set(System.currentTimeMillis());
+			stream.write(b, off, len);
+			operationStartTime.set(-1);
+		}
+		catch(IOException ex)
+		{
+			internalClose();
+			throw ex;
+		}
 	}
 
 	public void write(int b) throws IOException
 	{
-		operationStartTime.set(System.currentTimeMillis());
-		stream.write(b);
-		operationStartTime.set(-1);
+		try
+		{
+			operationStartTime.set(System.currentTimeMillis());
+			stream.write(b);
+			operationStartTime.set(-1);
+		}
+		catch(IOException ex)
+		{
+			internalClose();
+			throw ex;
+		}
 	}
 
 	public void flush() throws IOException
 	{
-		operationStartTime.set(System.currentTimeMillis());
-		stream.flush();
-		operationStartTime.set(-1);
+		try
+		{
+			operationStartTime.set(System.currentTimeMillis());
+			stream.flush();
+			operationStartTime.set(-1);
+		}
+		catch(IOException ex)
+		{
+			internalClose();
+			throw ex;
+		}
 	}
 
 	public void close() throws IOException
@@ -83,16 +119,34 @@ public class TimeoutOutputStream extends OutputStream
 		internalClose();
 	}
 
+	public boolean isClosed()
+	{
+		return closed.get();
+	}
+
 	private void internalClose() throws IOException
 	{
-		try
-		{
-			stream.close();
-		}
-		finally
+		if(!closed.get())
 		{
 			closed.set(true);
+			try
+			{
+				stream.close();
+			}
+			finally
+			{
+				if(watchdogThread!=null)
+				{
+					watchdogThread.interrupt();
+					watchdogThread=null;
+				}
+			}
 		}
+	}
+
+	boolean isWatchdogThreadRunning()
+	{
+		return watchdogThreadRunning;
 	}
 
 	private class TimeoutRunnable
@@ -100,6 +154,7 @@ public class TimeoutOutputStream extends OutputStream
 	{
 		public void run()
 		{
+			watchdogThreadRunning=true;
 			try
 			{
 				for (; ;)
@@ -139,6 +194,7 @@ public class TimeoutOutputStream extends OutputStream
 			{
 				//if(logger.isInfoEnabled()) logger.info("Interrupted....", e);
 			}
+			watchdogThreadRunning=false;
 		}
 	}
 
