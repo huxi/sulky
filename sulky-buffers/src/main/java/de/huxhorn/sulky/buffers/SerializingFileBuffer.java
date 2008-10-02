@@ -82,6 +82,7 @@ public class SerializingFileBuffer<E>
 		RandomAccessFile raf=null;
 		Lock lock=readWriteLock.readLock();
 		lock.lock();
+		Throwable throwable;
 		try
 		{
 			if(!serializeIndexFile.canRead())
@@ -91,16 +92,21 @@ public class SerializingFileBuffer<E>
 			raf=new RandomAccessFile(serializeIndexFile, "r");
 			return internalGetSize(raf);
 		}
-		catch (IOException e)
+		catch (Throwable e)
 		{
-			if(logger.isDebugEnabled()) logger.debug("Couldn't retrieve size!", e);
-			return 0;
+			throwable=e;
 		}
 		finally
 		{
 			closeQuietly(raf);
 			lock.unlock();
 		}
+		// it's a really bad idea to log while locked *sigh*
+		if(throwable!=null)
+		{
+			if(logger.isDebugEnabled()) logger.debug("Couldn't retrieve size!", throwable);
+		}
+		return 0;
 	}
 
 	public E get(long index)
@@ -110,6 +116,8 @@ public class SerializingFileBuffer<E>
 		E result=null;
 		Lock lock=readWriteLock.readLock();
 		lock.lock();
+		Throwable throwable=null;
+		long elementsCount=0;
 		try
 		{
 			if(!serializeFile.canRead() && !serializeIndexFile.canRead())
@@ -118,35 +126,50 @@ public class SerializingFileBuffer<E>
 			}
 			randomSerializeIndexFile=new RandomAccessFile(serializeIndexFile, "r");
 			randomSerializeFile=new RandomAccessFile(serializeFile, "r");
-			long elementsCount=internalGetSize(randomSerializeIndexFile);
-			if(index < 0 || index>=elementsCount)
+			elementsCount=internalGetSize(randomSerializeIndexFile);
+			if(index >= 0 && index<elementsCount)
 			{
-				if(logger.isInfoEnabled()) logger.info("index ("+index+") must be in the range [0..<"+elementsCount+"]. Returning null.");
-				return null;
+				long offset=internalOffsetOfElement(randomSerializeIndexFile,index);
+				result=internalReadElement(randomSerializeFile, offset);
+
+				return result;
 			}
-
-			long offset=internalOffsetOfElement(randomSerializeIndexFile,index);
-			result=internalReadElement(randomSerializeFile, offset);
-
-			return result;
 		}
-		catch (IOException e)
+		catch(Throwable e)
 		{
-			if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve offset of element at index "+index+"!", e);
-		}
-		catch (ClassNotFoundException e)
-		{
-			if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index "+index+"!", e);
-		}
-		catch (ClassCastException e)
-		{
-			if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index "+index+"!", e);
+			throwable=e;
 		}
 		finally
 		{
 			closeQuietly(randomSerializeFile);
 			closeQuietly(randomSerializeIndexFile);
 			lock.unlock();
+		}
+
+		// it's a really bad idea to log while locked *sigh*
+		if(throwable!=null)
+		{
+			if(logger.isWarnEnabled())
+			{
+				if(throwable instanceof ClassNotFoundException
+					|| throwable instanceof InvalidClassException)
+				{
+					logger.warn("Couldn't deserialize object at index "+index+"!\n"+throwable);
+				}
+				else if (throwable instanceof ClassCastException)
+				{
+					logger.warn("Couldn't cast deserialized object at index "+index+"!\n"+throwable);
+				}
+				else
+				{
+					logger.warn("Couldn't retrieve element at index "+index+"!", throwable);
+				}
+			}
+		}
+		else if(index < 0 || index>=elementsCount)
+		{
+			if(logger.isInfoEnabled()) logger.info("index ("+index+") must be in the range [0..<"+elementsCount+"]. Returning null.");
+			return null;
 		}
 
 		return result;
@@ -158,6 +181,7 @@ public class SerializingFileBuffer<E>
 		RandomAccessFile randomSerializeFile=null;
 		Lock lock=readWriteLock.writeLock();
 		lock.lock();
+		Throwable throwable=null;
 		try
 		{
 			randomSerializeIndexFile=new RandomAccessFile(serializeIndexFile, "rw");
@@ -176,7 +200,7 @@ public class SerializingFileBuffer<E>
 		}
 		catch (IOException e)
 		{
-			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", e);
+			throwable=e;
 		}
 		finally
 		{
@@ -184,6 +208,12 @@ public class SerializingFileBuffer<E>
 			closeQuietly(randomSerializeIndexFile);
 			lock.unlock();
 		}
+		if(throwable!=null)
+		{
+			// it's a really bad idea to log while locked *sigh*
+			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
+		}
+
 	}
 
 	public void addAll(List<E> elements)
@@ -197,6 +227,7 @@ public class SerializingFileBuffer<E>
 				RandomAccessFile randomSerializeFile=null;
 				Lock lock=readWriteLock.writeLock();
 				lock.lock();
+				Throwable throwable=null;
 				try
 				{
 					randomSerializeIndexFile=new RandomAccessFile(serializeIndexFile, "rw");
@@ -226,11 +257,11 @@ public class SerializingFileBuffer<E>
 						internalWriteOffset(randomSerializeIndexFile, elementsCount+index, curOffset);
 						index++;
 					}
-					if(logger.isInfoEnabled()) logger.info("Elements after batch-write: {}", index+elementsCount);
+					//if(logger.isInfoEnabled()) logger.info("Elements after batch-write: {}", index+elementsCount);
 				}
-				catch (IOException e)
+				catch (Throwable e)
 				{
-					if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", e);
+					throwable=e;
 				}
 				finally
 				{
@@ -238,7 +269,13 @@ public class SerializingFileBuffer<E>
 					closeQuietly(randomSerializeIndexFile);
 					lock.unlock();
 				}
+				if(throwable!=null)
+				{
+					// it's a really bad idea to log while locked *sigh*
+					if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
+				}
 			}
+
 		}
 	}
 
@@ -303,17 +340,15 @@ public class SerializingFileBuffer<E>
 			throw new IndexOutOfBoundsException("Invalid index: "+index+"!");
 		}
 		randomSerializeIndexFile.seek(offsetOffset);
-		long result = randomSerializeIndexFile.readLong();
-		if(logger.isDebugEnabled()) logger.debug("Offset of element {}: {}", index, result);
-		return result;
+		//if(logger.isDebugEnabled()) logger.debug("Offset of element {}: {}", index, result);
+		return randomSerializeIndexFile.readLong();
 	}
 
 	private long internalGetSize(RandomAccessFile randomSerializeIndexFile)
 			throws IOException
 	{
-		long result = randomSerializeIndexFile.length()/8;
-		if(logger.isDebugEnabled()) logger.debug("size={}", result);
-		return result;
+		//if(logger.isDebugEnabled()) logger.debug("size={}", result);
+		return randomSerializeIndexFile.length()/8;
 	}
 
 	private E internalReadElement(RandomAccessFile randomSerializeFile, long offset)
@@ -334,10 +369,9 @@ public class SerializingFileBuffer<E>
 		ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
 		GZIPInputStream gis=new GZIPInputStream(bis);
 		ObjectInputStream ois=new ObjectInputStream(gis);
+		//if(logger.isDebugEnabled()) logger.debug("Read element from offset {}.", offset);
 		//noinspection unchecked
-		E result = (E) ois.readObject();
-		if(logger.isDebugEnabled()) logger.debug("Read element from offset {}.", offset);
-		return result;
+		return (E) ois.readObject();
 	}
 
 	private void internalWriteOffset(RandomAccessFile randomSerializeIndexFile, long index, long offset)
@@ -364,15 +398,17 @@ public class SerializingFileBuffer<E>
 		out.close();
 		gos.finish();
 		byte[] buffer = bos.toByteArray();
-		int uncompressed=cos.getCount();
+		//int uncompressed=cos.getCount();
 
 		int bufferSize=buffer.length;
+		/*
 		if(logger.isDebugEnabled())
 		{
 			int packedPercent=(int)(((double)bufferSize/(double)uncompressed)*100f);
 			logger.debug("Uncompressed size: {}", uncompressed);
 			logger.debug("Compressed size  : {} ({}%)", bufferSize, packedPercent);
 		}
+		*/
 		randomSerializeFile.seek(offset);
 		randomSerializeFile.writeInt(bufferSize);
 		randomSerializeFile.write(buffer);
