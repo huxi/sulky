@@ -29,12 +29,12 @@ public class TimeoutOutputStream extends OutputStream
 	private AtomicLong operationStartTime;
 	private AtomicBoolean closed;
 	private Thread watchdogThread;
-	private boolean watchdogThreadRunning;
+	private AtomicBoolean watchdogThreadRunning;
 
 
 	public TimeoutOutputStream(OutputStream stream, int timeout)
 	{
-		watchdogThreadRunning=false;
+		watchdogThreadRunning=new AtomicBoolean(false);
 		if(stream==null)
 		{
 			throw new NullPointerException("stream must not be null!");
@@ -166,7 +166,7 @@ public class TimeoutOutputStream extends OutputStream
 
 	boolean isWatchdogThreadRunning()
 	{
-		return watchdogThreadRunning;
+		return watchdogThreadRunning.get();
 	}
 
 	private class TimeoutRunnable
@@ -174,7 +174,7 @@ public class TimeoutOutputStream extends OutputStream
 	{
 		public void run()
 		{
-			watchdogThreadRunning=true;
+			watchdogThreadRunning.set(true);
 			try
 			{
 				for (; ;)
@@ -214,7 +214,11 @@ public class TimeoutOutputStream extends OutputStream
 			{
 				//if(logger.isInfoEnabled()) logger.info("Interrupted....", e);
 			}
-			watchdogThreadRunning=false;
+			catch(RuntimeException e)
+			{
+				//if(logger.isInfoEnabled()) logger.info("RuntimeException....", e);
+			}
+			watchdogThreadRunning.set(false);
 		}
 	}
 
