@@ -158,7 +158,7 @@ public class TimeoutOutputStream extends OutputStream
 				if(watchdogThread!=null)
 				{
 					watchdogThread.interrupt();
-					watchdogThread=nul<l;
+					watchdogThread=null;
 				}
 			}
 		}
