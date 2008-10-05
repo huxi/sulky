@@ -67,6 +67,11 @@ public class TimeoutOutputStream extends OutputStream
 			internalClose();
 			throw ex;
 		}
+		catch(RuntimeException ex)
+		{
+			internalClose();
+			throw ex;
+		}
 	}
 
 	public void write(byte b[], int off, int len) throws IOException
@@ -78,6 +83,11 @@ public class TimeoutOutputStream extends OutputStream
 			operationStartTime.set(-1);
 		}
 		catch(IOException ex)
+		{
+			internalClose();
+			throw ex;
+		}
+		catch(RuntimeException ex)
 		{
 			internalClose();
 			throw ex;
@@ -97,6 +107,11 @@ public class TimeoutOutputStream extends OutputStream
 			internalClose();
 			throw ex;
 		}
+		catch(RuntimeException ex)
+		{
+			internalClose();
+			throw ex;
+		}
 	}
 
 	public void flush() throws IOException
@@ -108,6 +123,11 @@ public class TimeoutOutputStream extends OutputStream
 			operationStartTime.set(-1);
 		}
 		catch(IOException ex)
+		{
+			internalClose();
+			throw ex;
+		}
+		catch(RuntimeException ex)
 		{
 			internalClose();
 			throw ex;
@@ -138,7 +158,7 @@ public class TimeoutOutputStream extends OutputStream
 				if(watchdogThread!=null)
 				{
 					watchdogThread.interrupt();
-					watchdogThread=null;
+					watchdogThread=nul<l;
 				}
 			}
 		}
