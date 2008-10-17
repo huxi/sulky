@@ -20,13 +20,17 @@
 			<id>sulky.huxhorn.de</id>
 			<url>scp://huxhorn.de/kunden/homepages/37/d18379763/htdocs/sulky/projects/${pom.artifactId}</url>
 		</site>
+		<!--
+		scp doesn't work anymore
+		-->
 		<repository>
 			<id>sulky-repos</id>
-			<url>scp://shell.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>
+			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>
 		</repository>
 		<snapshotRepository>
 			<id>sulky-snapshot-repos</id>
-			<url>scp://shell.sourceforge.net/home/groups/s/su/sulky/htdocs/snapshot-repository</url>
+            <uniqueVersion>false</uniqueVersion>
+			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/snapshot-repository</url>
 		</snapshotRepository>
 	</distributionManagement>
 
