@@ -38,10 +38,10 @@
 		<module>sulky-buffers</module>
 		<module>sulky-sounds-api</module>
 		<module>sulky-sounds-impl-jlayer</module>
-		<module>sulky-io</module>
 		<module>sulky-logging</module>
 		<module>sulky-formatting</module>
 		<module>sulky-swing</module>
+		<module>sulky-io</module> <!-- Moved to the end because tests fail sometimes -->
 	</modules>
 
 </project>
