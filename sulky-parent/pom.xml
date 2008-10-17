@@ -41,15 +41,6 @@
 			<url>scp://huxhorn.de/kunden/homepages/37/d18379763/htdocs/sulky/projects/</url>
 		</site>
 		<!--
-		<repository>
-			<id>sulky-repos</id>
-			<url>scp://shell.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>
-		</repository>
-		<snapshotRepository>
-			<id>sulky-snapshot-repos</id>
-            <uniqueVersion>false</uniqueVersion>
-			<url>scp://shell.sourceforge.net/home/groups/s/su/sulky/htdocs/snapshot-repository</url>
-		</snapshotRepository>
 		scp doesn't work anymore
 		-->
 		<repository>
@@ -306,6 +297,10 @@
 			<extension>
 				<groupId>org.apache.maven.wagon</groupId>
 				<artifactId>wagon-ssh</artifactId>
+				<!-- 
+				<version>1.0-beta-4</version>
+				http://www.mail-archive.com/issues@maven.apache.org/msg42661.html
+				-->
 				<version>1.0-beta-2</version>
 			</extension>
 		</extensions>
