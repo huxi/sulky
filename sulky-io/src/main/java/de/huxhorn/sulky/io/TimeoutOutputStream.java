@@ -51,8 +51,15 @@ public class TimeoutOutputStream extends OutputStream
 		Runnable timeoutRunnable=new TimeoutRunnable();
 		watchdogThread =new Thread(timeoutRunnable, "TimeoutOutputStream Watchdog-Thread");
 		watchdogThread.start();
-		Thread.yield(); // give the watchdog thread a chance to start...		
-	}
+        try
+        {
+            Thread.sleep(10); // give the watchdog thread a chance to start...
+        }
+        catch (InterruptedException e)
+        {
+            // ignore
+        }
+    }
 
 	public void write(byte b[]) throws IOException
 	{
