@@ -65,20 +65,13 @@ public class SerializableDeserializer<E extends Serializable>
 				ois =new ObjectInputStream(bis);
 			}
 			Object result=ois.readObject();
-			try
-			{
-				//noinspection unchecked
-				return (E) result;
-			}
-			catch(ClassCastException ex)
-			{
-				ex.printStackTrace();
-				return null;
-			}
+			//noinspection unchecked
+			return (E) result;
 		}
 		catch (Throwable e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			// silently ignore any problems 
 			return null;
 		}
 		finally
