@@ -90,7 +90,7 @@ public class Or
 
 	public String toString()
 	{
-		StringBuffer result=new StringBuffer();
+		StringBuilder result=new StringBuilder();
 		if(conditions==null || conditions.size()==0)
 		{
 			result.append("false");

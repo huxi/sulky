@@ -307,7 +307,7 @@ public class OverwritingCircularBuffer<E>
 
 	public String toString()
 	{
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		result.append("[");
 		boolean first = true;
 		for (E current : this)

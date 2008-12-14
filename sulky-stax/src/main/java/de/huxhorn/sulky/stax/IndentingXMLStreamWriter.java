@@ -117,7 +117,7 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter
 	private void writeIndent() throws XMLStreamException
 	{
 
-		StringBuffer indentStr=new StringBuffer(lineSeparator);
+		StringBuilder indentStr=new StringBuilder(lineSeparator);
 		for(int i=0;i<indentLevel;i++)
 		{
 			indentStr.append(indentString);

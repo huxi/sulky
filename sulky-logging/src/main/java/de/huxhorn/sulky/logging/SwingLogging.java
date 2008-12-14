@@ -39,7 +39,7 @@ public class SwingLogging
 		{
 			final int[] conditions = {JComponent.WHEN_IN_FOCUSED_WINDOW, JComponent.WHEN_FOCUSED, JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT};
 			final String[] conditionStrings = {"WHEN_IN_FOCUSED_WINDOW", "WHEN_FOCUSED", "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT"};
-			StringBuffer msg = new StringBuffer();
+			StringBuilder msg = new StringBuilder();
 			for (int i = 0; i < conditions.length; i++)
 			{
 
@@ -107,7 +107,7 @@ public class SwingLogging
 
 		if (logger.isDebugEnabled())
 		{
-			StringBuffer msg = new StringBuffer();
+			StringBuilder msg = new StringBuilder();
 			msg.append("Primary:\n");
 			StyleSheet styleSheet = htmlEditorKit.getStyleSheet();
 			appendStyles(styleSheet, msg);
@@ -115,7 +115,7 @@ public class SwingLogging
 		}
 	}
 
-	private static void appendStyles(StyleSheet styleSheet, StringBuffer msg)
+	private static void appendStyles(StyleSheet styleSheet, StringBuilder msg)
 	{
 		Enumeration<?> styleNames = styleSheet.getStyleNames();
 		while (styleNames.hasMoreElements())

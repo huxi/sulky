@@ -76,7 +76,7 @@ public class Not
 
 	public String toString()
 	{
-		StringBuffer result=new StringBuffer();
+		StringBuilder result=new StringBuilder();
 		if(condition==null)
 		{
 			result.append("false");

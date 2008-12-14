@@ -67,7 +67,7 @@ public class HumanReadable
 
 		public String toString()
 		{
-			StringBuffer result=new StringBuffer();
+			StringBuilder result=new StringBuilder();
 			result.append("Unit[");
 			result.append("name=").append(name);
 			result.append(", symbol=").append(symbol);
@@ -103,7 +103,7 @@ public class HumanReadable
 
 		if(logger.isDebugEnabled())
 		{
-			StringBuffer msg=new StringBuffer("Binary units:\n");
+			StringBuilder msg=new StringBuilder("Binary units:\n");
 			for(Unit unit:BINARY_UNITS)
 			{
 				msg.append("\t").append(unit).append("\n");
@@ -147,7 +147,7 @@ public class HumanReadable
 		{
 			return ""+size+" ";
 		}
-		StringBuffer result=new StringBuffer();
+		StringBuilder result=new StringBuilder();
 		result.append(fraction);
 		long remainder=size%correctUnit.getFactor();
 		//if(remainder!=0)

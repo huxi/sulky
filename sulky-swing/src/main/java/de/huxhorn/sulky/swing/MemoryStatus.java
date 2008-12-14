@@ -345,7 +345,7 @@ public class MemoryStatus
 
 		// Tooltip
 		{
-			StringBuffer msg=new StringBuffer();
+			StringBuilder msg=new StringBuilder();
 			msg.append("<html>");
 			msg.append("Used memory: ");
 			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getUsed(), usingBinaryUnits, false)).append("bytes");

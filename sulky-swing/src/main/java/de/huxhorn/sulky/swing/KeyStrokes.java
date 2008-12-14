@@ -60,7 +60,7 @@ public class KeyStrokes
 	 */
 	public static String getModifiersString(int modifiers)
 	{
-		StringBuffer result=new StringBuffer();
+		StringBuilder result=new StringBuilder();
 		if( (modifiers & InputEvent.SHIFT_MASK)!=0 )
 		{
 			result.append("shift");
@@ -162,7 +162,7 @@ public class KeyStrokes
 	{
 		final Logger logger = LoggerFactory.getLogger(KeyStrokes.class);
 
-		StringBuffer buffer=new StringBuffer();
+		StringBuilder buffer=new StringBuilder();
 		buffer.append("Component: ").append(component).append(":\n");
 		buffer.append("\t").append(identifier).append(":\n");
 		InputMap inputMap;
@@ -175,7 +175,7 @@ public class KeyStrokes
 		logger.debug(buffer.toString());
 	}
 
-	private static void appendInputMap(StringBuffer buffer, String mapName, InputMap inputMap)
+	private static void appendInputMap(StringBuilder buffer, String mapName, InputMap inputMap)
 	{
 		buffer.append("\tmapName: ").append(mapName).append("\n");
 		KeyStroke[] keys = inputMap.allKeys();

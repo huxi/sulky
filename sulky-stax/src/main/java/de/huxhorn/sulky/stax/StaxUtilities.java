@@ -129,7 +129,7 @@ public class StaxUtilities
 		}
 		String replaced=replaceWhiteSpace(string);
 		char[] chars = replaced.toCharArray();
-		StringBuffer result=new StringBuffer(replaced.length());
+		StringBuilder result=new StringBuilder(replaced.length());
 		boolean needSpace=false;
 		for(char c : chars)
 		{
@@ -166,7 +166,7 @@ public class StaxUtilities
 		{
 			return null;
 		}
-		StringBuffer result=new StringBuffer(string);
+		StringBuilder result=new StringBuilder(string);
 		for(int i=0;i<result.length();i++)
 		{
 			char c=result.charAt(i);
@@ -408,7 +408,7 @@ public class StaxUtilities
 
 			int startWritePos = 0;
 
-			StringBuffer resultBuffer=null;
+			StringBuilder resultBuffer=null;
 
 			char previousChar=0;
 			for (int index = 0; index < length; index++)
@@ -419,7 +419,7 @@ public class StaxUtilities
 					case '\r':
 						if(resultBuffer==null)
 						{
-							resultBuffer=new StringBuffer();
+							resultBuffer=new StringBuilder();
 						}
 						resultBuffer.append(chars, startWritePos, index - startWritePos);
 						if(previousChar!='\n')
@@ -438,7 +438,7 @@ public class StaxUtilities
 					case '\n':
 						if(resultBuffer==null)
 						{
-							resultBuffer=new StringBuffer();
+							resultBuffer=new StringBuilder();
 						}
 						resultBuffer.append(chars, startWritePos, index - startWritePos);
 						if(previousChar!='\r')
@@ -680,7 +680,7 @@ public class StaxUtilities
 		if(logger.isDebugEnabled())
 		{
 
-			StringBuffer msgBuf=new StringBuffer();
+			StringBuilder msgBuf=new StringBuilder();
 			NamespaceContext nsc = writer.getNamespaceContext();
 			Iterator iter = nsc.getPrefixes(namespaceURI);
 			if(msg!=null)
@@ -718,7 +718,7 @@ public class StaxUtilities
 		if(logger.isDebugEnabled())
 		{
 			int type=reader.getEventType();
-			StringBuffer msgBuf=new StringBuffer(msg);
+			StringBuilder msgBuf=new StringBuilder(msg);
 			msgBuf.append("\n");
 			msgBuf.append("\t").append("eventType=").append(getEventTypeString(type)).append("\n");
 			if(type == XMLStreamConstants.START_ELEMENT || type == XMLStreamConstants.END_ELEMENT)
