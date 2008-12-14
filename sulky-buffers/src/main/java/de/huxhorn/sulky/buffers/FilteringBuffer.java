@@ -164,11 +164,11 @@ public class FilteringBuffer<E>
 				}
 				catch (InterruptedException e)
 				{
-					if(logger.isInfoEnabled()) logger.info("Interrupted...", e);
+					if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 					return;
 				}
 			}
-			if(logger.isInfoEnabled()) logger.info("Runnable finished.");
+			if(logger.isDebugEnabled()) logger.debug("Runnable finished.");
 		}
 	}
 }
