@@ -77,7 +77,7 @@ public class SimpleXml
 	 */
 	public static String replaceNonValidXMLCharacters(String in, char replacementChar)
 	{
-		StringBuffer out = null;
+		StringBuilder out = null;
 
 		if (!((replacementChar == 0x9) ||
 				(replacementChar == 0xA) ||
@@ -101,7 +101,7 @@ public class SimpleXml
 			{
 				if(out==null)
 				{
-					out=new StringBuffer(in);
+					out=new StringBuilder(in);
 				}
 				out.setCharAt(i, replacementChar);
 			}
