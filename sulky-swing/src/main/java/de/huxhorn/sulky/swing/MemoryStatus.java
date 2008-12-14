@@ -186,7 +186,7 @@ public class MemoryStatus
 			{
 				GraphicsConfiguration gc = getGraphicsConfiguration();
 				offscreenImage=gc.createCompatibleImage(paintingBounds.width, paintingBounds.height, Transparency.TRANSLUCENT);
-				if(logger.isInfoEnabled()) logger.info("Created offscreen-image...");
+				if(logger.isDebugEnabled()) logger.debug("Created offscreen-image...");
 			}
 		}
 		if(offscreenImage!=null)
@@ -400,7 +400,7 @@ public class MemoryStatus
 						}
 						catch (InterruptedException e)
 						{
-							if(logger.isInfoEnabled()) logger.info("Interrupted...", e);
+							if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 							return;
 						}
 					}
@@ -412,7 +412,7 @@ public class MemoryStatus
 				}
 				catch (InterruptedException e)
 				{
-					if(logger.isInfoEnabled()) logger.info("Interrupted...", e);
+					if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 					return;
 				}
 			}
