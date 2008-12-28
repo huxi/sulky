@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>de.huxhorn.sulky</groupId>
+	<artifactId>de.huxhorn.sulky.resources</artifactId>
+	<version>${parent.version}</version>
+	<packaging>jar</packaging>
+	<name>Sulky resources</name>
+	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
+
+	<scm>
+		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-resources</connection>
+		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-resources</developerConnection>
+		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-resources/</url>
+	</scm>
+
+	<parent>
+		<groupId>de.huxhorn.sulky</groupId>
+		<artifactId>de.huxhorn.sulky.parent</artifactId>
+<!-- SV --><version>0.9.5-SNAPSHOT</version>
+		<relativePath>../sulky-parent</relativePath>
+	</parent>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
