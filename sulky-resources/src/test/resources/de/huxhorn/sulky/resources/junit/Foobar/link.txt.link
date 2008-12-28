@@ -1,0 +1,6 @@
+# A comment
+# notFound.txt will not be found...
+notFound.txt
+
+# That's the resource that will actually be used.
+test.txt
