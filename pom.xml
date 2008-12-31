@@ -37,6 +37,7 @@
 	<modules>
 		<module>sulky-parent</module>
 		<module>sulky-generics</module>
+        <module>sulky-junit</module>
 		<module>sulky-stax</module>
 		<module>sulky-conditions</module>
 		<module>sulky-buffers</module>

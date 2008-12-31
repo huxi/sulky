@@ -122,6 +122,17 @@
 				<version>${sulkyVersion}</version>
 			</dependency>
 
+            <dependency>
+                <groupId>de.huxhorn.sulky</groupId>
+                <artifactId>de.huxhorn.sulky.resources</artifactId>
+                <version>${sulkyVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>de.huxhorn.sulky</groupId>
+                <artifactId>de.huxhorn.sulky.junit</artifactId>
+                <version>${sulkyVersion}</version>
+            </dependency>
             <!--
 			<dependency>
 				<groupId>commons-cli</groupId>
@@ -238,7 +249,6 @@
 						<ruleset>/rulesets/controversial.xml</ruleset>
 					</rulesets>
 					<format>xml</format>
-					<linkXref>true</linkXref>
 					<sourceEncoding>utf-8</sourceEncoding>
 					<minimumTokens>100</minimumTokens>
 					<targetJdk>1.5</targetJdk>
