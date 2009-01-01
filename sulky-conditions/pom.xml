@@ -16,12 +16,12 @@
 		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-conditions/</url>
 	</scm>
 
-	<parent>
-		<groupId>de.huxhorn.sulky</groupId>
-		<artifactId>de.huxhorn.sulky.parent</artifactId>
+    <parent>
+        <groupId>de.huxhorn.sulky</groupId>
+        <artifactId>de.huxhorn.sulky.parent</artifactId>
 <!-- SV --><version>0.9.5-SNAPSHOT</version>
-		<relativePath>../sulky-parent/pom.xml</relativePath>
-	</parent>
+        <relativePath>../sulky-parent/pom.xml</relativePath>
+    </parent>
 	
 	<dependencies>		
 		<!--
