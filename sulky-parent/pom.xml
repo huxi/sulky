@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.parent</artifactId>
-<!-- SV --><version>0.9.5</version>
+<!-- SV --><version>0.9.6-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Sulky parent pom file</name>
 	<description>This file is part of the sulky modules. It's the parent pom that contains general project informations.</description>
