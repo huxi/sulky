@@ -20,8 +20,8 @@
         <!--
 		<commonsLoggingVersion>1.1</commonsLoggingVersion>
 		-->
-		<slf4jVersion>1.5.5</slf4jVersion>
-		<logbackVersion>0.9.9</logbackVersion>
+		<slf4jVersion>1.5.6</slf4jVersion>
+		<logbackVersion>0.9.14</logbackVersion>
 	</properties>
 	
 	<licenses>
@@ -426,19 +426,6 @@
                         </manifest>
                         <manifestEntries>
                            <Implementation-Build>${buildNumber}</Implementation-Build>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <configuration>
-                    <manifest>
-                        <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                    </manifest>
-                    <archive>
-                        <manifestEntries>
-                            <Implementation-Build>${buildNumber}</Implementation-Build>
                         </manifestEntries>
                     </archive>
                 </configuration>
