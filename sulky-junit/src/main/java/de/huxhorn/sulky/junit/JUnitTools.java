@@ -23,11 +23,18 @@ import static org.junit.Assert.assertEquals;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
+import java.beans.XMLEncoder;
+import java.beans.XMLDecoder;
+import java.beans.PersistenceDelegate;
+import java.beans.Expression;
+import java.beans.Encoder;
 
 public class JUnitTools
 {
     /**
      * Serializes the original and returns the deserialized instance.
+	 * Serialization is using ObjectOutputStream/ObjectInputStream.
+
      * 
      * @param original the original Serializable,
      * @return the deserialized instance.
@@ -47,6 +54,43 @@ public class JUnitTools
         return (T) ois.readObject();
     }
 
+	/**
+	 * Serializes the original and returns the deserialized instance.
+	 * Serialization is using XMLEncoder/XMLDecoder.
+	 *
+	 * See http://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html
+	 * for a description of an enum problem. 
+	 *
+	 * @param original the original Serializable,
+	 * @param enums a list of enums that can be contained in original. Only needed in J2SE 1.5. 
+	 * @return the deserialized instance.
+	 * @throws java.io.IOException In case of error during (de)serialization.
+	 * @throws ClassNotFoundException In case of error during (de)serialization.
+	 * @see
+	 */
+	public static <T extends Serializable> T serializeXml(T original, Class... enums)
+			throws IOException, ClassNotFoundException
+	{
+		ByteArrayOutputStream os=new ByteArrayOutputStream();
+		XMLEncoder e = new XMLEncoder(os);
+		if(enums!=null)
+		{
+			PersistenceDelegate delegate=new EnumPersistenceDelegate();
+			for(Class c:enums)
+			{
+				e.setPersistenceDelegate( c, delegate );
+			}
+		}
+		e.writeObject(original);
+		e.close();
+
+		ByteArrayInputStream is=new ByteArrayInputStream(os.toByteArray());
+		XMLDecoder d=new XMLDecoder(is);
+		@SuppressWarnings({"unchecked"})
+		T result = (T) d.readObject();
+		d.close();
+		return result;
+	}
 
     public static <T extends Serializable> T testSerialization(T original)
             throws IOException, ClassNotFoundException
@@ -71,6 +115,28 @@ public class JUnitTools
         return result;
 	}
 
+	public static <T extends Serializable> T testXmlSerialization(T original, Class... enums)
+			throws IOException, ClassNotFoundException
+	{
+		return testXmlSerialization(original, false, enums);
+	}
+
+	public static <T extends Serializable> T testXmlSerialization(T original, boolean same, Class... enums)
+			throws IOException, ClassNotFoundException
+	{
+		T result=serializeXml(original, enums);
+
+		if(same)
+		{
+			assertSame(original, result);
+		}
+		else
+		{
+			assertEquals("Hashcodes of "+original+" and "+result+" differ!", original.hashCode(), result.hashCode());
+			assertEquals(original, result);
+		}
+		return result;
+	}
 
     public static <T extends Cloneable> T reflectionClone(T original)
            throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
@@ -107,5 +173,23 @@ public class JUnitTools
 
         return result;
     }
-        
+
+	/**
+	 * As described in http://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html
+	 */
+	static class EnumPersistenceDelegate
+		extends PersistenceDelegate
+	{
+		protected boolean mutatesTo( Object oldInstance, Object newInstance )
+		{
+			return oldInstance == newInstance;
+		}
+
+		protected Expression instantiate( Object oldInstance, Encoder out )
+		{
+			Enum e = ( Enum )oldInstance;
+			return new Expression( e, e.getClass(), "valueOf", new Object[]{e.name()} );
+		}
+	}
+
 }
