@@ -33,10 +33,36 @@
 	</licenses>
 
 	<issueManagement>
-		<system>sourceforge</system>
-		<url>https://sourceforge.net/tracker/?group_id=219543</url>
+		<system>trac</system>
+		<url>http://apps.sourceforge.net/trac/lilith/</url>
 	</issueManagement>
    
+	<mailingLists>
+		<!--
+		<mailingList>
+			<name>Announce List</name>
+			<subscribe>sulky-announce-join@lists.sourceforge.net</subscribe>
+			<unsubscribe>sulky-announce-leave@lists.sourceforge.net</unsubscribe>
+			<post>sulky-announce@lists.sourceforge.net</post>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=sulky-announce</archive>
+		</mailingList>
+		<mailingList>
+			<name>User List</name>
+			<subscribe>sulky-user-join@lists.sourceforge.net</subscribe>
+			<unsubscribe>sulky-user-leave@lists.sourceforge.net</unsubscribe>
+			<post>sulky-user@lists.sourceforge.net</post>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=sulky-user</archive>
+		</mailingList>
+		-->
+		<mailingList>
+			<name>Developer List</name>
+			<subscribe>sulky-devel-join@lists.sourceforge.net</subscribe>
+			<unsubscribe>sulky-devel-leave@lists.sourceforge.net</unsubscribe>
+			<post>sulky-devel@lists.sourceforge.net</post>
+			<archive>http://sourceforge.net/mailarchive/forum.php?forum_name=sulky-devel</archive>
+		</mailingList>
+	</mailingLists>
+
 	<distributionManagement>
 		<site>
 			<id>sulky.huxhorn.de</id>
@@ -205,7 +231,7 @@
 	<developers>
 		<developer>
 			<id>huxhorn</id>
-			<email>huxhorn@sourceforge.net</email>
+			<email>huxhorn@users.sourceforge.net</email>
 			<name>Joern Huxhorn</name>
 			<organization>Joern Huxhorn</organization>
 			<organizationUrl>http://sulky.huxhorn.de</organizationUrl>
@@ -296,7 +322,7 @@
 					</reportSet>
 				</reportSets>
 				<configuration>
-					<issueLinkTemplate>http://sourceforge.net/support/tracker.php?aid=%ISSUE%</issueLinkTemplate>
+					<issueLinkTemplate>http://apps.sourceforge.net/trac/lilith/ticket/%ISSUE%</issueLinkTemplate>
 				</configuration>
 			</plugin>
 			<plugin>
