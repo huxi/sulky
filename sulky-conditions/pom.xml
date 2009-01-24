@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.conditions</artifactId>
@@ -16,32 +16,18 @@
 		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-conditions/</url>
 	</scm>
 
-    <parent>
-        <groupId>de.huxhorn.sulky</groupId>
-        <artifactId>de.huxhorn.sulky.parent</artifactId>
-<!-- SV --><version>0.9.7-SNAPSHOT</version>
-        <relativePath>../sulky-parent/pom.xml</relativePath>
-    </parent>
-	
-	<dependencies>		
-		<!--
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		-->
+	<parent>
+		<groupId>de.huxhorn.sulky</groupId>
+		<artifactId>de.huxhorn.sulky.parent</artifactId>
+		<version><!-- SV -->0.9.7-SNAPSHOT</version>
+		<relativePath>../sulky-parent/pom.xml</relativePath>
+	</parent>
+
+	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 </project>

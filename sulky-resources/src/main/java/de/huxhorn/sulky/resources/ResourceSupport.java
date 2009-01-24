@@ -52,29 +52,29 @@ public class ResourceSupport
 	public ResourceSupport(Object object)
 	{
 		Logger logger = LoggerFactory.getLogger(ResourceSupport.class);
-		if (object == null)
+		if(object == null)
 		{
 			NullPointerException ex = new NullPointerException("obj must not be null!");
-			if (logger.isDebugEnabled())
+			if(logger.isDebugEnabled())
 			{
 				logger.debug("Parameter 'obj' of method 'ResourceSupport' must not be null!", ex);
 			}
 			throw ex;
 		}
 		Class c = object.getClass();
-		if (c == java.lang.Class.class)
+		if(c == java.lang.Class.class)
 		{
 			this.clazz = (Class) object;
 			this.object = null;
 			this.localizable = null;
-			if (logger.isDebugEnabled()) logger.debug("Parameter of ResourceSupport constructor was class " + clazz);
+			if(logger.isDebugEnabled()) logger.debug("Parameter of ResourceSupport constructor was class " + clazz);
 		}
 		else
 		{
 			this.clazz = c;
 			this.object = object;
 			localizable = LocalizableFactory.getLocalizable(object);
-			if (logger.isDebugEnabled())
+			if(logger.isDebugEnabled())
 			{
 				logger.debug("Parameter of ResourceSupport constructor was an instance of class " + clazz);
 			}
@@ -94,12 +94,12 @@ public class ResourceSupport
 	public Locale resolveLocale(final Locale locale)
 	{
 		Locale result = null;
-		if (localizable != null)
+		if(localizable != null)
 		{
 			result = localizable.getLocale();
 		}
 
-		if (result == null)
+		if(result == null)
 		{
 			result = locale;
 		}
@@ -133,7 +133,7 @@ public class ResourceSupport
 
 	public URL[] getLocalResources(final String resourceBaseName, final String[] suffixes, final Locale locale)
 	{
-		if (object != null)
+		if(object != null)
 		{
 			return Resources.getLocalResources(clazz, resourceBaseName, suffixes, resolveLocale(locale));
 		}
@@ -158,7 +158,7 @@ public class ResourceSupport
 
 	public URL getLocalResource(final String resourceBaseName, final String[] suffixes, final Locale locale)
 	{
-		if (object != null)
+		if(object != null)
 		{
 			return Resources.getLocalResource(clazz, resourceBaseName, suffixes, resolveLocale(locale));
 		}
@@ -183,7 +183,7 @@ public class ResourceSupport
 
 	public InputStream getLocalResourceAsStream(final String resourceBaseName, final String[] suffixes, final Locale locale)
 	{
-		if (object != null)
+		if(object != null)
 		{
 			return Resources.getLocalResourceAsStream(clazz, resourceBaseName, suffixes, resolveLocale(locale));
 		}
@@ -208,7 +208,7 @@ public class ResourceSupport
 
 	public URL[] getResources(final String resourceBaseName, final String[] suffixes, final Locale locale)
 	{
-		if (object != null)
+		if(object != null)
 		{
 			return Resources.getResources(clazz, resourceBaseName, suffixes, resolveLocale(locale));
 		}
@@ -233,7 +233,7 @@ public class ResourceSupport
 
 	public URL getResource(final String resourceBaseName, final String[] suffixes, final Locale locale)
 	{
-		if (object != null)
+		if(object != null)
 		{
 			return Resources.getResource(clazz, resourceBaseName, suffixes, resolveLocale(locale));
 		}
@@ -258,7 +258,7 @@ public class ResourceSupport
 
 	public InputStream getResourceAsStream(final String resourceBaseName, final String[] suffixes, final Locale locale)
 	{
-		if (object != null)
+		if(object != null)
 		{
 			return Resources.getResourceAsStream(clazz, resourceBaseName, suffixes, resolveLocale(locale));
 		}
@@ -283,7 +283,7 @@ public class ResourceSupport
 
 	public Map<String, Object> getLocalResourceMap(final String bundleBaseName, final Locale locale)
 	{
-		if (object != null)
+		if(object != null)
 		{
 			return ResourceMaps.getLocalResourceMap(clazz, bundleBaseName, resolveLocale(locale));
 		}
@@ -298,7 +298,7 @@ public class ResourceSupport
 
 	public Map<String, Object> getResourceMap(final String bundleBaseName, final Locale locale)
 	{
-		if (object != null)
+		if(object != null)
 		{
 			return ResourceMaps.getResourceMap(clazz, bundleBaseName, resolveLocale(locale));
 		}
