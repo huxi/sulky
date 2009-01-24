@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,13 +20,14 @@ package de.huxhorn.sulky.swing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.WritableRaster;
 import java.awt.image.Raster;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.net.URL;
+
+import javax.imageio.ImageIO;
 
 /**
  * Inspired by Filthy Rich Clients...
@@ -66,7 +67,7 @@ public class GraphicsUtilities
 	public static BufferedImage toCompatibleImage(BufferedImage image)
 	{
 		GraphicsConfiguration gc = getConfiguration();
-		if (image.getColorModel().equals(gc.getColorModel()))
+		if(image.getColorModel().equals(gc.getColorModel()))
 		{
 			return image;
 		}
@@ -96,26 +97,26 @@ public class GraphicsUtilities
 	{
 		final Logger logger = LoggerFactory.getLogger(GraphicsUtilities.class);
 
-		if (Float.compare(opacity, 0.0f) == 0)
+		if(Float.compare(opacity, 0.0f) == 0)
 		{
 			// return if transparent
 			return;
 		}
 		Composite c = g2.getComposite();
-		for (int i = -size; i <= size; i++)
+		for(int i = -size; i <= size; i++)
 		{
-			for (int j = -size; j <= size; j++)
+			for(int j = -size; j <= size; j++)
 			{
 				float distance = i * i + j * j;
 				float alpha = opacity;
-				if (Float.compare(distance, 0.0f) > 0)
+				if(Float.compare(distance, 0.0f) > 0)
 				{
 					alpha = (1.0f / distance) * opacity * size;
-					if (logger.isDebugEnabled()) logger.debug("Calculated alpha: {}", alpha);
+					if(logger.isDebugEnabled()) logger.debug("Calculated alpha: {}", alpha);
 				}
-				if (alpha > 1.0)
+				if(alpha > 1.0)
 				{
-					if (logger.isDebugEnabled()) logger.debug("Corrected alpha: {}", alpha);
+					if(logger.isDebugEnabled()) logger.debug("Corrected alpha: {}", alpha);
 					alpha = 1.0f;
 				}
 				//g2.setComposite(AlphaComposite.SrcOver.derive(alpha));
@@ -135,11 +136,11 @@ public class GraphicsUtilities
 	 * an image of type different from <code>BufferedImage.TYPE_INT_ARGB</code>
 	 * and <code>BufferedImage.TYPE_INT_RGB</code> will unmanage the image.</p>
 	 *
-	 * @param img	the source image
-	 * @param x	  the x location at which to start grabbing pixels
-	 * @param y	  the y location at which to start grabbing pixels
-	 * @param w	  the width of the rectangle of pixels to grab
-	 * @param h	  the height of the rectangle of pixels to grab
+	 * @param img    the source image
+	 * @param x      the x location at which to start grabbing pixels
+	 * @param y      the y location at which to start grabbing pixels
+	 * @param w      the width of the rectangle of pixels to grab
+	 * @param h      the height of the rectangle of pixels to grab
 	 * @param pixels a pre-allocated array of pixels of size w*h; can be null
 	 * @return <code>pixels</code> if non-null, a new array of integers
 	 *         otherwise
@@ -147,26 +148,26 @@ public class GraphicsUtilities
 	 *                                  of length &lt; w*h
 	 */
 	public static int[] getPixels(BufferedImage img,
-								  int x, int y, int w, int h, int[] pixels)
+	                              int x, int y, int w, int h, int[] pixels)
 	{
-		if (w == 0 || h == 0)
+		if(w == 0 || h == 0)
 		{
 			return new int[0];
 		}
 
-		if (pixels == null)
+		if(pixels == null)
 		{
 			pixels = new int[w * h];
 		}
-		else if (pixels.length < w * h)
+		else if(pixels.length < w * h)
 		{
 			throw new IllegalArgumentException("pixels array must have a length" +
-					" >= w*h");
+				" >= w*h");
 		}
 
 		int imageType = img.getType();
-		if (imageType == BufferedImage.TYPE_INT_ARGB ||
-				imageType == BufferedImage.TYPE_INT_RGB)
+		if(imageType == BufferedImage.TYPE_INT_ARGB ||
+			imageType == BufferedImage.TYPE_INT_RGB)
 		{
 			Raster raster = img.getRaster();
 			return (int[]) raster.getDataElements(x, y, w, h, pixels);
@@ -182,31 +183,31 @@ public class GraphicsUtilities
 	 * an image of type different from <code>BufferedImage.TYPE_INT_ARGB</code>
 	 * and <code>BufferedImage.TYPE_INT_RGB</code> will unmanage the image.</p>
 	 *
-	 * @param img	the destination image
-	 * @param x	  the x location at which to start storing pixels
-	 * @param y	  the y location at which to start storing pixels
-	 * @param w	  the width of the rectangle of pixels to store
-	 * @param h	  the height of the rectangle of pixels to store
+	 * @param img    the destination image
+	 * @param x      the x location at which to start storing pixels
+	 * @param y      the y location at which to start storing pixels
+	 * @param w      the width of the rectangle of pixels to store
+	 * @param h      the height of the rectangle of pixels to store
 	 * @param pixels an array of pixels, stored as integers
 	 * @throws IllegalArgumentException is <code>pixels</code> is non-null and
 	 *                                  of length &lt; w*h
 	 */
 	public static void setPixels(BufferedImage img,
-								 int x, int y, int w, int h, int[] pixels)
+	                             int x, int y, int w, int h, int[] pixels)
 	{
-		if (pixels == null || w == 0 || h == 0)
+		if(pixels == null || w == 0 || h == 0)
 		{
 			return;
 		}
-		else if (pixels.length < w * h)
+		else if(pixels.length < w * h)
 		{
 			throw new IllegalArgumentException("pixels array must have a length" +
-					" >= w*h");
+				" >= w*h");
 		}
 
 		int imageType = img.getType();
-		if (imageType == BufferedImage.TYPE_INT_ARGB ||
-				imageType == BufferedImage.TYPE_INT_RGB)
+		if(imageType == BufferedImage.TYPE_INT_ARGB ||
+			imageType == BufferedImage.TYPE_INT_RGB)
 		{
 			WritableRaster raster = img.getRaster();
 			raster.setDataElements(x, y, w, h, pixels);
@@ -219,7 +220,7 @@ public class GraphicsUtilities
 	}
 
 	public static BufferedImage loadCompatibleImage(URL resource)
-			throws IOException
+		throws IOException
 	{
 		BufferedImage image = ImageIO.read(resource);
 		return toCompatibleImage(image);

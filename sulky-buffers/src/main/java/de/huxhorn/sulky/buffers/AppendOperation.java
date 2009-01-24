@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,18 +23,21 @@ public interface AppendOperation<E>
 {
 	/**
 	 * Adds the given element.
+	 *
 	 * @param element to add.
 	 */
 	void add(E element);
 
 	/**
 	 * Adds all the given elements.
+	 *
 	 * @param elements to add.
 	 */
 	void addAll(List<E> elements);
 
 	/**
 	 * Adds all the given elements.
+	 *
 	 * @param elements to add.
 	 */
 	void addAll(E[] elements);

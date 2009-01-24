@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,11 +23,13 @@ import java.util.Collection;
 
 public class Buffers
 {
-	private Buffers() {}
+	private Buffers()
+	{
+	}
 
 	public static <E> void filter(Buffer<E> buffer, Condition condition, AppendOperation<E> toAppendTo)
 	{
-		for(E element:buffer)
+		for(E element : buffer)
 		{
 			if(condition.isTrue(element))
 			{
@@ -43,9 +45,9 @@ public class Buffers
 
 	public static <E> void filter(Buffer<E> buffer, Collection<FilterJob<E>> filterJobs)
 	{
-		for(E element:buffer)
+		for(E element : buffer)
 		{
-			for(FilterJob<E> job:filterJobs)
+			for(FilterJob<E> job : filterJobs)
 			{
 				if(job.getCondition().isTrue(element))
 				{
@@ -64,7 +66,7 @@ public class Buffers
 	{
 		if(buffer instanceof DisposeOperation)
 		{
-			DisposeOperation op=(DisposeOperation) buffer;
+			DisposeOperation op = (DisposeOperation) buffer;
 			op.dispose();
 		}
 	}
@@ -78,7 +80,7 @@ public class Buffers
 	{
 		if(buffer instanceof ResetOperation)
 		{
-			ResetOperation op=(ResetOperation) buffer;
+			ResetOperation op = (ResetOperation) buffer;
 			op.reset();
 		}
 	}

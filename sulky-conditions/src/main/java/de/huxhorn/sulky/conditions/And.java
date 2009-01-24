@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,8 +17,8 @@
  */
 package de.huxhorn.sulky.conditions;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Returns false if any of it's sub-conditions return false.
@@ -52,16 +52,17 @@ public class And
 
 	/**
 	 * Returns false if any of the contained conditions is false.
-	 *
+	 * <p/>
 	 * This implies that it returns true if the contained conditions are either null or empty.
+	 *
 	 * @param element
 	 * @return false if any of the contained conditions is false.
 	 */
 	public boolean isTrue(Object element)
 	{
-		if(conditions!=null)
+		if(conditions != null)
 		{
-			for(Condition condition:conditions)
+			for(Condition condition : conditions)
 			{
 				if(!condition.isTrue(element))
 				{
@@ -74,8 +75,8 @@ public class And
 
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
 
 		final And and = (And) o;
 
@@ -87,37 +88,38 @@ public class And
 		return (conditions != null ? conditions.hashCode() : 0);
 	}
 
-	public And clone() throws CloneNotSupportedException
+	public And clone()
+		throws CloneNotSupportedException
 	{
-		And result=(And)super.clone();
-		if(result.conditions!= null)
+		And result = (And) super.clone();
+		if(result.conditions != null)
 		{
-			List<Condition> clonedConditions=new ArrayList<Condition>(conditions.size());
-			for(Condition condition:result.conditions)
+			List<Condition> clonedConditions = new ArrayList<Condition>(conditions.size());
+			for(Condition condition : result.conditions)
 			{
 				clonedConditions.add(condition.clone());
 			}
-			result.conditions=clonedConditions;
+			result.conditions = clonedConditions;
 		}
 		return result;
 	}
 
 	public String toString()
 	{
-		StringBuilder result=new StringBuilder();
-		if(conditions==null || conditions.size()==0)
+		StringBuilder result = new StringBuilder();
+		if(conditions == null || conditions.size() == 0)
 		{
 			result.append("true");
 		}
 		else
 		{
 			result.append("(");
-			boolean first=true;
-			for(Condition condition:conditions)
+			boolean first = true;
+			for(Condition condition : conditions)
 			{
 				if(first)
 				{
-					first=false;
+					first = false;
 				}
 				else
 				{

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,8 @@ package de.huxhorn.sulky.stax;
 
 import junit.framework.TestCase;
 
-public class StaxUtilitiesTest extends TestCase
+public class StaxUtilitiesTest
+	extends TestCase
 {
 	public void testNormalizeNewlines()
 	{
@@ -27,59 +28,59 @@ public class StaxUtilitiesTest extends TestCase
 		String result;
 		String expectedResult;
 
-		input=null;
-		expectedResult=null;
-		result=StaxUtilities.normalizeNewlines(input);
+		input = null;
+		expectedResult = null;
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="";
-		expectedResult="";
-		result=StaxUtilities.normalizeNewlines(input);
+		input = "";
+		expectedResult = "";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="foobar";
-		expectedResult="foobar";
-		result=StaxUtilities.normalizeNewlines(input);
+		input = "foobar";
+		expectedResult = "foobar";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\nbar\nfoobar";
-		expectedResult="foo\nbar\nfoobar";
-		result=StaxUtilities.normalizeNewlines(input);
+		input = "foo\nbar\nfoobar";
+		expectedResult = "foo\nbar\nfoobar";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\nbar\r\nfoobar";
-		expectedResult="foo\nbar\nfoobar";
-		result= StaxUtilities.normalizeNewlines(input);
+		input = "foo\r\nbar\r\nfoobar";
+		expectedResult = "foo\nbar\nfoobar";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\n\r\nbar\r\nfoobar";
-		expectedResult="foo\n\nbar\nfoobar";
-		result=StaxUtilities.normalizeNewlines(input);
+		input = "foo\r\n\r\nbar\r\nfoobar";
+		expectedResult = "foo\n\nbar\nfoobar";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\n\rbar\n\rfoobar";
-		expectedResult="foo\nbar\nfoobar";
-		result=StaxUtilities.normalizeNewlines(input);
+		input = "foo\n\rbar\n\rfoobar";
+		expectedResult = "foo\nbar\nfoobar";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\rbar\rfoobar";
-		expectedResult="foo\nbar\nfoobar";
-		result=StaxUtilities.normalizeNewlines(input);
+		input = "foo\rbar\rfoobar";
+		expectedResult = "foo\nbar\nfoobar";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\rbar\rfoobar";
-		expectedResult="foo\n\nbar\nfoobar";
-		result=StaxUtilities.normalizeNewlines(input);
+		input = "foo\r\rbar\rfoobar";
+		expectedResult = "foo\n\nbar\nfoobar";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\n\r\rbar\rfoobar\r\r\r";
-		expectedResult="foo\n\n\nbar\nfoobar\n\n\n";
-		result=StaxUtilities.normalizeNewlines(input);
+		input = "foo\r\n\r\rbar\rfoobar\r\r\r";
+		expectedResult = "foo\n\n\nbar\nfoobar\n\n\n";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 
-		input="  foo\r\nb a r\r\nfoo  bar  \r\n  ";
-		expectedResult="  foo\nb a r\nfoo  bar  \n  ";
-		result=StaxUtilities.normalizeNewlines(input);
+		input = "  foo\r\nb a r\r\nfoo  bar  \r\n  ";
+		expectedResult = "  foo\nb a r\nfoo  bar  \n  ";
+		result = StaxUtilities.normalizeNewlines(input);
 		assertEquals(expectedResult, result);
 	}
 
@@ -89,59 +90,59 @@ public class StaxUtilitiesTest extends TestCase
 		String result;
 		String expectedResult;
 
-		input=null;
-		expectedResult=null;
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = null;
+		expectedResult = null;
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="";
-		expectedResult="";
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = "";
+		expectedResult = "";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foobar";
-		expectedResult="foobar";
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = "foobar";
+		expectedResult = "foobar";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\nbar\nfoobar";
-		expectedResult="foo bar foobar";
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = "foo\nbar\nfoobar";
+		expectedResult = "foo bar foobar";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\nbar\r\nfoobar";
-		expectedResult="foo  bar  foobar";
-		result= StaxUtilities.replaceWhiteSpace(input);
+		input = "foo\r\nbar\r\nfoobar";
+		expectedResult = "foo  bar  foobar";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\n\r\nbar\r\nfoobar";
-		expectedResult="foo    bar  foobar";
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = "foo\r\n\r\nbar\r\nfoobar";
+		expectedResult = "foo    bar  foobar";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\n\rbar\n\rfoobar";
-		expectedResult="foo  bar  foobar";
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = "foo\n\rbar\n\rfoobar";
+		expectedResult = "foo  bar  foobar";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\rbar\rfoobar";
-		expectedResult="foo bar foobar";
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = "foo\rbar\rfoobar";
+		expectedResult = "foo bar foobar";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\rbar\rfoobar";
-		expectedResult="foo  bar foobar";
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = "foo\r\rbar\rfoobar";
+		expectedResult = "foo  bar foobar";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\n\r\rbar\rfoobar\r\r\r";
-		expectedResult="foo    bar foobar   ";
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = "foo\r\n\r\rbar\rfoobar\r\r\r";
+		expectedResult = "foo    bar foobar   ";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="  foo\r\nb a r\r\nfoo  bar  \r\n  ";
-		expectedResult="  foo  b a r  foo  bar      ";
-		result=StaxUtilities.replaceWhiteSpace(input);
+		input = "  foo\r\nb a r\r\nfoo  bar  \r\n  ";
+		expectedResult = "  foo  b a r  foo  bar      ";
+		result = StaxUtilities.replaceWhiteSpace(input);
 		assertEquals(expectedResult, result);
 	}
 
@@ -151,59 +152,59 @@ public class StaxUtilitiesTest extends TestCase
 		String result;
 		String expectedResult;
 
-		input=null;
-		expectedResult=null;
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = null;
+		expectedResult = null;
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="";
-		expectedResult="";
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = "";
+		expectedResult = "";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foobar";
-		expectedResult="foobar";
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = "foobar";
+		expectedResult = "foobar";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\nbar\nfoobar";
-		expectedResult="foo bar foobar";
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = "foo\nbar\nfoobar";
+		expectedResult = "foo bar foobar";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\nbar\r\nfoobar";
-		expectedResult="foo bar foobar";
-		result= StaxUtilities.collapseWhiteSpace(input);
+		input = "foo\r\nbar\r\nfoobar";
+		expectedResult = "foo bar foobar";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\n\r\nbar\r\nfoobar";
-		expectedResult="foo bar foobar";
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = "foo\r\n\r\nbar\r\nfoobar";
+		expectedResult = "foo bar foobar";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\n\rbar\n\rfoobar";
-		expectedResult="foo bar foobar";
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = "foo\n\rbar\n\rfoobar";
+		expectedResult = "foo bar foobar";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\rbar\rfoobar";
-		expectedResult="foo bar foobar";
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = "foo\rbar\rfoobar";
+		expectedResult = "foo bar foobar";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\rbar\rfoobar";
-		expectedResult="foo bar foobar";
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = "foo\r\rbar\rfoobar";
+		expectedResult = "foo bar foobar";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="foo\r\n\r\rbar\rfoobar\r\r\r";
-		expectedResult="foo bar foobar";
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = "foo\r\n\r\rbar\rfoobar\r\r\r";
+		expectedResult = "foo bar foobar";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 
-		input="  foo\r\nb a r\r\nfoo  bar  \r\n  ";
-		expectedResult="foo b a r foo bar";
-		result=StaxUtilities.collapseWhiteSpace(input);
+		input = "  foo\r\nb a r\r\nfoo  bar  \r\n  ";
+		expectedResult = "foo b a r foo bar";
+		result = StaxUtilities.collapseWhiteSpace(input);
 		assertEquals(expectedResult, result);
 	}
 }

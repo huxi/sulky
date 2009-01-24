@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,13 +19,15 @@ package de.huxhorn.sulky.generics;
 
 /**
  * This interface is similar to java.sql.Wrapper. It should be in java.util since it's really handy...
+ *
  * @see java.sql.Wrapper
  */
-public interface Wrapper 
+public interface Wrapper
 {
 
-	<T> T unwrap(java.lang.Class<T> iface) throws IllegalArgumentException;
+	<T> T unwrap(java.lang.Class<T> iface)
+		throws IllegalArgumentException;
 
-    boolean isWrapperFor(java.lang.Class<?> iface);
+	boolean isWrapperFor(java.lang.Class<?> iface);
 
 }

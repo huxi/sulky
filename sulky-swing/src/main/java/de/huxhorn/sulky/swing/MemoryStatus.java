@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -18,35 +18,20 @@
 package de.huxhorn.sulky.swing;
 
 import de.huxhorn.sulky.formatting.HumanReadable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.Transparency;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 
 public class MemoryStatus
 	extends JComponent
@@ -61,21 +46,21 @@ public class MemoryStatus
 	private boolean usingBinaryUnits;
 
 	private BufferedImage offscreenImage;
-	private static final Color USED_COLOR = new Color(20,255,20); // 20 instead of 0 so brighter works properly
-	private static final Color TOTAL_COLOR = new Color(255, 255, 20,192); // 20 instead of 0 so brighter works properly
+	private static final Color USED_COLOR = new Color(20, 255, 20); // 20 instead of 0 so brighter works properly
+	private static final Color TOTAL_COLOR = new Color(255, 255, 20, 192); // 20 instead of 0 so brighter works properly
 
 	public MemoryStatus()
 	{
-		runtime=Runtime.getRuntime();
-		paused=true;
-		JLabel fontLabel=new JLabel("8,888.88 XXX");
+		runtime = Runtime.getRuntime();
+		paused = true;
+		JLabel fontLabel = new JLabel("8,888.88 XXX");
 		setFont(fontLabel.getFont());
 		//setMemoryInfo(new MemoryInfo(runtime));
 		updateMemoryBar();
 		addMouseListener(new GcMouseListener());
-		if(logger.isDebugEnabled()) logger.debug("Font: {}",getFont());
+		if(logger.isDebugEnabled()) logger.debug("Font: {}", getFont());
 		//initUi();
-		Thread t=new Thread(new PollRunnable(), "MemoryStatus-Poller");
+		Thread t = new Thread(new PollRunnable(), "MemoryStatus-Poller");
 		t.setDaemon(true);
 		t.start();
 	}
@@ -106,11 +91,11 @@ public class MemoryStatus
 
 	private void calculatePreferredSize()
 	{
-		JLabel label=new JLabel("8,888.88 XXX");
+		JLabel label = new JLabel("8,888.88 XXX");
 		label.setFont(getFont());
 		label.setBorder(getBorder());
 		Dimension size = label.getPreferredSize();
-		size.height+=2*GRADIENT_PIXELS;
+		size.height += 2 * GRADIENT_PIXELS;
 		setPreferredSize(size);
 	}
 
@@ -161,35 +146,36 @@ public class MemoryStatus
 	@Override
 	protected void paintComponent(Graphics g)
 	{
-		Insets insets=getInsets();
-		Dimension size=getSize();
+		Insets insets = getInsets();
+		Dimension size = getSize();
 		if(isOpaque())
 		{
 			g.setColor(getBackground());
-			g.fillRect(0,0,size.width, size.height);
+			g.fillRect(0, 0, size.width, size.height);
 		}
-		Rectangle paintingBounds=new Rectangle();
-		paintingBounds.x=insets.left;
-		paintingBounds.y=insets.top;
+		Rectangle paintingBounds = new Rectangle();
+		paintingBounds.x = insets.left;
+		paintingBounds.y = insets.top;
 		paintingBounds.width = size.width - insets.left - insets.right;
 		paintingBounds.height = size.height - insets.top - insets.bottom;
-		if(offscreenImage==null
-				|| offscreenImage.getWidth()!= paintingBounds.width
-				|| offscreenImage.getHeight()!= paintingBounds.height)
+		if(offscreenImage == null
+			|| offscreenImage.getWidth() != paintingBounds.width
+			|| offscreenImage.getHeight() != paintingBounds.height)
 		{
-			if(offscreenImage!=null)
+			if(offscreenImage != null)
 			{
 				offscreenImage.flush();
-				offscreenImage=null;
+				offscreenImage = null;
 			}
-			if(paintingBounds.width>0 && paintingBounds.height>0)
+			if(paintingBounds.width > 0 && paintingBounds.height > 0)
 			{
 				GraphicsConfiguration gc = getGraphicsConfiguration();
-				offscreenImage=gc.createCompatibleImage(paintingBounds.width, paintingBounds.height, Transparency.TRANSLUCENT);
+				offscreenImage = gc
+					.createCompatibleImage(paintingBounds.width, paintingBounds.height, Transparency.TRANSLUCENT);
 				if(logger.isDebugEnabled()) logger.debug("Created offscreen-image...");
 			}
 		}
-		if(offscreenImage!=null)
+		if(offscreenImage != null)
 		{
 			Graphics gr = offscreenImage.getGraphics();
 			paintMemoryStatus(gr, paintingBounds);
@@ -201,19 +187,19 @@ public class MemoryStatus
 
 	private void paintMemoryStatus(Graphics g, Rectangle paintingBounds)
 	{
-		MemoryInfo memoryInfo=this.memoryInfo;
-		Graphics2D g2=(Graphics2D) g;
+		MemoryInfo memoryInfo = this.memoryInfo;
+		Graphics2D g2 = (Graphics2D) g;
 		//g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setComposite(AlphaComposite.Clear);
-		g2.fillRect(0,0,paintingBounds.width, paintingBounds.height);
+		g2.fillRect(0, 0, paintingBounds.width, paintingBounds.height);
 		g2.setComposite(AlphaComposite.SrcOver);
-		if(memoryInfo!=null)
+		if(memoryInfo != null)
 		{
 			if(!usingTotal)
 			{
-				double usedFraction =(((double)memoryInfo.getUsed()/(double)memoryInfo.getMax()));
-				double totalFraction =(((double)memoryInfo.getTotal()/(double)memoryInfo.getMax()));
+				double usedFraction = (((double) memoryInfo.getUsed() / (double) memoryInfo.getMax()));
+				double totalFraction = (((double) memoryInfo.getTotal() / (double) memoryInfo.getMax()));
 				int usedWidth = (int) (paintingBounds.width * usedFraction + 0.5);
 				int totalWidth = (int) (paintingBounds.width * totalFraction + 0.5);
 
@@ -225,22 +211,22 @@ public class MemoryStatus
 			}
 			else
 			{
-				double usedFraction =(((double)memoryInfo.getUsed()/(double)memoryInfo.getTotal()));
+				double usedFraction = (((double) memoryInfo.getUsed() / (double) memoryInfo.getTotal()));
 				int usedWidth = (int) (paintingBounds.width * usedFraction + 0.5);
 
 				drawBar(g2, 0, usedWidth, paintingBounds.height, USED_COLOR);
 			}
 			// text
 			{
-				String text=HumanReadable.getHumanReadableSize(memoryInfo.getUsed(), usingBinaryUnits, true)+"B";
+				String text = HumanReadable.getHumanReadableSize(memoryInfo.getUsed(), usingBinaryUnits, true) + "B";
 				FontRenderContext frc = g2.getFontRenderContext();
 
-    			TextLayout tl = new TextLayout(text, getFont(), frc);
-				Shape s=tl.getOutline(null);
+				TextLayout tl = new TextLayout(text, getFont(), frc);
+				Shape s = tl.getOutline(null);
 				Rectangle textBounds = s.getBounds();
 				if(logger.isDebugEnabled()) logger.debug("textBounds: {}", textBounds);
-				textBounds.x=(textBounds.x*-1)+(paintingBounds.width-textBounds.width)/2;
-				textBounds.y=(textBounds.y*-1)+(paintingBounds.height-textBounds.height)/2;
+				textBounds.x = (textBounds.x * -1) + (paintingBounds.width - textBounds.width) / 2;
+				textBounds.y = (textBounds.y * -1) + (paintingBounds.height - textBounds.height) / 2;
 				g.translate(textBounds.x, textBounds.y);
 				if(logger.isDebugEnabled()) logger.debug("corrected textBounds: {}", textBounds);
 				//FontMetrics fm = g.getFontMetrics();
@@ -261,33 +247,36 @@ public class MemoryStatus
 
 	private void drawBar(Graphics2D g2, int startX, int endX, int height, Color c)
 	{
-		int halfHeight=height/2;
-		int gradientHeight=Math.min(GRADIENT_PIXELS, halfHeight);
+		int halfHeight = height / 2;
+		int gradientHeight = Math.min(GRADIENT_PIXELS, halfHeight);
 
-		if(2*gradientHeight < height)
+		if(2 * gradientHeight < height)
 		{
 			g2.setColor(c);
-			g2.fillRect(startX, gradientHeight, endX, height-2*gradientHeight);
+			g2.fillRect(startX, gradientHeight, endX, height - 2 * gradientHeight);
 		}
 
 		GradientPaint p;
-		Color brighter=c.brighter().brighter();
-		Color darker=c.darker().darker();
+		Color brighter = c.brighter().brighter();
+		Color darker = c.darker().darker();
 		int colorAlpha = c.getAlpha();
-		if(colorAlpha<255)
+		if(colorAlpha < 255)
 		{
-			brighter=new Color(brighter.getRed(),brighter.getGreen(),brighter.getBlue(),colorAlpha);
-			darker=new Color(darker.getRed(),darker.getGreen(),darker.getBlue(),colorAlpha);
+			brighter = new Color(brighter.getRed(), brighter.getGreen(), brighter.getBlue(), colorAlpha);
+			darker = new Color(darker.getRed(), darker.getGreen(), darker.getBlue(), colorAlpha);
 			if(logger.isDebugEnabled()) logger.debug("Corrected alpha-values.");
 		}
-		if(logger.isDebugEnabled()) logger.debug("original: {}\nbrighter: {}\ndarker: {}", new Object[]{c, brighter, darker});
-		p=new GradientPaint(0, 0, brighter, 0, gradientHeight, c);
+		if(logger.isDebugEnabled())
+		{
+			logger.debug("original: {}\nbrighter: {}\ndarker: {}", new Object[]{c, brighter, darker});
+		}
+		p = new GradientPaint(0, 0, brighter, 0, gradientHeight, c);
 		g2.setPaint(p);
 		g2.fillRect(startX, 0, endX, gradientHeight);
 
-		p=new GradientPaint(0, height-gradientHeight, c, 0, height, darker);
+		p = new GradientPaint(0, height - gradientHeight, c, 0, height, darker);
 		g2.setPaint(p);
-		g2.fillRect(startX, height-gradientHeight, endX, gradientHeight);
+		g2.fillRect(startX, height - gradientHeight, endX, gradientHeight);
 
 
 	}
@@ -318,9 +307,9 @@ public class MemoryStatus
 
 		public MemoryInfo(Runtime runtime)
 		{
-			total=runtime.totalMemory();
-			used=total-runtime.freeMemory();
-			max=runtime.maxMemory();
+			total = runtime.totalMemory();
+			used = total - runtime.freeMemory();
+			max = runtime.maxMemory();
 		}
 
 		public long getTotal()
@@ -341,20 +330,23 @@ public class MemoryStatus
 
 	private void updateMemoryBar()
 	{
-		this.memoryInfo=new MemoryInfo(runtime);
+		this.memoryInfo = new MemoryInfo(runtime);
 
 		// Tooltip
 		{
-			StringBuilder msg=new StringBuilder();
+			StringBuilder msg = new StringBuilder();
 			msg.append("<html>");
 			msg.append("Used memory: ");
-			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getUsed(), usingBinaryUnits, false)).append("bytes");
+			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getUsed(), usingBinaryUnits, false))
+				.append("bytes");
 			msg.append("<br>");
 			msg.append("Total memory: ");
-			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getTotal(), usingBinaryUnits, false)).append("bytes");
+			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getTotal(), usingBinaryUnits, false))
+				.append("bytes");
 			msg.append("<br>");
 			msg.append("Maximum memory: ");
-			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getMax(), usingBinaryUnits, false)).append("bytes");
+			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getMax(), usingBinaryUnits, false))
+				.append("bytes");
 			msg.append("<br><br>");
 			msg.append("Double-click to garbage-collect.");
 			msg.append("</html>");
@@ -379,16 +371,16 @@ public class MemoryStatus
 		implements Runnable
 	{
 		Runnable updateRunnable;
-		private long frequency=5000;
+		private long frequency = 5000;
 
 		public PollRunnable()
 		{
-			updateRunnable=new UpdateRunnable();
+			updateRunnable = new UpdateRunnable();
 		}
 
 		public void run()
 		{
-			for(;;)
+			for(; ;)
 			{
 				synchronized(MemoryStatus.this)
 				{
@@ -398,7 +390,7 @@ public class MemoryStatus
 						{
 							MemoryStatus.this.wait();
 						}
-						catch (InterruptedException e)
+						catch(InterruptedException e)
 						{
 							if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 							return;
@@ -410,7 +402,7 @@ public class MemoryStatus
 				{
 					Thread.sleep(frequency);
 				}
-				catch (InterruptedException e)
+				catch(InterruptedException e)
 				{
 					if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 					return;
@@ -433,7 +425,7 @@ public class MemoryStatus
 	{
 		public void mouseClicked(MouseEvent evt)
 		{
-			if (evt.getClickCount() >= 2 && evt.getButton() == MouseEvent.BUTTON1)
+			if(evt.getClickCount() >= 2 && evt.getButton() == MouseEvent.BUTTON1)
 			{
 				System.gc(); // this is not a bug!
 				if(logger.isInfoEnabled()) logger.info("Executed garbage-collection.");
@@ -444,14 +436,15 @@ public class MemoryStatus
 
 	public static void main(String[] args)
 	{
-		SwingUtilities.invokeLater(new Runnable(){
+		SwingUtilities.invokeLater(new Runnable()
+		{
 			public void run()
 			{
-				JFrame frame=new JFrame("Test");
+				JFrame frame = new JFrame("Test");
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				Container cp = frame.getContentPane();
-				cp.setLayout(new GridLayout(1,1));
-				MemoryStatus status=new MemoryStatus();
+				cp.setLayout(new GridLayout(1, 1));
+				MemoryStatus status = new MemoryStatus();
 				status.setUsingTotal(false);
 				status.setUsingBinaryUnits(true);
 				status.setBorder(new EmptyBorder(5, 5, 5, 5));

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,21 +17,22 @@
  */
 package de.huxhorn.sulky.conditions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
 
 public class OrTest
 	extends ConditionTestBase
 {
-	public void testEmpty() throws CloneNotSupportedException, IOException, ClassNotFoundException
+	public void testEmpty()
+		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
-		Or condition =new Or();
+		Or condition = new Or();
 		assertNull(condition.getConditions());
 		assertEquals(false, condition.isTrue(null));
 		internalTestCondition(condition);
 
-		List<Condition> conditions=new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<Condition>();
 		condition.setConditions(conditions);
 		assertNotNull(condition.getConditions());
 		assertEquals(conditions, condition.getConditions());
@@ -39,10 +40,11 @@ public class OrTest
 		internalTestCondition(condition);
 	}
 
-	public void testTrue() throws CloneNotSupportedException, IOException, ClassNotFoundException
+	public void testTrue()
+		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
-		Or condition =new Or();
-		List<Condition> conditions=new ArrayList<Condition>();
+		Or condition = new Or();
+		List<Condition> conditions = new ArrayList<Condition>();
 		condition.setConditions(conditions);
 
 		conditions.add(BooleanValues.TRUE);
@@ -56,10 +58,11 @@ public class OrTest
 		internalTestCondition(condition);
 	}
 
-	public void testFalse() throws CloneNotSupportedException, IOException, ClassNotFoundException
+	public void testFalse()
+		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
-		Or condition =new Or();
-		List<Condition> conditions=new ArrayList<Condition>();
+		Or condition = new Or();
+		List<Condition> conditions = new ArrayList<Condition>();
 		condition.setConditions(conditions);
 
 		conditions.add(BooleanValues.FALSE);

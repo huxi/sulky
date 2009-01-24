@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,16 +19,18 @@ package de.huxhorn.sulky.swing;
 
 import de.huxhorn.sulky.generics.GenericWrapper;
 
-import javax.swing.SwingUtilities;
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import javax.swing.*;
 
 /**
  * A wrapper for PropertyChangeListener that ensures that the wrapped listeners propertyChange method is invoked
  * on the EventDispatchThread.
  */
 public class PropertyChangeWrapper
-	extends GenericWrapper<PropertyChangeListener> implements PropertyChangeListener
+	extends GenericWrapper<PropertyChangeListener>
+	implements PropertyChangeListener
 {
 	public PropertyChangeWrapper(PropertyChangeListener wrapped)
 	{
@@ -37,7 +39,7 @@ public class PropertyChangeWrapper
 
 	public void propertyChange(final PropertyChangeEvent evt)
 	{
-		final PropertyChangeListener wrapped=getWrapped();
+		final PropertyChangeListener wrapped = getWrapped();
 		if(SwingUtilities.isEventDispatchThread())
 		{
 			wrapped.propertyChange(evt);

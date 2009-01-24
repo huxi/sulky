@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,11 +17,11 @@
  */
 package de.huxhorn.sulky.logging;
 
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class LoggingPropertyChangeListener
 	implements PropertyChangeListener
@@ -32,7 +32,7 @@ public class LoggingPropertyChangeListener
 	{
 		if(logger.isInfoEnabled())
 		{
-			Object[] args=new Object[]{event.getPropertyName(), event.getOldValue(), event.getNewValue()};
+			Object[] args = new Object[]{event.getPropertyName(), event.getOldValue(), event.getNewValue()};
 			logger.info("PropertyChangeEvent:\n\tpropertyName='{}'\n\toldValue={}\n\tnewValue={}", args);
 		}
 	}

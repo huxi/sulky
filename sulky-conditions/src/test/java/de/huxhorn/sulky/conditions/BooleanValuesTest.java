@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,14 +22,16 @@ import java.io.IOException;
 public class BooleanValuesTest
 	extends ConditionTestBase
 {
-	public void testTrue() throws CloneNotSupportedException, IOException, ClassNotFoundException
+	public void testTrue()
+		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
 		BooleanValues condition = BooleanValues.TRUE;
 		assertEquals(true, condition.isTrue(null));
 		internalTestCondition(condition);
 	}
 
-	public void testFalse() throws CloneNotSupportedException, IOException, ClassNotFoundException
+	public void testFalse()
+		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
 		BooleanValues condition = BooleanValues.FALSE;
 		assertEquals(false, condition.isTrue(null));

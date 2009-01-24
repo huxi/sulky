@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -25,12 +25,12 @@ public class BooleanValues
 	/**
 	 * true singleton
 	 */
-	public static final BooleanValues TRUE=new BooleanValues(true);
+	public static final BooleanValues TRUE = new BooleanValues(true);
 
 	/**
 	 * false singleton
 	 */
-	public static final BooleanValues FALSE=new BooleanValues(false);
+	public static final BooleanValues FALSE = new BooleanValues(false);
 
 	public static BooleanValues getInstance(boolean value)
 	{
@@ -46,8 +46,8 @@ public class BooleanValues
 
 	BooleanValues(boolean b)
 	{
-		this.value=b;
-		this.string=""+b;
+		this.value = b;
+		this.string = "" + b;
 	}
 
 	/**
@@ -61,9 +61,12 @@ public class BooleanValues
 		return value;
 	}
 
-	/** @noinspection CloneDoesntCallSuperClone*/
+	/**
+	 * @noinspection CloneDoesntCallSuperClone
+	 */
 	@Override
-	public BooleanValues clone() throws CloneNotSupportedException
+	public BooleanValues clone()
+		throws CloneNotSupportedException
 	{
 		return this;
 	}

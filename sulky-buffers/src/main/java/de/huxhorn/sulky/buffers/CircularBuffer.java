@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,6 +23,7 @@ public interface CircularBuffer<E>
 	/**
 	 * Returns the element at the given <tt>index</tt>. <tt>index</tt> must be in the
 	 * range <tt>[0..(getAvailableElements()-1)]</tt>.
+	 *
 	 * @param index
 	 */
 	E getRelative(int index);
@@ -30,6 +31,7 @@ public interface CircularBuffer<E>
 	/**
 	 * Sets the element at the given <tt>index</tt>. <tt>index</tt> must be in the
 	 * range <tt>[0..(getAvailableElements()-1)]</tt>.
+	 *
 	 * @param index
 	 */
 	E setRelative(int index, E element);

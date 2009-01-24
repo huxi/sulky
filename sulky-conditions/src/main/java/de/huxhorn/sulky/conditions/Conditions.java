@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,7 @@ public class Conditions
 {
 	/**
 	 * Returns true if condition contains otherCondition.
-	 *
+	 * <p/>
 	 * Conditions "contain" themselves so this method returns true if condition equals otherCondition.
 	 *
 	 * @param condition
@@ -42,9 +42,9 @@ public class Conditions
 		}
 		if(condition instanceof ConditionWrapper)
 		{
-			ConditionWrapper conditionWrapper=(ConditionWrapper) condition;
-			Condition wrappedCondition=conditionWrapper.getCondition();
-			if(wrappedCondition==null)
+			ConditionWrapper conditionWrapper = (ConditionWrapper) condition;
+			Condition wrappedCondition = conditionWrapper.getCondition();
+			if(wrappedCondition == null)
 			{
 				return false;
 			}
@@ -52,13 +52,13 @@ public class Conditions
 		}
 		else if(condition instanceof ConditionGroup)
 		{
-			ConditionGroup conditionGroup=(ConditionGroup) condition;
+			ConditionGroup conditionGroup = (ConditionGroup) condition;
 			List<Condition> conditions = conditionGroup.getConditions();
-			if(conditions==null)
+			if(conditions == null)
 			{
 				return false;
 			}
-			for(Condition c:conditions)
+			for(Condition c : conditions)
 			{
 				if(contains(c, otherCondition))
 				{

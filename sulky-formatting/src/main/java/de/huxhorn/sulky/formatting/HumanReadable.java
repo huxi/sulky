@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +32,7 @@ public class HumanReadable
 		{
 			this.factor = factor;
 			this.name = name;
-			this.symbol=symbol;
+			this.symbol = symbol;
 		}
 
 		public String getSymbol()
@@ -67,7 +67,7 @@ public class HumanReadable
 
 		public String toString()
 		{
-			StringBuilder result=new StringBuilder();
+			StringBuilder result = new StringBuilder();
 			result.append("Unit[");
 			result.append("name=").append(name);
 			result.append(", symbol=").append(symbol);
@@ -77,25 +77,25 @@ public class HumanReadable
 		}
 	}
 
-	private static final Unit[] BINARY_UNITS=
-			{
-				new Unit(1L << 60, "exbi", "Ei"),
-				new Unit(1L << 50, "pebi", "Pi"),
-				new Unit(1L << 40, "tebi", "Ti"),
-				new Unit(1L << 30, "gibi", "Gi"),
-				new Unit(1L << 20, "mebi", "Mi"),
-				new Unit(1L << 10, "kibi", "Ki"),
-			};
+	private static final Unit[] BINARY_UNITS =
+		{
+			new Unit(1L << 60, "exbi", "Ei"),
+			new Unit(1L << 50, "pebi", "Pi"),
+			new Unit(1L << 40, "tebi", "Ti"),
+			new Unit(1L << 30, "gibi", "Gi"),
+			new Unit(1L << 20, "mebi", "Mi"),
+			new Unit(1L << 10, "kibi", "Ki"),
+		};
 
-	private static final Unit[] DECIMAL_UNITS=
-			{
-				new Unit(1000L*1000L*1000L*1000L*1000L*1000L, "exa", "E"),
-				new Unit(1000L*1000L*1000L*1000L*1000L, "peta", "P"),
-				new Unit(1000L*1000L*1000L*1000L, "tera", "T"),
-				new Unit(1000L*1000L*1000L, "giga", "G"),
-				new Unit(1000L*1000L, "mega", "M"),
-				new Unit(1000L, "kilo", "k"),
-			};
+	private static final Unit[] DECIMAL_UNITS =
+		{
+			new Unit(1000L * 1000L * 1000L * 1000L * 1000L * 1000L, "exa", "E"),
+			new Unit(1000L * 1000L * 1000L * 1000L * 1000L, "peta", "P"),
+			new Unit(1000L * 1000L * 1000L * 1000L, "tera", "T"),
+			new Unit(1000L * 1000L * 1000L, "giga", "G"),
+			new Unit(1000L * 1000L, "mega", "M"),
+			new Unit(1000L, "kilo", "k"),
+		};
 
 	static
 	{
@@ -103,14 +103,14 @@ public class HumanReadable
 
 		if(logger.isDebugEnabled())
 		{
-			StringBuilder msg=new StringBuilder("Binary units:\n");
-			for(Unit unit:BINARY_UNITS)
+			StringBuilder msg = new StringBuilder("Binary units:\n");
+			for(Unit unit : BINARY_UNITS)
 			{
 				msg.append("\t").append(unit).append("\n");
 			}
 
 			msg.append("\nDecimal units:\n");
-			for(Unit unit:DECIMAL_UNITS)
+			for(Unit unit : DECIMAL_UNITS)
 			{
 				msg.append("\t").append(unit).append("\n");
 			}
@@ -131,31 +131,31 @@ public class HumanReadable
 	{
 		final Logger logger = LoggerFactory.getLogger(HumanReadable.class);
 
-		Unit correctUnit=null;
-		long fraction=0;
-		for(Unit unit:units)
+		Unit correctUnit = null;
+		long fraction = 0;
+		for(Unit unit : units)
 		{
-			fraction=size/unit.getFactor();
-			if(fraction>0)
+			fraction = size / unit.getFactor();
+			if(fraction > 0)
 			{
-				if(logger.isDebugEnabled()) logger.debug("Correct unit: "+unit);
-				correctUnit=unit;
+				if(logger.isDebugEnabled()) logger.debug("Correct unit: " + unit);
+				correctUnit = unit;
 				break;
 			}
 		}
-		if(correctUnit==null)
+		if(correctUnit == null)
 		{
-			return ""+size+" ";
+			return "" + size + " ";
 		}
-		StringBuilder result=new StringBuilder();
+		StringBuilder result = new StringBuilder();
 		result.append(fraction);
-		long remainder=size%correctUnit.getFactor();
+		long remainder = size % correctUnit.getFactor();
 		//if(remainder!=0)
 		{
 			result.append(".");
-			remainder=remainder*100;
-			remainder=remainder/correctUnit.getFactor();
-			if(remainder<10)
+			remainder = remainder * 100;
+			remainder = remainder / correctUnit.getFactor();
+			if(remainder < 10)
 			{
 				result.append("0");
 			}

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,8 +17,8 @@
  */
 package de.huxhorn.sulky.conditions;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Returns true if any of it's sub-conditions return true.
@@ -52,16 +52,17 @@ public class Or
 
 	/**
 	 * Returns true if any of the contained conditions is true.
-	 *
+	 * <p/>
 	 * This implies that it returns false if the contained conditions are either null or empty.
+	 *
 	 * @param element
 	 * @return true if any of the contained conditions is true.
 	 */
 	public boolean isTrue(Object element)
 	{
-		if(conditions!=null)
+		if(conditions != null)
 		{
-			for(Condition condition:conditions)
+			for(Condition condition : conditions)
 			{
 				if(condition.isTrue(element))
 				{
@@ -72,17 +73,18 @@ public class Or
 		return false;
 	}
 
-	public Or clone() throws CloneNotSupportedException
+	public Or clone()
+		throws CloneNotSupportedException
 	{
-		Or result=(Or)super.clone();
-		if(result.conditions!= null)
+		Or result = (Or) super.clone();
+		if(result.conditions != null)
 		{
-			List<Condition> clonedConditions=new ArrayList<Condition>(conditions.size());
-			for(Condition condition:result.conditions)
+			List<Condition> clonedConditions = new ArrayList<Condition>(conditions.size());
+			for(Condition condition : result.conditions)
 			{
 				clonedConditions.add(condition.clone());
 			}
-			result.conditions=clonedConditions;
+			result.conditions = clonedConditions;
 		}
 		return result;
 	}
@@ -90,20 +92,20 @@ public class Or
 
 	public String toString()
 	{
-		StringBuilder result=new StringBuilder();
-		if(conditions==null || conditions.size()==0)
+		StringBuilder result = new StringBuilder();
+		if(conditions == null || conditions.size() == 0)
 		{
 			result.append("false");
 		}
 		else
 		{
 			result.append("(");
-			boolean first=true;
-			for(Condition condition:conditions)
+			boolean first = true;
+			for(Condition condition : conditions)
 			{
 				if(first)
 				{
-					first=false;
+					first = false;
 				}
 				else
 				{
@@ -118,8 +120,8 @@ public class Or
 
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
 
 		final Or or = (Or) o;
 

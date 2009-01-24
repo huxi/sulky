@@ -17,10 +17,10 @@
  */
 package de.huxhorn.sulky.resources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Stack;
 
@@ -65,7 +65,7 @@ public class PathToolsTest
 		Stack stack = PathTools.getPathStack(path, reduce);
 		String methodCall = "getPathStack(\"" + path + "\", " + reduce + ");";
 		assertEquals(methodCall + " - Number of Stack-Elements", expectedPathElements.length, stack.size());
-		for (int i = 0; i < expectedPathElements.length; i++)
+		for(int i = 0; i < expectedPathElements.length; i++)
 		{
 			assertEquals(methodCall + " - Mismatch at Index #" + i, expectedPathElements[i], stack.elementAt(i));
 		}
@@ -79,7 +79,8 @@ public class PathToolsTest
 	}
 
 	@Test
-	public void resolvePath() throws Exception
+	public void resolvePath()
+		throws Exception
 	{
 		internalResolvePath("", "", "");
 		internalResolvePath("", "foo", "foo");
@@ -96,7 +97,8 @@ public class PathToolsTest
 	}
 
 	@Test
-	public void evaluatePath() throws Exception
+	public void evaluatePath()
+		throws Exception
 	{
 		internalEvaluatePath("", "");
 		internalEvaluatePath("/", "/");
@@ -112,7 +114,8 @@ public class PathToolsTest
 	}
 
 	@Test
-	public void getAbsolutePath() throws Exception
+	public void getAbsolutePath()
+		throws Exception
 	{
 		internalGetAbsolutePath("", "", null);
 		internalGetAbsolutePath("/", "", "/");
@@ -129,7 +132,8 @@ public class PathToolsTest
 	}
 
 	@Test
-	public void getParentPath() throws Exception
+	public void getParentPath()
+		throws Exception
 	{
 		internalGetParentPath("", "..");
 		internalGetParentPath(".", "..");
@@ -144,7 +148,8 @@ public class PathToolsTest
 	}
 
 	@Test
-	public void getCompatiblePath() throws Exception
+	public void getCompatiblePath()
+		throws Exception
 	{
 		internalGetCompatiblePath(".../foo", "../../foo");
 		internalGetCompatiblePath("./foo", "foo");
@@ -153,17 +158,20 @@ public class PathToolsTest
 	}
 
 	@Test
-	public void isDotPattern() throws Exception
+	public void isDotPattern()
+		throws Exception
 	{
 		// TEST: de.huxhorn.sulky.resources.PathTools.isDotPattern(String): testIsDotPattern
-		if (logger.isWarnEnabled())
+		if(logger.isWarnEnabled())
 		{
-			logger.warn("Empty test method for de.huxhorn.sulky.resources.PathTools.isDotPattern(String): testIsDotPattern");
+			logger
+				.warn("Empty test method for de.huxhorn.sulky.resources.PathTools.isDotPattern(String): testIsDotPattern");
 		}
 	}
 
 	@Test
-	public void getPathStack() throws Exception
+	public void getPathStack()
+		throws Exception
 	{
 		internalGetPathStack("", true, new String[]{});
 		internalGetPathStack("/", true, new String[]{"/",});
@@ -176,7 +184,8 @@ public class PathToolsTest
 	}
 
 	@Test
-	public void getPathStackString() throws Exception
+	public void getPathStackString()
+		throws Exception
 	{
 		internalGetPathStackString("", true, "");
 		internalGetPathStackString("/", true, "/");

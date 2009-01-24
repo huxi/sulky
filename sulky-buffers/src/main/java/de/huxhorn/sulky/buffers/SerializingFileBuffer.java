@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,19 +17,26 @@
  */
 package de.huxhorn.sulky.buffers;
 
+import org.apache.commons.io.output.CountingOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.io.output.CountingOutputStream;
 
-import java.util.List;
-import java.util.Iterator;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InvalidClassException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.RandomAccessFile;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.Lock;
-import java.util.zip.GZIPOutputStream;
 import java.util.zip.GZIPInputStream;
-import java.io.*;
+import java.util.zip.GZIPOutputStream;
 
 public class SerializingFileBuffer<E>
 	implements FileBuffer<E>
@@ -57,21 +64,21 @@ public class SerializingFileBuffer<E>
 
 	public SerializingFileBuffer(File serializeFile, File serializeIndexFile)
 	{
-		this.readWriteLock=new ReentrantReadWriteLock(true);
+		this.readWriteLock = new ReentrantReadWriteLock(true);
 		setSerializeFile(serializeFile);
 
-		if(serializeIndexFile==null)
+		if(serializeIndexFile == null)
 		{
-			File parent=serializeFile.getParentFile();
-			String indexName=serializeFile.getName();
-			int dotIndex=indexName.lastIndexOf('.');
+			File parent = serializeFile.getParentFile();
+			String indexName = serializeFile.getName();
+			int dotIndex = indexName.lastIndexOf('.');
 			if(dotIndex > 0)
 			{
 				// remove extension,
-				indexName = indexName.substring(0,dotIndex);
+				indexName = indexName.substring(0, dotIndex);
 			}
-			indexName+=INDEX_EXTENSION;
-			serializeIndexFile=new File(parent, indexName);
+			indexName += INDEX_EXTENSION;
+			serializeIndexFile = new File(parent, indexName);
 		}
 
 		setSerializeIndexFile(serializeIndexFile);
@@ -79,8 +86,8 @@ public class SerializingFileBuffer<E>
 
 	public long getSize()
 	{
-		RandomAccessFile raf=null;
-		Lock lock=readWriteLock.readLock();
+		RandomAccessFile raf = null;
+		Lock lock = readWriteLock.readLock();
 		lock.lock();
 		Throwable throwable;
 		try
@@ -89,12 +96,12 @@ public class SerializingFileBuffer<E>
 			{
 				return 0;
 			}
-			raf=new RandomAccessFile(serializeIndexFile, "r");
+			raf = new RandomAccessFile(serializeIndexFile, "r");
 			return internalGetSize(raf);
 		}
-		catch (Throwable e)
+		catch(Throwable e)
 		{
-			throwable=e;
+			throwable = e;
 		}
 		finally
 		{
@@ -102,7 +109,7 @@ public class SerializingFileBuffer<E>
 			lock.unlock();
 		}
 		// it's a really bad idea to log while locked *sigh*
-		if(throwable!=null)
+		if(throwable != null)
 		{
 			if(logger.isDebugEnabled()) logger.debug("Couldn't retrieve size!", throwable);
 		}
@@ -111,33 +118,33 @@ public class SerializingFileBuffer<E>
 
 	public E get(long index)
 	{
-		RandomAccessFile randomSerializeIndexFile=null;
-		RandomAccessFile randomSerializeFile=null;
-		E result=null;
-		Lock lock=readWriteLock.readLock();
+		RandomAccessFile randomSerializeIndexFile = null;
+		RandomAccessFile randomSerializeFile = null;
+		E result = null;
+		Lock lock = readWriteLock.readLock();
 		lock.lock();
-		Throwable throwable=null;
-		long elementsCount=0;
+		Throwable throwable = null;
+		long elementsCount = 0;
 		try
 		{
 			if(!serializeFile.canRead() && !serializeIndexFile.canRead())
 			{
 				return null;
 			}
-			randomSerializeIndexFile=new RandomAccessFile(serializeIndexFile, "r");
-			randomSerializeFile=new RandomAccessFile(serializeFile, "r");
-			elementsCount=internalGetSize(randomSerializeIndexFile);
-			if(index >= 0 && index<elementsCount)
+			randomSerializeIndexFile = new RandomAccessFile(serializeIndexFile, "r");
+			randomSerializeFile = new RandomAccessFile(serializeFile, "r");
+			elementsCount = internalGetSize(randomSerializeIndexFile);
+			if(index >= 0 && index < elementsCount)
 			{
-				long offset=internalOffsetOfElement(randomSerializeIndexFile,index);
-				result=internalReadElement(randomSerializeFile, offset);
+				long offset = internalOffsetOfElement(randomSerializeIndexFile, index);
+				result = internalReadElement(randomSerializeFile, offset);
 
 				return result;
 			}
 		}
 		catch(Throwable e)
 		{
-			throwable=e;
+			throwable = e;
 		}
 		finally
 		{
@@ -147,28 +154,31 @@ public class SerializingFileBuffer<E>
 		}
 
 		// it's a really bad idea to log while locked *sigh*
-		if(throwable!=null)
+		if(throwable != null)
 		{
 			if(logger.isWarnEnabled())
 			{
 				if(throwable instanceof ClassNotFoundException
 					|| throwable instanceof InvalidClassException)
 				{
-					logger.warn("Couldn't deserialize object at index "+index+"!\n"+throwable);
+					logger.warn("Couldn't deserialize object at index " + index + "!\n" + throwable);
 				}
-				else if (throwable instanceof ClassCastException)
+				else if(throwable instanceof ClassCastException)
 				{
-					logger.warn("Couldn't cast deserialized object at index "+index+"!\n"+throwable);
+					logger.warn("Couldn't cast deserialized object at index " + index + "!\n" + throwable);
 				}
 				else
 				{
-					logger.warn("Couldn't retrieve element at index "+index+"!", throwable);
+					logger.warn("Couldn't retrieve element at index " + index + "!", throwable);
 				}
 			}
 		}
-		else if(index < 0 || index>=elementsCount)
+		else if(index < 0 || index >= elementsCount)
 		{
-			if(logger.isInfoEnabled()) logger.info("index ("+index+") must be in the range [0..<"+elementsCount+"]. Returning null.");
+			if(logger.isInfoEnabled())
+			{
+				logger.info("index (" + index + ") must be in the range [0..<" + elementsCount + "]. Returning null.");
+			}
 			return null;
 		}
 
@@ -177,30 +187,30 @@ public class SerializingFileBuffer<E>
 
 	public void add(E element)
 	{
-		RandomAccessFile randomSerializeIndexFile=null;
-		RandomAccessFile randomSerializeFile=null;
-		Lock lock=readWriteLock.writeLock();
+		RandomAccessFile randomSerializeIndexFile = null;
+		RandomAccessFile randomSerializeFile = null;
+		Lock lock = readWriteLock.writeLock();
 		lock.lock();
-		Throwable throwable=null;
+		Throwable throwable = null;
 		try
 		{
-			randomSerializeIndexFile=new RandomAccessFile(serializeIndexFile, "rw");
-			randomSerializeFile=new RandomAccessFile(serializeFile, "rw");
-			long elementsCount=internalGetSize(randomSerializeIndexFile);
+			randomSerializeIndexFile = new RandomAccessFile(serializeIndexFile, "rw");
+			randomSerializeFile = new RandomAccessFile(serializeFile, "rw");
+			long elementsCount = internalGetSize(randomSerializeIndexFile);
 
-			long offset=0;
-			if(elementsCount>0)
+			long offset = 0;
+			if(elementsCount > 0)
 			{
-				long prevElement=elementsCount-1;
-				offset=internalOffsetOfElement(randomSerializeIndexFile, prevElement);
-				offset=offset+internalReadElementSize(randomSerializeFile, offset)+4;
+				long prevElement = elementsCount - 1;
+				offset = internalOffsetOfElement(randomSerializeIndexFile, prevElement);
+				offset = offset + internalReadElementSize(randomSerializeFile, offset) + 4;
 			}
 			internalWriteElement(randomSerializeFile, offset, element);
 			internalWriteOffset(randomSerializeIndexFile, elementsCount, offset);
 		}
-		catch (IOException e)
+		catch(IOException e)
 		{
-			throwable=e;
+			throwable = e;
 		}
 		finally
 		{
@@ -208,7 +218,7 @@ public class SerializingFileBuffer<E>
 			closeQuietly(randomSerializeIndexFile);
 			lock.unlock();
 		}
-		if(throwable!=null)
+		if(throwable != null)
 		{
 			// it's a really bad idea to log while locked *sigh*
 			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
@@ -218,50 +228,50 @@ public class SerializingFileBuffer<E>
 
 	public void addAll(List<E> elements)
 	{
-		if(elements!=null)
+		if(elements != null)
 		{
-			int newElementCount=elements.size();
-			if(newElementCount>0)
+			int newElementCount = elements.size();
+			if(newElementCount > 0)
 			{
-				RandomAccessFile randomSerializeIndexFile=null;
-				RandomAccessFile randomSerializeFile=null;
-				Lock lock=readWriteLock.writeLock();
+				RandomAccessFile randomSerializeIndexFile = null;
+				RandomAccessFile randomSerializeFile = null;
+				Lock lock = readWriteLock.writeLock();
 				lock.lock();
-				Throwable throwable=null;
+				Throwable throwable = null;
 				try
 				{
-					randomSerializeIndexFile=new RandomAccessFile(serializeIndexFile, "rw");
-					randomSerializeFile=new RandomAccessFile(serializeFile, "rw");
+					randomSerializeIndexFile = new RandomAccessFile(serializeIndexFile, "rw");
+					randomSerializeFile = new RandomAccessFile(serializeFile, "rw");
 
-					long elementsCount=internalGetSize(randomSerializeIndexFile);
+					long elementsCount = internalGetSize(randomSerializeIndexFile);
 
-					long offset=0;
-					if(elementsCount>0)
+					long offset = 0;
+					if(elementsCount > 0)
 					{
-						long prevElement=elementsCount-1;
-						offset=internalOffsetOfElement(randomSerializeIndexFile, prevElement);
-						offset=offset+internalReadElementSize(randomSerializeFile, offset)+4;
+						long prevElement = elementsCount - 1;
+						offset = internalOffsetOfElement(randomSerializeIndexFile, prevElement);
+						offset = offset + internalReadElementSize(randomSerializeFile, offset) + 4;
 					}
-					long[] offsets=new long[elements.size()];
-					int index=0;
-					for(E element:elements)
+					long[] offsets = new long[elements.size()];
+					int index = 0;
+					for(E element : elements)
 					{
-						offsets[index]=offset;
-						offset=offset+internalWriteElement(randomSerializeFile, offset, element)+4;
+						offsets[index] = offset;
+						offset = offset + internalWriteElement(randomSerializeFile, offset, element) + 4;
 						index++;
 					}
 
-					index=0;
-					for(long curOffset:offsets)
+					index = 0;
+					for(long curOffset : offsets)
 					{
-						internalWriteOffset(randomSerializeIndexFile, elementsCount+index, curOffset);
+						internalWriteOffset(randomSerializeIndexFile, elementsCount + index, curOffset);
 						index++;
 					}
 					//if(logger.isInfoEnabled()) logger.info("Elements after batch-write: {}", index+elementsCount);
 				}
-				catch (Throwable e)
+				catch(Throwable e)
 				{
-					throwable=e;
+					throwable = e;
 				}
 				finally
 				{
@@ -269,7 +279,7 @@ public class SerializingFileBuffer<E>
 					closeQuietly(randomSerializeIndexFile);
 					lock.unlock();
 				}
-				if(throwable!=null)
+				if(throwable != null)
 				{
 					// it's a really bad idea to log while locked *sigh*
 					if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
@@ -287,7 +297,7 @@ public class SerializingFileBuffer<E>
 
 	public void reset()
 	{
-		Lock lock=readWriteLock.writeLock();
+		Lock lock = readWriteLock.writeLock();
 		lock.lock();
 		try
 		{
@@ -301,7 +311,6 @@ public class SerializingFileBuffer<E>
 	}
 
 	/**
-	 *
 	 * @return will always return false, i.e. it does not check for diskspace!
 	 */
 	public boolean isFull()
@@ -318,26 +327,26 @@ public class SerializingFileBuffer<E>
 	{
 		final Logger logger = LoggerFactory.getLogger(SerializingFileBuffer.class);
 
-		if(raf!=null)
+		if(raf != null)
 		{
 			try
 			{
 				raf.close();
 			}
-			catch (IOException e)
+			catch(IOException e)
 			{
-				if(logger.isDebugEnabled()) logger.debug("Close on random access file threw exception!",e);
+				if(logger.isDebugEnabled()) logger.debug("Close on random access file threw exception!", e);
 			}
 		}
 	}
 
 	private long internalOffsetOfElement(RandomAccessFile randomSerializeIndexFile, long index)
-			throws IOException
+		throws IOException
 	{
-		long offsetOffset=8*index;
-		if(randomSerializeIndexFile.length()<offsetOffset+8)
+		long offsetOffset = 8 * index;
+		if(randomSerializeIndexFile.length() < offsetOffset + 8)
 		{
-			throw new IndexOutOfBoundsException("Invalid index: "+index+"!");
+			throw new IndexOutOfBoundsException("Invalid index: " + index + "!");
 		}
 		randomSerializeIndexFile.seek(offsetOffset);
 		//if(logger.isDebugEnabled()) logger.debug("Offset of element {}: {}", index, result);
@@ -345,54 +354,54 @@ public class SerializingFileBuffer<E>
 	}
 
 	private long internalGetSize(RandomAccessFile randomSerializeIndexFile)
-			throws IOException
+		throws IOException
 	{
 		//if(logger.isDebugEnabled()) logger.debug("size={}", result);
-		return randomSerializeIndexFile.length()/8;
+		return randomSerializeIndexFile.length() / 8;
 	}
 
 	private E internalReadElement(RandomAccessFile randomSerializeFile, long offset)
-			throws IOException, ClassNotFoundException, ClassCastException
+		throws IOException, ClassNotFoundException, ClassCastException
 	{
-		if(randomSerializeFile.length()<offset+4)
+		if(randomSerializeFile.length() < offset + 4)
 		{
-			throw new IndexOutOfBoundsException("Invalid offset: "+offset+"! Couldn't read length of data!");
+			throw new IndexOutOfBoundsException("Invalid offset: " + offset + "! Couldn't read length of data!");
 		}
 		randomSerializeFile.seek(offset);
-		int bufferSize=randomSerializeFile.readInt();
-		if(randomSerializeFile.length()<offset+4+bufferSize)
+		int bufferSize = randomSerializeFile.readInt();
+		if(randomSerializeFile.length() < offset + 4 + bufferSize)
 		{
-			throw new IndexOutOfBoundsException("Invalid length ("+bufferSize+") at offset: "+offset+"!");
+			throw new IndexOutOfBoundsException("Invalid length (" + bufferSize + ") at offset: " + offset + "!");
 		}
-		byte[] buffer=new byte[bufferSize];
+		byte[] buffer = new byte[bufferSize];
 		randomSerializeFile.readFully(buffer);
 		ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
-		GZIPInputStream gis=new GZIPInputStream(bis);
-		ObjectInputStream ois=new ObjectInputStream(gis);
+		GZIPInputStream gis = new GZIPInputStream(bis);
+		ObjectInputStream ois = new ObjectInputStream(gis);
 		//if(logger.isDebugEnabled()) logger.debug("Read element from offset {}.", offset);
 		//noinspection unchecked
 		return (E) ois.readObject();
 	}
 
 	private void internalWriteOffset(RandomAccessFile randomSerializeIndexFile, long index, long offset)
-			throws IOException
+		throws IOException
 	{
-		long offsetOffset=8*index;
-		if(randomSerializeIndexFile.length()<offsetOffset)
+		long offsetOffset = 8 * index;
+		if(randomSerializeIndexFile.length() < offsetOffset)
 		{
-			throw new IOException("Invalid offsetOffset "+offsetOffset+"!");
+			throw new IOException("Invalid offsetOffset " + offsetOffset + "!");
 		}
 		randomSerializeIndexFile.seek(offsetOffset);
 		randomSerializeIndexFile.writeLong(offset);
 	}
 
 	private int internalWriteElement(RandomAccessFile randomSerializeFile, long offset, E element)
-			throws IOException
+		throws IOException
 	{
-		ByteArrayOutputStream bos= new ByteArrayOutputStream();
-		GZIPOutputStream gos=new GZIPOutputStream(bos);
-		CountingOutputStream cos=new CountingOutputStream(gos);
-		ObjectOutputStream out=new ObjectOutputStream(cos);
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		GZIPOutputStream gos = new GZIPOutputStream(bos);
+		CountingOutputStream cos = new CountingOutputStream(gos);
+		ObjectOutputStream out = new ObjectOutputStream(cos);
 		out.writeObject(element);
 		out.flush();
 		out.close();
@@ -400,7 +409,7 @@ public class SerializingFileBuffer<E>
 		byte[] buffer = bos.toByteArray();
 		//int uncompressed=cos.getCount();
 
-		int bufferSize=buffer.length;
+		int bufferSize = buffer.length;
 		/*
 		if(logger.isDebugEnabled())
 		{
@@ -416,7 +425,7 @@ public class SerializingFileBuffer<E>
 	}
 
 	private long internalReadElementSize(RandomAccessFile randomSerializeFile, long offset)
-			throws IOException
+		throws IOException
 	{
 		randomSerializeFile.seek(offset);
 		return randomSerializeFile.readInt();
@@ -426,29 +435,29 @@ public class SerializingFileBuffer<E>
 	{
 		prepareFile(serializeFile);
 //		if(logger.isDebugEnabled()) logger.debug("serializeFile="+serializeFile.getAbsolutePath());
-		this.serializeFile=serializeFile;
+		this.serializeFile = serializeFile;
 	}
 
 	private void setSerializeIndexFile(File serializeIndexFile)
 	{
 		prepareFile(serializeIndexFile);
 		//if(logger.isDebugEnabled()) logger.debug("serializeIndexFile="+serializeIndexFile.getAbsolutePath());
-		this.serializeIndexFile=serializeIndexFile;
+		this.serializeIndexFile = serializeIndexFile;
 	}
 
 	private void prepareFile(File file)
 	{
-		File parent=file.getParentFile();
-		if(parent!=null)
+		File parent = file.getParentFile();
+		if(parent != null)
 		{
 			parent.mkdirs();
 			if(!parent.isDirectory())
 			{
-				throw new IllegalArgumentException(parent.getAbsolutePath()+" is not a directory!");
+				throw new IllegalArgumentException(parent.getAbsolutePath() + " is not a directory!");
 			}
 			if(file.isFile() && !file.canWrite())
 			{
-				throw new IllegalArgumentException(file.getAbsolutePath()+" is not writable!");
+				throw new IllegalArgumentException(file.getAbsolutePath() + " is not writable!");
 			}
 		}
 	}

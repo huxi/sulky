@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,15 +19,15 @@ package de.huxhorn.sulky.buffers;
 
 import de.huxhorn.sulky.conditions.Condition;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 public class FilteringBuffer<E>
-	implements Buffer<E>,DisposeOperation
+	implements Buffer<E>, DisposeOperation
 {
 	private Buffer<E> sourceBuffer;
 	private Condition condition;
@@ -40,15 +40,15 @@ public class FilteringBuffer<E>
 		this.condition = condition;
 		this.filteredIndices = new ArrayList<Long>();
 		this.disposed = false;
-		Thread t=new Thread(new FilterUpdateRunnable(1000));
+		Thread t = new Thread(new FilterUpdateRunnable(1000));
 		t.setDaemon(true);
 		t.start();
 	}
 
 	public E get(long index)
 	{
-		long realIndex=getSourceIndex(index);
-		if(realIndex>=0)
+		long realIndex = getSourceIndex(index);
+		if(realIndex >= 0)
 		{
 			return sourceBuffer.get(realIndex);
 		}
@@ -57,12 +57,12 @@ public class FilteringBuffer<E>
 
 	public long getSourceIndex(long index)
 	{
-		long realIndex=-1;
+		long realIndex = -1;
 		synchronized(filteredIndices)
 		{
-			if(index>=0 && index<filteredIndices.size())
+			if(index >= 0 && index < filteredIndices.size())
 			{
-				realIndex=filteredIndices.get((int) index);
+				realIndex = filteredIndices.get((int) index);
 			}
 		}
 		return realIndex;
@@ -93,7 +93,7 @@ public class FilteringBuffer<E>
 
 	public synchronized void dispose()
 	{
-		this.disposed =true;
+		this.disposed = true;
 	}
 
 	public boolean isDisposed()
@@ -111,12 +111,12 @@ public class FilteringBuffer<E>
 
 		public FilterUpdateRunnable(int filterDelay)
 		{
-			this.filterDelay=filterDelay;
+			this.filterDelay = filterDelay;
 		}
 
 		public void run()
 		{
-			for(;;)
+			for(; ;)
 			{
 				if(disposed)
 				{
@@ -124,28 +124,28 @@ public class FilteringBuffer<E>
 				}
 				long currentSize = sourceBuffer.getSize();
 				long filterStartIndex = lastFilteredElement;
-				if(currentSize<lastFilteredElement)
+				if(currentSize < lastFilteredElement)
 				{
-					filterStartIndex=0;
+					filterStartIndex = 0;
 					synchronized(filteredIndices)
 					{
 						filteredIndices.clear();
 					}
 				}
 
-				if(currentSize != lastFilteredElement+1)
+				if(currentSize != lastFilteredElement + 1)
 				{
 					//List<Long> newIndices=new ArrayList<Long>();
-					for(long i=filterStartIndex;i<currentSize;i++)
+					for(long i = filterStartIndex; i < currentSize; i++)
 					{
 						if(disposed)
 						{
 							break;
 						}
-						E current=sourceBuffer.get(i);
-						if(current!=null)
+						E current = sourceBuffer.get(i);
+						if(current != null)
 						{
-							if(condition!=null && condition.isTrue(current))
+							if(condition != null && condition.isTrue(current))
 							{
 								synchronized(filteredIndices)
 								{
@@ -154,7 +154,7 @@ public class FilteringBuffer<E>
 								}
 							}
 						}
-						lastFilteredElement=i;
+						lastFilteredElement = i;
 					}
 					//if(logger.isInfoEnabled()) logger.info("Added {} indices.", newIndices.size());
 				}
@@ -162,7 +162,7 @@ public class FilteringBuffer<E>
 				{
 					Thread.sleep(filterDelay);
 				}
-				catch (InterruptedException e)
+				catch(InterruptedException e)
 				{
 					if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 					return;

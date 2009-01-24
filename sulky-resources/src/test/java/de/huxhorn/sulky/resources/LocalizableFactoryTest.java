@@ -18,11 +18,12 @@
 package de.huxhorn.sulky.resources;
 
 import de.huxhorn.sulky.resources.junit.Foobar;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 import java.util.Locale;
 
@@ -34,7 +35,7 @@ public class LocalizableFactoryTest
 	{
 		Localizable result = LocalizableFactory.getLocalizable(originalObject);
 		if(logger.isDebugEnabled()) logger.debug("Localizable for original object {}: {}", originalObject, result);
-		if (proxy)
+		if(proxy)
 		{
 			Class c = result.getClass();
 			String name = c.getName();
@@ -48,7 +49,8 @@ public class LocalizableFactoryTest
 	}
 
 	@Test
-	public void getLocalizable() throws Exception
+	public void getLocalizable()
+		throws Exception
 	{
 		Locale locale = new Locale("de_DE");
 		Localizable loc;

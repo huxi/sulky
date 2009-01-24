@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,12 +17,13 @@
  */
 package de.huxhorn.sulky.io;
 
-import java.io.OutputStream;
 import java.io.IOException;
-import java.util.concurrent.atomic.AtomicLong;
+import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
-public class TimeoutOutputStream extends OutputStream
+public class TimeoutOutputStream
+	extends OutputStream
 {
 	private final OutputStream stream;
 	private int timeout;
@@ -34,34 +35,35 @@ public class TimeoutOutputStream extends OutputStream
 
 	public TimeoutOutputStream(OutputStream stream, int timeout)
 	{
-		watchdogThreadRunning=new AtomicBoolean(false);
-		if(stream==null)
+		watchdogThreadRunning = new AtomicBoolean(false);
+		if(stream == null)
 		{
 			throw new NullPointerException("stream must not be null!");
 		}
-		if(timeout<=0)
+		if(timeout <= 0)
 		{
 			throw new IllegalArgumentException("timeout must be a positive value!");
 		}
 		this.stream = stream;
 		this.timeout = timeout;
-		operationStartTime=new AtomicLong(-1);
-		closed=new AtomicBoolean(false);
+		operationStartTime = new AtomicLong(-1);
+		closed = new AtomicBoolean(false);
 
-		Runnable timeoutRunnable=new TimeoutRunnable();
-		watchdogThread =new Thread(timeoutRunnable, "TimeoutOutputStream Watchdog-Thread");
+		Runnable timeoutRunnable = new TimeoutRunnable();
+		watchdogThread = new Thread(timeoutRunnable, "TimeoutOutputStream Watchdog-Thread");
 		watchdogThread.start();
-        try
-        {
-            Thread.sleep(10); // give the watchdog thread a chance to start...
-        }
-        catch (InterruptedException e)
-        {
-            // ignore
-        }
-    }
+		try
+		{
+			Thread.sleep(10); // give the watchdog thread a chance to start...
+		}
+		catch(InterruptedException e)
+		{
+			// ignore
+		}
+	}
 
-	public void write(byte b[]) throws IOException
+	public void write(byte b[])
+		throws IOException
 	{
 		try
 		{
@@ -81,7 +83,8 @@ public class TimeoutOutputStream extends OutputStream
 		}
 	}
 
-	public void write(byte b[], int off, int len) throws IOException
+	public void write(byte b[], int off, int len)
+		throws IOException
 	{
 		try
 		{
@@ -101,7 +104,8 @@ public class TimeoutOutputStream extends OutputStream
 		}
 	}
 
-	public void write(int b) throws IOException
+	public void write(int b)
+		throws IOException
 	{
 		try
 		{
@@ -121,7 +125,8 @@ public class TimeoutOutputStream extends OutputStream
 		}
 	}
 
-	public void flush() throws IOException
+	public void flush()
+		throws IOException
 	{
 		try
 		{
@@ -141,7 +146,8 @@ public class TimeoutOutputStream extends OutputStream
 		}
 	}
 
-	public void close() throws IOException
+	public void close()
+		throws IOException
 	{
 		internalClose();
 	}
@@ -151,7 +157,8 @@ public class TimeoutOutputStream extends OutputStream
 		return closed.get();
 	}
 
-	private void internalClose() throws IOException
+	private void internalClose()
+		throws IOException
 	{
 		if(!closed.get())
 		{
@@ -162,10 +169,10 @@ public class TimeoutOutputStream extends OutputStream
 			}
 			finally
 			{
-				if(watchdogThread!=null)
+				if(watchdogThread != null)
 				{
 					watchdogThread.interrupt();
-					watchdogThread=null;
+					watchdogThread = null;
 				}
 			}
 		}
@@ -184,7 +191,7 @@ public class TimeoutOutputStream extends OutputStream
 			watchdogThreadRunning.set(true);
 			try
 			{
-				for (; ;)
+				for(; ;)
 				{
 					if(closed.get())
 					{
@@ -192,11 +199,11 @@ public class TimeoutOutputStream extends OutputStream
 						break;
 					}
 					long start = operationStartTime.get();
-					if (start >= 0)
+					if(start >= 0)
 					{
 						long since = System.currentTimeMillis() - start;
 
-						if (since > timeout)
+						if(since > timeout)
 						{
 							//if(logger.isInfoEnabled()) logger.info("Timeout detected! Exiting run()-loop.");
 							internalClose();
@@ -213,11 +220,11 @@ public class TimeoutOutputStream extends OutputStream
 					}
 				}
 			}
-			catch (IOException e)
+			catch(IOException e)
 			{
 				//if(logger.isWarnEnabled()) logger.warn("Exception while closing stream.", e);
 			}
-			catch (InterruptedException e)
+			catch(InterruptedException e)
 			{
 				//if(logger.isInfoEnabled()) logger.info("Interrupted....", e);
 			}

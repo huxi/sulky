@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,7 +20,6 @@ package de.huxhorn.sulky.conditions;
 /**
  * This class can be used as an alias for other, potentially complex, conditions.
  * Returns true if the contained condition returns true.
- *
  */
 public class NamedCondition
 	implements ConditionWrapper
@@ -52,7 +51,7 @@ public class NamedCondition
 
 	/**
 	 * Returns true if the contained condition returns true.
-	 *
+	 * <p/>
 	 * This implies that it returns false if the contained condition is null.
 	 *
 	 * @param element
@@ -60,37 +59,38 @@ public class NamedCondition
 	 */
 	public boolean isTrue(Object element)
 	{
-		if(condition!=null)
+		if(condition != null)
 		{
 			return condition.isTrue(element);
 		}
 		return false;
 	}
 
-	public NamedCondition clone() throws CloneNotSupportedException
+	public NamedCondition clone()
+		throws CloneNotSupportedException
 	{
-		NamedCondition result=(NamedCondition)super.clone();
-		if(result.condition!= null)
+		NamedCondition result = (NamedCondition) super.clone();
+		if(result.condition != null)
 		{
-			result.condition=result.condition.clone();
+			result.condition = result.condition.clone();
 		}
 		return result;
 	}
 
 	public String toString()
 	{
-		return "["+name+"]";
+		return "[" + name + "]";
 	}
 
 	// TODO: decide if equals/hashCode should probably only take the name into account.
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
 
 		final NamedCondition that = (NamedCondition) o;
 
-		if (condition != null ? !condition.equals(that.condition) : that.condition != null) return false;
+		if(condition != null ? !condition.equals(that.condition) : that.condition != null) return false;
 		return !(name != null ? !name.equals(that.name) : that.name != null);
 	}
 

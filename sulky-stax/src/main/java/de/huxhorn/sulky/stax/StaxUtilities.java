@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,13 +19,14 @@ package de.huxhorn.sulky.stax;
 
 import org.slf4j.Logger;
 
+import java.util.Iterator;
+
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import java.util.Iterator;
 
 public class StaxUtilities
 {
@@ -36,13 +37,14 @@ public class StaxUtilities
 
 	public static final String CDATA_END = "]]>";
 
-	public static final String XML_SCHEMA_INSTANCE_NAMESPACE_URI ="http://www.w3.org/2001/XMLSchema-instance";
-	public static final String XML_SCHEMA_INSTANCE_PREFIX="xsi";
-	public static final String XML_SCHEMA_INSTANCE_SCHEMA_LOCATION_ATTRIBUTE="schemaLocation";
+	public static final String XML_SCHEMA_INSTANCE_NAMESPACE_URI = "http://www.w3.org/2001/XMLSchema-instance";
+	public static final String XML_SCHEMA_INSTANCE_PREFIX = "xsi";
+	public static final String XML_SCHEMA_INSTANCE_SCHEMA_LOCATION_ATTRIBUTE = "schemaLocation";
 	public static final String NO_PREFIX = "";
 
 	/**
 	 * Shortcut for readSimpleTextNodeIfAvailable(reader, namespaceURI, nodeName, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE).
+	 *
 	 * @param reader
 	 * @param namespaceURI
 	 * @param nodeName
@@ -50,22 +52,22 @@ public class StaxUtilities
 	 * @throws XMLStreamException
 	 */
 	public static String readSimpleTextNodeIfAvailable(XMLStreamReader reader, String namespaceURI, String nodeName)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		return readSimpleTextNodeIfAvailable(reader, namespaceURI, nodeName, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE);
 	}
 
 	public static String readSimpleTextNodeIfAvailable(XMLStreamReader reader, String namespaceURI, String nodeName, WhiteSpaceHandling whiteSpace)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		int type = reader.getEventType();
-		String result=null;
+		String result = null;
 		if(XMLStreamConstants.START_ELEMENT == type && nodeName.equals(reader.getLocalName()))
 		{
-			if((namespaceURI==null && reader.getNamespaceURI()==null)
-				|| (namespaceURI!=null && namespaceURI.equals(reader.getNamespaceURI())))
+			if((namespaceURI == null && reader.getNamespaceURI() == null)
+				|| (namespaceURI != null && namespaceURI.equals(reader.getNamespaceURI())))
 			{
-				result=readText(reader, whiteSpace);
+				result = readText(reader, whiteSpace);
 				reader.nextTag();
 			}
 		}
@@ -80,16 +82,16 @@ public class StaxUtilities
 	 * @throws XMLStreamException
 	 */
 	public static String readText(XMLStreamReader reader)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		return readText(reader, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE);
 	}
 
 	public static String readText(XMLStreamReader reader, WhiteSpaceHandling whiteSpace)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		String result = reader.getElementText();
-		result=processWhiteSpace(result, whiteSpace);
+		result = processWhiteSpace(result, whiteSpace);
 		//reader.nextTag();
 		return result;
 	}
@@ -127,25 +129,25 @@ public class StaxUtilities
 		{
 			return null;
 		}
-		String replaced=replaceWhiteSpace(string);
+		String replaced = replaceWhiteSpace(string);
 		char[] chars = replaced.toCharArray();
-		StringBuilder result=new StringBuilder(replaced.length());
-		boolean needSpace=false;
+		StringBuilder result = new StringBuilder(replaced.length());
+		boolean needSpace = false;
 		for(char c : chars)
 		{
 			if(c == SPACE)
 			{
-				if(result.length()!=0)
+				if(result.length() != 0)
 				{
 					// we are not at the start anymore
-					needSpace=true;
+					needSpace = true;
 				}
 			}
 			else
 			{
 				if(needSpace)
 				{
-					needSpace=false;
+					needSpace = false;
 					result.append(SPACE);
 				}
 				result.append(c);
@@ -166,10 +168,10 @@ public class StaxUtilities
 		{
 			return null;
 		}
-		StringBuilder result=new StringBuilder(string);
-		for(int i=0;i<result.length();i++)
+		StringBuilder result = new StringBuilder(string);
+		for(int i = 0; i < result.length(); i++)
 		{
-			char c=result.charAt(i);
+			char c = result.charAt(i);
 			if(c == TAB || c == CARRIAGE_RETURN || c == LINE_FEED)
 			{
 				result.setCharAt(i, SPACE);
@@ -188,18 +190,19 @@ public class StaxUtilities
 
 	public static String readAttributeValue(XMLStreamReader reader, String namespaceURI, String name, WhiteSpaceHandling whiteSpace)
 	{
-		String attributeValue=reader.getAttributeValue(namespaceURI, name);
-		if(attributeValue==null)
+		String attributeValue = reader.getAttributeValue(namespaceURI, name);
+		if(attributeValue == null)
 		{
 			// this actually seems to be ok... attributes are unique
-			attributeValue=reader.getAttributeValue(null, name);
+			attributeValue = reader.getAttributeValue(null, name);
 		}
 		return processWhiteSpace(attributeValue, whiteSpace);
 	}
 
-	public static void writeNamespace(XMLStreamWriter writer, String prefix, String namespaceURI) throws XMLStreamException
+	public static void writeNamespace(XMLStreamWriter writer, String prefix, String namespaceURI)
+		throws XMLStreamException
 	{
-		if(prefix==null || NO_PREFIX.equals(prefix))
+		if(prefix == null || NO_PREFIX.equals(prefix))
 		{
 			writer.writeDefaultNamespace(namespaceURI);
 		}
@@ -209,16 +212,17 @@ public class StaxUtilities
 		}
 	}
 
-	public static NamespaceInfo setNamespace(XMLStreamWriter writer, String prefix, String namespaceURI, String defaultPrefix) throws XMLStreamException
+	public static NamespaceInfo setNamespace(XMLStreamWriter writer, String prefix, String namespaceURI, String defaultPrefix)
+		throws XMLStreamException
 	{
 		String p = writer.getPrefix(namespaceURI);
-		if(p==null)
+		if(p == null)
 		{
 			// not defined yet
 			NamespaceContext nsc = writer.getNamespaceContext();
-			if(prefix==null || NO_PREFIX.equals(prefix))
+			if(prefix == null || NO_PREFIX.equals(prefix))
 			{
-				String defaultNamespaceURI=nsc.getNamespaceURI(NO_PREFIX);
+				String defaultNamespaceURI = nsc.getNamespaceURI(NO_PREFIX);
 				if(defaultNamespaceURI == null || XMLConstants.NULL_NS_URI.equals(defaultNamespaceURI))
 				{
 					// no defaultNS yet.
@@ -236,26 +240,27 @@ public class StaxUtilities
 		{
 			if(NO_PREFIX.equals(p))
 			{
-				p=null;
+				p = null;
 			}
 			return new NamespaceInfo(p, false);
 		}
 	}
 
-	private static NamespaceInfo resolveNamespacePrefix(XMLStreamWriter writer, NamespaceContext nsc, String prefix, String namespaceURI) throws XMLStreamException
+	private static NamespaceInfo resolveNamespacePrefix(XMLStreamWriter writer, NamespaceContext nsc, String prefix, String namespaceURI)
+		throws XMLStreamException
 	{
-		int counter=1;
-		String prefixCandidate=prefix;
-		for(;;)
+		int counter = 1;
+		String prefixCandidate = prefix;
+		for(; ;)
 		{
-			String ns=nsc.getNamespaceURI(prefixCandidate);
+			String ns = nsc.getNamespaceURI(prefixCandidate);
 			if(!XMLConstants.NULL_NS_URI.equals(ns))
 			{
 				writer.setPrefix(prefixCandidate, namespaceURI);
 				return new NamespaceInfo(prefixCandidate, true);
 			}
 			counter++;
-			prefixCandidate=prefix +counter;
+			prefixCandidate = prefix + counter;
 		}
 	}
 
@@ -291,9 +296,9 @@ public class StaxUtilities
 	 * @throws XMLStreamException
 	 */
 	public static void writeStartElement(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
-		if(namespaceURI!=null)
+		if(namespaceURI != null)
 		{
 			if(prefix != null && !NO_PREFIX.equals(prefix))
 			{
@@ -311,11 +316,11 @@ public class StaxUtilities
 	}
 
 	public static void writeEmptyElement(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
-		if(namespaceURI!=null)
+		if(namespaceURI != null)
 		{
-			if(prefix!=null && !NO_PREFIX.equals(prefix))
+			if(prefix != null && !NO_PREFIX.equals(prefix))
 			{
 				writer.writeEmptyElement(prefix, nodeName, namespaceURI);
 			}
@@ -341,18 +346,18 @@ public class StaxUtilities
 	 * @throws XMLStreamException
 	 */
 	public static void writeAttribute(XMLStreamWriter writer, boolean qualified, String prefix, String namespaceURI, String name, String value)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		writeAttribute(writer, qualified, prefix, namespaceURI, name, value, WhiteSpaceHandling.COLLAPSE);
 	}
 
 	public static void writeAttribute(XMLStreamWriter writer, boolean qualified, String prefix, String namespaceURI, String name, String value, WhiteSpaceHandling whiteSpace)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
-		value=processWhiteSpace(value,whiteSpace);
-		if(qualified && namespaceURI!=null)
+		value = processWhiteSpace(value, whiteSpace);
+		if(qualified && namespaceURI != null)
 		{
-			if(prefix==null && !NO_PREFIX.equals(prefix))
+			if(prefix == null && !NO_PREFIX.equals(prefix))
 			{
 				writer.writeAttribute(namespaceURI, name, value);
 			}
@@ -369,6 +374,7 @@ public class StaxUtilities
 
 	/**
 	 * Shortcut for writeAttributeIfNotNull(writer, prefix, namespaceURI, name, value, WhiteSpaceHandling.COLLAPSE).
+	 *
 	 * @param writer
 	 * @param prefix
 	 * @param namespaceURI
@@ -377,15 +383,15 @@ public class StaxUtilities
 	 * @throws XMLStreamException
 	 */
 	public static void writeAttributeIfNotNull(XMLStreamWriter writer, boolean qualified, String prefix, String namespaceURI, String name, String value)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		writeAttributeIfNotNull(writer, qualified, prefix, namespaceURI, name, value, WhiteSpaceHandling.COLLAPSE);
 	}
 
 	public static void writeAttributeIfNotNull(XMLStreamWriter writer, boolean qualified, String prefix, String namespaceURI, String name, String value, WhiteSpaceHandling whiteSpace)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
-		if(value !=null)
+		if(value != null)
 		{
 			writeAttribute(writer, qualified, prefix, namespaceURI, name, value, whiteSpace);
 		}
@@ -393,79 +399,80 @@ public class StaxUtilities
 
 	/**
 	 * Normalizes the newlines of the string.
-	 *
+	 * <p/>
 	 * Replaces "\r\n", "\n\r" and "\r" with a single "\n".
+	 *
 	 * @param input
 	 * @return a string with cleaned up newlines, i.e. only \n, no \r.
 	 */
 	public static String normalizeNewlines(String input)
 	{
-		String result=input;
-		if(input!=null)
+		String result = input;
+		if(input != null)
 		{
-			char[] chars=input.toCharArray();
-			final int length=chars.length;
+			char[] chars = input.toCharArray();
+			final int length = chars.length;
 
 			int startWritePos = 0;
 
-			StringBuilder resultBuffer=null;
+			StringBuilder resultBuffer = null;
 
-			char previousChar=0;
-			for (int index = 0; index < length; index++)
+			char previousChar = 0;
+			for(int index = 0; index < length; index++)
 			{
 				char ch = chars[index];
 				switch(ch)
 				{
 					case '\r':
-						if(resultBuffer==null)
+						if(resultBuffer == null)
 						{
-							resultBuffer=new StringBuilder();
+							resultBuffer = new StringBuilder();
 						}
 						resultBuffer.append(chars, startWritePos, index - startWritePos);
-						if(previousChar!='\n')
+						if(previousChar != '\n')
 						{
 							resultBuffer.append("\n");
-							previousChar=ch;
+							previousChar = ch;
 						}
 						else
 						{
 							// reset so only pairs are ignored
-							previousChar=0;
+							previousChar = 0;
 						}
 						startWritePos = index + 1;
 						break;
 
 					case '\n':
-						if(resultBuffer==null)
+						if(resultBuffer == null)
 						{
-							resultBuffer=new StringBuilder();
+							resultBuffer = new StringBuilder();
 						}
 						resultBuffer.append(chars, startWritePos, index - startWritePos);
-						if(previousChar!='\r')
+						if(previousChar != '\r')
 						{
 							resultBuffer.append("\n");
-							previousChar=ch;
+							previousChar = ch;
 						}
 						else
 						{
 							// reset so only pairs are ignored
-							previousChar=0;
+							previousChar = 0;
 						}
 						startWritePos = index + 1;
 
 						break;
 
 					default:
-						previousChar=0;
+						previousChar = 0;
 						break;
 				}
 			}
 
 			// Write any pending data
-			if(resultBuffer!=null)
+			if(resultBuffer != null)
 			{
 				resultBuffer.append(chars, startWritePos, length - startWritePos);
-				result=resultBuffer.toString();
+				result = resultBuffer.toString();
 			}
 		}
 		return result;
@@ -474,21 +481,21 @@ public class StaxUtilities
 
 	/**
 	 * Writes a &lt;nodeName&gt; node containing the given text.
-	 *
+	 * <p/>
 	 * If tryUsingCData is true and the text does not contain the CData end token,
 	 * the text will be written using writeCData. Otherwise writeCharacters is used.
 	 *
 	 * @param writer
-	 * @param prefix the prefix of the node. May be null.
-	 * @param namespaceURI the namespaceURI of the node. May be null.
-	 * @param nodeName the nodeName of the node.
-	 * @param text the text that is written into to node. Must not be null.
+	 * @param prefix        the prefix of the node. May be null.
+	 * @param namespaceURI  the namespaceURI of the node. May be null.
+	 * @param nodeName      the nodeName of the node.
+	 * @param text          the text that is written into to node. Must not be null.
 	 * @param tryUsingCData is trying to is CData instead of encoded characters if possible.
 	 * @throws XMLStreamException
 	 * @see #writeText(javax.xml.stream.XMLStreamWriter, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNode(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text, WhiteSpaceHandling whiteSpace, boolean tryUsingCData)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		writeStartElement(writer, prefix, namespaceURI, nodeName);
 		writeText(writer, text, whiteSpace, tryUsingCData);
@@ -497,61 +504,61 @@ public class StaxUtilities
 
 	/**
 	 * Shortcut for writeSimpleTextNode(writer, prefix, namespaceURI, nodeName, text, false).
-	 *
+	 * <p/>
 	 * It won't try to use CDATA.
 	 *
 	 * @param writer
-	 * @param prefix the prefix of the node. May be null.
+	 * @param prefix       the prefix of the node. May be null.
 	 * @param namespaceURI the namespaceURI of the node. May be null.
-	 * @param nodeName the nodeName of the node.
-	 * @param text the text that is written into to node. Must not be null.
+	 * @param nodeName     the nodeName of the node.
+	 * @param text         the text that is written into to node. Must not be null.
 	 * @throws XMLStreamException
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNode(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text, WhiteSpaceHandling whiteSpace)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		writeSimpleTextNode(writer, prefix, namespaceURI, nodeName, text, whiteSpace, false);
 	}
 
 	/**
 	 * Shortcut for writeSimpleTextNode(writer, prefix, namespaceURI, nodeName, text, false).
-	 *
+	 * <p/>
 	 * It won't try to use CDATA and uses WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE.
 	 *
 	 * @param writer
-	 * @param prefix the prefix of the node. May be null.
+	 * @param prefix       the prefix of the node. May be null.
 	 * @param namespaceURI the namespaceURI of the node. May be null.
-	 * @param nodeName the nodeName of the node.
-	 * @param text the text that is written into to node. Must not be null.
+	 * @param nodeName     the nodeName of the node.
+	 * @param text         the text that is written into to node. Must not be null.
 	 * @throws XMLStreamException
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNode(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		writeSimpleTextNode(writer, prefix, namespaceURI, nodeName, text, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE, false);
 	}
 
 	/**
 	 * Writes a &lt;nodeName&gt; node containing the given text if text is not null.
-	 *
+	 * <p/>
 	 * If tryUsingCData is true and the text does not contain the CData end token,
 	 * the text will be written using writeCData. Otherwise writeCharacters is used.
 	 *
 	 * @param writer
-	 * @param prefix the prefix of the node. May be null.
-	 * @param namespaceURI the namespaceURI of the node. May be null.
-	 * @param nodeName the nodeName of the node.
-	 * @param text the text that is written into to node. May be null.
+	 * @param prefix        the prefix of the node. May be null.
+	 * @param namespaceURI  the namespaceURI of the node. May be null.
+	 * @param nodeName      the nodeName of the node.
+	 * @param text          the text that is written into to node. May be null.
 	 * @param tryUsingCData is trying to is CData instead of encoded characters if possible.
 	 * @throws XMLStreamException
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNodeIfNotNull(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text, WhiteSpaceHandling whiteSpace, boolean tryUsingCData)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
-		if(text!=null)
+		if(text != null)
 		{
 			writeSimpleTextNode(writer, prefix, namespaceURI, nodeName, text, whiteSpace, tryUsingCData);
 		}
@@ -559,21 +566,21 @@ public class StaxUtilities
 
 	/**
 	 * Writes a &lt;nodeName&gt; node containing the given text if text is not null.
-	 *
+	 * <p/>
 	 * It won't try to use CDATA.
 	 *
 	 * @param writer
-	 * @param prefix the prefix of the node. May be null.
+	 * @param prefix       the prefix of the node. May be null.
 	 * @param namespaceURI the namespaceURI of the node. May be null.
-	 * @param nodeName the nodeName of the node.
-	 * @param text the text that is written into to node. May be null.
+	 * @param nodeName     the nodeName of the node.
+	 * @param text         the text that is written into to node. May be null.
 	 * @throws XMLStreamException
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNodeIfNotNull(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text, WhiteSpaceHandling whiteSpace)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
-		if(text!=null)
+		if(text != null)
 		{
 			writeSimpleTextNode(writer, prefix, namespaceURI, nodeName, text, whiteSpace, false);
 		}
@@ -581,21 +588,21 @@ public class StaxUtilities
 
 	/**
 	 * Writes a &lt;nodeName&gt; node containing the given text if text is not null.
-	 *
+	 * <p/>
 	 * It won't try to use CDATA and uses WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE.
 	 *
 	 * @param writer
-	 * @param prefix the prefix of the node. May be null.
+	 * @param prefix       the prefix of the node. May be null.
 	 * @param namespaceURI the namespaceURI of the node. May be null.
-	 * @param nodeName the nodeName of the node.
-	 * @param text the text that is written into to node. May be null.
+	 * @param nodeName     the nodeName of the node.
+	 * @param text         the text that is written into to node. May be null.
 	 * @throws XMLStreamException
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNodeIfNotNull(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
-		if(text!=null)
+		if(text != null)
 		{
 			writeSimpleTextNode(writer, prefix, namespaceURI, nodeName, text, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE, false);
 		}
@@ -603,16 +610,16 @@ public class StaxUtilities
 
 	/**
 	 * Writes either characters or CDATA.
-	 *
+	 * <p/>
 	 * CDATA is onlyused if tryUsingCData is true and text does not contain the CDATA end token.
 	 *
 	 * @param writer
-	 * @param text the text to be written. Must not be null.
+	 * @param text          the text to be written. Must not be null.
 	 * @param tryUsingCData
 	 * @throws XMLStreamException
 	 */
 	public static void writeText(XMLStreamWriter writer, String text, WhiteSpaceHandling whiteSpace, boolean tryUsingCData)
-			throws XMLStreamException
+		throws XMLStreamException
 	{
 		processWhiteSpace(text, whiteSpace);
 		if(tryUsingCData && !text.contains(CDATA_END))
@@ -627,11 +634,13 @@ public class StaxUtilities
 
 	/**
 	 * Shortcut for writeText(writer, text, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE, false).
+	 *
 	 * @param writer
 	 * @param text
 	 * @throws XMLStreamException
 	 */
-	public static void writeText(XMLStreamWriter writer, String text) throws XMLStreamException
+	public static void writeText(XMLStreamWriter writer, String text)
+		throws XMLStreamException
 	{
 		writeText(writer, text, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE, false);
 	}
@@ -645,7 +654,7 @@ public class StaxUtilities
 			case XMLStreamConstants.CDATA:
 				return "CDATA";
 			case XMLStreamConstants.CHARACTERS:
-				return"CHARACTERS";
+				return "CHARACTERS";
 			case XMLStreamConstants.COMMENT:
 				return "COMMENT";
 			case XMLStreamConstants.DTD:
@@ -680,17 +689,17 @@ public class StaxUtilities
 		if(logger.isDebugEnabled())
 		{
 
-			StringBuilder msgBuf=new StringBuilder();
+			StringBuilder msgBuf = new StringBuilder();
 			NamespaceContext nsc = writer.getNamespaceContext();
 			Iterator iter = nsc.getPrefixes(namespaceURI);
-			if(msg!=null)
+			if(msg != null)
 			{
 				msgBuf.append(msg).append(" - ");
 			}
 			msgBuf.append("Prefixes defined for namespace ").append(namespaceURI).append(":");
 			if(iter.hasNext())
 			{
-				boolean isFirst=true;
+				boolean isFirst = true;
 				while(iter.hasNext())
 				{
 					if(!isFirst)
@@ -699,7 +708,7 @@ public class StaxUtilities
 					}
 					else
 					{
-						isFirst=false;
+						isFirst = false;
 					}
 					msgBuf.append("'").append(iter.next()).append("'");
 				}
@@ -717,8 +726,8 @@ public class StaxUtilities
 	{
 		if(logger.isDebugEnabled())
 		{
-			int type=reader.getEventType();
-			StringBuilder msgBuf=new StringBuilder(msg);
+			int type = reader.getEventType();
+			StringBuilder msgBuf = new StringBuilder(msg);
 			msgBuf.append("\n");
 			msgBuf.append("\t").append("eventType=").append(getEventTypeString(type)).append("\n");
 			if(type == XMLStreamConstants.START_ELEMENT || type == XMLStreamConstants.END_ELEMENT)
@@ -728,13 +737,15 @@ public class StaxUtilities
 			}
 			if(type == XMLStreamConstants.START_ELEMENT)
 			{
-				int attCount=reader.getAttributeCount();
+				int attCount = reader.getAttributeCount();
 				msgBuf.append("\t").append("attributeCount=").append(attCount).append("\n");
-				for(int i=0;i<attCount;i++)
+				for(int i = 0; i < attCount; i++)
 				{
 					msgBuf.append("\t\t").append("#####\n");
-					msgBuf.append("\t\t").append("attributeNamespace=").append(reader.getAttributeNamespace(i)).append("\n");
-					msgBuf.append("\t\t").append("attributeLocalName=").append(reader.getAttributeLocalName(i)).append("\n");
+					msgBuf.append("\t\t").append("attributeNamespace=").append(reader.getAttributeNamespace(i))
+						.append("\n");
+					msgBuf.append("\t\t").append("attributeLocalName=").append(reader.getAttributeLocalName(i))
+						.append("\n");
 					msgBuf.append("\t\t").append("attributeValue=").append(reader.getAttributeValue(i)).append("\n");
 					msgBuf.append("\t\t").append("attributePrefix=").append(reader.getAttributePrefix(i)).append("\n");
 				}

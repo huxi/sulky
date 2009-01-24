@@ -70,10 +70,10 @@ public final class Resources
 	/**
 	 * DOCUMENT: document
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale           the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>URL</code> array (empty if no resource was found)
 	 * @see #getResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 * @see Class#getResource(java.lang.String)
@@ -87,7 +87,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getLocalResources(clazz, resourceBaseName, suffixes, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
 	 * @return an <code>URL</code> array (empty if no resource was found)
@@ -101,9 +101,9 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getLocalResources(clazz, resourceName, {""}, locale);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale       the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>URL</code> array (empty if no resource was found)
 	 * @see #getLocalResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 */
@@ -115,7 +115,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getLocalResources(clazz, resourceName, {""}, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
 	 * @return an <code>URL</code> array (empty if no resource was found)
 	 * @see #getLocalResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -128,17 +128,17 @@ public final class Resources
 	/**
 	 * DOCUMENT: document
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale           the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>URL</code> to the resource or <code>null</code> if no resource was found.
 	 * @see #getLocalResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 */
 	public static URL getLocalResource(final Class clazz, final String resourceBaseName, final String[] suffixes, final Locale locale)
 	{
 		URL results[] = getLocalResources(clazz, resourceBaseName, suffixes, locale, true);
-		if (results.length == 0)
+		if(results.length == 0)
 		{
 			return null;
 		}
@@ -148,7 +148,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getLocalResource(clazz, resourceBaseName, suffixes, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
 	 * @return an <code>URL</code> to the resource or <code>null</code> if no resource was found.
@@ -163,9 +163,9 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getLocalResource(clazz, resourceName, {""}, locale);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale       the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>URL</code> to the resource or <code>null</code> if no resource was found.
 	 * @see #getLocalResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 * @see #getLocalResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -178,7 +178,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getLocalResource(clazz, resourceName, {""}, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
 	 * @return an <code>URL</code> to the resource or <code>null</code> if no resource was found.
 	 * @see #getLocalResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -192,10 +192,10 @@ public final class Resources
 	/**
 	 * DOCUMENT:
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale           the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>InputStream</code> to the resource or <code>null</code> if no resource was found or opening the <code>InputStream</code> of the resource <code>URL</code> threw an exception.
 	 * @see #getLocalResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 * @see #getLocalResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -208,7 +208,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getLocalResourceAsStream(clazz, resourceBaseName, suffixes, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
 	 * @return an <code>InputStream</code> to the resource or <code>null</code> if no resource was found or opening the <code>InputStream</code> of the resource <code>URL</code> threw an exception.
@@ -224,9 +224,9 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getLocalResourceAsStream(clazz, resourceName, {""}, locale);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale       the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>InputStream</code> to the resource or <code>null</code> if no resource was found or opening the <code>InputStream</code> of the resource <code>URL</code> threw an exception.
 	 * @see #getLocalResourceAsStream(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 * @see #getLocalResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -240,7 +240,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getLocalResourceAsStream(clazz, resourceName, {""}, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
 	 * @return an <code>InputStream</code> to the resource or <code>null</code> if no resource was found or opening the <code>InputStream</code> of the resource <code>URL</code> threw an exception.
 	 * @see #getLocalResourceAsStream(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -267,14 +267,14 @@ public final class Resources
 	 * Example:<br />
 	 * <code><pre>
 	 * package foobar;
-	 *
+	 * <p/>
 	 * public class Foo
 	 * {
 	 *      public static class Bar
 	 *      {
 	 *      }
 	 * }
-	 *
+	 * <p/>
 	 * // in some method...
 	 * Class c=foobar.Foo.Bar.class;
 	 * String resourceBaseName="resource";
@@ -307,10 +307,10 @@ public final class Resources
 	 * This is a fundamental difference compared to c.getResource(String)/getResourceAsStream(String)
 	 * </p>
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale           the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>URL</code> array (empty if no resource was found)
 	 * @see #getLocalResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 * @see Class#getResource(java.lang.String)
@@ -324,7 +324,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getResources(clazz, resourceBaseName, suffixes, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
 	 * @return an <code>URL</code> array (empty if no resource was found)
@@ -338,9 +338,9 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getResources(clazz, resourceName, {""}, locale);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale       the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>URL</code> array (empty if no resource was found)
 	 * @see #getResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 */
@@ -352,7 +352,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getResources(clazz, resourceName, {""}, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
 	 * @return an <code>URL</code> array (empty if no resource was found)
 	 * @see #getResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -365,17 +365,17 @@ public final class Resources
 	/**
 	 * DOCUMENT: document
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale           the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>URL</code> to the resource or <code>null</code> if no resource was found.
 	 * @see #getResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 */
 	public static URL getResource(final Class clazz, final String resourceBaseName, final String[] suffixes, final Locale locale)
 	{
 		URL[] resourceUrls = getResources(clazz, resourceBaseName, suffixes, locale, true);
-		if (resourceUrls.length == 0)
+		if(resourceUrls.length == 0)
 		{
 			return null;
 		}
@@ -385,7 +385,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getResource(clazz, resourceBaseName, suffixes, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
 	 * @return an <code>URL</code> to the resource or <code>null</code> if no resource was found.
@@ -399,9 +399,9 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getResource(clazz, resourceName, {""}, locale);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale       the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>URL</code> to the resource or <code>null</code> if no resource was found.
 	 * @see #getResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 */
@@ -413,7 +413,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getResource(clazz, resourceName, {""}, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
 	 * @return an <code>URL</code> to the resource or <code>null</code> if no resource was found.
 	 * @see #getResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -427,10 +427,10 @@ public final class Resources
 	/**
 	 * DOCUMENT:
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale           the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>InputStream</code> to the resource or <code>null</code> if no resource was found or opening the <code>InputStream</code> of the resource <code>URL</code> threw an exception.
 	 * @see #getResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 * @see #getResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -443,7 +443,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getResourceAsStream(clazz, resourceBaseName, suffixes, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
 	 * @return an <code>InputStream</code> to the resource or <code>null</code> if no resource was found or opening the <code>InputStream</code> of the resource <code>URL</code> threw an exception.
@@ -459,9 +459,9 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getResourceAsStream(clazz, resourceName, {""}, locale);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale       the <code>Locale</code> that is used to locate the resource.
 	 * @return an <code>InputStream</code> to the resource or <code>null</code> if no resource was found or opening the <code>InputStream</code> of the resource <code>URL</code> threw an exception.
 	 * @see #getResourceAsStream(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 * @see #getResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -475,7 +475,7 @@ public final class Resources
 	/**
 	 * This is a shortcut method for <code>getResourceAsStream(clazz, resourceName, {""}, null);</code>.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz        the <code>Class</code> that is used to locate the resource.
 	 * @param resourceName
 	 * @return an <code>InputStream</code> to the resource or <code>null</code> if no resource was found or opening the <code>InputStream</code> of the resource <code>URL</code> threw an exception.
 	 * @see #getResourceAsStream(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -502,7 +502,7 @@ public final class Resources
 		String fullName = clazz.getName();
 
 		int idx = fullName.lastIndexOf(".");
-		if (idx == -1)
+		if(idx == -1)
 		{
 			return fullName;
 		}
@@ -534,16 +534,16 @@ public final class Resources
 		String defaultSuf[] = getSingleLocaleSuffixArray(Locale.getDefault());
 
 		List<String> resultList = new ArrayList<String>(localeSuf.length + defaultSuf.length);
-		for (String currentSuffix : localeSuf)
+		for(String currentSuffix : localeSuf)
 		{
-			if (!resultList.contains(currentSuffix))
+			if(!resultList.contains(currentSuffix))
 			{
 				resultList.add(currentSuffix);
 			}
 		}
-		for (String currentSuffix : defaultSuf)
+		for(String currentSuffix : defaultSuf)
 		{
-			if (!resultList.contains(currentSuffix))
+			if(!resultList.contains(currentSuffix))
 			{
 				resultList.add(currentSuffix);
 			}
@@ -572,7 +572,7 @@ public final class Resources
 	 */
 	public static String[] getSingleLocaleSuffixArray(final Locale locale)
 	{
-		if (locale == null)
+		if(locale == null)
 		{
 			return EMPTY_STRING_ARRAY;
 		}
@@ -586,26 +586,26 @@ public final class Resources
 
 		List<String> resultList = new ArrayList<String>(3);
 
-		if (languageLength + countryLength + variantLength != 0)
+		if(languageLength + countryLength + variantLength != 0)
 		{
 			final StringBuilder temp = new StringBuilder();
 			//temp.append('_');
 			temp.append(language);
-			if (languageLength > 0)
+			if(languageLength > 0)
 			{
 				resultList.add(temp.toString());
 			}
 
-			if (countryLength + variantLength != 0)
+			if(countryLength + variantLength != 0)
 			{
 				temp.append('_');
 				temp.append(country);
-				if (countryLength > 0)
+				if(countryLength > 0)
 				{
 					resultList.add(temp.toString());
 				}
 
-				if (variantLength != 0)
+				if(variantLength != 0)
 				{
 					temp.append('_');
 					temp.append(variant);
@@ -656,7 +656,7 @@ public final class Resources
 	public static String getPathToPackage(final Class clazz)
 	{
 		Package p = clazz.getPackage();
-		if (p == null)
+		if(p == null)
 		{
 			return "/";
 		}
@@ -695,7 +695,7 @@ public final class Resources
 	 * @throws IOException if reading of the stream fails.
 	 */
 	private static List<String> readLinkInputStream(InputStream is)
-			throws IOException
+		throws IOException
 	{
 		final Logger logger = LoggerFactory.getLogger(Resources.class);
 
@@ -708,45 +708,45 @@ public final class Resources
 			br = new BufferedReader(isr);
 
 			String sl;
-			for (; ;)
+			for(; ;)
 			{
 				sl = br.readLine();
-				if (sl == null)
+				if(sl == null)
 				{
 					break;
 				}
 				sl = sl.trim();
-				if (sl.length() == 0)
+				if(sl.length() == 0)
 				{
 					continue;
 				}
-				if (sl.startsWith("#"))
+				if(sl.startsWith("#"))
 				{
-					if (logger.isDebugEnabled()) logger.debug("Comment: " + sl.substring(1));
+					if(logger.isDebugEnabled()) logger.debug("Comment: " + sl.substring(1));
 					continue;
 				}
 				result.add(sl);
 			}
 		}
-		catch (IOException ex)
+		catch(IOException ex)
 		{
 			exception = ex;
 		}
 		finally
 		{
-			if (br != null)
+			if(br != null)
 			{
 				try
 				{
 					br.close();
 				}
-				catch (IOException ex)
+				catch(IOException ex)
 				{
 					// ignore
 				}
 			}
 		}
-		if (exception != null)
+		if(exception != null)
 		{
 			// rethrow after correct close...
 			throw exception;
@@ -769,22 +769,22 @@ public final class Resources
 		URL result = null;
 
 		InputStream is = clazz.getResourceAsStream(resourceLinkPath);
-		if (is != null)
+		if(is != null)
 		{
 			// we found a link!
 			// check for cyclic link and add current resourceLinkPath
 			// to the linkStack
-			if (logger.isDebugEnabled())
+			if(logger.isDebugEnabled())
 			{
 				logger.debug("Found a link '" + resourceLinkPath + "' for resource '" + resourcePath + "'.");
 			}
 
 			// this is necessary because Class.getResourceAsStream is case-insensitive
 			String lowLinkPath = resourceLinkPath.toLowerCase();
-			if (stack.contains(lowLinkPath))
+			if(stack.contains(lowLinkPath))
 			{
 				// the exception is only used for logging (stack-trace) and won't be thrown...
-				if (logger.isWarnEnabled())
+				if(logger.isWarnEnabled())
 				{
 					//noinspection ThrowableInstanceNeverThrown
 					logger.warn("Found a cyclic link!", new CyclicLinkException(stack, resourceLinkPath));
@@ -800,34 +800,35 @@ public final class Resources
 				linkContent = readLinkInputStream(is);
 
 				Iterator iter = linkContent.iterator();
-				while (result == null && iter.hasNext())
+				while(result == null && iter.hasNext())
 				{
 					String currentLinkTarget = (String) iter.next();
 					// empty lines are allready ignored in readLinkInputStream
 					// Stack is cloned to support multiple lines...
 					String basePath = PathTools.getParentPath(resourceLinkPath);
 					currentLinkTarget = PathTools.getAbsolutePath(basePath, currentLinkTarget);
-					if (currentLinkTarget == null)
+					if(currentLinkTarget == null)
 					{
-						if (logger.isDebugEnabled())
+						if(logger.isDebugEnabled())
 						{
-							logger.debug("getAbsolutePath(\"" + basePath + "\", \"" + currentLinkTarget + "\") returned null - no valid absolute path found.");
+							logger
+								.debug("getAbsolutePath(\"" + basePath + "\", \"" + currentLinkTarget + "\") returned null - no valid absolute path found.");
 						}
 					}
 					else
 					{
-						if (logger.isDebugEnabled())
+						if(logger.isDebugEnabled())
 						{
 							logger.debug("Checking for link-target '" + currentLinkTarget + "'.");
 						}
 						result = recursiveResolve((Stack<String>) stack.clone(), clazz, currentLinkTarget);
-						if (result != null)
+						if(result != null)
 						{
-							if (logger.isDebugEnabled()) logger.debug("Found link-target '" + currentLinkTarget + "'.");
+							if(logger.isDebugEnabled()) logger.debug("Found link-target '" + currentLinkTarget + "'.");
 						}
 						else
 						{
-							if (logger.isDebugEnabled())
+							if(logger.isDebugEnabled())
 							{
 								logger.debug("Found unsatisfied link '" + currentLinkTarget + '.');
 							}
@@ -835,14 +836,14 @@ public final class Resources
 					}
 				}
 			}
-			catch (IOException ex)
+			catch(IOException ex)
 			{
-				if (logger.isWarnEnabled())
+				if(logger.isWarnEnabled())
 				{
 					logger.warn("Exception while reading link-content of '" + resourceLinkPath + "'.", ex);
 				}
 			}
-			if (result != null)
+			if(result != null)
 			{
 				// if we found a result return it...
 				return result;
@@ -857,11 +858,11 @@ public final class Resources
 	 * Used by the private getLocalResources and getResources methods to collect the resources.
 	 *
 	 * @param urlList
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
-	 * @param firstOnly		if <code>true</code>, this method will stop searching after a single result has been found, returning immediatly.
+	 * @param locale           the <code>Locale</code> that is used to locate the resource.
+	 * @param firstOnly        if <code>true</code>, this method will stop searching after a single result has been found, returning immediatly.
 	 * @see #getLocalResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale, boolean)
 	 * @see #getResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale, boolean)
 	 */
@@ -869,17 +870,17 @@ public final class Resources
 	{
 		final Logger logger = LoggerFactory.getLogger(Resources.class);
 		Class currentClass = clazz;
-		while (currentClass != java.lang.Object.class)
+		while(currentClass != java.lang.Object.class)
 		{
-			if (logger.isDebugEnabled()) logger.debug("currentClass = " + currentClass.getName());
+			if(logger.isDebugEnabled()) logger.debug("currentClass = " + currentClass.getName());
 			URL urls[] = getLocalResources(currentClass, resourceBaseName, suffixes, locale, firstOnly);
-			for (int i = 0; i < urls.length; i++)
+			for(int i = 0; i < urls.length; i++)
 			{
-				if (!urlList.contains(urls[i]))
+				if(!urlList.contains(urls[i]))
 				{
 					urlList.add(urls[i]);
-					if (logger.isDebugEnabled()) logger.debug("added url[" + i + "]: " + urls[i]);
-					if (firstOnly)
+					if(logger.isDebugEnabled()) logger.debug("added url[" + i + "]: " + urls[i]);
+					if(firstOnly)
 					{
 						return;
 					}
@@ -892,11 +893,11 @@ public final class Resources
 	/**
 	 * private method that is used by the public getLocalResource/getLocalResources methods.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
-	 * @param firstOnly		if <code>true</code>, this method will stop searching after a single result has been found, returning immediatly.
+	 * @param locale           the <code>Locale</code> that is used to locate the resource.
+	 * @param firstOnly        if <code>true</code>, this method will stop searching after a single result has been found, returning immediatly.
 	 * @return an <code>URL</code> array (empty if no resource was found)
 	 * @see #getLocalResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 * @see #getLocalResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -908,7 +909,7 @@ public final class Resources
 		String basePath = getPathToClass(clazz);
 
 		String[] suff;
-		if (suffixes == null || suffixes.length == 0)
+		if(suffixes == null || suffixes.length == 0)
 		{
 			suff = NO_SUFFIX;
 		}
@@ -920,42 +921,43 @@ public final class Resources
 		List<URL> urls = new ArrayList<URL>();
 		// handle locale parameter localePaths
 		String localePaths[] = getLocaleSuffixArray(locale);
-		for (String currentLocPath : localePaths)
+		for(String currentLocPath : localePaths)
 		{
-			for (String aSuff : suff)
+			for(String aSuff : suff)
 			{
 				String resourceName = resourceBaseName + aSuff;
 
 				String currentBase = basePath;
-				if (currentLocPath.length() != 0)
+				if(currentLocPath.length() != 0)
 				{
 					currentBase = currentBase + "/" + currentLocPath;
 				}
 
 				String currentPath = PathTools.getAbsolutePath(currentBase, resourceName);
 
-				if (currentPath == null)
+				if(currentPath == null)
 				{
-					if (logger.isDebugEnabled())
+					if(logger.isDebugEnabled())
 					{
-						logger.debug("getAbsolutePath(\"" + currentBase + "\", \"" + resourceName + "\") returned null - no valid absolute path found.");
+						logger
+							.debug("getAbsolutePath(\"" + currentBase + "\", \"" + resourceName + "\") returned null - no valid absolute path found.");
 					}
 				}
 				else
 				{
-					if (logger.isDebugEnabled())
+					if(logger.isDebugEnabled())
 					{
 						logger.debug("Trying to obtain URL for resource '" + currentPath + "'.");
 					}
 					URL url = resolveLink(clazz, currentPath);
-					if (url != null && !urls.contains(url))
+					if(url != null && !urls.contains(url))
 					{
-						if (firstOnly)
+						if(firstOnly)
 						{
 							return new URL[]{url};
 						}
 						urls.add(url);
-						if (logger.isDebugEnabled())
+						if(logger.isDebugEnabled())
 						{
 							logger.debug("Obtained new URL \"" + url + "\" for resource '" + currentPath + "'.");
 						}
@@ -964,32 +966,33 @@ public final class Resources
 			}
 		}
 		// check for resource in Class-folder without suffix
-		for (String aSuff : suff)
+		for(String aSuff : suff)
 		{
 			String resourceName = resourceBaseName + aSuff;
 			String absResourcePath = PathTools.getAbsolutePath(basePath, resourceName);
-			if (absResourcePath == null)
+			if(absResourcePath == null)
 			{
-				if (logger.isDebugEnabled())
+				if(logger.isDebugEnabled())
 				{
-					logger.debug("getAbsolutePath(\"" + basePath + "\", \"" + resourceName + "\") returned null - no valid absolute path found.");
+					logger
+						.debug("getAbsolutePath(\"" + basePath + "\", \"" + resourceName + "\") returned null - no valid absolute path found.");
 				}
 			}
 			else
 			{
-				if (logger.isDebugEnabled())
+				if(logger.isDebugEnabled())
 				{
 					logger.debug("Trying to obtain URL for resource '" + absResourcePath + "'.");
 				}
 				URL url = resolveLink(clazz, absResourcePath);
-				if (url != null && !urls.contains(url))
+				if(url != null && !urls.contains(url))
 				{
-					if (firstOnly)
+					if(firstOnly)
 					{
 						return new URL[]{url};
 					}
 					urls.add(url);
-					if (logger.isDebugEnabled())
+					if(logger.isDebugEnabled())
 					{
 						logger.debug("Obtained new URL \"" + url + "\" for resource '" + absResourcePath + "'.");
 					}
@@ -1005,11 +1008,11 @@ public final class Resources
 	/**
 	 * private method that is used by the public getResource/getResources methods.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz            the <code>Class</code> that is used to locate the resource.
 	 * @param resourceBaseName
 	 * @param suffixes
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
-	 * @param firstOnly		if <code>true</code>, this method will stop searching after a single result has been found, returning immediatly.
+	 * @param locale           the <code>Locale</code> that is used to locate the resource.
+	 * @param firstOnly        if <code>true</code>, this method will stop searching after a single result has been found, returning immediatly.
 	 * @return an <code>URL</code> array (empty if no resource was found)
 	 * @see #getResources(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
 	 * @see #getResource(java.lang.Class, java.lang.String, java.lang.String[], java.util.Locale)
@@ -1021,14 +1024,14 @@ public final class Resources
 		List<URL> urlList = new ArrayList<URL>();
 		// collect resources from given class...
 		collectResources(urlList, clazz, resourceBaseName, suffixes, locale, firstOnly);
-		if (!firstOnly || urlList.size() == 0)
+		if(!firstOnly || urlList.size() == 0)
 		{
 			// collect resources from declaring classes...
 			Class currentClass = clazz.getDeclaringClass();
-			while (currentClass != null)
+			while(currentClass != null)
 			{
 				collectResources(urlList, currentClass, resourceBaseName, suffixes, locale, firstOnly);
-				if (firstOnly && urlList.size() != 0)
+				if(firstOnly && urlList.size() != 0)
 				{
 					break;
 				}
@@ -1039,22 +1042,22 @@ public final class Resources
 		URL[] result = new URL[urlList.size()];
 		urlList.toArray(result);
 
-		if (logger.isInfoEnabled() && result.length == 0)
+		if(logger.isInfoEnabled() && result.length == 0)
 		{
 			StringBuilder msg = new StringBuilder();
 			msg.append("Couldn't obtain any URL's for resource '").append(resourceBaseName).append("'");
-			if (suffixes != null && suffixes.length != 0)
+			if(suffixes != null && suffixes.length != 0)
 			{
-				if (suffixes.length == 1 && suffixes[0].length() == 0)
+				if(suffixes.length == 1 && suffixes[0].length() == 0)
 				{
 					msg.append(" with no suffix. ");
 				}
 				else
 				{
 					msg.append(" with suffix(es) [");
-					for (int i = 0; i < suffixes.length; i++)
+					for(int i = 0; i < suffixes.length; i++)
 					{
-						if (i != 0)
+						if(i != 0)
 						{
 							msg.append(",");
 						}
@@ -1074,7 +1077,7 @@ public final class Resources
 	{
 		InputStream result = null;
 		URL resource;
-		if (local)
+		if(local)
 		{
 			resource = getLocalResource(clazz, resourceBaseName, suffixes, locale);
 		}
@@ -1082,16 +1085,16 @@ public final class Resources
 		{
 			resource = getResource(clazz, resourceBaseName, suffixes, locale);
 		}
-		if (resource != null)
+		if(resource != null)
 		{
 			try
 			{
 				result = resource.openStream();
 			}
-			catch (IOException ex)
+			catch(IOException ex)
 			{
 				final Logger logger = LoggerFactory.getLogger(Resources.class);
-				if (logger.isWarnEnabled())
+				if(logger.isWarnEnabled())
 				{
 					logger.warn("IOException while opening URL-Connection for URL '" + resource + "'!", ex);
 				}

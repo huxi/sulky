@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.master</artifactId>
-<!-- SV --><version>0.9.7-SNAPSHOT</version>
+	<version><!-- SV -->0.9.7-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Sulky master pom file</name>
 	<description>This file is part of the sulky modules. It's the master pom file that is used to build all other modules.</description>
@@ -21,15 +21,15 @@
 			<url>scp://huxhorn.de/kunden/homepages/37/d18379763/htdocs/sulky/projects/${pom.artifactId}</url>
 		</site>
 		<!--
-		scp doesn't work anymore
-		-->
+			  scp doesn't work anymore
+			  -->
 		<repository>
 			<id>sulky-repos</id>
 			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>
 		</repository>
 		<snapshotRepository>
 			<id>sulky-snapshot-repos</id>
-            <uniqueVersion>false</uniqueVersion>
+			<uniqueVersion>false</uniqueVersion>
 			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/snapshot-repository</url>
 		</snapshotRepository>
 	</distributionManagement>
@@ -37,7 +37,7 @@
 	<modules>
 		<module>sulky-parent</module>
 		<module>sulky-generics</module>
-        <module>sulky-junit</module>
+		<module>sulky-junit</module>
 		<module>sulky-stax</module>
 		<module>sulky-conditions</module>
 		<module>sulky-buffers</module>

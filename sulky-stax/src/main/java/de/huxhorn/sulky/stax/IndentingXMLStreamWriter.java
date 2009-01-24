@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,15 +20,16 @@ package de.huxhorn.sulky.stax;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.namespace.NamespaceContext;
 
-public class IndentingXMLStreamWriter implements XMLStreamWriter
+public class IndentingXMLStreamWriter
+	implements XMLStreamWriter
 {
 	private final Logger logger = LoggerFactory.getLogger(IndentingXMLStreamWriter.class);
 
-	private static final String SYSTEM_LINE_SEPARATOR=System.getProperty("line.separator");
+	private static final String SYSTEM_LINE_SEPARATOR = System.getProperty("line.separator");
 	private XMLStreamWriter writer;
 	private int indentLevel;
 	private boolean wroteText;
@@ -47,78 +48,85 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter
 
 	public IndentingXMLStreamWriter(XMLStreamWriter writer, String lineSeparator, String indentString)
 	{
-		if(writer==null)
+		if(writer == null)
 		{
 			// so we have consistent behaviour in case of debug or not.
 			throw new NullPointerException("writer must not be null!");
 		}
-		if(lineSeparator==null)
+		if(lineSeparator == null)
 		{
 			throw new NullPointerException("lineSeparator must not be null!");
 		}
-		if(indentString==null)
+		if(indentString == null)
 		{
 			throw new NullPointerException("indentString must not be null!");
 		}
 
 		this.writer = writer;
-		this.lineSeparator=lineSeparator;
-		this.indentString=indentString;
-		if(logger.isDebugEnabled()) logger.debug("writer-class: {}",writer.getClass());
-		this.indentLevel =0;
-		this.wroteText=false;
+		this.lineSeparator = lineSeparator;
+		this.indentString = indentString;
+		if(logger.isDebugEnabled()) logger.debug("writer-class: {}", writer.getClass());
+		this.indentLevel = 0;
+		this.wroteText = false;
 	}
 
-	public void writeStartElement(String localName) throws XMLStreamException
+	public void writeStartElement(String localName)
+		throws XMLStreamException
 	{
 		writeIndent();
 		writer.writeStartElement(localName);
 		increaseIndentLevel();
-		wroteText=false;
+		wroteText = false;
 	}
 
-	public void writeStartElement(String namespaceURI, String localName) throws XMLStreamException
+	public void writeStartElement(String namespaceURI, String localName)
+		throws XMLStreamException
 	{
 		writeIndent();
 		writer.writeStartElement(namespaceURI, localName);
 		increaseIndentLevel();
-		wroteText=false;
+		wroteText = false;
 	}
 
-	public void writeStartElement(String prefix, String localName, String namespaceURI) throws XMLStreamException
+	public void writeStartElement(String prefix, String localName, String namespaceURI)
+		throws XMLStreamException
 	{
 		writeIndent();
 		writer.writeStartElement(prefix, localName, namespaceURI);
 		increaseIndentLevel();
-		wroteText=false;
+		wroteText = false;
 	}
 
-	public void writeEmptyElement(String namespaceURI, String localName) throws XMLStreamException
+	public void writeEmptyElement(String namespaceURI, String localName)
+		throws XMLStreamException
 	{
 		writeIndent();
 		writer.writeEmptyElement(namespaceURI, localName);
-		wroteText=false;
+		wroteText = false;
 	}
 
-	public void writeEmptyElement(String prefix, String localName, String namespaceURI) throws XMLStreamException
+	public void writeEmptyElement(String prefix, String localName, String namespaceURI)
+		throws XMLStreamException
 	{
 		writeIndent();
 		writer.writeEmptyElement(prefix, localName, namespaceURI);
-		wroteText=false;
+		wroteText = false;
 	}
 
-	public void writeEmptyElement(String localName) throws XMLStreamException
+	public void writeEmptyElement(String localName)
+		throws XMLStreamException
 	{
 		writeIndent();
 		writer.writeEmptyElement(localName);
-		wroteText=false;
+		wroteText = false;
 	}
 
-	private void writeIndent() throws XMLStreamException
+	private void writeIndent()
+		throws XMLStreamException
 	{
 
-		StringBuilder indentStr=new StringBuilder(lineSeparator);
-		for(int i=0;i<indentLevel;i++)
+		StringBuilder indentStr = new StringBuilder(lineSeparator);
+		for(int i = 0; i < indentLevel; i++)
 		{
 			indentStr.append(indentString);
 		}
@@ -133,156 +141,180 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter
 	private void decreaseIndentLevel()
 	{
 		indentLevel--;
-		if(indentLevel <0)
+		if(indentLevel < 0)
 		{
-			indentLevel =0;
+			indentLevel = 0;
 		}
 	}
 
-	public void writeEndElement() throws XMLStreamException
+	public void writeEndElement()
+		throws XMLStreamException
 	{
 		decreaseIndentLevel();
 		if(!wroteText)
 		{
 			writeIndent();
-			wroteText=false;
+			wroteText = false;
 		}
 		writer.writeEndElement();
-		wroteText=false;
+		wroteText = false;
 	}
 
-	public void writeEndDocument() throws XMLStreamException
+	public void writeEndDocument()
+		throws XMLStreamException
 	{
 		writer.writeEndDocument();
 	}
 
-	public void close() throws XMLStreamException
+	public void close()
+		throws XMLStreamException
 	{
 		writer.close();
 	}
 
-	public void flush() throws XMLStreamException
+	public void flush()
+		throws XMLStreamException
 	{
 		writer.flush();
 	}
 
-	public void writeAttribute(String localName, String value) throws XMLStreamException
+	public void writeAttribute(String localName, String value)
+		throws XMLStreamException
 	{
 		writer.writeAttribute(localName, value);
 	}
 
-	public void writeAttribute(String prefix, String namespaceURI, String localName, String value) throws XMLStreamException
+	public void writeAttribute(String prefix, String namespaceURI, String localName, String value)
+		throws XMLStreamException
 	{
 		writer.writeAttribute(prefix, namespaceURI, localName, value);
 	}
 
-	public void writeAttribute(String namespaceURI, String localName, String value) throws XMLStreamException
+	public void writeAttribute(String namespaceURI, String localName, String value)
+		throws XMLStreamException
 	{
 		writer.writeAttribute(namespaceURI, localName, value);
 	}
 
-	public void writeNamespace(String prefix, String namespaceURI) throws XMLStreamException
+	public void writeNamespace(String prefix, String namespaceURI)
+		throws XMLStreamException
 	{
 		writer.writeNamespace(prefix, namespaceURI);
 	}
 
-	public void writeDefaultNamespace(String namespaceURI) throws XMLStreamException
+	public void writeDefaultNamespace(String namespaceURI)
+		throws XMLStreamException
 	{
 		writer.writeDefaultNamespace(namespaceURI);
 	}
 
-	public void writeComment(String data) throws XMLStreamException
+	public void writeComment(String data)
+		throws XMLStreamException
 	{
-		data=StaxUtilities.normalizeNewlines(data);
-		if(data!=null)
+		data = StaxUtilities.normalizeNewlines(data);
+		if(data != null)
 		{
-			data=data.replace("\n", lineSeparator);
+			data = data.replace("\n", lineSeparator);
 		}
 		writer.writeComment(data);
 	}
 
-	public void writeProcessingInstruction(String target) throws XMLStreamException
+	public void writeProcessingInstruction(String target)
+		throws XMLStreamException
 	{
 		writer.writeProcessingInstruction(target);
 	}
 
-	public void writeProcessingInstruction(String target, String data) throws XMLStreamException
+	public void writeProcessingInstruction(String target, String data)
+		throws XMLStreamException
 	{
 		writer.writeProcessingInstruction(target, data);
 	}
 
-	public void writeCData(String data) throws XMLStreamException
+	public void writeCData(String data)
+		throws XMLStreamException
 	{
-		data=StaxUtilities.normalizeNewlines(data);
-		if(data!=null)
+		data = StaxUtilities.normalizeNewlines(data);
+		if(data != null)
 		{
-			data=data.replace("\n", lineSeparator);
+			data = data.replace("\n", lineSeparator);
 		}
 		writer.writeCData(data);
-		wroteText=true;
+		wroteText = true;
 	}
 
-	public void writeDTD(String dtd) throws XMLStreamException
+	public void writeDTD(String dtd)
+		throws XMLStreamException
 	{
 		writer.writeDTD(dtd);
 	}
 
-	public void writeEntityRef(String name) throws XMLStreamException
+	public void writeEntityRef(String name)
+		throws XMLStreamException
 	{
 		writer.writeEntityRef(name);
 	}
 
-	public void writeStartDocument() throws XMLStreamException
+	public void writeStartDocument()
+		throws XMLStreamException
 	{
 		writer.writeStartDocument();
-		wroteText=false;
+		wroteText = false;
 	}
 
-	public void writeStartDocument(String version) throws XMLStreamException
+	public void writeStartDocument(String version)
+		throws XMLStreamException
 	{
 		writer.writeStartDocument(version);
-		wroteText=false;
+		wroteText = false;
 	}
 
-	public void writeStartDocument(String encoding, String version) throws XMLStreamException
+	public void writeStartDocument(String encoding, String version)
+		throws XMLStreamException
 	{
 		writer.writeStartDocument(encoding, version);
-		wroteText=false;
+		wroteText = false;
 	}
 
-	public void writeCharacters(String text) throws XMLStreamException
+	public void writeCharacters(String text)
+		throws XMLStreamException
 	{
-		text =StaxUtilities.normalizeNewlines(text);
-		if(text !=null)
+		text = StaxUtilities.normalizeNewlines(text);
+		if(text != null)
 		{
-			text =text.replace("\n", lineSeparator);
+			text = text.replace("\n", lineSeparator);
 		}
 		writer.writeCharacters(text);
-		wroteText=true;
+		wroteText = true;
 	}
 
-	public void writeCharacters(char[] text, int start, int len) throws XMLStreamException
+	public void writeCharacters(char[] text, int start, int len)
+		throws XMLStreamException
 	{
 		writer.writeCharacters(text, start, len);
-		wroteText=true;
+		wroteText = true;
 	}
 
-	public String getPrefix(String uri) throws XMLStreamException
+	public String getPrefix(String uri)
+		throws XMLStreamException
 	{
 		return writer.getPrefix(uri);
 	}
 
-	public void setPrefix(String prefix, String uri) throws XMLStreamException
+	public void setPrefix(String prefix, String uri)
+		throws XMLStreamException
 	{
 		writer.setPrefix(prefix, uri);
 	}
 
-	public void setDefaultNamespace(String uri) throws XMLStreamException
+	public void setDefaultNamespace(String uri)
+		throws XMLStreamException
 	{
 		writer.setDefaultNamespace(uri);
 	}
 
-	public void setNamespaceContext(NamespaceContext context) throws XMLStreamException
+	public void setNamespaceContext(NamespaceContext context)
+		throws XMLStreamException
 	{
 		writer.setNamespaceContext(context);
 	}
@@ -292,7 +324,8 @@ public class IndentingXMLStreamWriter implements XMLStreamWriter
 		return writer.getNamespaceContext();
 	}
 
-	public Object getProperty(String name) throws IllegalArgumentException
+	public Object getProperty(String name)
+		throws IllegalArgumentException
 	{
 		return writer.getProperty(name);
 	}

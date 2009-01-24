@@ -29,7 +29,7 @@ import java.util.Map;
 
 /**
  * Provides functionality for inheritance-safe resolution of resource maps.
- *
+ * <p/>
  * They are a replacement for ResourceBundle and provide similar functionality.
  */
 public class ResourceMaps
@@ -51,9 +51,9 @@ public class ResourceMaps
 	 * Bundles with a low index in the retrieved array will override settings in bundles with a
 	 * higher index.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz               the <code>Class</code> that is used to locate the resource.
 	 * @param resourceMapBaseName the basename of the bundle without extension.
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
+	 * @param locale              the <code>Locale</code> that is used to locate the resource.
 	 * @return a map containing the key-value-pairs of the bundles found.
 	 * @see de.huxhorn.sulky.resources.Resources#getResources(Class, String, String[], java.util.Locale)
 	 */
@@ -80,10 +80,10 @@ public class ResourceMaps
 	/**
 	 * private method that is used by the public getResourceMap/getLocalResourceMap methods.
 	 *
-	 * @param clazz the <code>Class</code> that is used to locate the resource.
+	 * @param clazz               the <code>Class</code> that is used to locate the resource.
 	 * @param resourceMapBaseName the base-name of the resource map.
-	 * @param locale the <code>Locale</code> that is used to locate the resource.
-	 * @param local		  if <code>true</code>, this method will perform a local search for the bundle (getLocalResources), otherwise the inheritance hierarchy is searched (getResources).
+	 * @param locale              the <code>Locale</code> that is used to locate the resource.
+	 * @param local               if <code>true</code>, this method will perform a local search for the bundle (getLocalResources), otherwise the inheritance hierarchy is searched (getResources).
 	 * @return a <code>Map</code> containing the cumulated resources.
 	 * @see #getLocalResourceMap(java.lang.Class, java.lang.String, java.util.Locale)
 	 * @see #getResourceMap(java.lang.Class, java.lang.String, java.util.Locale)
@@ -95,7 +95,7 @@ public class ResourceMaps
 		Map<String, Object> result = new HashMap<String, Object>();
 
 		URL[] resourceUrls;
-		if (local)
+		if(local)
 		{
 			resourceUrls = Resources.getLocalResources(clazz, resourceMapBaseName, MAP_SUFFIXES, locale);
 		}
@@ -106,10 +106,10 @@ public class ResourceMaps
 
 //        if(resourceUrls.length != 0)
 //        {
-		if (logger.isDebugEnabled())
+		if(logger.isDebugEnabled())
 		{
 			StringBuilder debug = new StringBuilder();
-			for (int i = 0; i < resourceUrls.length; i++)
+			for(int i = 0; i < resourceUrls.length; i++)
 			{
 				debug.append("URL[");
 				debug.append(i);
@@ -119,15 +119,15 @@ public class ResourceMaps
 			}
 			logger.debug(debug.toString());
 		}
-		for (URL resourceUrl : resourceUrls)
+		for(URL resourceUrl : resourceUrls)
 		{
 			try
 			{
 				MAP_LOADER.mergeMaps(resourceUrl, result, false);
 			}
-			catch (IOException ex)
+			catch(IOException ex)
 			{
-				if (logger.isWarnEnabled())
+				if(logger.isWarnEnabled())
 				{
 					logger.warn("IOException while loading resource map \"" + resourceUrl + "\"!", ex);
 				}
@@ -163,11 +163,11 @@ public class ResourceMaps
 //                }
 //            }
 //        }
-		if (logger.isDebugEnabled())
+		if(logger.isDebugEnabled())
 		{
 			StringBuilder buffer = new StringBuilder();
 
-			for (Map.Entry<String, Object> current : result.entrySet())
+			for(Map.Entry<String, Object> current : result.entrySet())
 			{
 				Object key = current.getKey();
 				Object value = current.getValue();

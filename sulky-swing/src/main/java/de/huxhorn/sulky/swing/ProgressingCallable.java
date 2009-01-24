@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,8 +17,8 @@
  */
 package de.huxhorn.sulky.swing;
 
-import java.util.concurrent.Callable;
 import java.beans.PropertyChangeListener;
+import java.util.concurrent.Callable;
 
 public interface ProgressingCallable<T>
 	extends Callable<T>
@@ -27,10 +27,12 @@ public interface ProgressingCallable<T>
 
 	/**
 	 * Should return values between 0 and 100.
+	 *
 	 * @return values between 0 and 100.
 	 */
 	int getProgress();
 
 	void addPropertyChangeListener(PropertyChangeListener listener);
+
 	void removePropertyChangeListener(PropertyChangeListener listener);
 }

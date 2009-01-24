@@ -18,12 +18,13 @@
 package de.huxhorn.sulky.resources;
 
 import de.huxhorn.sulky.resources.junit.Foobar;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
-import org.junit.AfterClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
 import java.util.Map;
@@ -44,18 +45,18 @@ public class ResourceMapsTest
 
 		result = ResourceMaps.getResourceMap(clazz, resourceBaseName, locale);
 		assertEquals("Number of elements", expectedResults.length, result.size());
-		for (String[] kv : expectedResults)
+		for(String[] kv : expectedResults)
 		{
 			// kv[0]=key, kv[1]=value
 			String key = kv[0];
 			String cur = (String) result.get(key);
 			assertEquals("Property \"" + key + "\"", kv[1], cur);
 		}
-		if (locale == null)
+		if(locale == null)
 		{
 			result = ResourceMaps.getResourceMap(clazz, resourceBaseName);
 			assertEquals("Number of elements", expectedResults.length, result.size());
-			for (String[] kv : expectedResults)
+			for(String[] kv : expectedResults)
 			{
 				// kv[0]=key, kv[1]=value
 				String key = kv[0];
@@ -70,18 +71,18 @@ public class ResourceMapsTest
 		Map result;
 		result = ResourceMaps.getLocalResourceMap(clazz, resourceBaseName, locale);
 		assertEquals("Number of elements", expectedResults.length, result.size());
-		for (String[] kv : expectedResults)
+		for(String[] kv : expectedResults)
 		{
 			// kv[0]=key, kv[1]=value
 			String key = kv[0];
 			String cur = (String) result.get(key);
 			assertEquals("Property \"" + key + "\"", kv[1], cur);
 		}
-		if (locale == null)
+		if(locale == null)
 		{
 			result = ResourceMaps.getLocalResourceMap(clazz, resourceBaseName);
 			assertEquals("Number of elements", expectedResults.length, result.size());
-			for (String[] kv : expectedResults)
+			for(String[] kv : expectedResults)
 			{
 				// kv[0]=key, kv[1]=value
 				String key = kv[0];
@@ -92,74 +93,78 @@ public class ResourceMapsTest
 	}
 
 	@BeforeClass
-	public static void setUp() throws Exception
+	public static void setUp()
+		throws Exception
 	{
 		prevDefault = Locale.getDefault();
 		Locale.setDefault(usLocale);
 	}
 
 	@AfterClass
-	public static void tearDown() throws Exception
+	public static void tearDown()
+		throws Exception
 	{
 		Locale.setDefault(prevDefault);
 	}
 
 	@Test
-	public void getResourceMap() throws Exception
+	public void getResourceMap()
+		throws Exception
 	{
 		Class c;
 
 		c = Foobar.class;
 		internalGetResourceMap(c, "resources", hessianLocale, new String[][]{
-				{"attention.txt", "Uffbasse!"},
-				{"ok.txt", "OK"},
-				{"cancel.txt", "Abbruch"},
-				{"base.txt", "BaseClass"},
+			{"attention.txt", "Uffbasse!"},
+			{"ok.txt", "OK"},
+			{"cancel.txt", "Abbruch"},
+			{"base.txt", "BaseClass"},
 		});
 		internalGetResourceMap(c, "resources", germanLocale, new String[][]{
-				{"attention.txt", "Achtung!"},
-				{"ok.txt", "OK"},
-				{"cancel.txt", "Abbruch"},
-				{"base.txt", "BaseClass"},
+			{"attention.txt", "Achtung!"},
+			{"ok.txt", "OK"},
+			{"cancel.txt", "Abbruch"},
+			{"base.txt", "BaseClass"},
 		});
 		internalGetResourceMap(c, "resources", null, new String[][]{
-				{"attention.txt", "Attention!"},
-				{"ok.txt", "OK"},
-				{"cancel.txt", "Cancel"},
-				{"base.txt", "BaseClass"},
+			{"attention.txt", "Attention!"},
+			{"ok.txt", "OK"},
+			{"cancel.txt", "Cancel"},
+			{"base.txt", "BaseClass"},
 		});
 
 		c = c.getSuperclass();
 		internalGetResourceMap(c, "resources", null, new String[][]{
-				{"base.txt", "BaseClass"},
+			{"base.txt", "BaseClass"},
 		});
 	}
 
 	@Test
-	public void getLocalResourceMap() throws Exception
+	public void getLocalResourceMap()
+		throws Exception
 	{
 		Class c;
 
 		c = Foobar.class;
 		internalGetLocalResourceMap(c, "resources", hessianLocale, new String[][]{
-				{"attention.txt", "Uffbasse!"},
-				{"ok.txt", "OK"},
-				{"cancel.txt", "Abbruch"},
+			{"attention.txt", "Uffbasse!"},
+			{"ok.txt", "OK"},
+			{"cancel.txt", "Abbruch"},
 		});
 		internalGetLocalResourceMap(c, "resources", germanLocale, new String[][]{
-				{"attention.txt", "Achtung!"},
-				{"ok.txt", "OK"},
-				{"cancel.txt", "Abbruch"},
+			{"attention.txt", "Achtung!"},
+			{"ok.txt", "OK"},
+			{"cancel.txt", "Abbruch"},
 		});
 		internalGetLocalResourceMap(c, "resources", null, new String[][]{
-				{"attention.txt", "Attention!"},
-				{"ok.txt", "OK"},
-				{"cancel.txt", "Cancel"},
+			{"attention.txt", "Attention!"},
+			{"ok.txt", "OK"},
+			{"cancel.txt", "Cancel"},
 		});
 
 		c = c.getSuperclass();
 		internalGetLocalResourceMap(c, "resources", null, new String[][]{
-				{"base.txt", "BaseClass"},
+			{"base.txt", "BaseClass"},
 		});
 	}
 }

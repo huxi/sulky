@@ -107,8 +107,8 @@ class BaseClass
  * Foobar implements the interface Localizable directly (without a Proxy in ResourceSupport).
  */
 public class Foobar
-		extends BaseClass
-		implements Localizable
+	extends BaseClass
+	implements Localizable
 {
 	private Locale locale = null;
 

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,22 +17,27 @@
  */
 package de.huxhorn.sulky.sounds.jlayer;
 
-import javazoom.jl.player.Player;
-import javazoom.jl.decoder.JavaLayerException;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
-import java.io.*;
-import java.net.URL;
-import java.net.MalformedURLException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import de.huxhorn.sulky.sounds.Sounds;
 
-public class JLayerSounds implements Sounds
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class JLayerSounds
+	implements Sounds
 {
 	private final Logger logger = LoggerFactory.getLogger(JLayerSounds.class);
 
@@ -43,9 +48,9 @@ public class JLayerSounds implements Sounds
 
 	public JLayerSounds()
 	{
-		playList=new ArrayList<String>();
-		soundLocations=new HashMap<String, String>();
-		Thread t=new Thread(new PlayRunnable(), "SoundPlayRunnable");
+		playList = new ArrayList<String>();
+		soundLocations = new HashMap<String, String>();
+		Thread t = new Thread(new PlayRunnable(), "SoundPlayRunnable");
 		t.setDaemon(true);
 		t.start();
 	}
@@ -57,7 +62,7 @@ public class JLayerSounds implements Sounds
 
 	public void setMute(boolean mute)
 	{
-		this.mute=mute;
+		this.mute = mute;
 	}
 
 	public Map<String, String> getSoundLocations()
@@ -89,6 +94,7 @@ public class JLayerSounds implements Sounds
 
 	/**
 	 * Shortcut for play(soundName, true).
+	 *
 	 * @param soundName
 	 */
 	public void play(String soundName)
@@ -99,43 +105,43 @@ public class JLayerSounds implements Sounds
 	private Player resolvePlayer(String soundName)
 	{
 		String soundLocation = null;
-		if(soundLocations!=null)
+		if(soundLocations != null)
 		{
 			soundLocation = soundLocations.get(soundName);
 		}
-		if(soundLocation==null)
+		if(soundLocation == null)
 		{
 			if(logger.isInfoEnabled()) logger.info("No soundlocation defined for sound {}.", soundName);
 			return null;
 		}
-		InputStream soundStream=JLayerSounds.class.getResourceAsStream(soundLocation);
-		if(soundStream==null)
+		InputStream soundStream = JLayerSounds.class.getResourceAsStream(soundLocation);
+		if(soundStream == null)
 		{
 			if(logger.isInfoEnabled()) logger.info("Couldn't retrieve {} as a resource...", soundLocation);
-			File file=new File(soundLocation);
+			File file = new File(soundLocation);
 			if(file.isFile())
 			{
 				try
 				{
-					soundStream=new FileInputStream(file);
+					soundStream = new FileInputStream(file);
 				}
-				catch (FileNotFoundException e)
+				catch(FileNotFoundException e)
 				{
 					if(logger.isInfoEnabled()) logger.info("Couldn't open {} as a file.", soundLocation);
 				}
 			}
-			if(soundStream==null)
+			if(soundStream == null)
 			{
 				try
 				{
-					URL url=new URL(soundLocation);
-					soundStream=url.openStream();
+					URL url = new URL(soundLocation);
+					soundStream = url.openStream();
 				}
-				catch (MalformedURLException e)
+				catch(MalformedURLException e)
 				{
 					if(logger.isInfoEnabled()) logger.info("Couldn't open {} as a URL.", soundLocation);
 				}
-				catch (IOException e)
+				catch(IOException e)
 				{
 					if(logger.isInfoEnabled()) logger.info("Couldn't open {} as a URL.", soundLocation);
 				}
@@ -147,9 +153,12 @@ public class JLayerSounds implements Sounds
 			{
 				return new Player(soundStream);
 			}
-			catch (JavaLayerException ex)
+			catch(JavaLayerException ex)
 			{
-				if(logger.isWarnEnabled()) logger.warn("Exception while creating player for sound '"+soundName+"'!",ex);
+				if(logger.isWarnEnabled())
+				{
+					logger.warn("Exception while creating player for sound '" + soundName + "'!", ex);
+				}
 			}
 		}
 		return null;
@@ -160,20 +169,20 @@ public class JLayerSounds implements Sounds
 	{
 		public void run()
 		{
-			for(;;)
+			for(; ;)
 			{
 				String nextSound;
 				synchronized(playList)
 				{
-					for(;;)
+					for(; ;)
 					{
-						if(playList.size()==0)
+						if(playList.size() == 0)
 						{
 							try
 							{
 								playList.wait();
 							}
-							catch (InterruptedException e)
+							catch(InterruptedException e)
 							{
 								if(logger.isInfoEnabled()) logger.info("Interrupted...");
 								return;
@@ -181,7 +190,7 @@ public class JLayerSounds implements Sounds
 						}
 						else
 						{
-							nextSound=playList.get(0);
+							nextSound = playList.get(0);
 							break;
 						}
 					}
@@ -189,17 +198,20 @@ public class JLayerSounds implements Sounds
 				if(!isMute())
 				{
 					if(logger.isInfoEnabled()) logger.info("Playing sound {}.", nextSound);
-					Player player=resolvePlayer(nextSound);
-					if(player!=null)
+					Player player = resolvePlayer(nextSound);
+					if(player != null)
 					{
 						try
 						{
 							player.play();
 							player.close();
 						}
-						catch (JavaLayerException ex)
+						catch(JavaLayerException ex)
 						{
-							if(logger.isWarnEnabled()) logger.warn("Exception while playing sound "+nextSound+"'!",ex);
+							if(logger.isWarnEnabled())
+							{
+								logger.warn("Exception while playing sound " + nextSound + "'!", ex);
+							}
 						}
 					}
 					else
