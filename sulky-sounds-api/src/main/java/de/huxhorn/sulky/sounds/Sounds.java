@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -23,7 +23,7 @@ public interface Sounds
 {
 	/**
 	 * Plays the sound with the given name.
-	 *
+	 * <p/>
 	 * If ignoreDuplicates is true, another instance
 	 * of the same sound will not be
 	 * added to the playlist while it is still played or waiting to be played .
@@ -35,6 +35,7 @@ public interface Sounds
 
 	/**
 	 * Shortcut for play(soundName, true).
+	 *
 	 * @param soundName
 	 */
 	void play(String soundName);
@@ -44,5 +45,6 @@ public interface Sounds
 	boolean isMute();
 
 	Map<String, String> getSoundLocations();
+
 	void setSoundLocations(Map<String, String> soundLocations);
 }

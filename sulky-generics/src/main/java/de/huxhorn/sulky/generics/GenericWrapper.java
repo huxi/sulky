@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,8 @@
  */
 package de.huxhorn.sulky.generics;
 
-public class GenericWrapper<T> implements Wrapper
+public class GenericWrapper<T>
+	implements Wrapper
 {
 	private T wrapped;
 
@@ -31,7 +32,8 @@ public class GenericWrapper<T> implements Wrapper
 		return wrapped;
 	}
 
-	public <T> T unwrap(Class<T> iface) throws IllegalArgumentException
+	public <T> T unwrap(Class<T> iface)
+		throws IllegalArgumentException
 	{
 		if(iface.isInstance(wrapped))
 		{
@@ -44,7 +46,7 @@ public class GenericWrapper<T> implements Wrapper
 				return Wrapper.class.cast(wrapped).unwrap(iface);
 			}
 		}
-		throw new IllegalArgumentException("This Wrapper does not wrap "+iface.getClass()+"!");
+		throw new IllegalArgumentException("This Wrapper does not wrap " + iface.getClass() + "!");
 	}
 
 	public boolean isWrapperFor(Class<?> iface)
@@ -62,8 +64,8 @@ public class GenericWrapper<T> implements Wrapper
 
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
 
 		final GenericWrapper that = (GenericWrapper) o;
 
@@ -78,6 +80,6 @@ public class GenericWrapper<T> implements Wrapper
 
 	public String toString()
 	{
-		return "wrapper-"+wrapped.getClass().getSimpleName()+"[wrapped="+wrapped+"]";
+		return "wrapper-" + wrapped.getClass().getSimpleName() + "[wrapped=" + wrapped + "]";
 	}
 }

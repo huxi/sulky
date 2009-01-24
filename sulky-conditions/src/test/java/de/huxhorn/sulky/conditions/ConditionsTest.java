@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,7 +32,7 @@ public class ConditionsTest
 
 		ConditionGroup conditionGroup = new And();
 		assertTrue(Conditions.contains(conditionGroup, conditionGroup));
-		List<Condition> conditions=new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<Condition>();
 		conditionGroup.setConditions(conditions);
 		assertTrue(Conditions.contains(conditionGroup, conditionGroup));
 		conditions.add(BooleanValues.TRUE);

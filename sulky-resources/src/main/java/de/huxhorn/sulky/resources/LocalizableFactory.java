@@ -20,9 +20,9 @@ package de.huxhorn.sulky.resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Proxy;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.Locale;
 
 /**
@@ -57,24 +57,24 @@ public final class LocalizableFactory
 
 		Class clazz = object.getClass();
 		Localizable loc;
-		if (object instanceof Localizable)
+		if(object instanceof Localizable)
 		{
 			loc = (Localizable) object;
-			if (logger.isDebugEnabled()) logger.debug("Casting to Localizable.");
+			if(logger.isDebugEnabled()) logger.debug("Casting to Localizable.");
 		}
 		else
 		{
 			// Important! Use the objects classloader so proxy's may be unloaded as well...
 			loc = (Localizable)
-					Proxy.newProxyInstance(clazz.getClassLoader(),
-							new Class[]{Localizable.class}, new LocalizableInvocationHandler(object));
-			if (logger.isDebugEnabled()) logger.debug("Created Localizable proxy.");
+				Proxy.newProxyInstance(clazz.getClassLoader(),
+					new Class[]{Localizable.class}, new LocalizableInvocationHandler(object));
+			if(logger.isDebugEnabled()) logger.debug("Created Localizable proxy.");
 		}
 		return loc;
 	}
 
 	private static class LocalizableInvocationHandler
-			implements InvocationHandler
+		implements InvocationHandler
 	{
 		private final Logger logger = LoggerFactory.getLogger(LocalizableInvocationHandler.class);
 
@@ -96,9 +96,9 @@ public final class LocalizableFactory
 			{
 				m = clazz.getMethod(GETTER_NAME);
 			}
-			catch (NoSuchMethodException ex)
+			catch(NoSuchMethodException ex)
 			{
-				if (logger.isInfoEnabled()) logger.info("getLocale-method not found...");
+				if(logger.isInfoEnabled()) logger.info("getLocale-method not found...");
 			}
 			this.getter = m;
 
@@ -107,36 +107,37 @@ public final class LocalizableFactory
 			{
 				m = clazz.getMethod(SETTER_NAME, new Class[]{Locale.class});
 			}
-			catch (NoSuchMethodException ex)
+			catch(NoSuchMethodException ex)
 			{
-				if (logger.isInfoEnabled()) logger.info("setLocale-method not found...");
+				if(logger.isInfoEnabled()) logger.info("setLocale-method not found...");
 			}
 			this.setter = m;
 		}
 
 		public Object invoke(Object proxy, Method method, Object[] args)
-				throws Throwable
+			throws Throwable
 		{
 			try
 			{
-				if (logger.isDebugEnabled())
+				if(logger.isDebugEnabled())
 				{
-					logger.debug("Calling method '" + method + "' on instance of class '" + object.getClass().getName() + "' with proxy '" + proxy.getClass() + "'.");
+					logger.debug("Calling method '" + method + "' on instance of class '" + object.getClass()
+						.getName() + "' with proxy '" + proxy.getClass() + "'.");
 				}
-				if (getter != null && GETTER_NAME.equals(method.getName()))
+				if(getter != null && GETTER_NAME.equals(method.getName()))
 				{
 					Object result = getter.invoke(object, args);
-					if (logger.isDebugEnabled()) logger.debug("Call-Result: " + result);
+					if(logger.isDebugEnabled()) logger.debug("Call-Result: " + result);
 					return result;
 				}
-				else if (setter != null && SETTER_NAME.equals(method.getName()))
+				else if(setter != null && SETTER_NAME.equals(method.getName()))
 				{
 					return setter.invoke(object, args);
 				}
 			}
-			catch (Throwable t)
+			catch(Throwable t)
 			{
-				if (logger.isWarnEnabled()) logger.warn("Throwable while invoking proxy-method!", t);
+				if(logger.isWarnEnabled()) logger.warn("Throwable while invoking proxy-method!", t);
 				throw t;
 			}
 			return null;

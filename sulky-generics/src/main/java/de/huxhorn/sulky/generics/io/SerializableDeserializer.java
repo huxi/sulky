@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -51,24 +51,24 @@ public class SerializableDeserializer<E extends Serializable>
 
 	public E deserialize(byte[] bytes)
 	{
-		ByteArrayInputStream bis =new ByteArrayInputStream(bytes);
-		ObjectInputStream ois =null;
+		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+		ObjectInputStream ois = null;
 		try
 		{
 			if(compressing)
 			{
-				GZIPInputStream gis =new GZIPInputStream(bis);
-				ois =new ObjectInputStream(gis);
+				GZIPInputStream gis = new GZIPInputStream(bis);
+				ois = new ObjectInputStream(gis);
 			}
 			else
 			{
-				ois =new ObjectInputStream(bis);
+				ois = new ObjectInputStream(bis);
 			}
-			Object result=ois.readObject();
+			Object result = ois.readObject();
 			//noinspection unchecked
 			return (E) result;
 		}
-		catch (Throwable e)
+		catch(Throwable e)
 		{
 			//e.printStackTrace();
 			// silently ignore any problems 

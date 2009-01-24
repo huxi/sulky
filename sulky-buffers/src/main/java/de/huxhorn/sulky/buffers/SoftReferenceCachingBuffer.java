@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,22 +20,23 @@ package de.huxhorn.sulky.buffers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.ref.Reference;
+import java.lang.ref.ReferenceQueue;
+import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.lang.ref.SoftReference;
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.Reference;
 
 public class SoftReferenceCachingBuffer<E>
 	implements Buffer<E>, ResetOperation, DisposeOperation
 {
 	private final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);
 
-	private static final ReferenceQueue refQueue=new ReferenceQueue();
+	private static final ReferenceQueue refQueue = new ReferenceQueue();
+
 	static
 	{
-		Thread cleanupThread=new Thread(new ReferenceQueueRunnable(), "ReferenceQueue-Cleanup");
+		Thread cleanupThread = new Thread(new ReferenceQueueRunnable(), "ReferenceQueue-Cleanup");
 		cleanupThread.setDaemon(true);
 		cleanupThread.start();
 		final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);
@@ -50,9 +51,9 @@ public class SoftReferenceCachingBuffer<E>
 
 	public SoftReferenceCachingBuffer(Buffer<E> buffer)
 	{
-		this.disposed=false;
+		this.disposed = false;
 		this.buffer = buffer;
-		this.cache=new ConcurrentHashMap<Long, MySoftReference<E>>();
+		this.cache = new ConcurrentHashMap<Long, MySoftReference<E>>();
 	}
 
 	Buffer<E> getWrappedBuffer()
@@ -66,12 +67,12 @@ public class SoftReferenceCachingBuffer<E>
 		{
 			return null;
 		}
-		SoftReference<E> softy=cache.get(index);
+		SoftReference<E> softy = cache.get(index);
 		E result;
-		if(softy!=null)
+		if(softy != null)
 		{
-			result=softy.get();
-			if(result==null)
+			result = softy.get();
+			if(result == null)
 			{
 				cache.remove(index);
 			}
@@ -83,8 +84,8 @@ public class SoftReferenceCachingBuffer<E>
 			}
 		}
 
-		result=buffer.get(index);
-		if(result!=null)
+		result = buffer.get(index);
+		if(result != null)
 		{
 			cache.put(index, new MySoftReference<E>(cache, index, result));
 			if(logger.isDebugEnabled()) logger.debug("Added {} to cache.", index);
@@ -106,7 +107,7 @@ public class SoftReferenceCachingBuffer<E>
 	{
 		if(buffer instanceof ResetOperation)
 		{
-			ResetOperation op=(ResetOperation) buffer;
+			ResetOperation op = (ResetOperation) buffer;
 			op.reset();
 		}
 		cache.clear();
@@ -114,7 +115,7 @@ public class SoftReferenceCachingBuffer<E>
 
 	public void dispose()
 	{
-		disposed=true;
+		disposed = true;
 		cache.clear();
 		if(buffer instanceof DisposeOperation)
 		{
@@ -140,7 +141,7 @@ public class SoftReferenceCachingBuffer<E>
 			//noinspection unchecked
 			super(referent, refQueue);
 			this.index = index;
-			this.cache=cache;
+			this.cache = cache;
 		}
 
 		public long getIndex()
@@ -157,29 +158,29 @@ public class SoftReferenceCachingBuffer<E>
 	}
 
 	private static class ReferenceQueueRunnable
-			implements Runnable
+		implements Runnable
 	{
 
 		public void run()
 		{
 
-			for(;;)
+			for(; ;)
 			{
 				try
 				{
 					Reference ref = refQueue.remove();
 					if(ref instanceof MySoftReference)
 					{
-						MySoftReference reference=(MySoftReference)ref;
+						MySoftReference reference = (MySoftReference) ref;
 						reference.removeFromCache();
 					}
 					else
 					{
 						final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);
-						if(logger.isWarnEnabled()) logger.warn("Unexpected reference!! {}",ref);
+						if(logger.isWarnEnabled()) logger.warn("Unexpected reference!! {}", ref);
 					}
 				}
-				catch (InterruptedException e)
+				catch(InterruptedException e)
 				{
 					final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);
 					if(logger.isInfoEnabled()) logger.info("Interrupted ReferenceQueueRunnable...");

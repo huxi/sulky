@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -20,28 +20,28 @@ package de.huxhorn.sulky.swing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
+import java.awt.*;
 import java.awt.event.InputEvent;
-import java.awt.Toolkit;
+
+import javax.swing.*;
 
 public class KeyStrokes
 {
-	public static final String COMMAND_ALIAS="command";
+	public static final String COMMAND_ALIAS = "command";
 
 	/**
 	 * The string representation of the system-dependant command modifier.
-	 *
+	 * <p/>
 	 * It is obtained by calling getModifiersString(Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()).
-	 *
 	 */
 	public static final String COMMAND_MODIFIERS;
 
 	static
 	{
-		Toolkit toolkit=Toolkit.getDefaultToolkit();
-		int keymask=toolkit.getMenuShortcutKeyMask();
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		int keymask = toolkit.getMenuShortcutKeyMask();
 
-		COMMAND_MODIFIERS=getModifiersString(keymask);
+		COMMAND_MODIFIERS = getModifiersString(keymask);
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class KeyStrokes
 	 * would return the string "shift control". Calling this method
 	 * without any modifiers set in the modifiers will return an empty string.
 	 * Calling it with all modifiers set will return "shift control meta alt altGraph".
-	 *
+	 * <p/>
 	 * This method is only used to initialize the system-dependant COMMAND_MODIFIERS
 	 * attribute but was left public because it can be quite handy for debugging.
 	 *
@@ -60,38 +60,38 @@ public class KeyStrokes
 	 */
 	public static String getModifiersString(int modifiers)
 	{
-		StringBuilder result=new StringBuilder();
-		if( (modifiers & InputEvent.SHIFT_MASK)!=0 )
+		StringBuilder result = new StringBuilder();
+		if((modifiers & InputEvent.SHIFT_MASK) != 0)
 		{
 			result.append("shift");
 		}
-		if( (modifiers & InputEvent.CTRL_MASK)!=0 )
+		if((modifiers & InputEvent.CTRL_MASK) != 0)
 		{
-			if(result.length()!=0)
+			if(result.length() != 0)
 			{
 				result.append(" ");
 			}
 			result.append("control");
 		}
-		if( (modifiers & InputEvent.META_MASK)!=0 )
+		if((modifiers & InputEvent.META_MASK) != 0)
 		{
-			if(result.length()!=0)
+			if(result.length() != 0)
 			{
 				result.append(" ");
 			}
 			result.append("meta");
 		}
-		if( (modifiers & InputEvent.ALT_MASK)!=0 )
+		if((modifiers & InputEvent.ALT_MASK) != 0)
 		{
-			if(result.length()!=0)
+			if(result.length() != 0)
 			{
 				result.append(" ");
 			}
 			result.append("alt");
 		}
-		if( (modifiers & InputEvent.ALT_GRAPH_MASK)!=0 )
+		if((modifiers & InputEvent.ALT_GRAPH_MASK) != 0)
 		{
-			if(result.length()!=0)
+			if(result.length() != 0)
 			{
 				result.append(" ");
 			}
@@ -102,6 +102,7 @@ public class KeyStrokes
 
 	/**
 	 * Shortcut for accel.replaceAll(COMMAND_ALIAS, COMMAND_MODIFIERS).
+	 *
 	 * @param accel
 	 */
 	public static String preprocessAccelerator(String accel)
@@ -115,8 +116,12 @@ public class KeyStrokes
 
 		KeyStroke result;
 		String preprocessedKeyStroke = preprocessAccelerator(keyStroke);
-		result=KeyStroke.getKeyStroke(preprocessedKeyStroke);
-		if(logger.isDebugEnabled()) logger.debug("keyStroke {} resolved to {} resulted in {}.", new Object[]{keyStroke, preprocessedKeyStroke, result});
+		result = KeyStroke.getKeyStroke(preprocessedKeyStroke);
+		if(logger.isDebugEnabled())
+		{
+			logger
+				.debug("keyStroke {} resolved to {} resulted in {}.", new Object[]{keyStroke, preprocessedKeyStroke, result});
+		}
 		return result;
 	}
 
@@ -124,8 +129,8 @@ public class KeyStrokes
 	{
 		final Logger logger = LoggerFactory.getLogger(KeyStrokes.class);
 
-		KeyStroke keyStroke=(KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-		if(keyStroke!=null)
+		KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
+		if(keyStroke != null)
 		{
 			if(logger.isDebugEnabled())
 			{
@@ -138,15 +143,15 @@ public class KeyStrokes
 
 			Object value;
 			inputMap = component.getInputMap(JComponent.WHEN_FOCUSED);
-			value=inputMap.get(keyStroke);
-			if(value!=null)
+			value = inputMap.get(keyStroke);
+			if(value != null)
 			{
 				inputMap.put(keyStroke, commandName);
 			}
 
 			inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-			value=inputMap.get(keyStroke);
-			if(value!=null)
+			value = inputMap.get(keyStroke);
+			if(value != null)
 			{
 				inputMap.put(keyStroke, commandName);
 			}
@@ -162,7 +167,7 @@ public class KeyStrokes
 	{
 		final Logger logger = LoggerFactory.getLogger(KeyStrokes.class);
 
-		StringBuilder buffer=new StringBuilder();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("Component: ").append(component).append(":\n");
 		buffer.append("\t").append(identifier).append(":\n");
 		InputMap inputMap;
@@ -179,9 +184,9 @@ public class KeyStrokes
 	{
 		buffer.append("\tmapName: ").append(mapName).append("\n");
 		KeyStroke[] keys = inputMap.allKeys();
-		if(keys!=null)
+		if(keys != null)
 		{
-			for(KeyStroke ks:keys)
+			for(KeyStroke ks : keys)
 			{
 				buffer.append("\t\tKey  : ").append(ks).append("\n");
 				buffer.append("\t\tValue: ").append(inputMap.get(ks)).append("\n");

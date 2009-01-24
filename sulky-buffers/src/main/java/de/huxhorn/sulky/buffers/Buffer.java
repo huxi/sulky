@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,13 +24,13 @@ public interface Buffer<E>
 	 * Returns the value at the given <tt>index</tt>.
 	 * <tt>index</tt> must be in the range <tt>[0..(getSize()-1)]</tt>.
 	 * Returns <tt>null</tt> if a value couldn't be resolved, e.g. in case of a volatile buffer.
+	 *
 	 * @param index must be in the range <tt>[0..(getSize()-1)]</tt>.
 	 * @return the value at the given <tt>index</tt>.
 	 */
 	E get(long index);
 
 	/**
-	 *
 	 * @return the size of the buffer.
 	 */
 	long getSize();

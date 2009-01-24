@@ -3,7 +3,7 @@
 
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
-			<param name="Pattern" value="%-5level - %msg%n" />
+			<param name="Pattern" value="%-5level - %msg%n"/>
 		</layout>
 	</appender>
 
@@ -13,8 +13,8 @@
 	</root>
 
 	<!--
-	<logger name="de.huxhorn">
-		<level value="TRACE"/>
-	</logger>
-	-->
+	   <logger name="de.huxhorn">
+		   <level value="TRACE"/>
+	   </logger>
+	   -->
 </configuration>

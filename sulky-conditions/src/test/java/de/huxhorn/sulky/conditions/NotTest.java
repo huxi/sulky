@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,25 +22,28 @@ import java.io.IOException;
 public class NotTest
 	extends ConditionTestBase
 {
-	public void testEmpty() throws CloneNotSupportedException, IOException, ClassNotFoundException
+	public void testEmpty()
+		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
-		Not condition =new Not();
+		Not condition = new Not();
 		assertNull(condition.getCondition());
 		assertEquals(false, condition.isTrue(null));
 		internalTestCondition(condition);
 	}
 
-	public void testTrue() throws CloneNotSupportedException, IOException, ClassNotFoundException
+	public void testTrue()
+		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
-		Not condition =new Not();
+		Not condition = new Not();
 		condition.setCondition(BooleanValues.FALSE);
 		assertEquals(true, condition.isTrue(null));
 		internalTestCondition(condition);
 	}
 
-	public void testFalse() throws CloneNotSupportedException, IOException, ClassNotFoundException
+	public void testFalse()
+		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
-		Not condition =new Not();
+		Not condition = new Not();
 		condition.setCondition(BooleanValues.TRUE);
 		assertEquals(false, condition.isTrue(null));
 		internalTestCondition(condition);

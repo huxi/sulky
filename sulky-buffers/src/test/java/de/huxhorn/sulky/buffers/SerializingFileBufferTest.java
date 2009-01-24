@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 
 public class SerializingFileBufferTest
-		extends TestCase
+	extends TestCase
 {
 	private final Logger logger = LoggerFactory.getLogger(SerializingFileBufferTest.class);
 
@@ -33,17 +33,19 @@ public class SerializingFileBufferTest
 	private File serializeFile;
 	private File serializeIndexFile;
 
-	protected void setUp() throws Exception
+	protected void setUp()
+		throws Exception
 	{
 		tempOutputPath = File.createTempFile("sfb-testing", "rulez");
 		tempOutputPath.delete();
 		tempOutputPath.mkdirs();
-		serializeFile=new File(tempOutputPath, "dump");
-		serializeIndexFile=new File(tempOutputPath, "dump.index");
+		serializeFile = new File(tempOutputPath, "dump");
+		serializeIndexFile = new File(tempOutputPath, "dump.index");
 		instance = new SerializingFileBuffer<String>(serializeFile, serializeIndexFile);
 	}
 
-	protected void tearDown() throws Exception
+	protected void tearDown()
+		throws Exception
 	{
 		super.tearDown();
 		serializeFile.delete();
@@ -53,35 +55,35 @@ public class SerializingFileBufferTest
 
 	public void testReadWrite()
 	{
-		String[] values={
-				"Null, sozusagen ganix",
-				"Eins",
-				"Zwei",
-				"Drei",
-				"Vier",
-				"Fuenef",
-				"Sechse",
-				"Siebene",
-				"Achtele",
-				"Neune",
-				"Zehne"
+		String[] values = {
+			"Null, sozusagen ganix",
+			"Eins",
+			"Zwei",
+			"Drei",
+			"Vier",
+			"Fuenef",
+			"Sechse",
+			"Siebene",
+			"Achtele",
+			"Neune",
+			"Zehne"
 		};
 
 		instance.addAll(values);
-		assertEquals(values.length, (int)instance.getSize());
+		assertEquals(values.length, (int) instance.getSize());
 
-		for(int i=0;i<values.length;i++)
+		for(int i = 0; i < values.length; i++)
 		{
-			String value=instance.get(i);
+			String value = instance.get(i);
 			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
-			assertEquals("Element #"+i+" differs!", values[i], value);
+			assertEquals("Element #" + i + " differs!", values[i], value);
 		}
 
-		int index=0;
-		for(String value:instance)
+		int index = 0;
+		for(String value : instance)
 		{
 			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
-			assertEquals("Element #"+index+" differs!", values[index], value);
+			assertEquals("Element #" + index + " differs!", values[index], value);
 			index++;
 		}
 	}

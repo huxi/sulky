@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -32,65 +32,65 @@ public class Windows
 		{
 			window.pack();
 		}
-		GraphicsEnvironment ge=GraphicsEnvironment.getLocalGraphicsEnvironment();
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Rectangle maxBounds = ge.getMaximumWindowBounds();
-		if(logger.isDebugEnabled()) logger.debug("MaximumWindowBounds: {}",maxBounds);
+		if(logger.isDebugEnabled()) logger.debug("MaximumWindowBounds: {}", maxBounds);
 
 		Rectangle windowBounds = window.getBounds();
 		if(logger.isDebugEnabled()) logger.debug("Original windowBounds: {}", windowBounds);
-		if(windowBounds.width>maxBounds.width)
+		if(windowBounds.width > maxBounds.width)
 		{
-			windowBounds.width=maxBounds.width;
+			windowBounds.width = maxBounds.width;
 		}
-		if(windowBounds.height>maxBounds.height)
+		if(windowBounds.height > maxBounds.height)
 		{
-			windowBounds.height=maxBounds.height;
+			windowBounds.height = maxBounds.height;
 		}
 		if(logger.isDebugEnabled()) logger.debug("Corrected windowBounds: {}", windowBounds);
 
 		Rectangle centerBounds = maxBounds;
-		if(centerParent!=null && centerParent.isVisible())
+		if(centerParent != null && centerParent.isVisible())
 		{
 			centerBounds = centerParent.getBounds();
 			if(logger.isDebugEnabled()) logger.debug("Retrieved parent container bounds...");
 		}
 		if(logger.isDebugEnabled()) logger.debug("centerBounds: {}", centerBounds);
-		windowBounds.x=centerBounds.x+(centerBounds.width-windowBounds.width)/2;
-		windowBounds.y=centerBounds.y+(centerBounds.height-windowBounds.height)/2;
+		windowBounds.x = centerBounds.x + (centerBounds.width - windowBounds.width) / 2;
+		windowBounds.y = centerBounds.y + (centerBounds.height - windowBounds.height) / 2;
 		if(logger.isDebugEnabled()) logger.debug("centered bounds: {}", windowBounds);
 
 		// first, correct upper left corner
-		if(windowBounds.x<maxBounds.x)
+		if(windowBounds.x < maxBounds.x)
 		{
-			windowBounds.x=maxBounds.x;
+			windowBounds.x = maxBounds.x;
 		}
-		if(windowBounds.y<maxBounds.y)
+		if(windowBounds.y < maxBounds.y)
 		{
-			windowBounds.y=maxBounds.y;
+			windowBounds.y = maxBounds.y;
 		}
 		if(logger.isDebugEnabled()) logger.debug("corrected1: {}", windowBounds);
 
 		// second, check bottom right
-		if(windowBounds.x+windowBounds.width>maxBounds.x+maxBounds.width)
+		if(windowBounds.x + windowBounds.width > maxBounds.x + maxBounds.width)
 		{
-			windowBounds.x=maxBounds.width-windowBounds.width;
+			windowBounds.x = maxBounds.width - windowBounds.width;
 		}
-		if(windowBounds.y+windowBounds.height>maxBounds.y+maxBounds.height)
+		if(windowBounds.y + windowBounds.height > maxBounds.y + maxBounds.height)
 		{
-			windowBounds.y=maxBounds.height-windowBounds.height;
+			windowBounds.y = maxBounds.height - windowBounds.height;
 		}
 		if(logger.isDebugEnabled()) logger.debug("corrected1: {}", windowBounds);
 
 		// third, correct upper left corner again because upper left is more important and
 		// has probably again moved out of screen because of bottom right correction
 		// if window/window is simply too large.
-		if(windowBounds.x<maxBounds.x)
+		if(windowBounds.x < maxBounds.x)
 		{
-			windowBounds.x=maxBounds.x;
+			windowBounds.x = maxBounds.x;
 		}
-		if(windowBounds.y<maxBounds.y)
+		if(windowBounds.y < maxBounds.y)
 		{
-			windowBounds.y=maxBounds.y;
+			windowBounds.y = maxBounds.y;
 		}
 		if(logger.isDebugEnabled()) logger.debug("changed bounds: {}", windowBounds);
 

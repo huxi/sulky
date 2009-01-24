@@ -7,44 +7,44 @@ This section describes different ways of resource resolution provided by Java&tr
 <h3 id="files">Loading resources from files</h3>
 
 <p>Loading resources from files is generally a bad idea. Files are always
-    either relative to the current directory of the application or absolute and
-    therefore platform-dependant. If the application is expected to work on
-    any operating system without a change the use of <code>File</code> <strong>for resources</strong>
-    should be avoided.</p>
+	either relative to the current directory of the application or absolute and
+	therefore platform-dependant. If the application is expected to work on
+	any operating system without a change the use of <code>File</code> <strong>for resources</strong>
+	should be avoided.</p>
 <dl>
-    <dt><code>public File(String pathname)</code></dt>
-    <dd>
-        The given <code>pathname</code> is resolved <strong>relative to the current application directory</strong> if
-        it's not an absolute path already.<br/>
-        If this constructor is used to obtain resources it obviously won't be possible to do
-        tasks in your application that depend on the current application directory (e.g. 'dir')
-        because the user is required to change the current directory to the install directory
-        of the application before starting it. Otherwise it wouldn't be able to find it's
-        required resources.
-    </dd>
-    <dt><code>public File(String parent, String child)</code></dt>
-    <dd>
-        Usage of this constructor isn't as bad as the previous one because it's platform independant
-        if <code>parent</code> was obtained in a platform independant way e.g. by calling
-        <code>System.getProperty(String)</code> with argument <code>"java.io.tmpdir"</code>
-        for temporary files or <code>"user.home"</code> for application settings.
-    </dd>
+	<dt><code>public File(String pathname)</code></dt>
+	<dd>
+		The given <code>pathname</code> is resolved <strong>relative to the current application directory</strong> if
+		it's not an absolute path already.<br/>
+		If this constructor is used to obtain resources it obviously won't be possible to do
+		tasks in your application that depend on the current application directory (e.g. 'dir')
+		because the user is required to change the current directory to the install directory
+		of the application before starting it. Otherwise it wouldn't be able to find it's
+		required resources.
+	</dd>
+	<dt><code>public File(String parent, String child)</code></dt>
+	<dd>
+		Usage of this constructor isn't as bad as the previous one because it's platform independant
+		if <code>parent</code> was obtained in a platform independant way e.g. by calling
+		<code>System.getProperty(String)</code> with argument <code>"java.io.tmpdir"</code>
+		for temporary files or <code>"user.home"</code> for application settings.
+	</dd>
 </dl>
 
 <h3 id="classloader">Obtaining resources using <code>java.lang.ClassLoader</code>
-    or <code>java.lang.Class</code></h3>
+	or <code>java.lang.Class</code></h3>
 
 <p>By using the methods <code>getResource</code> and <code>getResourceAsStream</code> of
-    <code>java.lang.ClassLoader</code> or <code>java.lang.Class</code> the resource locations are
-    at least platform independant. They can (and should) be contained in JAR files which translates
-    into faster resolution and less disk space usage.</p>
+	<code>java.lang.ClassLoader</code> or <code>java.lang.Class</code> the resource locations are
+	at least platform independant. They can (and should) be contained in JAR files which translates
+	into faster resolution and less disk space usage.</p>
 
 <p>Resources obtained by the <code>ClassLoader</code> (directly or
-    indirectly by <code>Class</code>) are never locale specific like
-    <code>ResourceBundle</code>-resources (explained <a href="#resourceBundle">below</a>).</p>
+	indirectly by <code>Class</code>) are never locale specific like
+	<code>ResourceBundle</code>-resources (explained <a href="#resourceBundle">below</a>).</p>
 
 <p>A (quite unobvious) drawback of <code>Class.getResource</code> is that the apparent
-    usage results in an inheritance unsafe class under certain circumstances.</p>
+	usage results in an inheritance unsafe class under certain circumstances.</p>
 
 <p>This is probably best explained by an example:</p>
 <code><pre>
@@ -65,7 +65,7 @@ public class Foo
 <p>Looks quite right, doesn't it? Well, it isn't. Instead it contains a major bug!</p>
 
 <p>Because <code>Foo</code> is <code>public</code> and not <code>final</code> it's possible
-    to extend it.</p>
+	to extend it.</p>
 <code><pre>
 package your.customer;
 
@@ -82,13 +82,13 @@ public class MyFoo extends foobar.Foo
 </code>
 
 <p>If your customer calls <code>someMethod()</code> the class <code>MyFoo</code> won't
-    be able to find the resource because it is searched for <strong>relative to the
-        package <code>your.customer</code></strong> (<code>getClass()</code> in <code>someMethod()</code>
-    will, correctly but very unlikely expected, return
-    <code>your.customer.MyFoo.class</code> instead of <code>foobar.Foo.class</code>).</p>
+	be able to find the resource because it is searched for <strong>relative to the
+		package <code>your.customer</code></strong> (<code>getClass()</code> in <code>someMethod()</code>
+	will, correctly but very unlikely expected, return
+	<code>your.customer.MyFoo.class</code> instead of <code>foobar.Foo.class</code>).</p>
 
 <p>The correct way to implement class <code>Foo</code> in an inheritance safe manner
-    would look like this:</p>
+	would look like this:</p>
 <code><pre>
 package foobar;
 
@@ -105,7 +105,7 @@ public class Foo
 </code>
 
 <p>That way <code>someMethod()</code> will still search relative to the package <code>foobar</code> even
-    if called on an extending class in a different package.</p>
+	if called on an extending class in a different package.</p>
 
 <h3 id="resourceBundle">Obtaining locale specific resources using <code>java.util.ResourceBundle</code></h3>
 

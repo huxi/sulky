@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,13 +17,13 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.List;
-import java.util.Iterator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class BlockingCircularBuffer<E>
 	implements CircularBuffer<E>
@@ -37,14 +37,14 @@ public class BlockingCircularBuffer<E>
 
 	public BlockingCircularBuffer(int bufferSize, int congestionDelay)
 	{
-		events=new OverwritingCircularBuffer<E>(bufferSize);
-		lock=new ReentrantLock();
-		this.congestionDelay=congestionDelay;
+		events = new OverwritingCircularBuffer<E>(bufferSize);
+		lock = new ReentrantLock();
+		this.congestionDelay = congestionDelay;
 	}
 
 	public BlockingCircularBuffer(int bufferSize)
 	{
-		this(bufferSize,DEFAULT_CONGESTION_DELAY);
+		this(bufferSize, DEFAULT_CONGESTION_DELAY);
 	}
 
 	public int getCongestionDelay()
@@ -54,9 +54,9 @@ public class BlockingCircularBuffer<E>
 
 	public void setCongestionDelay(int congestionDelay)
 	{
-		if(congestionDelay<0)
+		if(congestionDelay < 0)
 		{
-			throw new IllegalArgumentException("congestionDelay ("+congestionDelay+") must not be negative!");
+			throw new IllegalArgumentException("congestionDelay (" + congestionDelay + ") must not be negative!");
 		}
 		this.congestionDelay = congestionDelay;
 	}
@@ -71,13 +71,17 @@ public class BlockingCircularBuffer<E>
 				lock.unlock();
 				try
 				{
-					if(logger.isWarnEnabled()) logger.warn("Congestion ({} events) detected, sleeping for {} millis.", events.getAvailableElements(), congestionDelay);
-					if(congestionDelay>0)
+					if(logger.isWarnEnabled())
+					{
+						logger
+							.warn("Congestion ({} events) detected, sleeping for {} millis.", events.getAvailableElements(), congestionDelay);
+					}
+					if(congestionDelay > 0)
 					{
 						Thread.sleep(congestionDelay);
 					}
 				}
-				catch (InterruptedException e)
+				catch(InterruptedException e)
 				{
 					if(logger.isInfoEnabled()) logger.info("Interrupted...");
 					return;
@@ -94,7 +98,7 @@ public class BlockingCircularBuffer<E>
 
 	public void addAll(List<E> elements)
 	{
-		for (E element : elements)
+		for(E element : elements)
 		{
 			add(element);
 		}
@@ -102,7 +106,7 @@ public class BlockingCircularBuffer<E>
 
 	public void addAll(E[] elements)
 	{
-		for (E element : elements)
+		for(E element : elements)
 		{
 			add(element);
 		}
@@ -135,7 +139,6 @@ public class BlockingCircularBuffer<E>
 	}
 
 	/**
-	 *
 	 * @return either <tt>null</tt> or a List containing all accumulated events.
 	 */
 	public List<E> removeAll()

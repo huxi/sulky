@@ -47,28 +47,28 @@ public abstract class MapLoader
 
 	protected MapLoader(String[] suffixes)
 	{
-		if (suffixes.length == 0)
+		if(suffixes.length == 0)
 		{
 			throw new IllegalArgumentException("MapLoader must have a suffix.");
 		}
 		Logger logger = LoggerFactory.getLogger(MapLoader.class);
 
 		List<String> suff = new ArrayList<String>(suffixes.length);
-		for (int i = 0; i < suffixes.length; i++)
+		for(int i = 0; i < suffixes.length; i++)
 		{
 			String cur = suffixes[i];
-			if (cur == null)
+			if(cur == null)
 			{
-				if (logger.isWarnEnabled()) logger.warn("suffixes[" + i + "] is null!");
+				if(logger.isWarnEnabled()) logger.warn("suffixes[" + i + "] is null!");
 			}
 			else
 			{
 				cur = cur.trim().toLowerCase();
-				if (cur.length() != 0)
+				if(cur.length() != 0)
 				{
-					if (suff.contains(cur))
+					if(suff.contains(cur))
 					{
-						if (logger.isWarnEnabled())
+						if(logger.isWarnEnabled())
 						{
 							logger.warn("Duplicate suffix entry at suffixes[" + i + "]: " + cur);
 						}
@@ -94,9 +94,9 @@ public abstract class MapLoader
 	public boolean isSupported(URL url)
 	{
 		String fileName = url.getPath().toLowerCase();
-		for (String suffix : suffixes)
+		for(String suffix : suffixes)
 		{
-			if (fileName.endsWith(suffix))
+			if(fileName.endsWith(suffix))
 			{
 				return true;
 			}
@@ -112,31 +112,31 @@ public abstract class MapLoader
 	 * and not <code>null</code>. Otherwise, already existing entries in
 	 * <code>result</code> will not be replaced.
 	 *
-	 * @param url the source URL of the <code>Map</code> to be loaded.
-	 * @param result the result map that will be merged with the loaded map. Will be created if <code>null</code>.
+	 * @param url       the source URL of the <code>Map</code> to be loaded.
+	 * @param result    the result map that will be merged with the loaded map. Will be created if <code>null</code>.
 	 * @param overwrite if <code>true</code>, non-<code>null</code> values in result will be replaced with non-<code>null</code> values of the loaded map.
 	 * @return the merged map
 	 * @throws IOException if loading the map fails.
 	 */
 	public Map<String, Object> mergeMaps(URL url, Map<String, Object> result, boolean overwrite)
-			throws IOException
+		throws IOException
 	{
-		if(result==null)
+		if(result == null)
 		{
-			result=new HashMap<String, Object>();
+			result = new HashMap<String, Object>();
 		}
 
 		Map<String, Object> map = loadMap(url);
-		if (map != null)
+		if(map != null)
 		{
-			for (Map.Entry<String, Object> current : map.entrySet())
+			for(Map.Entry<String, Object> current : map.entrySet())
 			{
 				String key = current.getKey();
 				Object value = current.getValue();
-				if (value != null)
+				if(value != null)
 				{
 					Object previous = result.get(key);
-					if (overwrite || previous == null)
+					if(overwrite || previous == null)
 					{
 						result.put(key, value);
 					}
@@ -147,11 +147,11 @@ public abstract class MapLoader
 	}
 
 	public abstract Map<String, Object> loadMap(URL url)
-			throws IOException;
+		throws IOException;
 }
 
 class PropertiesMapLoader
-		extends MapLoader
+	extends MapLoader
 {
 	public static final String PROPERTY_BUNDLE_SUFFIX = ".properties";
 
@@ -161,9 +161,9 @@ class PropertiesMapLoader
 	}
 
 	public Map<String, Object> loadMap(URL url)
-			throws IOException
+		throws IOException
 	{
-		if (!isSupported(url))
+		if(!isSupported(url))
 		{
 			return null;
 		}
@@ -174,11 +174,11 @@ class PropertiesMapLoader
 		bundle.load(is);
 
 		Enumeration e = bundle.keys();
-		while (e.hasMoreElements())
+		while(e.hasMoreElements())
 		{
 			String key = (String) e.nextElement();
 			Object value = bundle.get(key);
-			if (value != null)
+			if(value != null)
 			{
 				result.put(key, value);
 			}

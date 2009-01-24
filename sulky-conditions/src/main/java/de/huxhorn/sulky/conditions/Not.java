@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -49,7 +49,7 @@ public class Not
 
 	/**
 	 * Returns true if the contained condition returns false.
-	 *
+	 * <p/>
 	 * This implies that it returns false if the contained condition is null.
 	 *
 	 * @param element
@@ -64,20 +64,21 @@ public class Not
 		return false;
 	}
 
-	public Not clone() throws CloneNotSupportedException
+	public Not clone()
+		throws CloneNotSupportedException
 	{
-		Not result=(Not)super.clone();
-		if(result.condition!= null)
+		Not result = (Not) super.clone();
+		if(result.condition != null)
 		{
-			result.condition=result.condition.clone();
+			result.condition = result.condition.clone();
 		}
 		return result;
 	}
 
 	public String toString()
 	{
-		StringBuilder result=new StringBuilder();
-		if(condition==null)
+		StringBuilder result = new StringBuilder();
+		if(condition == null)
 		{
 			result.append("false");
 		}
@@ -92,8 +93,8 @@ public class Not
 
 	public boolean equals(Object o)
 	{
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
 
 		final Not not = (Not) o;
 

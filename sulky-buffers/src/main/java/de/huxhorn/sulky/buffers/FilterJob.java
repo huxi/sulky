@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -22,8 +22,10 @@ import de.huxhorn.sulky.conditions.Condition;
 public interface FilterJob<E>
 {
 	void setCondition(Condition condition);
+
 	Condition getCondition();
 
 	void setAppendOperation(AppendOperation<E> operation);
+
 	AppendOperation<E> getAppendOperation();
 }

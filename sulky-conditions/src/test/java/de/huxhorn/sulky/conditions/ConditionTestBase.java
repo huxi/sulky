@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -19,36 +19,39 @@ package de.huxhorn.sulky.conditions;
 
 import junit.framework.TestCase;
 
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
-import java.io.IOException;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class ConditionTestBase
-		extends TestCase
+	extends TestCase
 {
-	public void internalTestCondition(Condition condition) throws CloneNotSupportedException, IOException, ClassNotFoundException
+	public void internalTestCondition(Condition condition)
+		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
 		internalTestCloneEquals(condition);
 		internalTestSerialization(condition);
 	}
 
-	public void internalTestSerialization(Condition condition) throws IOException, ClassNotFoundException
+	public void internalTestSerialization(Condition condition)
+		throws IOException, ClassNotFoundException
 	{
-		ByteArrayOutputStream os=new ByteArrayOutputStream();
-		ObjectOutputStream oos=new ObjectOutputStream(os);
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(os);
 		oos.writeObject(condition);
 		oos.close();
-		ByteArrayInputStream is=new ByteArrayInputStream(os.toByteArray());
-		ObjectInputStream ois=new ObjectInputStream(is);
-		Condition deserialized=(Condition) ois.readObject();
+		ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+		ObjectInputStream ois = new ObjectInputStream(is);
+		Condition deserialized = (Condition) ois.readObject();
 		internalTestEquals(condition, deserialized);
 	}
 
-	public void internalTestCloneEquals(Condition condition) throws CloneNotSupportedException
+	public void internalTestCloneEquals(Condition condition)
+		throws CloneNotSupportedException
 	{
-		Condition clone=condition.clone();
+		Condition clone = condition.clone();
 		internalTestEquals(condition, clone);
 	}
 
@@ -57,8 +60,8 @@ public class ConditionTestBase
 		assertEquals(original, other);
 		if(other instanceof ConditionGroup)
 		{
-			ConditionGroup originalGroup=(ConditionGroup) original;
-			ConditionGroup clonedGroup=(ConditionGroup) other;
+			ConditionGroup originalGroup = (ConditionGroup) original;
+			ConditionGroup clonedGroup = (ConditionGroup) other;
 			assertEquals(originalGroup.getConditions(), clonedGroup.getConditions());
 		}
 		else if(other instanceof ConditionWrapper)

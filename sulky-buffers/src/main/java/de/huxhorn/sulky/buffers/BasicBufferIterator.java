@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -29,9 +29,9 @@ public class BasicBufferIterator<E>
 
 	public BasicBufferIterator(Buffer<E> buffer)
 	{
-		this.buffer=buffer;
-		this.size=buffer.getSize();
-		this.current=0;
+		this.buffer = buffer;
+		this.size = buffer.getSize();
+		this.current = 0;
 	}
 
 	public boolean hasNext()
@@ -41,7 +41,7 @@ public class BasicBufferIterator<E>
 
 	public E next()
 	{
-		if (!hasNext())
+		if(!hasNext())
 		{
 			throw new NoSuchElementException("Iterator doesn't have more entries");
 		}

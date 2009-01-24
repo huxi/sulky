@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -37,7 +37,7 @@ public class SerializableSerializer<E extends Serializable>
 
 	public SerializableSerializer(boolean compressing)
 	{
-		this.compressing=compressing;
+		this.compressing = compressing;
 	}
 
 	public boolean isCompressing()
@@ -52,18 +52,18 @@ public class SerializableSerializer<E extends Serializable>
 
 	public byte[] serialize(E object)
 	{
-		ByteArrayOutputStream bos=new ByteArrayOutputStream();
-		ObjectOutputStream oos=null;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = null;
 		try
 		{
 			if(compressing)
 			{
-				GZIPOutputStream gos=new GZIPOutputStream(bos);
-				oos=new ObjectOutputStream(gos);
+				GZIPOutputStream gos = new GZIPOutputStream(bos);
+				oos = new ObjectOutputStream(gos);
 			}
 			else
 			{
-				oos=new ObjectOutputStream(bos);
+				oos = new ObjectOutputStream(bos);
 			}
 			oos.writeObject(object);
 			oos.flush();
@@ -73,7 +73,7 @@ public class SerializableSerializer<E extends Serializable>
 			//System.out.println("serialized size: "+result.length);
 			return result;
 		}
-		catch (IOException e)
+		catch(IOException e)
 		{
 			e.printStackTrace();
 			return null;
