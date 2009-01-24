@@ -45,7 +45,7 @@ public class PathTools
 	 * resolvePath("/foo","../bar") returns "/foo/../bar"
 	 *
 	 * @param basePath the base-path needed in case of an relative path.
-	 * @param path	 the path that will be resolved against <code>basePath</code> if it
+	 * @param path     the path that will be resolved against <code>basePath</code> if it
 	 *                 is relative.
 	 * @return the new path that was resolved according to <code>basePath</code>
 	 *         if necessary.
@@ -57,35 +57,35 @@ public class PathTools
 	{
 		final Logger logger = LoggerFactory.getLogger(PathTools.class);
 
-		if (basePath == null)
+		if(basePath == null)
 		{
 			NullPointerException ex = new NullPointerException("basePath must not be null!");
-			if (logger.isDebugEnabled())
+			if(logger.isDebugEnabled())
 			{
 				logger.debug("Parameter 'basePath' of method 'resolvePath' must not be null!", ex);
 			}
 			throw ex;
 		}
-		if (path == null)
+		if(path == null)
 		{
 			NullPointerException ex = new NullPointerException("path must not be null!");
-			if (logger.isDebugEnabled()) logger.debug("Parameter 'path' of method 'resolvePath' must not be null!", ex);
+			if(logger.isDebugEnabled()) logger.debug("Parameter 'path' of method 'resolvePath' must not be null!", ex);
 			throw ex;
 		}
-		if (path.startsWith("/"))
+		if(path.startsWith("/"))
 		{
 			// path is absolute
 			return path;
 		}
-		if (basePath.length() == 0)
+		if(basePath.length() == 0)
 		{
 			return path;
 		}
-		if (path.length() == 0)
+		if(path.length() == 0)
 		{
 			return basePath;
 		}
-		if (!basePath.endsWith("/"))
+		if(!basePath.endsWith("/"))
 		{
 			basePath = basePath + "/";
 		}
@@ -121,7 +121,7 @@ public class PathTools
 	 * getAbsolutePath("bar", "foobar") returns null (basePath not absolute)
 	 *
 	 * @param basePath the base path that is used to evaluate path.
-	 * @param path the relative path.
+	 * @param path     the relative path.
 	 * @return the absolute path or null if no such path was found, e.g. because
 	 *         basePath wasn't absolute or because a path-underflow happened.
 	 * @throws NullPointerException if either basePath or path is null.
@@ -131,13 +131,14 @@ public class PathTools
 		String resolvedPath = resolvePath(basePath, path);
 
 		String result = evaluatePath(resolvedPath);
-		if (!result.startsWith("/"))
+		if(!result.startsWith("/"))
 		{
 			final Logger logger = LoggerFactory.getLogger(PathTools.class);
 			// path is not absolute - returning null...
-			if (logger.isDebugEnabled())
+			if(logger.isDebugEnabled())
 			{
-				logger.debug("The evaluated path is not absolute: \"" + result + "\". Returning null for getAbsolutePath(\"" + basePath + "\", \"" + path + "\").");
+				logger
+					.debug("The evaluated path is not absolute: \"" + result + "\". Returning null for getAbsolutePath(\"" + basePath + "\", \"" + path + "\").");
 			}
 			return null;
 		}
@@ -161,18 +162,18 @@ public class PathTools
 	public static String getCompatiblePath(String path)
 	{
 		Stack<String> pathStack = getPathStack(path, true);
-		if (pathStack.empty())
+		if(pathStack.empty())
 		{
 			return "";
 		}
 		String first = pathStack.get(0);
-		if (isDotPattern(first))
+		if(isDotPattern(first))
 //        Matcher m=DOT_PATTERN.matcher(first);
 //        if(m.matches())
 		{
 			pathStack.remove(0);
 			int len = first.length();
-			for (int i = 1; i < len; i++)
+			for(int i = 1; i < len; i++)
 			{
 				pathStack.add(0, "..");
 			}
@@ -188,10 +189,10 @@ public class PathTools
 	 */
 	public static boolean isDotPattern(String s)
 	{
-		for (int i = 0; i < s.length(); i++)
+		for(int i = 0; i < s.length(); i++)
 		{
 			char c = s.charAt(i);
-			if (c != '.')
+			if(c != '.')
 			{
 				return false;
 			}
@@ -205,7 +206,7 @@ public class PathTools
 	 * path element as the first element.
 	 * If the resulting path is an absolute path the first element of the stack will be "/".
 	 *
-	 * @param path the input path
+	 * @param path         the input path
 	 * @param evaluateDots if <code>true</code>, dots will be evaluated.
 	 * @return a Stack containing all the path elements of path.
 	 */
@@ -213,29 +214,29 @@ public class PathTools
 	{
 		Stack<String> pathStack = new Stack<String>();
 		boolean wasAbsolute = false;
-		if (path.startsWith("/"))
+		if(path.startsWith("/"))
 		{
 			// remember absolute path...
 			wasAbsolute = true;
 		}
 		int underflowCounter = 0;
 		StringTokenizer tok = new StringTokenizer(path, "/", false);
-		while (tok.hasMoreTokens())
+		while(tok.hasMoreTokens())
 		{
 			String pathElement = tok.nextToken();
-			if (pathElement.length() != 0)
+			if(pathElement.length() != 0)
 			{
 				// ignore wrong //-entries
-				if (evaluateDots)
+				if(evaluateDots)
 				{
 //                    Matcher m=DOT_PATTERN.matcher(pathElement);
 //                    if( m.matches())
-					if (isDotPattern(pathElement))
+					if(isDotPattern(pathElement))
 					{
 						// we found a dot-element
-						for (int i = 1; i < pathElement.length(); i++)
+						for(int i = 1; i < pathElement.length(); i++)
 						{
-							if (pathStack.empty())
+							if(pathStack.empty())
 							{
 								underflowCounter++;
 							}
@@ -256,16 +257,16 @@ public class PathTools
 				}
 			}
 		}
-		if (underflowCounter > 0)
+		if(underflowCounter > 0)
 		{
 			StringBuilder dots = new StringBuilder(".");
-			for (int i = 0; i < underflowCounter; i++)
+			for(int i = 0; i < underflowCounter; i++)
 			{
 				dots.append(".");
 			}
 			pathStack.add(0, dots.toString());
 		}
-		else if (wasAbsolute)
+		else if(wasAbsolute)
 		{
 			pathStack.add(0, "/");
 		}
@@ -283,24 +284,24 @@ public class PathTools
 	{
 		StringBuilder result = new StringBuilder();
 		boolean rootFound = false;
-		if (!pathStack.empty())
+		if(!pathStack.empty())
 		{
 			rootFound = true;
 			String currentEntry = (String) pathStack.remove(0);
-			if (!currentEntry.equals("/"))
+			if(!currentEntry.equals("/"))
 			{
 
 				rootFound = false;
 				result.append(currentEntry);
 			}
 
-			while (!pathStack.empty())
+			while(!pathStack.empty())
 			{
 				result.append("/");
 				result.append(pathStack.remove(0));
 			}
 		}
-		if (rootFound && result.length() == 0)
+		if(rootFound && result.length() == 0)
 		{
 			result.append("/");
 		}

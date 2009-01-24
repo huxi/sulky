@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2008 Joern Huxhorn
+ * Copyright (C) 2007-2009 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -67,11 +67,11 @@ public class SimpleXml
 	 * standard</a>.
 	 * <p/>
 	 * Based on code from http://cse-mjmcl.cse.bris.ac.uk/blog/2007/02/14/1171465494443.html
-	 *
+	 * <p/>
 	 * This method takes into account that no change will be necessary most of the time so
 	 * nothing will be allocated/changed until the first non-valid character is found.
 	 *
-	 * @param in The String whose non-valid characters we want to remove.
+	 * @param in              The String whose non-valid characters we want to remove.
 	 * @param replacementChar the character to replace invalid characters with.
 	 * @return The in String, with non-valid characters replaced by replacementChar.
 	 */
@@ -79,34 +79,35 @@ public class SimpleXml
 	{
 		StringBuilder out = null;
 
-		if (!((replacementChar == 0x9) ||
-				(replacementChar == 0xA) ||
-				(replacementChar == 0xD) ||
-				((replacementChar >= 0x20) && (replacementChar <= 0xD7FF)) ||
-				((replacementChar >= 0xE000) && (replacementChar <= 0xFFFD)) ||
-				((replacementChar >= 0x10000) && (replacementChar <= 0x10FFFF))))
+		if(!((replacementChar == 0x9) ||
+			(replacementChar == 0xA) ||
+			(replacementChar == 0xD) ||
+			((replacementChar >= 0x20) && (replacementChar <= 0xD7FF)) ||
+			((replacementChar >= 0xE000) && (replacementChar <= 0xFFFD)) ||
+			((replacementChar >= 0x10000) && (replacementChar <= 0x10FFFF))))
 		{
-			throw new IllegalArgumentException("Replacement character 0x"+Integer.toString(replacementChar,16)+" is invalid itself!");
+			throw new IllegalArgumentException("Replacement character 0x" + Integer
+				.toString(replacementChar, 16) + " is invalid itself!");
 		}
 
-		for (int i = 0; i < in.length(); i++)
+		for(int i = 0; i < in.length(); i++)
 		{
 			char current = in.charAt(i);
-			if (!((current == 0x9) ||
-					(current == 0xA) ||
-					(current == 0xD) ||
-					((current >= 0x20) && (current <= 0xD7FF)) ||
-					((current >= 0xE000) && (current <= 0xFFFD)) ||
-					((current >= 0x10000) && (current <= 0x10FFFF))))
+			if(!((current == 0x9) ||
+				(current == 0xA) ||
+				(current == 0xD) ||
+				((current >= 0x20) && (current <= 0xD7FF)) ||
+				((current >= 0xE000) && (current <= 0xFFFD)) ||
+				((current >= 0x10000) && (current <= 0x10FFFF))))
 			{
-				if(out==null)
+				if(out == null)
 				{
-					out=new StringBuilder(in);
+					out = new StringBuilder(in);
 				}
 				out.setCharAt(i, replacementChar);
 			}
 		}
-		if(out!=null)
+		if(out != null)
 		{
 			return out.toString();
 		}

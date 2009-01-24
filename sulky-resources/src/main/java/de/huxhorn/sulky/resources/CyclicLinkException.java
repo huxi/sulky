@@ -22,7 +22,8 @@ import java.util.Stack;
 /**
  * DOCUMENT: <code>CyclicLinkException</code>
  */
-public class CyclicLinkException extends Exception
+public class CyclicLinkException
+	extends Exception
 {
 	private static final long serialVersionUID = 5197383554254357523L;
 
@@ -43,9 +44,9 @@ public class CyclicLinkException extends Exception
 	public String getLinkStackString()
 	{
 		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < linkStack.size(); i++)
+		for(int i = 0; i < linkStack.size(); i++)
 		{
-			if (i != 0)
+			if(i != 0)
 			{
 				result.append(" => ");
 			}

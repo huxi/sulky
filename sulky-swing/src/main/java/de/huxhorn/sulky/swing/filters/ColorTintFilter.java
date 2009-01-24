@@ -36,8 +36,8 @@ package de.huxhorn.sulky.swing.filters;
 
 import de.huxhorn.sulky.swing.GraphicsUtilities;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.Color;
 
 /**
  * <p>A color tint filter can be used to mix a solid color to an image. The
@@ -51,110 +51,124 @@ import java.awt.Color;
  * </pre>
  * <p>Definition of the parameters:</p>
  * <ul>
- *   <li><code>cR</code>: color of the resulting pixel</li>
- *   <li><code>cS</code>: color of the source pixel</li>
- *   <li><code>cM</code>: the solid color to mix with the source image</li>
- *   <li><code>mixValue</code>: strength of the mix, a value between 0.0 and 1.0</li>
+ * <li><code>cR</code>: color of the resulting pixel</li>
+ * <li><code>cS</code>: color of the source pixel</li>
+ * <li><code>cM</code>: the solid color to mix with the source image</li>
+ * <li><code>mixValue</code>: strength of the mix, a value between 0.0 and 1.0</li>
  * </ul>
  *
  * @author Romain Guy <romain.guy@mac.com>
  */
 
-public class ColorTintFilter extends AbstractFilter {
-    private final Color mixColor;
-    private final float mixValue;
+public class ColorTintFilter
+	extends AbstractFilter
+{
+	private final Color mixColor;
+	private final float mixValue;
 
-    private int[] preMultipliedRed;
-    private int[] preMultipliedGreen;
-    private int[] preMultipliedBlue;
+	private int[] preMultipliedRed;
+	private int[] preMultipliedGreen;
+	private int[] preMultipliedBlue;
 
-    /**
-     * <p>Creates a new color mixer filter. The specified color will be used
-     * to tint the source image, with a mixing strength defined by
-     * <code>mixValue</code>.</p>
-     *
-     * @param mixColor the solid color to mix with the source image
-     * @param mixValue the strength of the mix, between 0.0 and 1.0; if the
-     *   specified value lies outside this range, it is clamped
-     * @throws IllegalArgumentException if <code>mixColor</code> is null
-     */
-    public ColorTintFilter(Color mixColor, float mixValue) {
-        if (mixColor == null) {
-            throw new IllegalArgumentException("mixColor cannot be null");
-        }
+	/**
+	 * <p>Creates a new color mixer filter. The specified color will be used
+	 * to tint the source image, with a mixing strength defined by
+	 * <code>mixValue</code>.</p>
+	 *
+	 * @param mixColor the solid color to mix with the source image
+	 * @param mixValue the strength of the mix, between 0.0 and 1.0; if the
+	 *                 specified value lies outside this range, it is clamped
+	 * @throws IllegalArgumentException if <code>mixColor</code> is null
+	 */
+	public ColorTintFilter(Color mixColor, float mixValue)
+	{
+		if(mixColor == null)
+		{
+			throw new IllegalArgumentException("mixColor cannot be null");
+		}
 
-        this.mixColor = mixColor;
-        if (mixValue < 0.0f) {
-            mixValue = 0.0f;
-        } else if (mixValue > 1.0f) {
-            mixValue = 1.0f;
-        }
-        this.mixValue = mixValue;
+		this.mixColor = mixColor;
+		if(mixValue < 0.0f)
+		{
+			mixValue = 0.0f;
+		}
+		else if(mixValue > 1.0f)
+		{
+			mixValue = 1.0f;
+		}
+		this.mixValue = mixValue;
 
-        int mix_r = (int) (mixColor.getRed()   * mixValue);
-        int mix_g = (int) (mixColor.getGreen() * mixValue);
-        int mix_b = (int) (mixColor.getBlue()  * mixValue);
+		int mix_r = (int) (mixColor.getRed() * mixValue);
+		int mix_g = (int) (mixColor.getGreen() * mixValue);
+		int mix_b = (int) (mixColor.getBlue() * mixValue);
 
-        // Since we use only lookup tables to apply the filter, this filter
-        // could be implemented as a LookupOp.
-        float factor = 1.0f - mixValue;
-        preMultipliedRed   = new int[256];
-        preMultipliedGreen = new int[256];
-        preMultipliedBlue  = new int[256];
+		// Since we use only lookup tables to apply the filter, this filter
+		// could be implemented as a LookupOp.
+		float factor = 1.0f - mixValue;
+		preMultipliedRed = new int[256];
+		preMultipliedGreen = new int[256];
+		preMultipliedBlue = new int[256];
 
-        for (int i = 0; i < 256; i++) {
-            int value = (int) (i * factor);
-            preMultipliedRed[i]   = value + mix_r;
-            preMultipliedGreen[i] = value + mix_g;
-            preMultipliedBlue[i]  = value + mix_b;
-        }
-    }
+		for(int i = 0; i < 256; i++)
+		{
+			int value = (int) (i * factor);
+			preMultipliedRed[i] = value + mix_r;
+			preMultipliedGreen[i] = value + mix_g;
+			preMultipliedBlue[i] = value + mix_b;
+		}
+	}
 
-    /**
-     * <p>Returns the mix value of this filter.</p>
-     *
-     * @return the mix value, between 0.0 and 1.0
-     */
-    public float getMixValue() {
-        return mixValue;
-    }
+	/**
+	 * <p>Returns the mix value of this filter.</p>
+	 *
+	 * @return the mix value, between 0.0 and 1.0
+	 */
+	public float getMixValue()
+	{
+		return mixValue;
+	}
 
-    /**
-     * <p>Returns the solid mix color of this filter.</p>
-     *
-     * @return the solid color used for mixing
-     */
-    public Color getMixColor() {
-        return mixColor;
-    }
+	/**
+	 * <p>Returns the solid mix color of this filter.</p>
+	 *
+	 * @return the solid color used for mixing
+	 */
+	public Color getMixColor()
+	{
+		return mixColor;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public BufferedImage filter(BufferedImage src, BufferedImage dst) {
-        if (dst == null) {
-            dst = createCompatibleDestImage(src, null);
-        }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public BufferedImage filter(BufferedImage src, BufferedImage dst)
+	{
+		if(dst == null)
+		{
+			dst = createCompatibleDestImage(src, null);
+		}
 
-        int width = src.getWidth();
-        int height = src.getHeight();
+		int width = src.getWidth();
+		int height = src.getHeight();
 
-        int[] pixels = new int[width * height];
-        GraphicsUtilities.getPixels(src, 0, 0, width, height, pixels);
-        mixColor(pixels);
-        GraphicsUtilities.setPixels(dst, 0, 0, width, height, pixels);
+		int[] pixels = new int[width * height];
+		GraphicsUtilities.getPixels(src, 0, 0, width, height, pixels);
+		mixColor(pixels);
+		GraphicsUtilities.setPixels(dst, 0, 0, width, height, pixels);
 
-        return dst;
-    }
+		return dst;
+	}
 
-    private void mixColor(int[] pixels) {
-        for (int i = 0; i < pixels.length; i++) {
-            int argb = pixels[i];
-            pixels[i] = (argb & 0xFF000000) |
-                        preMultipliedRed[(argb >> 16)   & 0xFF] << 16 |
-                        preMultipliedGreen[(argb >> 8)  & 0xFF] <<  8 |
-                        preMultipliedBlue[argb & 0xFF];
-        }
-    }
+	private void mixColor(int[] pixels)
+	{
+		for(int i = 0; i < pixels.length; i++)
+		{
+			int argb = pixels[i];
+			pixels[i] = (argb & 0xFF000000) |
+				preMultipliedRed[(argb >> 16) & 0xFF] << 16 |
+				preMultipliedGreen[(argb >> 8) & 0xFF] << 8 |
+				preMultipliedBlue[argb & 0xFF];
+		}
+	}
 }
