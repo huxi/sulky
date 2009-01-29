@@ -17,7 +17,9 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,20 +28,21 @@ import java.util.Iterator;
 import java.util.List;
 
 public class OverwritingCircularBufferTest
-	extends TestCase
 {
 	private final Logger logger = LoggerFactory.getLogger(OverwritingCircularBufferTest.class);
 
 	private static final int TEST_BUFFER_SIZE = 5;
 	private OverwritingCircularBuffer<Long> instance;
 
-	protected void setUp()
+	@Before
+	public void setUp()
 		throws Exception
 	{
 		instance = new OverwritingCircularBuffer<Long>(TEST_BUFFER_SIZE);
 	}
 
-	public void testEmpty()
+	@Test
+	public void empty()
 	{
 		assertTrue("Instance is not empty!", instance.isEmpty());
 		assertTrue("Instance is full!", !instance.isFull());
@@ -50,7 +53,8 @@ public class OverwritingCircularBufferTest
 		assertTrue("iterator has next!", !iterator.hasNext());
 	}
 
-	public void testOne()
+	@Test
+	public void one()
 	{
 		instance.add((long) 1);
 
@@ -74,7 +78,8 @@ public class OverwritingCircularBufferTest
 		assertEquals("Iterator and get values differ!", element, getValue);
 	}
 
-	public void testNearlyFull()
+	@Test
+	public void nearlyFull()
 	{
 		for(int i = 0; i < TEST_BUFFER_SIZE - 1; i++)
 		{
@@ -104,7 +109,8 @@ public class OverwritingCircularBufferTest
 		}
 	}
 
-	public void testFull()
+	@Test
+	public void full()
 	{
 		for(int i = 0; i < TEST_BUFFER_SIZE; i++)
 		{
@@ -134,7 +140,8 @@ public class OverwritingCircularBufferTest
 		}
 	}
 
-	public void testOverflowOne()
+	@Test
+	public void overflowOne()
 	{
 		for(int i = 0; i < TEST_BUFFER_SIZE; i++)
 		{
@@ -166,7 +173,8 @@ public class OverwritingCircularBufferTest
 		}
 	}
 
-	public void testOverflowDouble()
+	@Test
+	public void overflowDouble()
 	{
 		for(int i = 0; i < TEST_BUFFER_SIZE * 2; i++)
 		{
@@ -197,7 +205,8 @@ public class OverwritingCircularBufferTest
 		}
 	}
 
-	public void testAddAllList()
+	@Test
+	public void addAllList()
 	{
 		List<Long> values = new ArrayList<Long>();
 		for(int i = 0; i < 4 * TEST_BUFFER_SIZE; i++)
@@ -232,7 +241,8 @@ public class OverwritingCircularBufferTest
 		}
 	}
 
-	public void testAddAllArray()
+	@Test
+	public void addAllArray()
 	{
 		Long[] values = new Long[4 * TEST_BUFFER_SIZE];
 		for(int i = 0; i < 4 * TEST_BUFFER_SIZE; i++)
@@ -267,7 +277,8 @@ public class OverwritingCircularBufferTest
 		}
 	}
 
-	public void testAddRemove()
+	@Test
+	public void addRemove()
 	{
 		internalTestRemove(instance, 0);
 		internalTestRemove(instance, 3);
@@ -282,7 +293,8 @@ public class OverwritingCircularBufferTest
 		internalTestRemove(instance, 17);
 	}
 
-	public void testAddRemoveAll()
+	@Test
+	public void addRemoveAll()
 	{
 		internalTestRemoveAll(instance, 0);
 		internalTestRemoveAll(instance, 3);

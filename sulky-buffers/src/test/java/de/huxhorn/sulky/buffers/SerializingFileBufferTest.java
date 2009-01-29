@@ -17,14 +17,16 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
 public class SerializingFileBufferTest
-	extends TestCase
 {
 	private final Logger logger = LoggerFactory.getLogger(SerializingFileBufferTest.class);
 
@@ -33,7 +35,8 @@ public class SerializingFileBufferTest
 	private File serializeFile;
 	private File serializeIndexFile;
 
-	protected void setUp()
+	@Before
+	public void setUp()
 		throws Exception
 	{
 		tempOutputPath = File.createTempFile("sfb-testing", "rulez");
@@ -44,15 +47,16 @@ public class SerializingFileBufferTest
 		instance = new SerializingFileBuffer<String>(serializeFile, serializeIndexFile);
 	}
 
-	protected void tearDown()
+	@After
+	public void tearDown()
 		throws Exception
 	{
-		super.tearDown();
 		serializeFile.delete();
 		serializeIndexFile.delete();
 		tempOutputPath.delete();
 	}
 
+	@Test
 	public void testReadWrite()
 	{
 		String[] values = {
