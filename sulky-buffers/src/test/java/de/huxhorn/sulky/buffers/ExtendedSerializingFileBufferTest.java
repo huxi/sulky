@@ -25,12 +25,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.Map;
+import java.util.HashMap;
 
-public class SerializingFileBufferTest
+public class ExtendedSerializingFileBufferTest
 {
-	private final Logger logger = LoggerFactory.getLogger(SerializingFileBufferTest.class);
+	private final Logger logger = LoggerFactory.getLogger(ExtendedSerializingFileBufferTest.class);
 
-	private SerializingFileBuffer<String> instance;
 	private File tempOutputPath;
 	private File serializeFile;
 	private File serializeIndexFile;
@@ -44,7 +45,6 @@ public class SerializingFileBufferTest
 		tempOutputPath.mkdirs();
 		serializeFile = new File(tempOutputPath, "dump");
 		serializeIndexFile = new File(tempOutputPath, "dump.index");
-		instance = new SerializingFileBuffer<String>(serializeFile, serializeIndexFile);
 	}
 
 	@After
@@ -57,7 +57,7 @@ public class SerializingFileBufferTest
 	}
 
 	@Test
-	public void readWrite()
+	public void readWriteNoMagicNoMeta()
 	{
 		String[] values = {
 			"Null, sozusagen ganix",
@@ -73,6 +73,84 @@ public class SerializingFileBufferTest
 			"Zehne"
 		};
 
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(null, null,serializeFile, serializeIndexFile);
+		instance.addAll(values);
+		assertEquals(values.length, (int) instance.getSize());
+
+		for(int i = 0; i < values.length; i++)
+		{
+			String value = instance.get(i);
+			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
+			assertEquals("Element #" + i + " differs!", values[i], value);
+		}
+
+		int index = 0;
+		for(String value : instance)
+		{
+			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
+			assertEquals("Element #" + index + " differs!", values[index], value);
+			index++;
+		}
+	}
+
+	@Test
+	public void readWriteMagicNoMeta()
+	{
+		String[] values = {
+			"Null, sozusagen ganix",
+			"Eins",
+			"Zwei",
+			"Drei",
+			"Vier",
+			"Fuenef",
+			"Sechse",
+			"Siebene",
+			"Achtele",
+			"Neune",
+			"Zehne"
+		};
+
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(0xDEADBEEF, null,serializeFile, serializeIndexFile);
+		instance.addAll(values);
+		assertEquals(values.length, (int) instance.getSize());
+
+		for(int i = 0; i < values.length; i++)
+		{
+			String value = instance.get(i);
+			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
+			assertEquals("Element #" + i + " differs!", values[i], value);
+		}
+
+		int index = 0;
+		for(String value : instance)
+		{
+			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
+			assertEquals("Element #" + index + " differs!", values[index], value);
+			index++;
+		}
+	}
+
+	@Test
+	public void readWriteNoMagicMeta()
+	{
+		String[] values = {
+			"Null, sozusagen ganix",
+			"Eins",
+			"Zwei",
+			"Drei",
+			"Vier",
+			"Fuenef",
+			"Sechse",
+			"Siebene",
+			"Achtele",
+			"Neune",
+			"Zehne"
+		};
+
+		Map<String, String> meta=new HashMap<String, String>();
+		meta.put("foo", "bar");
+		
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(null, meta, serializeFile, serializeIndexFile);
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
 
