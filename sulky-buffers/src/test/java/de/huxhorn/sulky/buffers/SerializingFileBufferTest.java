@@ -34,6 +34,7 @@ public class SerializingFileBufferTest
 	private File tempOutputPath;
 	private File serializeFile;
 	private File serializeIndexFile;
+	private String[] values;
 
 	@Before
 	public void setUp()
@@ -45,6 +46,21 @@ public class SerializingFileBufferTest
 		serializeFile = new File(tempOutputPath, "dump");
 		serializeIndexFile = new File(tempOutputPath, "dump.index");
 		instance = new SerializingFileBuffer<String>(serializeFile, serializeIndexFile);
+		values = new String[]
+			{
+				"Null, sozusagen ganix",
+				"Eins",
+				"Zwei",
+				"Drei",
+				"Vier",
+				"Fuenef",
+				"Sechse",
+				"Siebene",
+				"Achtele",
+				"Neune",
+				"Zehne"
+			};
+
 	}
 
 	@After
@@ -57,22 +73,33 @@ public class SerializingFileBufferTest
 	}
 
 	@Test
-	public void readWrite()
+	public void readWriteAdd()
 	{
-		String[] values = {
-			"Null, sozusagen ganix",
-			"Eins",
-			"Zwei",
-			"Drei",
-			"Vier",
-			"Fuenef",
-			"Sechse",
-			"Siebene",
-			"Achtele",
-			"Neune",
-			"Zehne"
-		};
+		for(String current : values)
+		{
+			instance.add(current);
+		}
+		assertEquals(values.length, (int) instance.getSize());
 
+		for(int i = 0; i < values.length; i++)
+		{
+			String value = instance.get(i);
+			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
+			assertEquals("Element #" + i + " differs!", values[i], value);
+		}
+
+		int index = 0;
+		for(String value : instance)
+		{
+			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
+			assertEquals("Element #" + index + " differs!", values[index], value);
+			index++;
+		}
+	}
+
+	@Test
+	public void readWriteAddAll()
+	{
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
 

@@ -17,7 +17,9 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import org.apache.commons.io.output.CountingOutputStream;
+import de.huxhorn.sulky.generics.io.Serializer;
+import de.huxhorn.sulky.generics.io.Deserializer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,17 +32,37 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * In contrast to SerializingFileBuffer, this implementation supports the following:
+ *
+ * <ul>
+ * <li>An optional magic value to identify the type of a buffer file.<br/>
+ * If present (and it should be), it is contained in the first four bytes of the data-file and can be evaluated by external classes, e.g. FileFilters.
+ * An application would use one (or more) specific magic value to identify it's own files.
+ * </li>
+ * <li>Configurable Serializer and Deserializer so the way the elements are actually written and read can be changed as needed.
+ * </li>
+ * <li>
+ * Optional meta data that can be used to provide additional informations about the content of the buffer.
+ * It might be used to identify the correct pair of Serializer and Deserrializer required by the buffer
+ * </li>
+ * <li>Optional ElementProcessors that are executed after elements are added to the buffer.</li>
+ * </ul>
+ *
+ * TODO: more docu :p
+ * @param <E> the type of objects that are stored in this buffer.
+ */
 public class ExtendedSerializingFileBuffer<E>
 	implements FileBuffer<E>
 {
@@ -63,21 +85,62 @@ public class ExtendedSerializingFileBuffer<E>
 	private Map<String, String> metaData;
 	private static final int MAGIC_VALUE_SIZE = 4;
 	private static final int META_LENGTH_SIZE = 4;
-	private int initialDataOffset;
+	private long initialDataOffset;
 
+	private Serializer<E> serializer;
+	private Deserializer<E> deserializer;
+	private List<ElementProcessor<E>> elementProcessors;
+
+	/**
+	 * Shortcut for ExtendedSerializingFileBuffer(magicValue, metaData, null, null, serializeFile, null).
+	 *
+	 * @param magicValue the magic value of the buffer, can be null but shouldn't.
+	 * @param metaData the meta data of the buffer. Might be null.
+	 * @param serializeFile the data file.
+	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
+	 */
 	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, File serializeFile)
 	{
-		this(magicValue, metaData, serializeFile, null);
+		this(magicValue, metaData, null, null, serializeFile, null);
 	}
 
-	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, File serializeFile, File serializeIndexFile)
+	/**
+	 * Shortcut for ExtendedSerializingFileBuffer(magicValue, metaData, null, null, serializeFile, null).
+	 *
+	 * @param magicValue the magic value of the buffer, can be null but shouldn't.
+	 * @param metaData the meta data of the buffer. Might be null.
+	 * @param serializer the serializer used by this buffer. Might be null.
+	 * @param deserializer the serializer used by this buffer.  Might be null.
+	 * @param serializeFile the data file.
+	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
+	 */
+	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, Serializer<E> serializer, Deserializer<E> deserializer, File serializeFile)
+	{
+		this(magicValue, metaData, serializer, deserializer, serializeFile, null);
+	}
+
+	/**
+	 * TODO: add description :p
+	 *
+	 * @param magicValue the magic value of the buffer, can be null but shouldn't.
+	 * @param metaData the meta data of the buffer. Might be null.
+	 * @param serializer the serializer used by this buffer. Might be null.
+	 * @param deserializer the serializer used by this buffer.  Might be null.
+	 * @param serializeFile the data file.
+	 * @param serializeIndexFile the index file of the buffer.
+	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
+	 */
+	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, Serializer<E> serializer, Deserializer<E> deserializer, File serializeFile, File serializeIndexFile)
 	{
 		this.readWriteLock = new ReentrantReadWriteLock(true);
-		this.magicValue=magicValue;
-		if(metaData!=null)
+		this.magicValue = magicValue;
+		if(metaData != null)
 		{
-			this.metaData=new HashMap<String, String>(metaData);
+			this.metaData = new HashMap<String, String>(metaData);
 		}
+		this.serializer=serializer;
+		this.deserializer=deserializer;
+		
 		setSerializeFile(serializeFile);
 
 		if(serializeIndexFile == null)
@@ -123,146 +186,10 @@ public class ExtendedSerializingFileBuffer<E>
 				lock.unlock();
 			}
 		}
-	}
-
-	/**
-	 * Locking is already performed for this method.
-	 */
-	protected void writeMetaData()
-	{
-		int offset=0;
-		if(magicValue!=null)
+		if(serializeFile.length()>initialDataOffset)
 		{
-			offset=MAGIC_VALUE_SIZE;
+			
 		}
-
-		RandomAccessFile raf=null;
-		try
-		{
-			byte[] buffer = null;
-			int length=0;
-			if(metaData!=null)
-			{
-
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				GZIPOutputStream gos = new GZIPOutputStream(bos);
-				CountingOutputStream cos = new CountingOutputStream(gos);
-				ObjectOutputStream out = new ObjectOutputStream(cos);
-				out.writeObject(metaData);
-				out.flush();
-				out.close();
-				gos.finish();
-				buffer = bos.toByteArray();
-				length=buffer.length;
-			}
-
-			raf = new RandomAccessFile(serializeFile, "rw");
-			raf.seek(offset);
-			raf.writeInt(length);
-			if(length>0)
-			{
-				raf.write(buffer);
-			}
-		}
-		catch(Throwable e)
-		{
-			throw new IllegalArgumentException("Could not write meta data to "+serializeFile.getAbsolutePath()+"!", e);
-		}
-		finally
-		{
-			closeQuietly(raf);
-		}
-	}
-
-	/**
-	 * Locking is already performed for this method.
-	 */
-	protected void writeMagicValue()
-	{
-		if(magicValue!=null)
-		{
-			RandomAccessFile raf=null;
-			try
-			{
-				raf = new RandomAccessFile(serializeFile, "rw");
-				raf.seek(0);
-				raf.writeInt(magicValue);
-			}
-			catch(Throwable e)
-			{
-				throw new IllegalArgumentException("Could not write magic value to "+serializeFile.getAbsolutePath()+"!", e);
-			}
-			finally
-			{
-				closeQuietly(raf);
-			}
-		}
-	}
-
-	/**
-	 * Locking is already performed for this method.
-	 */
-	protected void initializeMetaData()
-	{
-		int offset=0;
-		if(magicValue!=null)
-		{
-			offset=MAGIC_VALUE_SIZE;
-		}
-		RandomAccessFile raf = null;
-		Throwable throwable=null;
-		try
-		{
-			raf = new RandomAccessFile(serializeFile, "r");
-			if(raf.length()>=offset+META_LENGTH_SIZE)
-			{
-				raf.seek(offset);
-				int metaLength = raf.readInt();
-				if(metaLength>0)
-				{
-					if(raf.length() < offset + META_LENGTH_SIZE + metaLength)
-					{
-						throw new IndexOutOfBoundsException("Invalid length (" + metaLength + ") at offset: " + offset + "!");
-					}
-					initialDataOffset=offset+META_LENGTH_SIZE+metaLength;
-					byte[] buffer = new byte[metaLength];
-					raf.readFully(buffer);
-					ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
-					GZIPInputStream gis = new GZIPInputStream(bis);
-					ObjectInputStream ois = new ObjectInputStream(gis);
-					//noinspection unchecked
-					metaData = (Map<String, String>) ois.readObject();
-				}
-				else
-				{
-					metaData=null;
-					initialDataOffset=offset+META_LENGTH_SIZE;
-				}
-
-			}
-			else
-			{
-				throw new IllegalArgumentException("Could not read meta data from "+serializeFile.getAbsolutePath()+"!");
-			}
-		}
-		catch(RuntimeException ex)
-		{
-			// rethrow
-			throw ex;
-		}
-		catch(Throwable e)
-		{
-			throwable = e;
-		}
-		finally
-		{
-			closeQuietly(raf);
-		}
-		if(throwable!=null)
-		{
-			throw new IllegalArgumentException("Could not read meta data from "+serializeFile.getAbsolutePath()+"!", throwable);
-		}
-
 	}
 
 	/**
@@ -270,25 +197,28 @@ public class ExtendedSerializingFileBuffer<E>
 	 */
 	protected void validateMagicValue()
 	{
-		if(magicValue!=null)
+		if(magicValue != null)
 		{
 			RandomAccessFile raf = null;
-			Throwable throwable=null;
+			Throwable throwable = null;
 			try
 			{
 				raf = new RandomAccessFile(serializeFile, "r");
-				if(raf.length()>=MAGIC_VALUE_SIZE)
+				if(raf.length() >= MAGIC_VALUE_SIZE)
 				{
 					raf.seek(0);
 					int readMagicValue = raf.readInt();
 					if(magicValue != readMagicValue)
 					{
-						throw new IllegalArgumentException("Read magicValue "+Integer.toHexString(readMagicValue)+" differs from expected magic value "+Integer.toHexString(magicValue)+"!");
+						throw new IllegalArgumentException("Read magic value 0x" + Integer
+							.toHexString(readMagicValue) + " differs from expected magic value 0x" + Integer
+							.toHexString(magicValue) + "!");
 					}
 				}
 				else
 				{
-					throw new IllegalArgumentException("Could not read magic value from "+serializeFile.getAbsolutePath()+"!");
+					throw new IllegalArgumentException("Could not read magic value from " + serializeFile
+						.getAbsolutePath() + "!");
 				}
 			}
 			catch(IllegalArgumentException ex)
@@ -304,17 +234,201 @@ public class ExtendedSerializingFileBuffer<E>
 			{
 				closeQuietly(raf);
 			}
-			if(throwable!=null)
+			if(throwable != null)
 			{
-				throw new IllegalArgumentException("Could not read magic value from "+serializeFile.getAbsolutePath()+"!", throwable);
+				throw new IllegalArgumentException("Could not read magic value from " + serializeFile
+					.getAbsolutePath() + "!", throwable);
 			}
 		}
-		//To change body of created methods use File | Settings | File Templates.
+	}
+
+	/**
+	 * Locking is already performed for this method.
+	 */
+	protected void writeMagicValue()
+	{
+		if(magicValue != null)
+		{
+			RandomAccessFile raf = null;
+			try
+			{
+				raf = new RandomAccessFile(serializeFile, "rw");
+				raf.seek(0);
+				raf.writeInt(magicValue);
+			}
+			catch(Throwable e)
+			{
+				throw new IllegalArgumentException("Could not write magic value to " + serializeFile
+					.getAbsolutePath() + "!", e);
+			}
+			finally
+			{
+				closeQuietly(raf);
+			}
+		}
+	}
+
+	/**
+	 * Locking is already performed for this method.
+	 */
+	protected void writeMetaData()
+	{
+		int offset = 0;
+		if(magicValue != null)
+		{
+			offset = MAGIC_VALUE_SIZE;
+		}
+
+		RandomAccessFile raf = null;
+		try
+		{
+			byte[] buffer = null;
+			int length = 0;
+			if(metaData != null)
+			{
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				GZIPOutputStream gos = new GZIPOutputStream(bos);
+				ObjectOutputStream out = new ObjectOutputStream(gos);
+				out.writeObject(metaData);
+				out.flush();
+				out.close();
+				gos.finish();
+				buffer = bos.toByteArray();
+				length = buffer.length;
+			}
+
+			raf = new RandomAccessFile(serializeFile, "rw");
+			raf.seek(offset);
+			raf.writeInt(length);
+			if(length > 0)
+			{
+				raf.seek(offset + META_LENGTH_SIZE);
+				raf.write(buffer);
+			}
+			setInitialDataOffset(offset + META_LENGTH_SIZE + length);
+		}
+		catch(Throwable e)
+		{
+			throw new IllegalArgumentException("Could not write meta data to " + serializeFile
+				.getAbsolutePath() + "!", e);
+		}
+		finally
+		{
+			closeQuietly(raf);
+		}
+	}
+
+	/**
+	 * Locking is already performed for this method.
+	 */
+	protected void initializeMetaData()
+	{
+		int offset = 0;
+		if(magicValue != null)
+		{
+			offset = MAGIC_VALUE_SIZE;
+		}
+		RandomAccessFile raf = null;
+		Throwable throwable = null;
+		try
+		{
+			raf = new RandomAccessFile(serializeFile, "r");
+			if(raf.length() >= offset + META_LENGTH_SIZE)
+			{
+				raf.seek(offset);
+				int metaLength = raf.readInt();
+				if(metaLength > 0)
+				{
+					if(raf.length() < offset + META_LENGTH_SIZE + metaLength)
+					{
+						throw new IndexOutOfBoundsException("Invalid length (" + metaLength + ") at offset: " + offset + "!");
+					}
+					setInitialDataOffset(offset + META_LENGTH_SIZE + metaLength);
+					raf.seek(offset+META_LENGTH_SIZE);
+					byte[] buffer = new byte[metaLength];
+					raf.readFully(buffer);
+					ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
+					GZIPInputStream gis = new GZIPInputStream(bis);
+					ObjectInputStream ois = new ObjectInputStream(gis);
+					//noinspection unchecked
+					metaData = (Map<String, String>) ois.readObject();
+				}
+				else
+				{
+					metaData = null;
+					setInitialDataOffset(offset + META_LENGTH_SIZE);
+				}
+			}
+			else
+			{
+				throw new IllegalArgumentException("Could not read meta data from " + serializeFile
+					.getAbsolutePath() + "!");
+			}
+		}
+		catch(RuntimeException ex)
+		{
+			// rethrow
+			throw ex;
+		}
+		catch(Throwable e)
+		{
+			throwable = e;
+		}
+		finally
+		{
+			closeQuietly(raf);
+		}
+		if(throwable != null)
+		{
+			throw new IllegalArgumentException("Could not read meta data from " + serializeFile
+				.getAbsolutePath() + "!", throwable);
+		}
+	}
+
+
+	protected void setInitialDataOffset(long initialDataOffset)
+	{
+		this.initialDataOffset = initialDataOffset;
+	}
+
+	protected long getInitialDataOffset()
+	{
+		return initialDataOffset;
+	}
+
+	public Serializer<E> getSerializer()
+	{
+		return serializer;
+	}
+
+	public void setSerializer(Serializer<E> serializer)
+	{
+		this.serializer = serializer;
+	}
+
+	public Deserializer<E> getDeserializer()
+	{
+		return deserializer;
+	}
+
+	public void setDeserializer(Deserializer<E> deserializer)
+	{
+		this.deserializer = deserializer;
+	}
+
+	public List<ElementProcessor<E>> getElementProcessors()
+	{
+		return elementProcessors;
+	}
+
+	public void setElementProcessors(List<ElementProcessor<E>> elementProcessors)
+	{
+		this.elementProcessors = elementProcessors;
 	}
 
 	public Map<String, String> getMetaData()
 	{
-		if(metaData==null)
+		if(metaData == null)
 		{
 			return null;
 		}
@@ -358,6 +472,13 @@ public class ExtendedSerializingFileBuffer<E>
 		return 0;
 	}
 
+	/**
+	 *
+	 * @param index must be in the range <tt>[0..(getSize()-1)]</tt>.
+	 * @return the element at the given index.
+	 * @throws IllegalStateException if no Deserializer has been set.
+	 * @throws IndexOutOfBoundsException if there is no element at the given index.
+	 */
 	public E get(long index)
 	{
 		RandomAccessFile randomSerializeIndexFile = null;
@@ -369,7 +490,7 @@ public class ExtendedSerializingFileBuffer<E>
 		long elementsCount = 0;
 		try
 		{
-			if(!serializeFile.canRead() && !serializeIndexFile.canRead())
+			if(!serializeFile.canRead() || !serializeIndexFile.canRead())
 			{
 				return null;
 			}
@@ -427,6 +548,12 @@ public class ExtendedSerializingFileBuffer<E>
 		return result;
 	}
 
+	/**
+	 * Adds the element to the end of the buffer.
+	 *  
+	 * @param element to add.
+	 * @throws IllegalStateException if no Serializer has been set.
+	 */
 	public void add(E element)
 	{
 		RandomAccessFile randomSerializeIndexFile = null;
@@ -449,6 +576,16 @@ public class ExtendedSerializingFileBuffer<E>
 			}
 			internalWriteElement(randomSerializeFile, offset, element);
 			internalWriteOffset(randomSerializeIndexFile, elementsCount, offset);
+
+			// call proecssors if available
+			List<ElementProcessor<E>> localProcessors = elementProcessors;
+			if(localProcessors!=null)
+			{
+			    for(ElementProcessor<E> current: elementProcessors)
+			    {
+				    current.processElement(element);
+			    }
+			}
 		}
 		catch(IOException e)
 		{
@@ -465,9 +602,13 @@ public class ExtendedSerializingFileBuffer<E>
 			// it's a really bad idea to log while locked *sigh*
 			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
 		}
-
 	}
 
+	/**
+	 * Adds all elements to the end of the buffer.
+	 * @param elements to add.
+	 * @throws IllegalStateException if no Serializer has been set.
+	 */
 	public void addAll(List<E> elements)
 	{
 		if(elements != null)
@@ -487,7 +628,7 @@ public class ExtendedSerializingFileBuffer<E>
 
 					long elementsCount = internalGetSize(randomSerializeIndexFile);
 
-					long offset = 0;
+					long offset = initialDataOffset;
 					if(elementsCount > 0)
 					{
 						long prevElement = elementsCount - 1;
@@ -508,6 +649,15 @@ public class ExtendedSerializingFileBuffer<E>
 					{
 						internalWriteOffset(randomSerializeIndexFile, elementsCount + index, curOffset);
 						index++;
+					}
+					// call proecssors if available
+					List<ElementProcessor<E>> localProcessors = elementProcessors;
+					if(localProcessors!=null)
+					{
+					    for(ElementProcessor<E> current: elementProcessors)
+					    {
+						    current.processElements(elements);
+					    }
 					}
 					//if(logger.isInfoEnabled()) logger.info("Elements after batch-write: {}", index+elementsCount);
 				}
@@ -607,6 +757,11 @@ public class ExtendedSerializingFileBuffer<E>
 	private E internalReadElement(RandomAccessFile randomSerializeFile, long offset)
 		throws IOException, ClassNotFoundException, ClassCastException
 	{
+		if(deserializer == null)
+		{
+			throw new IllegalStateException("Deserializer has not been initialized!");
+		}
+
 		if(randomSerializeFile.length() < offset + 4)
 		{
 			throw new IndexOutOfBoundsException("Invalid offset: " + offset + "! Couldn't read length of data!");
@@ -619,12 +774,7 @@ public class ExtendedSerializingFileBuffer<E>
 		}
 		byte[] buffer = new byte[bufferSize];
 		randomSerializeFile.readFully(buffer);
-		ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
-		GZIPInputStream gis = new GZIPInputStream(bis);
-		ObjectInputStream ois = new ObjectInputStream(gis);
-		//if(logger.isDebugEnabled()) logger.debug("Read element from offset {}.", offset);
-		//noinspection unchecked
-		return (E) ois.readObject();
+		return deserializer.deserialize(buffer);
 	}
 
 	private void internalWriteOffset(RandomAccessFile randomSerializeIndexFile, long index, long offset)
@@ -642,26 +792,14 @@ public class ExtendedSerializingFileBuffer<E>
 	private int internalWriteElement(RandomAccessFile randomSerializeFile, long offset, E element)
 		throws IOException
 	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		GZIPOutputStream gos = new GZIPOutputStream(bos);
-		CountingOutputStream cos = new CountingOutputStream(gos);
-		ObjectOutputStream out = new ObjectOutputStream(cos);
-		out.writeObject(element);
-		out.flush();
-		out.close();
-		gos.finish();
-		byte[] buffer = bos.toByteArray();
-		//int uncompressed=cos.getCount();
+		if(serializer == null)
+		{
+			throw new IllegalStateException("Serializer has not been initialized!");
+		}
+		byte[] buffer = serializer.serialize(element);
 
 		int bufferSize = buffer.length;
-		/*
-		if(logger.isDebugEnabled())
-		{
-			int packedPercent=(int)(((double)bufferSize/(double)uncompressed)*100f);
-			logger.debug("Uncompressed size: {}", uncompressed);
-			logger.debug("Compressed size  : {} ({}%)", bufferSize, packedPercent);
-		}
-		*/
+
 		randomSerializeFile.seek(offset);
 		randomSerializeFile.writeInt(bufferSize);
 		randomSerializeFile.write(buffer);

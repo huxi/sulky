@@ -21,23 +21,30 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.zip.GZIPOutputStream;
+import java.beans.XMLEncoder;
+import java.beans.PersistenceDelegate;
 
-public class SerializableSerializer<E extends Serializable>
+public class XmlSerializer<E>
 	implements Serializer<E>
 {
 	boolean compressing;
+	private Class[] enums;
 
-	public SerializableSerializer()
+	public XmlSerializer()
 	{
 		this(false);
 	}
 
-	public SerializableSerializer(boolean compressing)
+	public XmlSerializer(boolean compressing)
 	{
 		this.compressing = compressing;
+	}
+
+	public XmlSerializer(boolean compressing, Class... enums)
+	{
+		setCompressing(compressing);
+		this.enums=enums;
 	}
 
 	public boolean isCompressing()
@@ -53,21 +60,29 @@ public class SerializableSerializer<E extends Serializable>
 	public byte[] serialize(E object)
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = null;
+		XMLEncoder encoder;
 		try
 		{
 			if(compressing)
 			{
 				GZIPOutputStream gos = new GZIPOutputStream(bos);
-				oos = new ObjectOutputStream(gos);
+				encoder=new XMLEncoder(gos);
 			}
 			else
 			{
-				oos = new ObjectOutputStream(bos);
+				encoder=new XMLEncoder(bos);
 			}
-			oos.writeObject(object);
-			oos.flush();
-			oos.close();
+			if(enums != null)
+			{
+				PersistenceDelegate delegate = new EnumPersistenceDelegate();
+				for(Class c : enums)
+				{
+					encoder.setPersistenceDelegate(c, delegate);
+				}
+			}
+
+			encoder.writeObject(object);
+			encoder.close();
 			return bos.toByteArray();
 		}
 		catch(IOException e)
@@ -77,7 +92,6 @@ public class SerializableSerializer<E extends Serializable>
 		}
 		finally
 		{
-			IOUtils.closeQuietly(oos);
 			IOUtils.closeQuietly(bos);
 		}
 	}

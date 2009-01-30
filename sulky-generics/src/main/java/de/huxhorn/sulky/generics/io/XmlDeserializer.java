@@ -19,25 +19,24 @@ package de.huxhorn.sulky.generics.io;
 
 import org.apache.commons.io.IOUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.Serializable;
-import java.util.zip.GZIPOutputStream;
+import java.util.zip.GZIPInputStream;
+import java.beans.XMLDecoder;
 
-public class SerializableSerializer<E extends Serializable>
-	implements Serializer<E>
+public class XmlDeserializer<E extends Serializable>
+	implements Deserializer<E>
 {
 	boolean compressing;
 
-	public SerializableSerializer()
+	public XmlDeserializer()
 	{
 		this(false);
 	}
 
-	public SerializableSerializer(boolean compressing)
+	public XmlDeserializer(boolean compressing)
 	{
-		this.compressing = compressing;
+		setCompressing(compressing);
 	}
 
 	public boolean isCompressing()
@@ -50,35 +49,34 @@ public class SerializableSerializer<E extends Serializable>
 		this.compressing = compressing;
 	}
 
-	public byte[] serialize(E object)
+	public E deserialize(byte[] bytes)
 	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = null;
+		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+		XMLDecoder decoder;
 		try
 		{
 			if(compressing)
 			{
-				GZIPOutputStream gos = new GZIPOutputStream(bos);
-				oos = new ObjectOutputStream(gos);
+				GZIPInputStream gis = new GZIPInputStream(bis);
+				decoder=new XMLDecoder(gis);
 			}
 			else
 			{
-				oos = new ObjectOutputStream(bos);
+				decoder=new XMLDecoder(bis);
 			}
-			oos.writeObject(object);
-			oos.flush();
-			oos.close();
-			return bos.toByteArray();
+
+			Object result = decoder.readObject();
+			//noinspection unchecked
+			return (E) result;
 		}
-		catch(IOException e)
+		catch(Throwable e)
 		{
-			e.printStackTrace();
+			// silently ignore any problems 
 			return null;
 		}
 		finally
 		{
-			IOUtils.closeQuietly(oos);
-			IOUtils.closeQuietly(bos);
+			IOUtils.closeQuietly(bis);
 		}
 	}
 }
