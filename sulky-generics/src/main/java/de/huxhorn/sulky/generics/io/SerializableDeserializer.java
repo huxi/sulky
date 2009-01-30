@@ -70,7 +70,6 @@ public class SerializableDeserializer<E extends Serializable>
 		}
 		catch(Throwable e)
 		{
-			//e.printStackTrace();
 			// silently ignore any problems 
 			return null;
 		}

@@ -17,7 +17,6 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import org.apache.commons.io.output.CountingOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,7 +126,7 @@ public class SerializingFileBuffer<E>
 		long elementsCount = 0;
 		try
 		{
-			if(!serializeFile.canRead() && !serializeIndexFile.canRead())
+			if(!serializeFile.canRead() || !serializeIndexFile.canRead())
 			{
 				return null;
 			}
@@ -400,8 +399,7 @@ public class SerializingFileBuffer<E>
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		GZIPOutputStream gos = new GZIPOutputStream(bos);
-		CountingOutputStream cos = new CountingOutputStream(gos);
-		ObjectOutputStream out = new ObjectOutputStream(cos);
+		ObjectOutputStream out = new ObjectOutputStream(gos);
 		out.writeObject(element);
 		out.flush();
 		out.close();
