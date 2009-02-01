@@ -17,9 +17,9 @@
  */
 package de.huxhorn.sulky.generics.io;
 
-import java.beans.PersistenceDelegate;
-import java.beans.Expression;
 import java.beans.Encoder;
+import java.beans.Expression;
+import java.beans.PersistenceDelegate;
 
 /**
  * As described in http://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html

@@ -19,17 +19,19 @@ package de.huxhorn.sulky.generics.io;
 
 import org.apache.commons.io.IOUtils;
 
+import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.zip.GZIPOutputStream;
-import java.beans.XMLEncoder;
-import java.beans.PersistenceDelegate;
 
 public class XmlSerializer<E>
 	implements Serializer<E>
 {
-	boolean compressing;
-	private Class[] enums;
+	private static final Class[] NO_ENUMS = {};
+	private boolean compressing;
+	private final Class[] enums;
+	private EnumPersistenceDelegate enumDelegate;
 
 	public XmlSerializer()
 	{
@@ -38,13 +40,17 @@ public class XmlSerializer<E>
 
 	public XmlSerializer(boolean compressing)
 	{
-		this.compressing = compressing;
+		this(compressing, NO_ENUMS);
 	}
 
 	public XmlSerializer(boolean compressing, Class... enums)
 	{
 		setCompressing(compressing);
-		this.enums=enums;
+		this.enums = enums;
+		if(this.enums != null && this.enums.length > 0)
+		{
+			enumDelegate = new EnumPersistenceDelegate();
+		}
 	}
 
 	public boolean isCompressing()
@@ -66,18 +72,17 @@ public class XmlSerializer<E>
 			if(compressing)
 			{
 				GZIPOutputStream gos = new GZIPOutputStream(bos);
-				encoder=new XMLEncoder(gos);
+				encoder = new XMLEncoder(gos);
 			}
 			else
 			{
-				encoder=new XMLEncoder(bos);
+				encoder = new XMLEncoder(bos);
 			}
 			if(enums != null)
 			{
-				PersistenceDelegate delegate = new EnumPersistenceDelegate();
 				for(Class c : enums)
 				{
-					encoder.setPersistenceDelegate(c, delegate);
+					encoder.setPersistenceDelegate(c, enumDelegate);
 				}
 			}
 
@@ -94,5 +99,11 @@ public class XmlSerializer<E>
 		{
 			IOUtils.closeQuietly(bos);
 		}
+	}
+
+
+	public String toString()
+	{
+		return "XmlSerializer[compressing=" + compressing + ", enums=" + Arrays.toString(enums) + "]";
 	}
 }

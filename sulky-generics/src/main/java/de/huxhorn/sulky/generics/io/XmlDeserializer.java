@@ -19,15 +19,15 @@ package de.huxhorn.sulky.generics.io;
 
 import org.apache.commons.io.IOUtils;
 
+import java.beans.XMLDecoder;
 import java.io.ByteArrayInputStream;
 import java.io.Serializable;
 import java.util.zip.GZIPInputStream;
-import java.beans.XMLDecoder;
 
 public class XmlDeserializer<E extends Serializable>
 	implements Deserializer<E>
 {
-	boolean compressing;
+	private boolean compressing;
 
 	public XmlDeserializer()
 	{
@@ -58,11 +58,11 @@ public class XmlDeserializer<E extends Serializable>
 			if(compressing)
 			{
 				GZIPInputStream gis = new GZIPInputStream(bis);
-				decoder=new XMLDecoder(gis);
+				decoder = new XMLDecoder(gis);
 			}
 			else
 			{
-				decoder=new XMLDecoder(bis);
+				decoder = new XMLDecoder(bis);
 			}
 
 			Object result = decoder.readObject();
@@ -78,5 +78,10 @@ public class XmlDeserializer<E extends Serializable>
 		{
 			IOUtils.closeQuietly(bis);
 		}
+	}
+
+	public String toString()
+	{
+		return "XmlDeserializer[compressing=" + compressing + "]";
 	}
 }
