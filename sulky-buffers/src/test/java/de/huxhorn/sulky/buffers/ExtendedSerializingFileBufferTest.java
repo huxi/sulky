@@ -461,7 +461,6 @@ public class ExtendedSerializingFileBufferTest
 		}
 	}
 
-	// TODO: add tests that check errors and behavior after deletion of files.
 	@Test
 	public void deleteDataFileAdd()
 	{
