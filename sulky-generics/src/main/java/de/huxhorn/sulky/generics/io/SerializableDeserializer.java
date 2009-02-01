@@ -27,7 +27,7 @@ import java.util.zip.GZIPInputStream;
 public class SerializableDeserializer<E extends Serializable>
 	implements Deserializer<E>
 {
-	boolean compressing;
+	private boolean compressing;
 
 	public SerializableDeserializer()
 	{
@@ -79,4 +79,10 @@ public class SerializableDeserializer<E extends Serializable>
 			IOUtils.closeQuietly(bis);
 		}
 	}
+
+	public String toString()
+	{
+		return "SerializableDeserializer[compressing=" + compressing + "]";
+	}
+
 }
