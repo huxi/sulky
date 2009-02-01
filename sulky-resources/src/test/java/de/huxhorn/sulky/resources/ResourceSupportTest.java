@@ -1256,17 +1256,17 @@ public class ResourceSupportTest
 		});
 
 		// checking internal class handling
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.Internal.class);
+		resourcesupport = new ResourceSupport(Foobar.Internal.class);
 		internalGetLocalResources("test.txt", null, germanLocale, new String[]{
 			"Foobar/Internal/test.txt",
 		});
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
 		internalGetLocalResources("test.txt", null, germanLocale, new String[]{
 			"Foobar/StaticInternal/de/test.txt",
 			"Foobar/StaticInternal/test.txt",
 		});
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.Foo.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
 		internalGetLocalResources("test.txt", null, germanLocale, new String[]{});
 	}
 
@@ -1292,13 +1292,13 @@ public class ResourceSupportTest
 		internalGetLocalResource("cyclicFallback1", null, germanLocale, "Foobar/cyclicFallback1");
 
 		// checking internal class handling
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.Internal.class);
+		resourcesupport = new ResourceSupport(Foobar.Internal.class);
 		internalGetLocalResource("test.txt", null, germanLocale, "Foobar/Internal/test.txt");
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
 		internalGetLocalResource("test.txt", null, germanLocale, "Foobar/StaticInternal/de/test.txt");
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.Foo.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
 		internalGetLocalResource("test.txt", null, germanLocale, null);
 	}
 
@@ -1324,13 +1324,13 @@ public class ResourceSupportTest
 		internalGetLocalResourceAsStream("cyclicFallback1", null, germanLocale, true);
 
 		// checking internal class handling
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.Internal.class);
+		resourcesupport = new ResourceSupport(Foobar.Internal.class);
 		internalGetLocalResourceAsStream("test.txt", null, germanLocale, true);
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
 		internalGetLocalResourceAsStream("test.txt", null, germanLocale, true);
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.Foo.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
 		internalGetLocalResourceAsStream("test.txt", null, germanLocale, false);
 	}
 
@@ -1377,19 +1377,19 @@ public class ResourceSupportTest
 		});
 
 		// checking internal class handling
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.Internal.class);
+		resourcesupport = new ResourceSupport(Foobar.Internal.class);
 		internalGetResources("test.txt", null, germanLocale, new String[]{
 			"Foobar/Internal/test.txt",
 			"Foobar/test.txt"
 		});
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
 		internalGetResources("test.txt", null, germanLocale, new String[]{
 			"Foobar/StaticInternal/de/test.txt",
 			"Foobar/StaticInternal/test.txt",
 			"Foobar/test.txt"
 		});
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.Foo.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
 		internalGetResources("test.txt", null, germanLocale, new String[]{
 			"Foobar/StaticInternal/de/test.txt",
 			"Foobar/StaticInternal/test.txt",
@@ -1455,13 +1455,13 @@ public class ResourceSupportTest
 		internalGetResource("cyclicFallback1", null, germanLocale, "Foobar/cyclicFallback1");
 
 		// checking internal class handling
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.Internal.class);
+		resourcesupport = new ResourceSupport(Foobar.Internal.class);
 		internalGetResource("test.txt", null, germanLocale, "Foobar/Internal/test.txt");
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
 		internalGetResource("test.txt", null, germanLocale, "Foobar/StaticInternal/de/test.txt");
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.Foo.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
 		internalGetResource("test.txt", null, germanLocale, "Foobar/StaticInternal/de/test.txt");
 	}
 
@@ -1487,13 +1487,13 @@ public class ResourceSupportTest
 		internalGetResourceAsStream("cyclicFallback1", null, germanLocale, true);
 
 		// checking internal class handling
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.Internal.class);
+		resourcesupport = new ResourceSupport(Foobar.Internal.class);
 		internalGetResourceAsStream("test.txt", null, germanLocale, true);
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
 		internalGetResourceAsStream("test.txt", null, germanLocale, true);
 
-		resourcesupport = new ResourceSupport(de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.Foo.class);
+		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
 		internalGetResourceAsStream("test.txt", null, germanLocale, true);
 	}
 
