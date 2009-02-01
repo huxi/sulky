@@ -857,7 +857,14 @@ public class ExtendedSerializingFileBuffer<E>
 		}
 		else
 		{
-			result.append("0x").append(Integer.toHexString(magicValue));
+			result.append("0x");
+			String hexValue = Integer.toHexString(magicValue);
+			int zeroes = 8 - hexValue.length();
+			for(int i = 0; i < zeroes; i++)
+			{
+				result.append("0");
+			}
+			result.append(hexValue);
 		}
 		result.append(", ");
 
