@@ -47,29 +47,30 @@ public class SerializingFileBuffer<E>
 	/**
 	 * the file that contains the serialized objects.
 	 */
-	private File serializeFile;
+	private File dataFile;
 
 	/**
 	 * index file that contains the number of contained objects as well as the offsets of the objects in the
 	 * serialized file.
 	 */
-	private File serializeIndexFile;
+	private File indexFile;
+
 	private static final String INDEX_EXTENSION = ".index";
 
-	public SerializingFileBuffer(File serializeFile)
+	public SerializingFileBuffer(File dataFile)
 	{
-		this(serializeFile, null);
+		this(dataFile, null);
 	}
 
-	public SerializingFileBuffer(File serializeFile, File serializeIndexFile)
+	public SerializingFileBuffer(File dataFile, File indexFile)
 	{
 		this.readWriteLock = new ReentrantReadWriteLock(true);
-		setSerializeFile(serializeFile);
+		setDataFile(dataFile);
 
-		if(serializeIndexFile == null)
+		if(indexFile == null)
 		{
-			File parent = serializeFile.getParentFile();
-			String indexName = serializeFile.getName();
+			File parent = dataFile.getParentFile();
+			String indexName = dataFile.getName();
 			int dotIndex = indexName.lastIndexOf('.');
 			if(dotIndex > 0)
 			{
@@ -77,10 +78,10 @@ public class SerializingFileBuffer<E>
 				indexName = indexName.substring(0, dotIndex);
 			}
 			indexName += INDEX_EXTENSION;
-			serializeIndexFile = new File(parent, indexName);
+			indexFile = new File(parent, indexName);
 		}
 
-		setSerializeIndexFile(serializeIndexFile);
+		setIndexFile(indexFile);
 	}
 
 	public long getSize()
@@ -91,11 +92,11 @@ public class SerializingFileBuffer<E>
 		Throwable throwable;
 		try
 		{
-			if(!serializeIndexFile.canRead())
+			if(!indexFile.canRead())
 			{
 				return 0;
 			}
-			raf = new RandomAccessFile(serializeIndexFile, "r");
+			raf = new RandomAccessFile(indexFile, "r");
 			return internalGetSize(raf);
 		}
 		catch(Throwable e)
@@ -126,12 +127,12 @@ public class SerializingFileBuffer<E>
 		long elementsCount = 0;
 		try
 		{
-			if(!serializeFile.canRead() || !serializeIndexFile.canRead())
+			if(!dataFile.canRead() || !indexFile.canRead())
 			{
 				return null;
 			}
-			randomSerializeIndexFile = new RandomAccessFile(serializeIndexFile, "r");
-			randomSerializeFile = new RandomAccessFile(serializeFile, "r");
+			randomSerializeIndexFile = new RandomAccessFile(indexFile, "r");
+			randomSerializeFile = new RandomAccessFile(dataFile, "r");
 			elementsCount = internalGetSize(randomSerializeIndexFile);
 			if(index >= 0 && index < elementsCount)
 			{
@@ -193,8 +194,8 @@ public class SerializingFileBuffer<E>
 		Throwable throwable = null;
 		try
 		{
-			randomSerializeIndexFile = new RandomAccessFile(serializeIndexFile, "rw");
-			randomSerializeFile = new RandomAccessFile(serializeFile, "rw");
+			randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
+			randomSerializeFile = new RandomAccessFile(dataFile, "rw");
 			long elementsCount = internalGetSize(randomSerializeIndexFile);
 
 			long offset = 0;
@@ -239,8 +240,8 @@ public class SerializingFileBuffer<E>
 				Throwable throwable = null;
 				try
 				{
-					randomSerializeIndexFile = new RandomAccessFile(serializeIndexFile, "rw");
-					randomSerializeFile = new RandomAccessFile(serializeFile, "rw");
+					randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
+					randomSerializeFile = new RandomAccessFile(dataFile, "rw");
 
 					long elementsCount = internalGetSize(randomSerializeIndexFile);
 
@@ -300,8 +301,8 @@ public class SerializingFileBuffer<E>
 		lock.lock();
 		try
 		{
-			serializeIndexFile.delete();
-			serializeFile.delete();
+			indexFile.delete();
+			dataFile.delete();
 		}
 		finally
 		{
@@ -429,18 +430,18 @@ public class SerializingFileBuffer<E>
 		return randomSerializeFile.readInt();
 	}
 
-	private void setSerializeFile(File serializeFile)
+	private void setDataFile(File dataFile)
 	{
-		prepareFile(serializeFile);
-//		if(logger.isDebugEnabled()) logger.debug("serializeFile="+serializeFile.getAbsolutePath());
-		this.serializeFile = serializeFile;
+		prepareFile(dataFile);
+//		if(logger.isDebugEnabled()) logger.debug("dataFile="+dataFile.getAbsolutePath());
+		this.dataFile = dataFile;
 	}
 
-	private void setSerializeIndexFile(File serializeIndexFile)
+	private void setIndexFile(File indexFile)
 	{
-		prepareFile(serializeIndexFile);
-		//if(logger.isDebugEnabled()) logger.debug("serializeIndexFile="+serializeIndexFile.getAbsolutePath());
-		this.serializeIndexFile = serializeIndexFile;
+		prepareFile(indexFile);
+		//if(logger.isDebugEnabled()) logger.debug("indexFile="+indexFile.getAbsolutePath());
+		this.indexFile = indexFile;
 	}
 
 	private void prepareFile(File file)
@@ -458,5 +459,35 @@ public class SerializingFileBuffer<E>
 				throw new IllegalArgumentException(file.getAbsolutePath() + " is not writable!");
 			}
 		}
+	}
+
+	public String toString()
+	{
+		StringBuilder result = new StringBuilder();
+		result.append("SerializingFileBuffer[");
+
+		result.append("dataFile=");
+		if(dataFile == null)
+		{
+			result.append("null");
+		}
+		else
+		{
+			result.append("\"").append(dataFile.getAbsolutePath()).append("\"");
+		}
+		result.append(", ");
+
+		result.append("indexFile=");
+		if(indexFile == null)
+		{
+			result.append("null");
+		}
+		else
+		{
+			result.append("\"").append(indexFile.getAbsolutePath()).append("\"");
+		}
+
+		result.append("]");
+		return result.toString();
 	}
 }
