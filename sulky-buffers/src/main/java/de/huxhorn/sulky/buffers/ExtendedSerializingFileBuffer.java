@@ -17,8 +17,8 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import de.huxhorn.sulky.generics.io.Serializer;
 import de.huxhorn.sulky.generics.io.Deserializer;
+import de.huxhorn.sulky.generics.io.Serializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ import java.util.zip.GZIPOutputStream;
 
 /**
  * In contrast to SerializingFileBuffer, this implementation supports the following:
- *
+ * <p/>
  * <ul>
  * <li>An optional magic value to identify the type of a buffer file.<br/>
  * If present (and it should be), it is contained in the first four bytes of the data-file and can be evaluated by external classes, e.g. FileFilters.
@@ -59,8 +59,9 @@ import java.util.zip.GZIPOutputStream;
  * </li>
  * <li>Optional ElementProcessors that are executed after elements are added to the buffer.</li>
  * </ul>
- *
+ * <p/>
  * TODO: more docu :p
+ *
  * @param <E> the type of objects that are stored in this buffer.
  */
 public class ExtendedSerializingFileBuffer<E>
@@ -73,13 +74,13 @@ public class ExtendedSerializingFileBuffer<E>
 	/**
 	 * the file that contains the serialized objects.
 	 */
-	private File serializeFile;
+	private File dataFile;
 
 	/**
 	 * index file that contains the number of contained objects as well as the offsets of the objects in the
 	 * serialized file.
 	 */
-	private File serializeIndexFile;
+	private File indexFile;
 	private static final String INDEX_EXTENSION = ".index";
 	private Integer magicValue;
 	private Map<String, String> metaData;
@@ -95,42 +96,42 @@ public class ExtendedSerializingFileBuffer<E>
 	 * Shortcut for ExtendedSerializingFileBuffer(magicValue, metaData, null, null, serializeFile, null).
 	 *
 	 * @param magicValue the magic value of the buffer, can be null but shouldn't.
-	 * @param metaData the meta data of the buffer. Might be null.
-	 * @param serializeFile the data file.
+	 * @param metaData   the meta data of the buffer. Might be null.
+	 * @param dataFile   the data file.
 	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
 	 */
-	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, File serializeFile)
+	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, File dataFile)
 	{
-		this(magicValue, metaData, null, null, serializeFile, null);
+		this(magicValue, metaData, null, null, dataFile, null);
 	}
 
 	/**
 	 * Shortcut for ExtendedSerializingFileBuffer(magicValue, metaData, null, null, serializeFile, null).
 	 *
-	 * @param magicValue the magic value of the buffer, can be null but shouldn't.
-	 * @param metaData the meta data of the buffer. Might be null.
-	 * @param serializer the serializer used by this buffer. Might be null.
+	 * @param magicValue   the magic value of the buffer, can be null but shouldn't.
+	 * @param metaData     the meta data of the buffer. Might be null.
+	 * @param serializer   the serializer used by this buffer. Might be null.
 	 * @param deserializer the serializer used by this buffer.  Might be null.
-	 * @param serializeFile the data file.
+	 * @param dataFile     the data file.
 	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
 	 */
-	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, Serializer<E> serializer, Deserializer<E> deserializer, File serializeFile)
+	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, Serializer<E> serializer, Deserializer<E> deserializer, File dataFile)
 	{
-		this(magicValue, metaData, serializer, deserializer, serializeFile, null);
+		this(magicValue, metaData, serializer, deserializer, dataFile, null);
 	}
 
 	/**
 	 * TODO: add description :p
 	 *
-	 * @param magicValue the magic value of the buffer, can be null but shouldn't.
-	 * @param metaData the meta data of the buffer. Might be null.
-	 * @param serializer the serializer used by this buffer. Might be null.
+	 * @param magicValue   the magic value of the buffer, can be null but shouldn't.
+	 * @param metaData     the meta data of the buffer. Might be null.
+	 * @param serializer   the serializer used by this buffer. Might be null.
 	 * @param deserializer the serializer used by this buffer.  Might be null.
-	 * @param serializeFile the data file.
-	 * @param serializeIndexFile the index file of the buffer.
+	 * @param dataFile     the data file.
+	 * @param indexFile    the index file of the buffer.
 	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
 	 */
-	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, Serializer<E> serializer, Deserializer<E> deserializer, File serializeFile, File serializeIndexFile)
+	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, Serializer<E> serializer, Deserializer<E> deserializer, File dataFile, File indexFile)
 	{
 		this.readWriteLock = new ReentrantReadWriteLock(true);
 		this.magicValue = magicValue;
@@ -138,15 +139,15 @@ public class ExtendedSerializingFileBuffer<E>
 		{
 			this.metaData = new HashMap<String, String>(metaData);
 		}
-		this.serializer=serializer;
-		this.deserializer=deserializer;
-		
-		setSerializeFile(serializeFile);
+		this.serializer = serializer;
+		this.deserializer = deserializer;
 
-		if(serializeIndexFile == null)
+		setDataFile(dataFile);
+
+		if(indexFile == null)
 		{
-			File parent = serializeFile.getParentFile();
-			String indexName = serializeFile.getName();
+			File parent = dataFile.getParentFile();
+			String indexName = dataFile.getName();
 			int dotIndex = indexName.lastIndexOf('.');
 			if(dotIndex > 0)
 			{
@@ -154,11 +155,11 @@ public class ExtendedSerializingFileBuffer<E>
 				indexName = indexName.substring(0, dotIndex);
 			}
 			indexName += INDEX_EXTENSION;
-			serializeIndexFile = new File(parent, indexName);
+			indexFile = new File(parent, indexName);
 		}
 
-		setSerializeIndexFile(serializeIndexFile);
-		if(serializeFile.exists())
+		setIndexFile(indexFile);
+		if(dataFile.exists())
 		{
 			Lock lock = readWriteLock.readLock();
 			lock.lock();
@@ -186,9 +187,9 @@ public class ExtendedSerializingFileBuffer<E>
 				lock.unlock();
 			}
 		}
-		if(serializeFile.length()>initialDataOffset)
+		if(dataFile.length() > initialDataOffset)
 		{
-			
+
 		}
 	}
 
@@ -203,7 +204,7 @@ public class ExtendedSerializingFileBuffer<E>
 			Throwable throwable = null;
 			try
 			{
-				raf = new RandomAccessFile(serializeFile, "r");
+				raf = new RandomAccessFile(dataFile, "r");
 				if(raf.length() >= MAGIC_VALUE_SIZE)
 				{
 					raf.seek(0);
@@ -217,7 +218,7 @@ public class ExtendedSerializingFileBuffer<E>
 				}
 				else
 				{
-					throw new IllegalArgumentException("Could not read magic value from " + serializeFile
+					throw new IllegalArgumentException("Could not read magic value from " + dataFile
 						.getAbsolutePath() + "!");
 				}
 			}
@@ -236,7 +237,7 @@ public class ExtendedSerializingFileBuffer<E>
 			}
 			if(throwable != null)
 			{
-				throw new IllegalArgumentException("Could not read magic value from " + serializeFile
+				throw new IllegalArgumentException("Could not read magic value from " + dataFile
 					.getAbsolutePath() + "!", throwable);
 			}
 		}
@@ -252,13 +253,13 @@ public class ExtendedSerializingFileBuffer<E>
 			RandomAccessFile raf = null;
 			try
 			{
-				raf = new RandomAccessFile(serializeFile, "rw");
+				raf = new RandomAccessFile(dataFile, "rw");
 				raf.seek(0);
 				raf.writeInt(magicValue);
 			}
 			catch(Throwable e)
 			{
-				throw new IllegalArgumentException("Could not write magic value to " + serializeFile
+				throw new IllegalArgumentException("Could not write magic value to " + dataFile
 					.getAbsolutePath() + "!", e);
 			}
 			finally
@@ -297,7 +298,7 @@ public class ExtendedSerializingFileBuffer<E>
 				length = buffer.length;
 			}
 
-			raf = new RandomAccessFile(serializeFile, "rw");
+			raf = new RandomAccessFile(dataFile, "rw");
 			raf.seek(offset);
 			raf.writeInt(length);
 			if(length > 0)
@@ -309,7 +310,7 @@ public class ExtendedSerializingFileBuffer<E>
 		}
 		catch(Throwable e)
 		{
-			throw new IllegalArgumentException("Could not write meta data to " + serializeFile
+			throw new IllegalArgumentException("Could not write meta data to " + dataFile
 				.getAbsolutePath() + "!", e);
 		}
 		finally
@@ -332,7 +333,7 @@ public class ExtendedSerializingFileBuffer<E>
 		Throwable throwable = null;
 		try
 		{
-			raf = new RandomAccessFile(serializeFile, "r");
+			raf = new RandomAccessFile(dataFile, "r");
 			if(raf.length() >= offset + META_LENGTH_SIZE)
 			{
 				raf.seek(offset);
@@ -344,7 +345,7 @@ public class ExtendedSerializingFileBuffer<E>
 						throw new IndexOutOfBoundsException("Invalid length (" + metaLength + ") at offset: " + offset + "!");
 					}
 					setInitialDataOffset(offset + META_LENGTH_SIZE + metaLength);
-					raf.seek(offset+META_LENGTH_SIZE);
+					raf.seek(offset + META_LENGTH_SIZE);
 					byte[] buffer = new byte[metaLength];
 					raf.readFully(buffer);
 					ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
@@ -361,7 +362,7 @@ public class ExtendedSerializingFileBuffer<E>
 			}
 			else
 			{
-				throw new IllegalArgumentException("Could not read meta data from " + serializeFile
+				throw new IllegalArgumentException("Could not read meta data from " + dataFile
 					.getAbsolutePath() + "!");
 			}
 		}
@@ -380,7 +381,7 @@ public class ExtendedSerializingFileBuffer<E>
 		}
 		if(throwable != null)
 		{
-			throw new IllegalArgumentException("Could not read meta data from " + serializeFile
+			throw new IllegalArgumentException("Could not read meta data from " + dataFile
 				.getAbsolutePath() + "!", throwable);
 		}
 	}
@@ -448,11 +449,11 @@ public class ExtendedSerializingFileBuffer<E>
 		Throwable throwable;
 		try
 		{
-			if(!serializeIndexFile.canRead())
+			if(!indexFile.canRead())
 			{
 				return 0;
 			}
-			raf = new RandomAccessFile(serializeIndexFile, "r");
+			raf = new RandomAccessFile(indexFile, "r");
 			return internalGetSize(raf);
 		}
 		catch(Throwable e)
@@ -473,10 +474,9 @@ public class ExtendedSerializingFileBuffer<E>
 	}
 
 	/**
-	 *
 	 * @param index must be in the range <tt>[0..(getSize()-1)]</tt>.
 	 * @return the element at the given index.
-	 * @throws IllegalStateException if no Deserializer has been set.
+	 * @throws IllegalStateException     if no Deserializer has been set.
 	 * @throws IndexOutOfBoundsException if there is no element at the given index.
 	 */
 	public E get(long index)
@@ -490,12 +490,12 @@ public class ExtendedSerializingFileBuffer<E>
 		long elementsCount = 0;
 		try
 		{
-			if(!serializeFile.canRead() || !serializeIndexFile.canRead())
+			if(!dataFile.canRead() || !indexFile.canRead())
 			{
 				return null;
 			}
-			randomSerializeIndexFile = new RandomAccessFile(serializeIndexFile, "r");
-			randomSerializeFile = new RandomAccessFile(serializeFile, "r");
+			randomSerializeIndexFile = new RandomAccessFile(indexFile, "r");
+			randomSerializeFile = new RandomAccessFile(dataFile, "r");
 			elementsCount = internalGetSize(randomSerializeIndexFile);
 			if(index >= 0 && index < elementsCount)
 			{
@@ -550,7 +550,7 @@ public class ExtendedSerializingFileBuffer<E>
 
 	/**
 	 * Adds the element to the end of the buffer.
-	 *  
+	 *
 	 * @param element to add.
 	 * @throws IllegalStateException if no Serializer has been set.
 	 */
@@ -563,8 +563,8 @@ public class ExtendedSerializingFileBuffer<E>
 		Throwable throwable = null;
 		try
 		{
-			randomSerializeIndexFile = new RandomAccessFile(serializeIndexFile, "rw");
-			randomSerializeFile = new RandomAccessFile(serializeFile, "rw");
+			randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
+			randomSerializeFile = new RandomAccessFile(dataFile, "rw");
 			long elementsCount = internalGetSize(randomSerializeIndexFile);
 
 			long offset = initialDataOffset;
@@ -579,12 +579,12 @@ public class ExtendedSerializingFileBuffer<E>
 
 			// call proecssors if available
 			List<ElementProcessor<E>> localProcessors = elementProcessors;
-			if(localProcessors!=null)
+			if(localProcessors != null)
 			{
-			    for(ElementProcessor<E> current: elementProcessors)
-			    {
-				    current.processElement(element);
-			    }
+				for(ElementProcessor<E> current : elementProcessors)
+				{
+					current.processElement(element);
+				}
 			}
 		}
 		catch(IOException e)
@@ -606,6 +606,7 @@ public class ExtendedSerializingFileBuffer<E>
 
 	/**
 	 * Adds all elements to the end of the buffer.
+	 *
 	 * @param elements to add.
 	 * @throws IllegalStateException if no Serializer has been set.
 	 */
@@ -623,8 +624,8 @@ public class ExtendedSerializingFileBuffer<E>
 				Throwable throwable = null;
 				try
 				{
-					randomSerializeIndexFile = new RandomAccessFile(serializeIndexFile, "rw");
-					randomSerializeFile = new RandomAccessFile(serializeFile, "rw");
+					randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
+					randomSerializeFile = new RandomAccessFile(dataFile, "rw");
 
 					long elementsCount = internalGetSize(randomSerializeIndexFile);
 
@@ -652,12 +653,12 @@ public class ExtendedSerializingFileBuffer<E>
 					}
 					// call proecssors if available
 					List<ElementProcessor<E>> localProcessors = elementProcessors;
-					if(localProcessors!=null)
+					if(localProcessors != null)
 					{
-					    for(ElementProcessor<E> current: elementProcessors)
-					    {
-						    current.processElements(elements);
-					    }
+						for(ElementProcessor<E> current : elementProcessors)
+						{
+							current.processElements(elements);
+						}
 					}
 					//if(logger.isInfoEnabled()) logger.info("Elements after batch-write: {}", index+elementsCount);
 				}
@@ -693,8 +694,8 @@ public class ExtendedSerializingFileBuffer<E>
 		lock.lock();
 		try
 		{
-			serializeIndexFile.delete();
-			serializeFile.delete();
+			indexFile.delete();
+			dataFile.delete();
 			writeMagicValue();
 			writeMetaData();
 		}
@@ -813,18 +814,18 @@ public class ExtendedSerializingFileBuffer<E>
 		return randomSerializeFile.readInt();
 	}
 
-	private void setSerializeFile(File serializeFile)
+	private void setDataFile(File dataFile)
 	{
-		prepareFile(serializeFile);
-//		if(logger.isDebugEnabled()) logger.debug("serializeFile="+serializeFile.getAbsolutePath());
-		this.serializeFile = serializeFile;
+		prepareFile(dataFile);
+//		if(logger.isDebugEnabled()) logger.debug("dataFile="+dataFile.getAbsolutePath());
+		this.dataFile = dataFile;
 	}
 
-	private void setSerializeIndexFile(File serializeIndexFile)
+	private void setIndexFile(File indexFile)
 	{
-		prepareFile(serializeIndexFile);
-		//if(logger.isDebugEnabled()) logger.debug("serializeIndexFile="+serializeIndexFile.getAbsolutePath());
-		this.serializeIndexFile = serializeIndexFile;
+		prepareFile(indexFile);
+		//if(logger.isDebugEnabled()) logger.debug("indexFile="+indexFile.getAbsolutePath());
+		this.indexFile = indexFile;
 	}
 
 	private void prepareFile(File file)
@@ -842,5 +843,55 @@ public class ExtendedSerializingFileBuffer<E>
 				throw new IllegalArgumentException(file.getAbsolutePath() + " is not writable!");
 			}
 		}
+	}
+
+	public String toString()
+	{
+		StringBuilder result = new StringBuilder();
+		result.append("ExtendedSerializingFileBuffer[");
+
+		result.append("magicValue=");
+		if(magicValue == null)
+		{
+			result.append("null");
+		}
+		else
+		{
+			result.append("0x").append(Integer.toHexString(magicValue));
+		}
+		result.append(", ");
+
+		result.append("metaData=").append(metaData);
+		result.append(", ");
+
+		result.append("dataFile=");
+		if(dataFile == null)
+		{
+			result.append("null");
+		}
+		else
+		{
+			result.append("\"").append(dataFile.getAbsolutePath()).append("\"");
+		}
+		result.append(", ");
+
+		result.append("indexFile=");
+		if(indexFile == null)
+		{
+			result.append("null");
+		}
+		else
+		{
+			result.append("\"").append(indexFile.getAbsolutePath()).append("\"");
+		}
+		result.append(", ");
+
+		result.append("serializer=").append(serializer);
+		result.append(", ");
+
+		result.append("deserializer=").append(deserializer);
+
+		result.append("]");
+		return result.toString();
 	}
 }
