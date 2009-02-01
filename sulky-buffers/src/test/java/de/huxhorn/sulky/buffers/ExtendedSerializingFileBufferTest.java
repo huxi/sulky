@@ -17,10 +17,10 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import de.huxhorn.sulky.generics.io.Serializer;
 import de.huxhorn.sulky.generics.io.Deserializer;
-import de.huxhorn.sulky.generics.io.SerializableSerializer;
 import de.huxhorn.sulky.generics.io.SerializableDeserializer;
+import de.huxhorn.sulky.generics.io.SerializableSerializer;
+import de.huxhorn.sulky.generics.io.Serializer;
 
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -31,10 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExtendedSerializingFileBufferTest
 {
@@ -60,8 +60,8 @@ public class ExtendedSerializingFileBufferTest
 		serializeFile = new File(tempOutputPath, "dump");
 		serializeIndexFile = new File(tempOutputPath, "dump.index");
 
-		serializer=new SerializableSerializer<String>();
-		deserializer=new SerializableDeserializer<String>();
+		serializer = new SerializableSerializer<String>();
+		deserializer = new SerializableDeserializer<String>();
 
 		values = new String[]
 			{
@@ -93,38 +93,10 @@ public class ExtendedSerializingFileBufferTest
 		tempOutputPath.delete();
 	}
 
-	@Test
-	public void readWriteNoMagicNoMetaAdd()
+	@Test(expected = NullPointerException.class)
+	public void readWriteNoMagic()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(null, null, serializer, deserializer, serializeFile, serializeIndexFile);
-		for(String current : values)
-		{
-			instance.add(current);
-		}
-		assertEquals(values.length, (int) instance.getSize());
-
-		for(int i = 0; i < values.length; i++)
-		{
-			String value = instance.get(i);
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
-			assertEquals("Element #" + i + " differs!", values[i], value);
-		}
-
-		int index = 0;
-		for(String value : instance)
-		{
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
-			assertEquals("Element #" + index + " differs!", values[index], value);
-			index++;
-		}
-
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(null, null, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		assertEquals(values.length, (int) otherInstance.getSize());
-
-		assertNull(otherInstance.getMagicValue());
-
-		assertNull(otherInstance.getMetaData());
+		new ExtendedSerializingFileBuffer<String>(null, null, serializer, deserializer, serializeFile, serializeIndexFile);
 	}
 
 	@Test
@@ -162,40 +134,6 @@ public class ExtendedSerializingFileBufferTest
 	}
 
 	@Test
-	public void readWriteNoMagicMetaAdd()
-	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(null, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-		for(String current : values)
-		{
-			instance.add(current);
-		}
-		assertEquals(values.length, (int) instance.getSize());
-
-		for(int i = 0; i < values.length; i++)
-		{
-			String value = instance.get(i);
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
-			assertEquals("Element #" + i + " differs!", values[i], value);
-		}
-
-		int index = 0;
-		for(String value : instance)
-		{
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
-			assertEquals("Element #" + index + " differs!", values[index], value);
-			index++;
-		}
-
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(null, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		assertEquals(values.length, (int) otherInstance.getSize());
-
-		assertNull(otherInstance.getMagicValue());
-
-		assertEquals(metaData, otherInstance.getMetaData());
-	}
-
-	@Test
 	public void readWriteMagicMetaAdd()
 	{
 		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
@@ -230,37 +168,6 @@ public class ExtendedSerializingFileBufferTest
 	}
 
 	@Test
-	public void readWriteNoMagicNoMetaAddAll()
-	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(null, null, serializer, deserializer, serializeFile, serializeIndexFile);
-		instance.addAll(values);
-		assertEquals(values.length, (int) instance.getSize());
-
-		for(int i = 0; i < values.length; i++)
-		{
-			String value = instance.get(i);
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
-			assertEquals("Element #" + i + " differs!", values[i], value);
-		}
-
-		int index = 0;
-		for(String value : instance)
-		{
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
-			assertEquals("Element #" + index + " differs!", values[index], value);
-			index++;
-		}
-
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(null, null, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		assertEquals(values.length, (int) otherInstance.getSize());
-
-		assertNull(otherInstance.getMagicValue());
-
-		assertNull(otherInstance.getMetaData());
-	}
-
-	@Test
 	public void readWriteMagicNoMetaAddAll()
 	{
 		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, serializeFile, serializeIndexFile);
@@ -289,37 +196,6 @@ public class ExtendedSerializingFileBufferTest
 		assertEquals(magicValue, otherInstance.getMagicValue());
 
 		assertNull(otherInstance.getMetaData());
-	}
-
-	@Test
-	public void readWriteNoMagicMetaAddAll()
-	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(null, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-		instance.addAll(values);
-		assertEquals(values.length, (int) instance.getSize());
-
-		for(int i = 0; i < values.length; i++)
-		{
-			String value = instance.get(i);
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
-			assertEquals("Element #" + i + " differs!", values[i], value);
-		}
-
-		int index = 0;
-		for(String value : instance)
-		{
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
-			assertEquals("Element #" + index + " differs!", values[index], value);
-			index++;
-		}
-
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(null, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		assertEquals(values.length, (int) otherInstance.getSize());
-
-		assertNull(otherInstance.getMagicValue());
-
-		assertEquals(metaData, otherInstance.getMetaData());
 	}
 
 	@Test
@@ -386,22 +262,6 @@ public class ExtendedSerializingFileBufferTest
 	}
 
 	@Test
-	public void meta()
-	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(null, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		assertEquals(0, (int) instance.getSize());
-
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(null, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		assertEquals(0, (int) instance.getSize());
-
-		assertNull(otherInstance.getMagicValue());
-
-		assertEquals(metaData, otherInstance.getMetaData());
-	}
-
-	@Test
 	public void resetMagicMeta()
 	{
 		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
@@ -417,44 +277,6 @@ public class ExtendedSerializingFileBufferTest
 		assertEquals(0, otherInstance.getSize());
 
 		assertEquals(magicValue, otherInstance.getMagicValue());
-
-		assertEquals(metaData, otherInstance.getMetaData());
-
-		instance.addAll(values);
-		assertEquals(values.length, (int) instance.getSize());
-
-		for(int i = 0; i < values.length; i++)
-		{
-			String value = instance.get(i);
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
-			assertEquals("Element #" + i + " differs!", values[i], value);
-		}
-
-		int index = 0;
-		for(String value : instance)
-		{
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
-			assertEquals("Element #" + index + " differs!", values[index], value);
-			index++;
-		}
-	}
-
-	@Test
-	public void resetNoMagicMeta()
-	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(null, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		instance.addAll(values);
-		assertEquals(values.length, (int) instance.getSize());
-
-		instance.reset();
-		assertEquals(0, instance.getSize());
-
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(null, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		assertEquals(0, otherInstance.getSize());
-
-		assertNull(otherInstance.getMagicValue());
 
 		assertEquals(metaData, otherInstance.getMetaData());
 
@@ -516,49 +338,11 @@ public class ExtendedSerializingFileBufferTest
 	}
 
 	@Test
-	public void resetNoMagicNoMeta()
-	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(null, null, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		instance.addAll(values);
-		assertEquals(values.length, (int) instance.getSize());
-
-		instance.reset();
-		assertEquals(0, instance.getSize());
-
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(null, null, serializer, deserializer, serializeFile, serializeIndexFile);
-
-		assertEquals(0, otherInstance.getSize());
-
-		assertNull(otherInstance.getMagicValue());
-
-		assertNull(otherInstance.getMetaData());
-
-		instance.addAll(values);
-		assertEquals(values.length, (int) instance.getSize());
-
-		for(int i = 0; i < values.length; i++)
-		{
-			String value = instance.get(i);
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", i, value);
-			assertEquals("Element #" + i + " differs!", values[i], value);
-		}
-
-		int index = 0;
-		for(String value : instance)
-		{
-			if(logger.isInfoEnabled()) logger.info("Element #{}={}", index, value);
-			assertEquals("Element #" + index + " differs!", values[index], value);
-			index++;
-		}
-	}
-
-	@Test
 	public void elementProcessorsAdd()
 	{
 		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-		List<ElementProcessor<String>> elementProcessors=new ArrayList<ElementProcessor<String>>();
-		CapturingElementProcessor capture=new CapturingElementProcessor();
+		List<ElementProcessor<String>> elementProcessors = new ArrayList<ElementProcessor<String>>();
+		CapturingElementProcessor capture = new CapturingElementProcessor();
 		elementProcessors.add(capture);
 		instance.setElementProcessors(elementProcessors);
 		instance.add("Example");
@@ -570,8 +354,8 @@ public class ExtendedSerializingFileBufferTest
 	public void elementProcessorsAddAll()
 	{
 		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, serializeFile, serializeIndexFile);
-		List<ElementProcessor<String>> elementProcessors=new ArrayList<ElementProcessor<String>>();
-		CapturingElementProcessor capture=new CapturingElementProcessor();
+		List<ElementProcessor<String>> elementProcessors = new ArrayList<ElementProcessor<String>>();
+		CapturingElementProcessor capture = new CapturingElementProcessor();
 		elementProcessors.add(capture);
 		instance.setElementProcessors(elementProcessors);
 		instance.addAll(values);
@@ -588,7 +372,7 @@ public class ExtendedSerializingFileBufferTest
 	private static class CapturingElementProcessor
 		implements ElementProcessor<String>
 	{
-		public List<String> list=new ArrayList<String>();
+		public List<String> list = new ArrayList<String>();
 
 		public void processElement(String element)
 		{

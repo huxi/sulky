@@ -94,7 +94,7 @@ public class ExtendedSerializingFileBuffer<E>
 	/**
 	 * Shortcut for ExtendedSerializingFileBuffer(magicValue, metaData, null, null, serializeFile, null).
 	 *
-	 * @param magicValue the magic value of the buffer, can be null but shouldn't.
+	 * @param magicValue the magic value of the buffer.
 	 * @param metaData   the meta data of the buffer. Might be null.
 	 * @param dataFile   the data file.
 	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
@@ -107,7 +107,7 @@ public class ExtendedSerializingFileBuffer<E>
 	/**
 	 * Shortcut for ExtendedSerializingFileBuffer(magicValue, metaData, null, null, serializeFile, null).
 	 *
-	 * @param magicValue   the magic value of the buffer, can be null but shouldn't.
+	 * @param magicValue   the magic value of the buffer.
 	 * @param metaData     the meta data of the buffer. Might be null.
 	 * @param serializer   the serializer used by this buffer. Might be null.
 	 * @param deserializer the serializer used by this buffer.  Might be null.
@@ -122,17 +122,22 @@ public class ExtendedSerializingFileBuffer<E>
 	/**
 	 * TODO: add description :p
 	 *
-	 * @param magicValue   the magic value of the buffer, can be null but shouldn't.
+	 * @param magicValue   the magic value of the buffer.
 	 * @param metaData     the meta data of the buffer. Might be null.
 	 * @param serializer   the serializer used by this buffer. Might be null.
 	 * @param deserializer the serializer used by this buffer.  Might be null.
 	 * @param dataFile     the data file.
 	 * @param indexFile    the index file of the buffer.
+	 * @throws NullPointerException if magicValue is null.
 	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
 	 */
 	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> metaData, Serializer<E> serializer, Deserializer<E> deserializer, File dataFile, File indexFile)
 	{
 		this.readWriteLock = new ReentrantReadWriteLock(true);
+		if(magicValue == null)
+		{
+			throw new NullPointerException("magicValue must not be null!");
+		}
 		this.magicValue = magicValue;
 		this.metaSerializer = new XmlSerializer<Map<String, String>>(true);
 		this.metaDeserializer = new XmlDeserializer<Map<String, String>>(true);
@@ -160,7 +165,7 @@ public class ExtendedSerializingFileBuffer<E>
 		}
 
 		setIndexFile(indexFile);
-		if(dataFile.exists())
+		if(dataFile.exists() && dataFile.length() >= MAGIC_VALUE_SIZE + META_LENGTH_SIZE)
 		{
 			Lock lock = readWriteLock.readLock();
 			lock.lock();
@@ -182,104 +187,97 @@ public class ExtendedSerializingFileBuffer<E>
 			{
 				writeMagicValue();
 				writeMetaData();
+				indexFile.delete();
 			}
 			finally
 			{
 				lock.unlock();
 			}
 		}
-		if(dataFile.length() > initialDataOffset)
-		{
-
-		}
 	}
 
 	/**
 	 * Locking is already performed for this method.
+	 *
+	 * @throws IllegalArgumentException if magicValue could not be read or differs from the specified value of this buffer.
 	 */
 	protected void validateMagicValue()
 	{
-		if(magicValue != null)
+		RandomAccessFile raf = null;
+		Throwable throwable = null;
+		try
 		{
-			RandomAccessFile raf = null;
-			Throwable throwable = null;
-			try
+			raf = new RandomAccessFile(dataFile, "r");
+			if(raf.length() >= MAGIC_VALUE_SIZE)
 			{
-				raf = new RandomAccessFile(dataFile, "r");
-				if(raf.length() >= MAGIC_VALUE_SIZE)
+				raf.seek(0);
+				int readMagicValue = raf.readInt();
+				if(magicValue != readMagicValue)
 				{
-					raf.seek(0);
-					int readMagicValue = raf.readInt();
-					if(magicValue != readMagicValue)
-					{
-						throw new IllegalArgumentException("Read magic value 0x" + Integer
-							.toHexString(readMagicValue) + " differs from expected magic value 0x" + Integer
-							.toHexString(magicValue) + "!");
-					}
-				}
-				else
-				{
-					throw new IllegalArgumentException("Could not read magic value from " + dataFile
-						.getAbsolutePath() + "!");
+					throw new IllegalArgumentException("Read magic value 0x" + Integer
+						.toHexString(readMagicValue) + " differs from expected magic value 0x" + Integer
+						.toHexString(magicValue) + "!");
 				}
 			}
-			catch(IllegalArgumentException ex)
-			{
-				// rethrow
-				throw ex;
-			}
-			catch(Throwable e)
-			{
-				throwable = e;
-			}
-			finally
-			{
-				closeQuietly(raf);
-			}
-			if(throwable != null)
+			else
 			{
 				throw new IllegalArgumentException("Could not read magic value from " + dataFile
-					.getAbsolutePath() + "!", throwable);
+					.getAbsolutePath() + "!");
 			}
+		}
+		catch(IllegalArgumentException ex)
+		{
+			// rethrow
+			throw ex;
+		}
+		catch(Throwable e)
+		{
+			throwable = e;
+		}
+		finally
+		{
+			closeQuietly(raf);
+		}
+		if(throwable != null)
+		{
+			throw new IllegalArgumentException("Could not read magic value from " + dataFile
+				.getAbsolutePath() + "!", throwable);
 		}
 	}
 
 	/**
 	 * Locking is already performed for this method.
+	 *
+	 * @throws IllegalArgumentException if magicValue could not be written.
 	 */
 	protected void writeMagicValue()
 	{
-		if(magicValue != null)
+		RandomAccessFile raf = null;
+		try
 		{
-			RandomAccessFile raf = null;
-			try
-			{
-				raf = new RandomAccessFile(dataFile, "rw");
-				raf.seek(0);
-				raf.writeInt(magicValue);
-			}
-			catch(Throwable e)
-			{
-				throw new IllegalArgumentException("Could not write magic value to " + dataFile
-					.getAbsolutePath() + "!", e);
-			}
-			finally
-			{
-				closeQuietly(raf);
-			}
+			raf = new RandomAccessFile(dataFile, "rw");
+			raf.seek(0);
+			raf.writeInt(magicValue);
+		}
+		catch(Throwable e)
+		{
+			throw new IllegalArgumentException("Could not write magic value to " + dataFile
+				.getAbsolutePath() + "!", e);
+		}
+		finally
+		{
+			closeQuietly(raf);
 		}
 	}
 
 	/**
 	 * Locking is already performed for this method.
+	 *
+	 * @throws IllegalArgumentException if metaData could not be written.
 	 */
 	protected void writeMetaData()
 	{
-		int offset = 0;
-		if(magicValue != null)
-		{
-			offset = MAGIC_VALUE_SIZE;
-		}
+		int offset = MAGIC_VALUE_SIZE;
 
 		RandomAccessFile raf = null;
 		try
@@ -318,14 +316,13 @@ public class ExtendedSerializingFileBuffer<E>
 
 	/**
 	 * Locking is already performed for this method.
+	 *
+	 * @throws IllegalArgumentException if metaData could not be read.
 	 */
 	protected void initializeMetaData()
 	{
-		int offset = 0;
-		if(magicValue != null)
-		{
-			offset = MAGIC_VALUE_SIZE;
-		}
+		int offset = MAGIC_VALUE_SIZE;
+
 		RandomAccessFile raf = null;
 		Throwable throwable = null;
 		try
@@ -339,7 +336,7 @@ public class ExtendedSerializingFileBuffer<E>
 				{
 					if(raf.length() < offset + META_LENGTH_SIZE + metaLength)
 					{
-						throw new IndexOutOfBoundsException("Invalid length (" + metaLength + ") at offset: " + offset + "!");
+						throw new IllegalArgumentException("Invalid length (" + metaLength + ") at offset: " + offset + "!");
 					}
 					setInitialDataOffset(offset + META_LENGTH_SIZE + metaLength);
 					raf.seek(offset + META_LENGTH_SIZE);
