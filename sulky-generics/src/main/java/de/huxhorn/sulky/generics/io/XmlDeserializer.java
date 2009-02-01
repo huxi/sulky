@@ -21,10 +21,9 @@ import org.apache.commons.io.IOUtils;
 
 import java.beans.XMLDecoder;
 import java.io.ByteArrayInputStream;
-import java.io.Serializable;
 import java.util.zip.GZIPInputStream;
 
-public class XmlDeserializer<E extends Serializable>
+public class XmlDeserializer<E>
 	implements Deserializer<E>
 {
 	private boolean compressing;

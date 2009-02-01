@@ -19,17 +19,15 @@ package de.huxhorn.sulky.buffers;
 
 import de.huxhorn.sulky.generics.io.Deserializer;
 import de.huxhorn.sulky.generics.io.Serializer;
+import de.huxhorn.sulky.generics.io.XmlDeserializer;
+import de.huxhorn.sulky.generics.io.XmlSerializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InvalidClassException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,8 +38,6 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * In contrast to SerializingFileBuffer, this implementation supports the following:
@@ -90,6 +86,9 @@ public class ExtendedSerializingFileBuffer<E>
 
 	private Serializer<E> serializer;
 	private Deserializer<E> deserializer;
+
+	private Serializer<Map<String, String>> metaSerializer;
+	private Deserializer<Map<String, String>> metaDeserializer;
 	private List<ElementProcessor<E>> elementProcessors;
 
 	/**
@@ -135,6 +134,8 @@ public class ExtendedSerializingFileBuffer<E>
 	{
 		this.readWriteLock = new ReentrantReadWriteLock(true);
 		this.magicValue = magicValue;
+		this.metaSerializer = new XmlSerializer<Map<String, String>>(true);
+		this.metaDeserializer = new XmlDeserializer<Map<String, String>>(true);
 		if(metaData != null)
 		{
 			this.metaData = new HashMap<String, String>(metaData);
@@ -287,15 +288,11 @@ public class ExtendedSerializingFileBuffer<E>
 			int length = 0;
 			if(metaData != null)
 			{
-				ByteArrayOutputStream bos = new ByteArrayOutputStream();
-				GZIPOutputStream gos = new GZIPOutputStream(bos);
-				ObjectOutputStream out = new ObjectOutputStream(gos);
-				out.writeObject(metaData);
-				out.flush();
-				out.close();
-				gos.finish();
-				buffer = bos.toByteArray();
-				length = buffer.length;
+				buffer = metaSerializer.serialize(metaData);
+				if(buffer != null)
+				{
+					length = buffer.length;
+				}
 			}
 
 			raf = new RandomAccessFile(dataFile, "rw");
@@ -348,11 +345,8 @@ public class ExtendedSerializingFileBuffer<E>
 					raf.seek(offset + META_LENGTH_SIZE);
 					byte[] buffer = new byte[metaLength];
 					raf.readFully(buffer);
-					ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
-					GZIPInputStream gis = new GZIPInputStream(bis);
-					ObjectInputStream ois = new ObjectInputStream(gis);
-					//noinspection unchecked
-					metaData = (Map<String, String>) ois.readObject();
+
+					metaData = metaDeserializer.deserialize(buffer);
 				}
 				else
 				{
