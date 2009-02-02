@@ -326,6 +326,7 @@ public class ExtendedSerializingFileBuffer<E>
 				raf.write(buffer);
 			}
 			setInitialDataOffset(offset + META_LENGTH_SIZE + length);
+			metaData = preferredMetaData;
 		}
 		catch(Throwable e)
 		{
