@@ -46,6 +46,7 @@
 		<module>sulky-logging</module>
 		<module>sulky-formatting</module>
 		<module>sulky-swing</module>
+		<module>sulky-tasks</module>
 		<module>sulky-resources</module>
 		<module>sulky-io</module>
 	</modules>
