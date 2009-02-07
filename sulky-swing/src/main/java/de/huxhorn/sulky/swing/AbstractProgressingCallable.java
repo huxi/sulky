@@ -77,12 +77,14 @@ public abstract class AbstractProgressingCallable<T>
 		this.lastSleepStep = 0;
 	}
 
+	/**
+	 * Sets the number of steps required to complete the task. A number <= 0 means that the number of steps are not
+	 * (yet) known and will result in a progress of -1.
+	 *
+	 * @param numberOfSteps the number of steps to complete the task.
+	 */
 	protected void setNumberOfSteps(long numberOfSteps)
 	{
-		if(numberOfSteps < 1)
-		{
-			throw new IllegalArgumentException("numberOfSteps (" + numberOfSteps + ") must be positive!");
-		}
 		this.numberOfSteps = numberOfSteps;
 	}
 
@@ -112,15 +114,19 @@ public abstract class AbstractProgressingCallable<T>
 
 	private void calculateProgress()
 	{
-		int newProgress = (int) (((double) currentStep / (double) numberOfSteps) * 100);
-		if(logger.isDebugEnabled()) logger.debug("New progress: {}", newProgress);
+		int newProgress = -1;
+		if(numberOfSteps > 0)
+		{
+			newProgress = (int) (((double) currentStep / (double) numberOfSteps) * 100);
+		}
 		setProgress(newProgress);
 	}
 
-	protected void setProgress(int progress)
+	private void setProgress(int progress)
 	{
 		if(this.progress != progress)
 		{
+			if(logger.isDebugEnabled()) logger.debug("New progress: {}", progress);
 			Object oldValue = this.progress;
 			this.progress = progress;
 			Object newValue = this.progress;
