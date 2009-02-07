@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.swing;
+package de.huxhorn.sulky.tasks;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,13 +29,13 @@ import java.beans.PropertyChangeSupport;
  * can (and will) transform those changes into ResultListener calls that are guaranteed
  * to be executed by the EventDispatchThread.
  * <p/>
- * Extending classes should normally only call setNumberOfSteps and setCurrentStep whenever
+ * Extending classes only call setNumberOfSteps and setCurrentStep whenever
  * necessary.
  * <p/>
  * The constructors with initialSleepSteps and laterSleepSteps arguments are recommended for longer
  * operations. setCurrentStep will sleep for 1ms every time initialSleepSteps number of steps have been
  * processed. If laterSleepSteps is defined this value is used if more than 5*initialSleepSteps steps have
- * been prcessed.
+ * been processed.
  * It can be usefull to use a smaller initialSleepSteps to support faster cancelation at the start of an
  * operation, e.g. in case of an accidental start by the user, while using a larger laterSleepSteps amount
  * after an initial warm-up-period for performance reason (switching threads is expensive).
@@ -85,29 +85,36 @@ public abstract class AbstractProgressingCallable<T>
 	 */
 	protected void setNumberOfSteps(long numberOfSteps)
 	{
-		this.numberOfSteps = numberOfSteps;
+		if(this.numberOfSteps != numberOfSteps)
+		{
+			this.numberOfSteps = numberOfSteps;
+			calculateProgress();
+		}
 	}
 
 	protected void setCurrentStep(long currentStep)
 		throws InterruptedException
 	{
-		this.currentStep = currentStep;
-		calculateProgress();
-		if(currentStep != 0 && initialSleepSteps > 0)
+		if(this.currentStep != currentStep)
 		{
-			if(laterSleepSteps > 0 && currentStep > initialSleepSteps * 5)
+			this.currentStep = currentStep;
+			calculateProgress();
+			if(currentStep != 0 && initialSleepSteps > 0)
 			{
+				if(laterSleepSteps > 0 && currentStep > initialSleepSteps * 5)
+				{
 
-				if(lastSleepStep + laterSleepSteps < currentStep)
+					if(lastSleepStep + laterSleepSteps < currentStep)
+					{
+						lastSleepStep = currentStep;
+						Thread.sleep(1);
+					}
+				}
+				else if(lastSleepStep + initialSleepSteps < currentStep)
 				{
 					lastSleepStep = currentStep;
 					Thread.sleep(1);
 				}
-			}
-			else if(lastSleepStep + initialSleepSteps < currentStep)
-			{
-				lastSleepStep = currentStep;
-				Thread.sleep(1);
 			}
 		}
 	}

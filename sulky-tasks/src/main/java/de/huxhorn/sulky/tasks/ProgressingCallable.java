@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.swing;
+package de.huxhorn.sulky.tasks;
 
 import java.beans.PropertyChangeListener;
 import java.util.concurrent.Callable;
