@@ -35,13 +35,17 @@ import java.util.concurrent.Future;
 
 import javax.swing.*;
 
+// TODO: startup/shutdown
+// TODO: configurable executor
+
+// TODO: optionally execute on EventDispatchThread, instead of always
 public class SwingWorkManager<V>
 {
 	private final Logger logger = LoggerFactory.getLogger(SwingWorkManager.class);
 
 	private ExecutorService executor;
 	private final List<Future<V>> futures;
-	private final List<ResultListener> resultListeners;
+	private final List<ResultListener<V>> resultListeners;
 	private final List<PropertyChangeEvent> internalProgressChanges;
 	private final Map<Future<V>, Callable<V>> futureCallableMapping;
 
@@ -53,7 +57,7 @@ public class SwingWorkManager<V>
 		futureCallableMapping = new HashMap<Future<V>, Callable<V>>();
 		progressChangeListener = new ProgressChangeListener();
 		internalProgressChanges = new ArrayList<PropertyChangeEvent>();
-		resultListeners = new LinkedList<ResultListener>();
+		resultListeners = new LinkedList<ResultListener<V>>();
 		executor = Executors.newCachedThreadPool();
 		Thread t = new Thread(new ResultPoller(), "ResultPoller Runnable");
 		t.setDaemon(true);
@@ -141,7 +145,7 @@ public class SwingWorkManager<V>
 		}
 	}
 
-	public void addResultListener(ResultListener listener)
+	public void addResultListener(ResultListener<V> listener)
 	{
 		synchronized(resultListeners)
 		{
@@ -149,7 +153,7 @@ public class SwingWorkManager<V>
 		}
 	}
 
-	public void removeResultListener(ResultListener listener)
+	public void removeResultListener(ResultListener<V> listener)
 	{
 		synchronized(resultListeners)
 		{
@@ -163,7 +167,7 @@ public class SwingWorkManager<V>
 		private final Logger logger = LoggerFactory.getLogger(SwingWorkManager.class);
 
 		private List<Future<V>> done;
-		private List<ResultListener> clonedListeners;
+		private List<ResultListener<V>> clonedListeners;
 		private List<PropertyChangeEvent> progressChanges;
 
 		public ResultListenerFireRunnable(List<Future<V>> done, List<PropertyChangeEvent> progressChanges)
@@ -176,7 +180,7 @@ public class SwingWorkManager<V>
 		{
 			synchronized(resultListeners)
 			{
-				this.clonedListeners = new ArrayList<ResultListener>(resultListeners);
+				this.clonedListeners = new ArrayList<ResultListener<V>>(resultListeners);
 			}
 
 			// fire changes of progress before any other events
@@ -190,7 +194,8 @@ public class SwingWorkManager<V>
 						&& newValue instanceof Integer
 						&& ProgressingCallable.PROGRESS_PROPERTY_NAME.equals(current.getPropertyName()))
 					{
-
+						// this can be assumed correct because this is a private class
+						@SuppressWarnings({"unchecked"})
 						ProgressingCallable<V> progressingCallable = (ProgressingCallable<V>) source;
 						int progress = (Integer) newValue;
 						fireProgressEvent(progressingCallable, progress);
