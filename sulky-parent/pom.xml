@@ -160,6 +160,12 @@
 				<artifactId>de.huxhorn.sulky.junit</artifactId>
 				<version>${sulkyVersion}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>de.huxhorn.sulky</groupId>
+				<artifactId>de.huxhorn.sulky.tasks</artifactId>
+				<version>${sulkyVersion}</version>
+			</dependency>
 			<!--
 			<dependency>
 				<groupId>commons-cli</groupId>

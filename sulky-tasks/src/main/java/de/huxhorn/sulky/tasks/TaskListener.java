@@ -15,18 +15,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.swing;
+package de.huxhorn.sulky.tasks;
 
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
-public interface ResultListener<V>
+public interface TaskListener<V>
 {
-	void executionFailed(Callable<V> future, ExecutionException exception);
+	void executionFailed(Task<V> task, ExecutionException exception);
 
-	void executionFinished(Callable<V> future, V result);
+	void executionFinished(Task<V> task, V result);
 
-	void executionCanceled(Callable<V> callable);
+	void executionCanceled(Task<V> task);
 
-	void progressUpdated(ProgressingCallable<V> callable, int progress);
+	void progressUpdated(Task<V> task, int progress);
 }
