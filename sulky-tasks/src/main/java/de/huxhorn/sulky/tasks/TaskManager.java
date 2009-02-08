@@ -20,9 +20,11 @@ package de.huxhorn.sulky.tasks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,18 +35,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import javax.swing.*;
-
-// TODO: startup/shutdown
-// TODO: configurable executor
-
-// TODO: optionally execute on EventDispatchThread, instead of always
 public class TaskManager<V>
 {
+	public enum State
+	{
+		INITIALIZED,
+		RUNNING,
+		STOPPED
+	}
+
 	private final Logger logger = LoggerFactory.getLogger(TaskManager.class);
 
-	private boolean usingSwingEventQueue;
-	private final ExecutorService executor;
+	private boolean usingEventQueue;
+	private final ExecutorService executorService;
 
 	/**
 	 * synchronized(tasks)
@@ -69,54 +72,158 @@ public class TaskManager<V>
 	private final List<TaskListener<V>> taskListeners;
 
 	private final PropertyChangeListener progressChangeListener;
+	private Thread resultPollerThread;
+	private State state;
 
+	/**
+	 * Creates a new task manager with a cached thread pool.
+	 * <p/>
+	 * By default, it is not using the event dispatch thread to fire task events.
+	 */
 	public TaskManager()
 	{
-		this(Executors.newCachedThreadPool());
+		this(Executors.newCachedThreadPool(), false);
 	}
 
 
-	public TaskManager(ExecutorService executor)
+	/**
+	 * Creates a new task manager with the given executor service.
+	 * <p/>
+	 * By default, it is not using the event dispatch thread to fire task events.
+	 *
+	 * @param executorService the executor service to be used by this task manager.
+	 */
+	public TaskManager(ExecutorService executorService)
 	{
-		nextTaskId = 1;
-		usingSwingEventQueue = false;
-		tasks = new HashMap<Integer, Task<V>>();
-		callableTasks = new HashMap<Integer, Task<V>>();
-		progressChangeListener = new ProgressChangeListener();
-		internalProgressChanges = new ArrayList<ProgressChange<V>>();
-		taskListeners = new LinkedList<TaskListener<V>>();
-		this.executor = executor;
-		Thread t = new Thread(new TaskResultPoller(), "TaskResultPoller Runnable");
-		t.setDaemon(true);
-		t.start();
+		this(executorService, false);
 	}
 
+	/**
+	 * Creates a new task manager with the given executor service.
+	 *
+	 * @param executorService the executor service to be used by this task manager.
+	 * @param usingEventQueue whether or not the event dispatch thread should be used to fire task events.
+	 */
+	public TaskManager(ExecutorService executorService, boolean usingEventQueue)
+	{
+		this.nextTaskId = 1;
+		this.usingEventQueue = usingEventQueue;
+		this.tasks = new HashMap<Integer, Task<V>>();
+		this.callableTasks = new HashMap<Integer, Task<V>>();
+		this.progressChangeListener = new ProgressChangeListener();
+		this.internalProgressChanges = new ArrayList<ProgressChange<V>>();
+		this.taskListeners = new LinkedList<TaskListener<V>>();
+		this.executorService = executorService;
+		this.state = State.INITIALIZED;
+	}
+
+	/**
+	 * Starts up this task manager.
+	 *
+	 * @throws IllegalStateException if the task manager was not INITIALIZED.
+	 */
+	public void startUp()
+	{
+		if(state == State.INITIALIZED)
+		{
+			resultPollerThread = new Thread(new TaskResultPoller(), "TaskResultPoller");
+			resultPollerThread.setDaemon(true);
+			resultPollerThread.start();
+			state = State.RUNNING;
+		}
+		else
+		{
+			throw new IllegalStateException("You tried to start a task manager but it's state was " + state + " instead of INITIALIZED!");
+		}
+	}
+
+	/**
+	 * Shuts down this task manager including the used executor service.
+	 * This call is simply ignored if the task manager was not running.
+	 */
+	public void shutDown()
+	{
+		if(state == State.RUNNING)
+		{
+			executorService.shutdownNow();
+			resultPollerThread.interrupt();
+			state = State.STOPPED;
+		}
+	}
+
+	/**
+	 * @return the state this task manager is in.
+	 */
+	public State getState()
+	{
+		return state;
+	}
+
+	/**
+	 * Starts a task.
+	 *
+	 * @param callable the callable that will be used to create a task.
+	 * @param name     name of the task, need not be unique.
+	 * @return the started task
+	 * @throws IllegalStateException    if the task manager is not running.
+	 * @throws IllegalArgumentException if the name is null.
+	 */
 	public Task<V> startTask(Callable<V> callable, String name)
 	{
-		return startTask(callable,  name, null);
+		return startTask(callable, name, null, null);
 	}
 
+	/**
+	 * Starts a task.
+	 *
+	 * @param callable    the callable that will be used to create a task.
+	 * @param name        name of the task, need not be unique.
+	 * @param description optional human-readable descriiption of what this task is about.
+	 * @return the started task
+	 * @throws IllegalStateException    if the task manager is not running.
+	 * @throws IllegalArgumentException if the name is null.
+	 */
 	public Task<V> startTask(Callable<V> callable, String name, String description)
 	{
+		return startTask(callable, name, description, null);
+	}
+
+	/**
+	 * Starts a task.
+	 *
+	 * @param callable    the callable that will be used to create a task.
+	 * @param name        name of the task, need not be unique.
+	 * @param description optional human-readable descriiption of what this task is about.
+	 * @param metaData    optional meta data to be associated with this task.
+	 * @return the started task
+	 * @throws IllegalStateException    if the task manager is not running.
+	 * @throws IllegalArgumentException if the name is null.
+	 */
+	public Task<V> startTask(Callable<V> callable, String name, String description, Map<String, String> metaData)
+	{
+		if(state != State.RUNNING)
+		{
+			throw new IllegalStateException("You tried to start a task but the task managers state was " + state + " instead of RUNNING!");
+		}
 		if(name == null)
 		{
 			throw new IllegalArgumentException("name must not be null!");
 		}
-		if (callable instanceof ProgressingCallable)
+		if(callable instanceof ProgressingCallable)
 		{
 			ProgressingCallable pcallable = (ProgressingCallable) callable;
 			pcallable.addPropertyChangeListener(progressChangeListener);
-			if (logger.isDebugEnabled()) logger.debug("Added progress change listener to callable.");
+			if(logger.isDebugEnabled()) logger.debug("Added progress change listener to callable.");
 		}
 
 		int callableIdentity = System.identityHashCode(callable);
 
-		Future<V> future = executor.submit(callable);
+		Future<V> future = executorService.submit(callable);
 		Task<V> task;
-		synchronized (tasks)
+		synchronized(tasks)
 		{
 			int newId = nextTaskId++;
-			task = new TaskImpl<V>(newId, this, future, callable, name, description);
+			task = new TaskImpl<V>(newId, this, future, callable, name, description, metaData);
 			tasks.put(newId, task);
 			callableTasks.put(callableIdentity, task);
 		}
@@ -125,7 +232,7 @@ public class TaskManager<V>
 
 	public Task<V> getTaskById(int taskId)
 	{
-		synchronized (tasks)
+		synchronized(tasks)
 		{
 			return tasks.get(taskId);
 		}
@@ -134,7 +241,7 @@ public class TaskManager<V>
 	public Task<V> getTaskByCallable(Callable<V> callable)
 	{
 		int callableIdentity = System.identityHashCode(callable);
-		synchronized (tasks)
+		synchronized(tasks)
 		{
 			return callableTasks.get(callableIdentity);
 		}
@@ -144,21 +251,21 @@ public class TaskManager<V>
 	{
 		Map<Integer, Task<V>> result;
 
-		synchronized (tasks)
+		synchronized(tasks)
 		{
 			result = new HashMap<Integer, Task<V>>(tasks);
 		}
 		return result;
 	}
 
-	public boolean isUsingSwingEventQueue()
+	public boolean isUsingEventQueue()
 	{
-		return usingSwingEventQueue;
+		return usingEventQueue;
 	}
 
-	public void setUsingSwingEventQueue(boolean usingSwingEventQueue)
+	public void setUsingEventQueue(boolean usingEventQueue)
 	{
-		this.usingSwingEventQueue = usingSwingEventQueue;
+		this.usingEventQueue = usingEventQueue;
 	}
 
 	private static class ProgressChange<V>
@@ -184,7 +291,7 @@ public class TaskManager<V>
 	}
 
 	private class TaskResultPoller
-			implements Runnable
+		implements Runnable
 	{
 		private final Logger logger = LoggerFactory.getLogger(TaskResultPoller.class);
 
@@ -192,34 +299,34 @@ public class TaskManager<V>
 
 		public void run()
 		{
-			for (; ;)
+			for(; ;)
 			{
 				try
 				{
 					List<ProgressChange<V>> progressChanges = null;
 					List<Task<V>> doneTasks = null;
-					synchronized (tasks)
+					synchronized(tasks)
 					{
-						if (internalProgressChanges.size() > 0)
+						if(internalProgressChanges.size() > 0)
 						{
 							progressChanges = new ArrayList<ProgressChange<V>>(internalProgressChanges);
 							internalProgressChanges.clear();
 						}
-						for (Map.Entry<Integer, Task<V>> entry : tasks.entrySet())
+						for(Map.Entry<Integer, Task<V>> entry : tasks.entrySet())
 						{
 							Task<V> task = entry.getValue();
-							if (task.getFuture().isDone())
+							if(task.getFuture().isDone())
 							{
-								if (doneTasks == null)
+								if(doneTasks == null)
 								{
 									doneTasks = new ArrayList<Task<V>>();
 								}
 								doneTasks.add(task);
 							}
 						}
-						if (doneTasks != null)
+						if(doneTasks != null)
 						{
-							for (Task task : doneTasks)
+							for(Task task : doneTasks)
 							{
 								int callableIdentity = System.identityHashCode(task.getCallable());
 								tasks.remove(task.getId());
@@ -229,12 +336,12 @@ public class TaskManager<V>
 					} // synchronized (tasks)
 
 
-					if (doneTasks != null || progressChanges != null)
+					if(doneTasks != null || progressChanges != null)
 					{
 						ResultListenerFireRunnable runnable = new ResultListenerFireRunnable(doneTasks, progressChanges);
-						if (usingSwingEventQueue)
+						if(usingEventQueue)
 						{
-							SwingUtilities.invokeLater(runnable);
+							EventQueue.invokeLater(runnable);
 						}
 						else
 						{
@@ -243,9 +350,9 @@ public class TaskManager<V>
 					}
 					Thread.sleep(POLL_INTERVAL);
 				}
-				catch (InterruptedException e)
+				catch(InterruptedException e)
 				{
-					if (logger.isInfoEnabled()) logger.info("Interrupted...", e);
+					if(logger.isInfoEnabled()) logger.info("Interrupted...", e);
 					break;
 				}
 			}
@@ -254,7 +361,7 @@ public class TaskManager<V>
 
 	public void addTaskListener(TaskListener<V> listener)
 	{
-		synchronized (taskListeners)
+		synchronized(taskListeners)
 		{
 			taskListeners.add(listener);
 		}
@@ -262,14 +369,14 @@ public class TaskManager<V>
 
 	public void removeTaskListener(TaskListener<V> listener)
 	{
-		synchronized (taskListeners)
+		synchronized(taskListeners)
 		{
 			taskListeners.remove(listener);
 		}
 	}
 
 	private class ResultListenerFireRunnable
-			implements Runnable
+		implements Runnable
 	{
 		private final Logger logger = LoggerFactory.getLogger(TaskManager.class);
 
@@ -285,33 +392,33 @@ public class TaskManager<V>
 
 		public void run()
 		{
-			synchronized (taskListeners)
+			synchronized(taskListeners)
 			{
 				this.clonedListeners = new ArrayList<TaskListener<V>>(taskListeners);
 			}
 
 			// fire changes of progress before any other events
-			if (progressChanges != null)
+			if(progressChanges != null)
 			{
-				for (ProgressChange<V> current : progressChanges)
+				for(ProgressChange<V> current : progressChanges)
 				{
 					fireProgressEvent(current.getTask(), current.getProgress());
 				}
 			}
-			if (done != null)
+			if(done != null)
 			{
-				for (Task<V> task : done)
+				for(Task<V> task : done)
 				{
 					Callable<V> callable = task.getCallable();
-					if (callable instanceof ProgressingCallable)
+					if(callable instanceof ProgressingCallable)
 					{
 						// remove propertyChangeListener...
 						ProgressingCallable pc = (ProgressingCallable) callable;
 						pc.removePropertyChangeListener(progressChangeListener);
-						if (logger.isDebugEnabled()) logger.debug("Removed progress change listener from callable.");
+						if(logger.isDebugEnabled()) logger.debug("Removed progress change listener from callable.");
 					}
 					Future<V> future = task.getFuture();
-					if (future.isCancelled())
+					if(future.isCancelled())
 					{
 						fireCanceledEvent(task);
 					}
@@ -323,11 +430,11 @@ public class TaskManager<V>
 						{
 							fireFinishedEvent(task, future.get());
 						}
-						catch (InterruptedException e)
+						catch(InterruptedException e)
 						{
-							if (logger.isInfoEnabled()) logger.info("Interrupted...", e);
+							if(logger.isInfoEnabled()) logger.info("Interrupted...", e);
 						}
-						catch (ExecutionException e)
+						catch(ExecutionException e)
 						{
 							fireExceptionEvent(task, e);
 						}
@@ -339,7 +446,7 @@ public class TaskManager<V>
 
 		private void fireProgressEvent(Task<V> task, int progress)
 		{
-			for (TaskListener<V> listener : clonedListeners)
+			for(TaskListener<V> listener : clonedListeners)
 			{
 				listener.progressUpdated(task, progress);
 			}
@@ -347,7 +454,7 @@ public class TaskManager<V>
 
 		private void fireExceptionEvent(Task<V> task, ExecutionException exception)
 		{
-			for (TaskListener<V> listener : clonedListeners)
+			for(TaskListener<V> listener : clonedListeners)
 			{
 				listener.executionFailed(task, exception);
 			}
@@ -355,7 +462,7 @@ public class TaskManager<V>
 
 		private void fireFinishedEvent(Task<V> task, V result)
 		{
-			for (TaskListener<V> listener : clonedListeners)
+			for(TaskListener<V> listener : clonedListeners)
 			{
 				listener.executionFinished(task, result);
 			}
@@ -363,7 +470,7 @@ public class TaskManager<V>
 
 		private void fireCanceledEvent(Task<V> task)
 		{
-			for (TaskListener<V> listener : clonedListeners)
+			for(TaskListener<V> listener : clonedListeners)
 			{
 				listener.executionCanceled(task);
 			}
@@ -371,16 +478,16 @@ public class TaskManager<V>
 	}
 
 	private class ProgressChangeListener
-			implements PropertyChangeListener
+		implements PropertyChangeListener
 	{
 
 		public void propertyChange(PropertyChangeEvent evt)
 		{
 			Object source = evt.getSource();
 			Object newValue = evt.getNewValue();
-			if (source instanceof ProgressingCallable
-					&& newValue instanceof Integer
-					&& ProgressingCallable.PROGRESS_PROPERTY_NAME.equals(evt.getPropertyName()))
+			if(source instanceof ProgressingCallable
+				&& newValue instanceof Integer
+				&& ProgressingCallable.PROGRESS_PROPERTY_NAME.equals(evt.getPropertyName()))
 			{
 				int progress = (Integer) newValue;
 				int callableIdentity = System.identityHashCode(source);
@@ -388,7 +495,7 @@ public class TaskManager<V>
 				synchronized(tasks)
 				{
 					Task<V> task = callableTasks.get(callableIdentity);
-					if (task != null)
+					if(task != null)
 					{
 						internalProgressChanges.add(new ProgressChange<V>(task, progress));
 					}
@@ -398,7 +505,7 @@ public class TaskManager<V>
 	}
 
 	private final static class TaskImpl<V>
-			implements Task<V>
+		implements Task<V>
 	{
 		private final int id;
 		private final TaskManager<V> taskManager;
@@ -406,15 +513,24 @@ public class TaskManager<V>
 		private final Callable<V> callable;
 		private final String name;
 		private final String description;
+		private final Map<String, String> metaData;
 
-		public TaskImpl(int id, TaskManager<V> taskManager, Future<V> future, Callable<V> callable, String name, String description)
+		public TaskImpl(int id, TaskManager<V> taskManager, Future<V> future, Callable<V> callable, String name, String description, Map<String, String> metaData)
 		{
 			this.id = id;
-			this.taskManager=taskManager;
+			this.taskManager = taskManager;
 			this.callable = callable;
 			this.future = future;
-			this.name=name;
-			this.description=description;
+			this.name = name;
+			this.description = description;
+			if(metaData != null)
+			{
+				this.metaData = new HashMap<String, String>(metaData);
+			}
+			else
+			{
+				this.metaData = null;
+			}
 		}
 
 		public int getId()
@@ -430,6 +546,15 @@ public class TaskManager<V>
 		public String getDescription()
 		{
 			return description;
+		}
+
+		public Map<String, String> getMetaData()
+		{
+			if(metaData == null)
+			{
+				return null;
+			}
+			return Collections.unmodifiableMap(metaData);
 		}
 
 		public Future<V> getFuture()
