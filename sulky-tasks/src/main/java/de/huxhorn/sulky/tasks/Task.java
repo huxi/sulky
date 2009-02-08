@@ -1,7 +1,8 @@
 package de.huxhorn.sulky.tasks;
 
-import java.util.concurrent.Future;
+import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
 public interface Task<V>
 {
@@ -10,8 +11,10 @@ public interface Task<V>
 	TaskManager<V> getTaskManager();
 
 	String getName();
-	
+
 	String getDescription();
+
+	Map<String, String> getMetaData();
 
 	Future<V> getFuture();
 
