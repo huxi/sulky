@@ -37,6 +37,10 @@ import java.util.concurrent.Future;
 
 public class TaskManager<V>
 {
+	// TODO: Use java.util.concurrent.locks.ReentrantReadWriteLock instead of synchronized.
+	/**
+	 * The states a TaskManager can be in. A TaskManager can't be restarted.
+	 */
 	public enum State
 	{
 		INITIALIZED,
@@ -164,9 +168,11 @@ public class TaskManager<V>
 	 *
 	 * @param callable the callable that will be used to create a task.
 	 * @param name     name of the task, need not be unique.
-	 * @return the started task
+	 * @return the started Task.
 	 * @throws IllegalStateException    if the task manager is not running.
-	 * @throws IllegalArgumentException if the name is null.
+	 * @throws IllegalArgumentException if the name is null or the Callable was already started.
+	 * @see de.huxhorn.sulky.tasks.Task
+	 * @see de.huxhorn.sulky.tasks.ProgressingCallable
 	 */
 	public Task<V> startTask(Callable<V> callable, String name)
 	{
@@ -179,9 +185,11 @@ public class TaskManager<V>
 	 * @param callable    the callable that will be used to create a task.
 	 * @param name        name of the task, need not be unique.
 	 * @param description optional human-readable descriiption of what this task is about.
-	 * @return the started task
+	 * @return the started Task.
 	 * @throws IllegalStateException    if the task manager is not running.
-	 * @throws IllegalArgumentException if the name is null.
+	 * @throws IllegalArgumentException if the name is null or the Callable was already started.
+	 * @see de.huxhorn.sulky.tasks.Task
+	 * @see de.huxhorn.sulky.tasks.ProgressingCallable
 	 */
 	public Task<V> startTask(Callable<V> callable, String name, String description)
 	{
@@ -195,9 +203,11 @@ public class TaskManager<V>
 	 * @param name        name of the task, need not be unique.
 	 * @param description optional human-readable descriiption of what this task is about.
 	 * @param metaData    optional meta data to be associated with this task.
-	 * @return the started task
+	 * @return the started Task.
 	 * @throws IllegalStateException    if the task manager is not running.
-	 * @throws IllegalArgumentException if the name is null.
+	 * @throws IllegalArgumentException if the name is null or the Callable was already started.
+	 * @see de.huxhorn.sulky.tasks.Task
+	 * @see de.huxhorn.sulky.tasks.ProgressingCallable
 	 */
 	public Task<V> startTask(Callable<V> callable, String name, String description, Map<String, String> metaData)
 	{
@@ -222,6 +232,10 @@ public class TaskManager<V>
 		Task<V> task;
 		synchronized(tasks)
 		{
+			if(callableTasks.containsKey(callableIdentity))
+			{
+				throw new IllegalArgumentException("Callable is already scheduled!");
+			}
 			int newId = nextTaskId++;
 			task = new TaskImpl<V>(newId, this, future, callable, name, description, metaData);
 			tasks.put(newId, task);
@@ -448,7 +462,18 @@ public class TaskManager<V>
 		{
 			for(TaskListener<V> listener : clonedListeners)
 			{
-				listener.progressUpdated(task, progress);
+				try
+				{
+					listener.progressUpdated(task, progress);
+				}
+				catch(Throwable t)
+				{
+					if(logger.isErrorEnabled())
+					{
+						logger
+							.error("TaskListener " + listener + " threw an exception while progressUpdated was called!", t);
+					}
+				}
 			}
 		}
 
@@ -456,7 +481,18 @@ public class TaskManager<V>
 		{
 			for(TaskListener<V> listener : clonedListeners)
 			{
-				listener.executionFailed(task, exception);
+				try
+				{
+					listener.executionFailed(task, exception);
+				}
+				catch(Throwable t)
+				{
+					if(logger.isErrorEnabled())
+					{
+						logger
+							.error("TaskListener " + listener + " threw an exception while executionFailed was called!", t);
+					}
+				}
 			}
 		}
 
@@ -464,7 +500,18 @@ public class TaskManager<V>
 		{
 			for(TaskListener<V> listener : clonedListeners)
 			{
-				listener.executionFinished(task, result);
+				try
+				{
+					listener.executionFinished(task, result);
+				}
+				catch(Throwable t)
+				{
+					if(logger.isErrorEnabled())
+					{
+						logger
+							.error("TaskListener " + listener + " threw an exception while executionFinished was called!", t);
+					}
+				}
 			}
 		}
 
@@ -472,7 +519,18 @@ public class TaskManager<V>
 		{
 			for(TaskListener<V> listener : clonedListeners)
 			{
-				listener.executionCanceled(task);
+				try
+				{
+					listener.executionCanceled(task);
+				}
+				catch(Throwable t)
+				{
+					if(logger.isErrorEnabled())
+					{
+						logger
+							.error("TaskListener " + listener + " threw an exception while executionCanceled was called!", t);
+					}
+				}
 			}
 		}
 	}

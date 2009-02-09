@@ -25,9 +25,9 @@ import java.beans.PropertyChangeSupport;
 
 /**
  * The registered PropertyChangeLsiteners are called from the calculating thread
- * not from the EventDispatchThread. This is perfectly ok since SwingWorkManager
- * can (and will) transform those changes into ResultListener calls that are guaranteed
- * to be executed by the EventDispatchThread.
+ * not from the EventDispatchThread. This is perfectly ok since TaskManager
+ * can (if requested) transform those changes into ResultListener calls that are guaranteed
+ * to be executed on the event dispatch thread.
  * <p/>
  * Extending classes only call setNumberOfSteps and setCurrentStep whenever
  * necessary.
@@ -36,8 +36,9 @@ import java.beans.PropertyChangeSupport;
  * operations. setCurrentStep will sleep for 1ms every time initialSleepSteps number of steps have been
  * processed. If laterSleepSteps is defined this value is used if more than 5*initialSleepSteps steps have
  * been processed.
- * It can be usefull to use a smaller initialSleepSteps to support faster cancelation at the start of an
- * operation, e.g. in case of an accidental start by the user, while using a larger laterSleepSteps amount
+ * <p/>
+ * It can be usefull to use a smaller value for initialSleepSteps to support faster cancelation at the start of an
+ * operation, e.g. in case of an accidental start by the user, while using a larger value for laterSleepSteps
  * after an initial warm-up-period for performance reason (switching threads is expensive).
  * <p/>
  * The sleep itself is necessary to allow cancelation from the executor. The InterruptedException should not
@@ -70,8 +71,8 @@ public abstract class AbstractProgressingCallable<T>
 	public AbstractProgressingCallable(int initialSleepSteps, int laterSleepSteps)
 	{
 		this.changeSupport = new PropertyChangeSupport(this);
-		this.progress = 0;
-		this.numberOfSteps = 1;
+		this.progress = -1;
+		this.numberOfSteps = 0;
 		this.initialSleepSteps = initialSleepSteps;
 		this.laterSleepSteps = laterSleepSteps;
 		this.lastSleepStep = 0;
@@ -129,6 +130,11 @@ public abstract class AbstractProgressingCallable<T>
 		setProgress(newProgress);
 	}
 
+	/**
+	 * Fires the PropertyChangeEvent if required - as defined in the interface.
+	 *
+	 * @param progress the new progress.
+	 */
 	private void setProgress(int progress)
 	{
 		if(this.progress != progress)
@@ -142,6 +148,11 @@ public abstract class AbstractProgressingCallable<T>
 
 	}
 
+	/**
+	 * Returns values between 0 and 100, or a negative value indicating an unknown progress.
+	 *
+	 * @return the progress of the operation.
+	 */
 	public int getProgress()
 	{
 		return progress;
