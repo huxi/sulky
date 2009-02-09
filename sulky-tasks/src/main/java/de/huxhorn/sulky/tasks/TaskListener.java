@@ -19,13 +19,48 @@ package de.huxhorn.sulky.tasks;
 
 import java.util.concurrent.ExecutionException;
 
-public interface TaskListener<V>
+/**
+ * Registered TaskListeners are called by a TaskManager whenever the state of one of its Tasks changes.
+ * <p/>
+ * The calls are guaranteed to be executed on the event dispatch thread if usingEventQueue of the TaskManager is true.
+ * Otherwise, they are executed on an internal thread of the TaskManager.
+ *
+ * @param <T> the type of the result.
+ * @see de.huxhorn.sulky.tasks.TaskManager#setUsingEventQueue(boolean)
+ * @see de.huxhorn.sulky.tasks.TaskManager#addTaskListener(TaskListener)
+ * @see de.huxhorn.sulky.tasks.TaskManager#removeTaskListener(TaskListener)
+ */
+public interface TaskListener<T>
 {
-	void executionFailed(Task<V> task, ExecutionException exception);
+	/**
+	 * This method is called if the execution of the Task fails with an exception.
+	 *
+	 * @param task      the Task that failed.
+	 * @param exception contains the actual Exception that caused the failure.
+	 */
+	void executionFailed(Task<T> task, ExecutionException exception);
 
-	void executionFinished(Task<V> task, V result);
+	/**
+	 * This method is called after a tasks finishes.
+	 *
+	 * @param task   the Task that finished.
+	 * @param result the result the Task computed.
+	 */
+	void executionFinished(Task<T> task, T result);
 
-	void executionCanceled(Task<V> task);
+	/**
+	 * This method is called if a Task was canceled.
+	 *
+	 * @param task the Task that was canceled.
+	 */
+	void executionCanceled(Task<T> task);
 
-	void progressUpdated(Task<V> task, int progress);
+	/**
+	 * This method is called if the progress of the Task changed.
+	 * It will only be called if the contained Callable is actually a proper ProgressingCallable.
+	 *
+	 * @param task     the Task that has a new progress value
+	 * @param progress the new progress value of the Task.
+	 */
+	void progressUpdated(Task<T> task, int progress);
 }
