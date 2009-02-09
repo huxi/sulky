@@ -26,9 +26,9 @@ public interface ProgressingCallable<T>
 	String PROGRESS_PROPERTY_NAME = "progress";
 
 	/**
-	 * Should return values between 0 and 100.
+	 * Should return values between -1 and 100, -1 indicating an unknown progress.
 	 *
-	 * @return values between 0 and 100.
+	 * @return values between -1 and 100.
 	 */
 	int getProgress();
 
