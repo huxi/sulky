@@ -34,10 +34,15 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class TaskManager<V>
+/**
+ * <p>A TaskManager is used to create Tasks for given Callables.</p>
+ *
+ * @param <T> the type of the result.
+ */
+public class TaskManager<T>
 {
-	// TODO: Use java.util.concurrent.locks.ReentrantReadWriteLock instead of synchronized.
 	/**
 	 * The states a TaskManager can be in. A TaskManager can't be restarted.
 	 */
@@ -50,30 +55,32 @@ public class TaskManager<V>
 
 	private final Logger logger = LoggerFactory.getLogger(TaskManager.class);
 
+	private final ReentrantReadWriteLock tasksLock;
+	private final ReentrantReadWriteLock taskListenersLock;
 	private boolean usingEventQueue;
 	private final ExecutorService executorService;
 
 	/**
-	 * synchronized(tasks)
+	 * locked with tasksLock
 	 */
-	private final Map<Integer, Task<V>> tasks;
+	private final Map<Integer, Task<T>> tasks;
 
 	/**
-	 * synchronized(tasks)
+	 * locked with tasksLock
 	 */
-	private final Map<Integer, Task<V>> callableTasks;
+	private final Map<Integer, Task<T>> callableTasks;
 
 	/**
-	 * synchronized(tasks)
+	 * locked with tasksLock
 	 */
-	private final List<ProgressChange<V>> internalProgressChanges;
+	private final List<ProgressChange<T>> internalProgressChanges;
 
 	/**
-	 * synchronized(tasks)
+	 * locked with tasksLock
 	 */
 	private int nextTaskId;
 
-	private final List<TaskListener<V>> taskListeners;
+	private final List<TaskListener<T>> taskListeners;
 
 	private final PropertyChangeListener progressChangeListener;
 	private Thread resultPollerThread;
@@ -103,20 +110,22 @@ public class TaskManager<V>
 	}
 
 	/**
-	 * Creates a new task manager with the given executor service.
+	 * Creates a new task manager with the given executor service and the given us.
 	 *
 	 * @param executorService the executor service to be used by this task manager.
 	 * @param usingEventQueue whether or not the event dispatch thread should be used to fire task events.
 	 */
 	public TaskManager(ExecutorService executorService, boolean usingEventQueue)
 	{
+		this.tasksLock = new ReentrantReadWriteLock();
+		this.taskListenersLock = new ReentrantReadWriteLock();
 		this.nextTaskId = 1;
 		this.usingEventQueue = usingEventQueue;
-		this.tasks = new HashMap<Integer, Task<V>>();
-		this.callableTasks = new HashMap<Integer, Task<V>>();
+		this.tasks = new HashMap<Integer, Task<T>>();
+		this.callableTasks = new HashMap<Integer, Task<T>>();
 		this.progressChangeListener = new ProgressChangeListener();
-		this.internalProgressChanges = new ArrayList<ProgressChange<V>>();
-		this.taskListeners = new LinkedList<TaskListener<V>>();
+		this.internalProgressChanges = new ArrayList<ProgressChange<T>>();
+		this.taskListeners = new LinkedList<TaskListener<T>>();
 		this.executorService = executorService;
 		this.state = State.INITIALIZED;
 	}
@@ -144,14 +153,15 @@ public class TaskManager<V>
 	/**
 	 * Shuts down this task manager including the used executor service.
 	 * This call is simply ignored if the task manager was not running.
+	 * No TaskListener calls will be executed after this method was executed.
 	 */
 	public void shutDown()
 	{
 		if(state == State.RUNNING)
 		{
-			executorService.shutdownNow();
-			resultPollerThread.interrupt();
 			state = State.STOPPED;
+			resultPollerThread.interrupt();
+			executorService.shutdownNow();
 		}
 	}
 
@@ -174,7 +184,7 @@ public class TaskManager<V>
 	 * @see de.huxhorn.sulky.tasks.Task
 	 * @see de.huxhorn.sulky.tasks.ProgressingCallable
 	 */
-	public Task<V> startTask(Callable<V> callable, String name)
+	public Task<T> startTask(Callable<T> callable, String name)
 	{
 		return startTask(callable, name, null, null);
 	}
@@ -191,7 +201,7 @@ public class TaskManager<V>
 	 * @see de.huxhorn.sulky.tasks.Task
 	 * @see de.huxhorn.sulky.tasks.ProgressingCallable
 	 */
-	public Task<V> startTask(Callable<V> callable, String name, String description)
+	public Task<T> startTask(Callable<T> callable, String name, String description)
 	{
 		return startTask(callable, name, description, null);
 	}
@@ -209,7 +219,7 @@ public class TaskManager<V>
 	 * @see de.huxhorn.sulky.tasks.Task
 	 * @see de.huxhorn.sulky.tasks.ProgressingCallable
 	 */
-	public Task<V> startTask(Callable<V> callable, String name, String description, Map<String, String> metaData)
+	public Task<T> startTask(Callable<T> callable, String name, String description, Map<String, String> metaData)
 	{
 		if(state != State.RUNNING)
 		{
@@ -228,55 +238,110 @@ public class TaskManager<V>
 
 		int callableIdentity = System.identityHashCode(callable);
 
-		Future<V> future = executorService.submit(callable);
-		Task<V> task;
-		synchronized(tasks)
+		Future<T> future = executorService.submit(callable);
+		Task<T> task;
+//		synchronized(tasks)
+		ReentrantReadWriteLock.WriteLock lock = tasksLock.writeLock();
+		lock.lock();
+		try
 		{
 			if(callableTasks.containsKey(callableIdentity))
 			{
 				throw new IllegalArgumentException("Callable is already scheduled!");
 			}
 			int newId = nextTaskId++;
-			task = new TaskImpl<V>(newId, this, future, callable, name, description, metaData);
+			task = new TaskImpl<T>(newId, this, future, callable, name, description, metaData);
 			tasks.put(newId, task);
 			callableTasks.put(callableIdentity, task);
+		}
+		finally
+		{
+			lock.unlock();
 		}
 		return task;
 	}
 
-	public Task<V> getTaskById(int taskId)
+	/**
+	 * Returns the Task associated with the Task ID.
+	 *
+	 * @param taskId the Task ID for which the Task should be resolved.
+	 * @return the Task associated with the Task ID.
+	 */
+	public Task<T> getTaskById(int taskId)
 	{
-		synchronized(tasks)
+		//synchronized(tasks)
+		ReentrantReadWriteLock.ReadLock lock = tasksLock.readLock();
+		lock.lock();
+		try
 		{
 			return tasks.get(taskId);
 		}
-	}
-
-	public Task<V> getTaskByCallable(Callable<V> callable)
-	{
-		int callableIdentity = System.identityHashCode(callable);
-		synchronized(tasks)
+		finally
 		{
-			return callableTasks.get(callableIdentity);
+			lock.unlock();
 		}
 	}
 
-	public Map<Integer, Task<V>> getTasks()
+	/**
+	 * Returns the Task associated with the given Callable.
+	 *
+	 * @param callable the Callable for which the Task should be resolved.
+	 * @return the Task associated with the given Callable.
+	 */
+	public Task<T> getTaskByCallable(Callable<T> callable)
 	{
-		Map<Integer, Task<V>> result;
-
-		synchronized(tasks)
+		int callableIdentity = System.identityHashCode(callable);
+		//synchronized(tasks)
+		ReentrantReadWriteLock.ReadLock lock = tasksLock.readLock();
+		lock.lock();
+		try
 		{
-			result = new HashMap<Integer, Task<V>>(tasks);
+			return callableTasks.get(callableIdentity);
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
+	/**
+	 * Returns a Map containing all Tasks with their Task ID as key.
+	 *
+	 * @return a Map containing all Tasks with their Task ID as key.
+	 */
+	public Map<Integer, Task<T>> getTasks()
+	{
+		Map<Integer, Task<T>> result;
+
+		//synchronized(tasks)
+		ReentrantReadWriteLock.ReadLock lock = tasksLock.readLock();
+		lock.lock();
+		try
+		{
+			result = new HashMap<Integer, Task<T>>(tasks);
+		}
+		finally
+		{
+			lock.unlock();
 		}
 		return result;
 	}
 
+	/**
+	 * Returns true if this TaskManager calls TaskListeners on the event dispatcher thread, false otherwise.
+	 *
+	 * @return true if this TaskManager calls TaskListeners on the event dispatcher thread, false otherwise.
+	 */
 	public boolean isUsingEventQueue()
 	{
 		return usingEventQueue;
 	}
 
+	/**
+	 * Set whether or not this TaskManager calls TaskListeners on the event dispatcher thread.
+	 *
+	 * @param usingEventQueue whether or not this TaskManager calls TaskListeners on the event dispatcher thread.
+	 */
 	public void setUsingEventQueue(boolean usingEventQueue)
 	{
 		this.usingEventQueue = usingEventQueue;
@@ -317,23 +382,27 @@ public class TaskManager<V>
 			{
 				try
 				{
-					List<ProgressChange<V>> progressChanges = null;
-					List<Task<V>> doneTasks = null;
-					synchronized(tasks)
+					List<ProgressChange<T>> progressChanges = null;
+					List<Task<T>> doneTasks = null;
+
+					//synchronized(tasks)
+					ReentrantReadWriteLock.WriteLock lock = tasksLock.writeLock();
+					lock.lock();
+					try
 					{
 						if(internalProgressChanges.size() > 0)
 						{
-							progressChanges = new ArrayList<ProgressChange<V>>(internalProgressChanges);
+							progressChanges = new ArrayList<ProgressChange<T>>(internalProgressChanges);
 							internalProgressChanges.clear();
 						}
-						for(Map.Entry<Integer, Task<V>> entry : tasks.entrySet())
+						for(Map.Entry<Integer, Task<T>> entry : tasks.entrySet())
 						{
-							Task<V> task = entry.getValue();
+							Task<T> task = entry.getValue();
 							if(task.getFuture().isDone())
 							{
 								if(doneTasks == null)
 								{
-									doneTasks = new ArrayList<Task<V>>();
+									doneTasks = new ArrayList<Task<T>>();
 								}
 								doneTasks.add(task);
 							}
@@ -348,7 +417,10 @@ public class TaskManager<V>
 							}
 						}
 					} // synchronized (tasks)
-
+					finally
+					{
+						lock.unlock();
+					}
 
 					if(doneTasks != null || progressChanges != null)
 					{
@@ -373,19 +445,43 @@ public class TaskManager<V>
 		}
 	}
 
-	public void addTaskListener(TaskListener<V> listener)
+	/**
+	 * Adds the given TaskListener.
+	 *
+	 * @param listener the TaskListener to add.
+	 */
+	public void addTaskListener(TaskListener<T> listener)
 	{
-		synchronized(taskListeners)
+		//synchronized(taskListeners)
+		ReentrantReadWriteLock.WriteLock lock = taskListenersLock.writeLock();
+		lock.lock();
+		try
 		{
 			taskListeners.add(listener);
 		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
-	public void removeTaskListener(TaskListener<V> listener)
+	/**
+	 * Removes the given TaskListener.
+	 *
+	 * @param listener the TaskListener to remove.
+	 */
+	public void removeTaskListener(TaskListener<T> listener)
 	{
-		synchronized(taskListeners)
+		//synchronized(taskListeners)
+		ReentrantReadWriteLock.WriteLock lock = taskListenersLock.writeLock();
+		lock.lock();
+		try
 		{
 			taskListeners.remove(listener);
+		}
+		finally
+		{
+			lock.unlock();
 		}
 	}
 
@@ -394,11 +490,11 @@ public class TaskManager<V>
 	{
 		private final Logger logger = LoggerFactory.getLogger(TaskManager.class);
 
-		private List<Task<V>> done;
-		private List<TaskListener<V>> clonedListeners;
-		private List<ProgressChange<V>> progressChanges;
+		private List<Task<T>> done;
+		private List<TaskListener<T>> clonedListeners;
+		private List<ProgressChange<T>> progressChanges;
 
-		public ResultListenerFireRunnable(List<Task<V>> done, List<ProgressChange<V>> progressChanges)
+		public ResultListenerFireRunnable(List<Task<T>> done, List<ProgressChange<T>> progressChanges)
 		{
 			this.done = done;
 			this.progressChanges = progressChanges;
@@ -406,24 +502,31 @@ public class TaskManager<V>
 
 		public void run()
 		{
-			synchronized(taskListeners)
+			//synchronized(taskListeners)
+			ReentrantReadWriteLock.ReadLock lock = taskListenersLock.readLock();
+			lock.lock();
+			try
 			{
-				this.clonedListeners = new ArrayList<TaskListener<V>>(taskListeners);
+				this.clonedListeners = new ArrayList<TaskListener<T>>(taskListeners);
+			}
+			finally
+			{
+				lock.unlock();
 			}
 
 			// fire changes of progress before any other events
 			if(progressChanges != null)
 			{
-				for(ProgressChange<V> current : progressChanges)
+				for(ProgressChange<T> current : progressChanges)
 				{
 					fireProgressEvent(current.getTask(), current.getProgress());
 				}
 			}
 			if(done != null)
 			{
-				for(Task<V> task : done)
+				for(Task<T> task : done)
 				{
-					Callable<V> callable = task.getCallable();
+					Callable<T> callable = task.getCallable();
 					if(callable instanceof ProgressingCallable)
 					{
 						// remove propertyChangeListener...
@@ -431,7 +534,7 @@ public class TaskManager<V>
 						pc.removePropertyChangeListener(progressChangeListener);
 						if(logger.isDebugEnabled()) logger.debug("Removed progress change listener from callable.");
 					}
-					Future<V> future = task.getFuture();
+					Future<T> future = task.getFuture();
 					if(future.isCancelled())
 					{
 						fireCanceledEvent(task);
@@ -458,9 +561,9 @@ public class TaskManager<V>
 			}
 		}
 
-		private void fireProgressEvent(Task<V> task, int progress)
+		private void fireProgressEvent(Task<T> task, int progress)
 		{
-			for(TaskListener<V> listener : clonedListeners)
+			for(TaskListener<T> listener : clonedListeners)
 			{
 				try
 				{
@@ -477,9 +580,9 @@ public class TaskManager<V>
 			}
 		}
 
-		private void fireExceptionEvent(Task<V> task, ExecutionException exception)
+		private void fireExceptionEvent(Task<T> task, ExecutionException exception)
 		{
-			for(TaskListener<V> listener : clonedListeners)
+			for(TaskListener<T> listener : clonedListeners)
 			{
 				try
 				{
@@ -496,9 +599,9 @@ public class TaskManager<V>
 			}
 		}
 
-		private void fireFinishedEvent(Task<V> task, V result)
+		private void fireFinishedEvent(Task<T> task, T result)
 		{
-			for(TaskListener<V> listener : clonedListeners)
+			for(TaskListener<T> listener : clonedListeners)
 			{
 				try
 				{
@@ -515,9 +618,9 @@ public class TaskManager<V>
 			}
 		}
 
-		private void fireCanceledEvent(Task<V> task)
+		private void fireCanceledEvent(Task<T> task)
 		{
-			for(TaskListener<V> listener : clonedListeners)
+			for(TaskListener<T> listener : clonedListeners)
 			{
 				try
 				{
@@ -550,13 +653,21 @@ public class TaskManager<V>
 				int progress = (Integer) newValue;
 				int callableIdentity = System.identityHashCode(source);
 
-				synchronized(tasks)
+				//synchronized(tasks)
+				ReentrantReadWriteLock.WriteLock lock = tasksLock.writeLock();
+				// using write lock because internalProgressChanges is changed.
+				lock.lock();
+				try
 				{
-					Task<V> task = callableTasks.get(callableIdentity);
+					Task<T> task = callableTasks.get(callableIdentity);
 					if(task != null)
 					{
-						internalProgressChanges.add(new ProgressChange<V>(task, progress));
+						internalProgressChanges.add(new ProgressChange<T>(task, progress));
 					}
+				}
+				finally
+				{
+					lock.unlock();
 				}
 			}
 		}

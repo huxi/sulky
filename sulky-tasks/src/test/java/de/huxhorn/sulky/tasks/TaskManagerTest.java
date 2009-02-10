@@ -26,6 +26,8 @@ public class TaskManagerTest
 	@Before
 	public void setUp()
 	{
+		Toolkit tk = Toolkit.getDefaultToolkit();
+		if(logger.isDebugEnabled()) logger.debug("Toolkit: {}", tk);
 		instance = new TaskManager<Integer>();
 		taskName = "TaskName";
 	}
@@ -386,6 +388,7 @@ public class TaskManagerTest
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
 		List<String> expectedMsgs = new ArrayList<String>();
+		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 0");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 10");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 20");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 30");
@@ -460,6 +463,7 @@ public class TaskManagerTest
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
 		List<String> expectedMsgs = new ArrayList<String>();
+		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 0");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 10");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 20");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 30");

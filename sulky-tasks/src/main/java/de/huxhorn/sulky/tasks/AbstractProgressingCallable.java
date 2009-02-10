@@ -24,26 +24,32 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 /**
- * The registered PropertyChangeLsiteners are called from the calculating thread
- * not from the EventDispatchThread. This is perfectly ok since TaskManager
- * can (if requested) transform those changes into ResultListener calls that are guaranteed
- * to be executed on the event dispatch thread.
+ * <p>This class is an abstract implementation of the ProgressingCallable interface.</p>
  * <p/>
- * Extending classes only call setNumberOfSteps and setCurrentStep whenever
- * necessary.
+ * <p>Extending classes only call setNumberOfSteps and setCurrentStep whenever
+ * necessary. The progress is automatically calculated.</p>
  * <p/>
- * The constructors with initialSleepSteps and laterSleepSteps arguments are recommended for longer
+ * <p>The registered PropertyChangeListeners are called from the calculating thread
+ * not from the event dispatch thread. This is perfectly ok since TaskManager
+ * transforms those changes into ResultListener calls that are guaranteed
+ * to be executed on the event dispatch thread if usingEventQueue is set to true.</p>
+ * <p/>
+ * <p>The constructors with initialSleepSteps and laterSleepSteps arguments are recommended for longer
  * operations. setCurrentStep will sleep for 1ms every time initialSleepSteps number of steps have been
  * processed. If laterSleepSteps is defined this value is used if more than 5*initialSleepSteps steps have
- * been processed.
+ * been processed.</p>
  * <p/>
- * It can be usefull to use a smaller value for initialSleepSteps to support faster cancelation at the start of an
+ * <p>It can be usefull to use a smaller value for initialSleepSteps to support faster cancelation at the start of an
  * operation, e.g. in case of an accidental start by the user, while using a larger value for laterSleepSteps
- * after an initial warm-up-period for performance reason (switching threads is expensive).
+ * after an initial warm-up-period for performance reason (switching threads is expensive).</p>
  * <p/>
- * The sleep itself is necessary to allow cancelation from the executor. The InterruptedException should not
- * be caught by the caller. If it is caught, e.g. to perform some cleanup,  care should be taken to leave
- * the call-method at the earliest possible time.
+ * <p>The sleep itself is necessary to allow cancelation from the executor. The InterruptedException should not
+ * be caught by the caller. If it is caught, e.g. to perform some cleanup, care should be taken to leave
+ * the call-method at the earliest possible time.</p>
+ *
+ * @param <T> the type of the result.
+ * @see java.util.concurrent.Callable
+ * @see de.huxhorn.sulky.tasks.ProgressingCallable
  */
 public abstract class AbstractProgressingCallable<T>
 	implements ProgressingCallable<T>

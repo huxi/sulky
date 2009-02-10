@@ -4,7 +4,15 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public interface Task<V>
+/**
+ * <p>A Task is created by a TaskManager and encapsulates both Callable and Future as well as additional information.</p>
+ *
+ * @param <T> the type of the result.
+ * @see java.util.concurrent.Callable
+ * @see java.util.concurrent.Future
+ * @see de.huxhorn.sulky.tasks.TaskManager#startTask(java.util.concurrent.Callable, String, String, java.util.Map)
+ */
+public interface Task<T>
 {
 	/**
 	 * Returns the ID of this task. Task IDs are unique in relation to the TaskManager that started the task.
@@ -18,7 +26,7 @@ public interface Task<V>
 	 *
 	 * @return the TaskManager that started this Task.
 	 */
-	TaskManager<V> getTaskManager();
+	TaskManager<T> getTaskManager();
 
 	String getName();
 
@@ -26,7 +34,7 @@ public interface Task<V>
 
 	Map<String, String> getMetaData();
 
-	Future<V> getFuture();
+	Future<T> getFuture();
 
-	Callable<V> getCallable();
+	Callable<T> getCallable();
 }
