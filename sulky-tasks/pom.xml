@@ -11,9 +11,9 @@
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 
 	<scm>
-		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-swing</connection>
-		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-swing</developerConnection>
-		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-swing/</url>
+		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-tasks</connection>
+		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-tasks</developerConnection>
+		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-tasks/</url>
 	</scm>
 
 	<parent>
