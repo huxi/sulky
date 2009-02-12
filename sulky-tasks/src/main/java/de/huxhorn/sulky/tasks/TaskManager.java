@@ -63,7 +63,12 @@ public class TaskManager<T>
 	/**
 	 * locked with tasksLock
 	 */
-	private final Map<Integer, Task<T>> tasks;
+	private final List<Task<T>> internalCreatedTasks;
+
+	/**
+	 * locked with tasksLock
+	 */
+	private final Map<Long, Task<T>> tasks;
 
 	/**
 	 * locked with tasksLock
@@ -78,7 +83,7 @@ public class TaskManager<T>
 	/**
 	 * locked with tasksLock
 	 */
-	private int nextTaskId;
+	private long nextTaskId;
 
 	private final List<TaskListener<T>> taskListeners;
 
@@ -121,7 +126,8 @@ public class TaskManager<T>
 		this.taskListenersLock = new ReentrantReadWriteLock();
 		this.nextTaskId = 1;
 		this.usingEventQueue = usingEventQueue;
-		this.tasks = new HashMap<Integer, Task<T>>();
+		this.internalCreatedTasks = new ArrayList<Task<T>>();
+		this.tasks = new HashMap<Long, Task<T>>();
 		this.callableTasks = new HashMap<Integer, Task<T>>();
 		this.progressChangeListener = new ProgressChangeListener();
 		this.internalProgressChanges = new ArrayList<ProgressChange<T>>();
@@ -249,8 +255,9 @@ public class TaskManager<T>
 			{
 				throw new IllegalArgumentException("Callable is already scheduled!");
 			}
-			int newId = nextTaskId++;
+			long newId = nextTaskId++;
 			task = new TaskImpl<T>(newId, this, future, callable, name, description, metaData);
+			internalCreatedTasks.add(task);
 			tasks.put(newId, task);
 			callableTasks.put(callableIdentity, task);
 		}
@@ -267,7 +274,7 @@ public class TaskManager<T>
 	 * @param taskId the Task ID for which the Task should be resolved.
 	 * @return the Task associated with the Task ID.
 	 */
-	public Task<T> getTaskById(int taskId)
+	public Task<T> getTaskById(long taskId)
 	{
 		//synchronized(tasks)
 		ReentrantReadWriteLock.ReadLock lock = tasksLock.readLock();
@@ -309,16 +316,16 @@ public class TaskManager<T>
 	 *
 	 * @return a Map containing all Tasks with their Task ID as key.
 	 */
-	public Map<Integer, Task<T>> getTasks()
+	public Map<Long, Task<T>> getTasks()
 	{
-		Map<Integer, Task<T>> result;
+		Map<Long, Task<T>> result;
 
 		//synchronized(tasks)
 		ReentrantReadWriteLock.ReadLock lock = tasksLock.readLock();
 		lock.lock();
 		try
 		{
-			result = new HashMap<Integer, Task<T>>(tasks);
+			result = new HashMap<Long, Task<T>>(tasks);
 		}
 		finally
 		{
@@ -384,18 +391,24 @@ public class TaskManager<T>
 				{
 					List<ProgressChange<T>> progressChanges = null;
 					List<Task<T>> doneTasks = null;
+					List<Task<T>> createdTasks = null;
 
 					//synchronized(tasks)
 					ReentrantReadWriteLock.WriteLock lock = tasksLock.writeLock();
 					lock.lock();
 					try
 					{
+						if(internalCreatedTasks.size() > 0)
+						{
+							createdTasks = new ArrayList<Task<T>>(internalCreatedTasks);
+							internalCreatedTasks.clear();
+						}
 						if(internalProgressChanges.size() > 0)
 						{
 							progressChanges = new ArrayList<ProgressChange<T>>(internalProgressChanges);
 							internalProgressChanges.clear();
 						}
-						for(Map.Entry<Integer, Task<T>> entry : tasks.entrySet())
+						for(Map.Entry<Long, Task<T>> entry : tasks.entrySet())
 						{
 							Task<T> task = entry.getValue();
 							if(task.getFuture().isDone())
@@ -422,9 +435,9 @@ public class TaskManager<T>
 						lock.unlock();
 					}
 
-					if(doneTasks != null || progressChanges != null)
+					if(createdTasks != null || doneTasks != null || progressChanges != null)
 					{
-						ResultListenerFireRunnable runnable = new ResultListenerFireRunnable(doneTasks, progressChanges);
+						ResultListenerFireRunnable runnable = new ResultListenerFireRunnable(createdTasks, doneTasks, progressChanges);
 						if(usingEventQueue)
 						{
 							EventQueue.invokeLater(runnable);
@@ -490,12 +503,14 @@ public class TaskManager<T>
 	{
 		private final Logger logger = LoggerFactory.getLogger(TaskManager.class);
 
+		private List<Task<T>> createdTasks;
 		private List<Task<T>> done;
 		private List<TaskListener<T>> clonedListeners;
 		private List<ProgressChange<T>> progressChanges;
 
-		public ResultListenerFireRunnable(List<Task<T>> done, List<ProgressChange<T>> progressChanges)
+		public ResultListenerFireRunnable(List<Task<T>> createdTasks, List<Task<T>> done, List<ProgressChange<T>> progressChanges)
 		{
+			this.createdTasks = createdTasks;
 			this.done = done;
 			this.progressChanges = progressChanges;
 		}
@@ -514,7 +529,15 @@ public class TaskManager<T>
 				lock.unlock();
 			}
 
-			// fire changes of progress before any other events
+			// fire creation of tasks before any other events
+			if(createdTasks != null)
+			{
+				for(Task<T> current : createdTasks)
+				{
+					fireCreatedEvent(current);
+				}
+			}
+			// then fire changes of progress before finish, cancel or fail
 			if(progressChanges != null)
 			{
 				for(ProgressChange<T> current : progressChanges)
@@ -558,6 +581,25 @@ public class TaskManager<T>
 					}
 				}
 
+			}
+		}
+
+		private void fireCreatedEvent(Task<T> task)
+		{
+			for(TaskListener<T> listener : clonedListeners)
+			{
+				try
+				{
+					listener.taskCreated(task);
+				}
+				catch(Throwable t)
+				{
+					if(logger.isErrorEnabled())
+					{
+						logger
+							.error("TaskListener " + listener + " threw an exception while progressUpdated was called!", t);
+					}
+				}
 			}
 		}
 
@@ -676,7 +718,7 @@ public class TaskManager<T>
 	private final static class TaskImpl<V>
 		implements Task<V>
 	{
-		private final int id;
+		private final long id;
 		private final TaskManager<V> taskManager;
 		private final Future<V> future;
 		private final Callable<V> callable;
@@ -684,7 +726,7 @@ public class TaskManager<T>
 		private final String description;
 		private final Map<String, String> metaData;
 
-		public TaskImpl(int id, TaskManager<V> taskManager, Future<V> future, Callable<V> callable, String name, String description, Map<String, String> metaData)
+		public TaskImpl(long id, TaskManager<V> taskManager, Future<V> future, Callable<V> callable, String name, String description, Map<String, String> metaData)
 		{
 			this.id = id;
 			this.taskManager = taskManager;
@@ -702,7 +744,7 @@ public class TaskManager<T>
 			}
 		}
 
-		public int getId()
+		public long getId()
 		{
 			return id;
 		}
@@ -758,7 +800,7 @@ public class TaskManager<T>
 		@Override
 		public int hashCode()
 		{
-			return id;
+			return (int) id;
 		}
 	}
 }

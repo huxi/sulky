@@ -146,7 +146,7 @@ public class TaskManagerTest
 		instance.startUp();
 		Callable<Integer> callable = new SleepingCallable("C1", 2000);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
@@ -154,7 +154,7 @@ public class TaskManagerTest
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
@@ -203,14 +203,14 @@ public class TaskManagerTest
 		instance.startUp();
 		Callable<Integer> callable = new SleepingExceptionCallable("C1", 2000);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
@@ -258,14 +258,14 @@ public class TaskManagerTest
 		instance.startUp();
 		Callable<Integer> callable = new SleepingProgressingCallable("C1", 200);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
@@ -313,14 +313,14 @@ public class TaskManagerTest
 		instance.startUp();
 		Callable<Integer> callable = new SleepingExceptionProgressingCallable("C1", 200);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
@@ -339,14 +339,14 @@ public class TaskManagerTest
 		instance.addTaskListener(taskListener);
 		Callable<Integer> callable = new SleepingCallable("C1", 200);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
@@ -356,6 +356,7 @@ public class TaskManagerTest
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
 		List<String> expectedMsgs = new ArrayList<String>();
+		expectedMsgs.add(TestTaskListener.CREATED + callable);
 		expectedMsgs.add(TestTaskListener.FINISHED + callable);
 		assertEquals(expectedMsgs, messages);
 		tasks = instance.getTasks();
@@ -371,14 +372,14 @@ public class TaskManagerTest
 		instance.addTaskListener(taskListener);
 		Callable<Integer> callable = new SleepingProgressingCallable("C1", 200);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
@@ -388,6 +389,7 @@ public class TaskManagerTest
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
 		List<String> expectedMsgs = new ArrayList<String>();
+		expectedMsgs.add(TestTaskListener.CREATED + callable);
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 0");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 10");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 20");
@@ -414,14 +416,14 @@ public class TaskManagerTest
 		instance.addTaskListener(taskListener);
 		Callable<Integer> callable = new SleepingExceptionCallable("C1", 200);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
@@ -431,6 +433,7 @@ public class TaskManagerTest
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
 		List<String> expectedMsgs = new ArrayList<String>();
+		expectedMsgs.add(TestTaskListener.CREATED + callable);
 		expectedMsgs.add(TestTaskListener.FAILED + callable + " java.lang.RuntimeException");
 		assertEquals(expectedMsgs, messages);
 		tasks = instance.getTasks();
@@ -446,14 +449,14 @@ public class TaskManagerTest
 		instance.addTaskListener(taskListener);
 		Callable<Integer> callable = new SleepingExceptionProgressingCallable("C1", 200);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
@@ -463,6 +466,7 @@ public class TaskManagerTest
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
 		List<String> expectedMsgs = new ArrayList<String>();
+		expectedMsgs.add(TestTaskListener.CREATED + callable);
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 0");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 10");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 20");
@@ -481,14 +485,14 @@ public class TaskManagerTest
 		instance.startUp();
 		Callable<Integer> callable = new SleepingCallable("C1", 2000);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		future.cancel(true);
@@ -506,14 +510,14 @@ public class TaskManagerTest
 		instance.startUp();
 		Callable<Integer> callable = new SleepingProgressingCallable("C1", 200);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		future.cancel(true);
@@ -533,14 +537,14 @@ public class TaskManagerTest
 		instance.addTaskListener(taskListener);
 		Callable<Integer> callable = new SleepingProgressingCallable("C1", 200);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		future.cancel(true);
@@ -551,6 +555,7 @@ public class TaskManagerTest
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
 		List<String> expectedMsgs = new ArrayList<String>();
+		expectedMsgs.add(TestTaskListener.CREATED + callable);
 		expectedMsgs.add(TestTaskListener.CANCELED + callable);
 		assertEquals(expectedMsgs, messages);
 		tasks = instance.getTasks();
@@ -566,14 +571,14 @@ public class TaskManagerTest
 		instance.addTaskListener(taskListener);
 		Callable<Integer> callable = new SleepingProgressingCallable("C1", 200);
 		Task<Integer> task = instance.startTask(callable, taskName);
-		int taskId = task.getId();
+		long taskId = task.getId();
 		assertEquals(1, taskId);
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
 		assertEquals(false, future.isCancelled());
 		assertEquals(false, future.isDone());
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(500);
@@ -584,6 +589,7 @@ public class TaskManagerTest
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
+		assertTrue(messages.contains(TestTaskListener.CREATED + callable));
 		assertTrue(messages.contains(TestTaskListener.CANCELED + callable));
 		tasks = instance.getTasks();
 		assertEquals(0, tasks.size());
@@ -633,7 +639,7 @@ public class TaskManagerTest
 		assertSame(prog6Task, instance.getTaskById(6));
 		assertSame(prog6Task, instance.getTaskByCallable(prog6));
 
-		Map<Integer, Task<Integer>> tasks = instance.getTasks();
+		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(6, tasks.size());
 
 		Thread.sleep(500);
@@ -645,6 +651,12 @@ public class TaskManagerTest
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
+		assertTrue(messages.contains(TestTaskListener.CREATED + prog1));
+		assertTrue(messages.contains(TestTaskListener.CREATED + prog2));
+		assertTrue(messages.contains(TestTaskListener.CREATED + prog3));
+		assertTrue(messages.contains(TestTaskListener.CREATED + prog4));
+		assertTrue(messages.contains(TestTaskListener.CREATED + prog5));
+		assertTrue(messages.contains(TestTaskListener.CREATED + prog6));
 		assertTrue(messages.contains(TestTaskListener.FINISHED + prog1));
 		assertTrue(messages.contains(TestTaskListener.CANCELED + prog2));
 		assertTrue(messages.contains(TestTaskListener.FAILED + prog3 + " java.lang.RuntimeException"));
@@ -816,6 +828,7 @@ public class TaskManagerTest
 	private static class TestTaskListener
 		implements TaskListener<Integer>
 	{
+		public static final String CREATED = "Created: ";
 		public static final String FAILED = "Failed: ";
 		public static final String FINISHED = "Finished: ";
 		public static final String CANCELED = "Canceled: ";
@@ -828,6 +841,12 @@ public class TaskManagerTest
 		public TestTaskListener()
 		{
 			messages = new ArrayList<String>();
+		}
+
+		public void taskCreated(Task<Integer> task)
+		{
+			if(logger.isInfoEnabled()) logger.info("Task created.");
+			messages.add(CREATED + task.getCallable());
 		}
 
 		public void executionFailed(Task<Integer> task, ExecutionException exception)
@@ -891,6 +910,11 @@ public class TaskManagerTest
 					failed = true;
 				}
 			}
+		}
+
+		public void taskCreated(Task<Integer> integerTask)
+		{
+			checkThread();
 		}
 
 		public void executionFailed(Task<Integer> task, ExecutionException exception)

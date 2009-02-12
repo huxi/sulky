@@ -33,6 +33,13 @@ import java.util.concurrent.ExecutionException;
 public interface TaskListener<T>
 {
 	/**
+	 * This method is called after a new Task has been created.
+	 *
+	 * @param task the new Task.
+	 */
+	void taskCreated(Task<T> task);
+
+	/**
 	 * This method is called if the execution of the Task fails with an exception.
 	 *
 	 * @param task      the Task that failed.
