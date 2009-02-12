@@ -9,7 +9,8 @@
 	<name>Sulky parent pom file</name>
 	<description>This file is part of the sulky modules. It's the parent pom that contains general project informations.</description>
 	<url>http://sulky.huxhorn.de/projects/</url>
-
+	<inceptionYear>2007</inceptionYear>
+	
 	<scm>
 		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-parent</connection>
 		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-parent</developerConnection>
