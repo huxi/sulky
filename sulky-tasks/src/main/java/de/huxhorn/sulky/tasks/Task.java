@@ -19,7 +19,7 @@ public interface Task<T>
 	 *
 	 * @return the ID of the task.
 	 */
-	int getId();
+	long getId();
 
 	/**
 	 * Returns the TaskManager that started this task.
