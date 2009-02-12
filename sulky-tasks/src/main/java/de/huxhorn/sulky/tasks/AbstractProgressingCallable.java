@@ -60,8 +60,8 @@ public abstract class AbstractProgressingCallable<T>
 	private int progress;
 	private long numberOfSteps;
 	private long currentStep;
-	private int initialSleepSteps;
-	private int laterSleepSteps;
+	private long initialSleepSteps;
+	private long laterSleepSteps;
 	private long lastSleepStep;
 
 	public AbstractProgressingCallable()
@@ -69,12 +69,12 @@ public abstract class AbstractProgressingCallable<T>
 		this(0, 0);
 	}
 
-	public AbstractProgressingCallable(int sleepSteps)
+	public AbstractProgressingCallable(long sleepSteps)
 	{
 		this(sleepSteps, 0);
 	}
 
-	public AbstractProgressingCallable(int initialSleepSteps, int laterSleepSteps)
+	public AbstractProgressingCallable(long initialSleepSteps, long laterSleepSteps)
 	{
 		this.changeSupport = new PropertyChangeSupport(this);
 		this.progress = -1;

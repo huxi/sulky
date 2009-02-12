@@ -54,6 +54,42 @@ public class TaskManagerTest
 		}, "Won't work");
 	}
 
+	@Test
+	public void states()
+	{
+		assertEquals(TaskManager.State.INITIALIZED, instance.getState());
+		instance.startUp();
+		assertEquals(TaskManager.State.RUNNING, instance.getState());
+		instance.shutDown();
+		assertEquals(TaskManager.State.STOPPED, instance.getState());
+	}
+
+	/**
+	 * No exception, second shutDown should be silently ignored.
+	 */
+	@Test
+	public void shutDownTwice()
+	{
+		instance.startUp();
+		instance.shutDown();
+		instance.shutDown();
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void startUpTwice()
+	{
+		instance.startUp();
+		instance.startUp();
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void restart()
+	{
+		instance.startUp();
+		instance.shutDown();
+		instance.startUp();
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public void missingName()
 	{
@@ -256,7 +292,7 @@ public class TaskManagerTest
 		throws InterruptedException
 	{
 		instance.startUp();
-		Callable<Integer> callable = new SleepingProgressingCallable("C1", 200);
+		Callable<Integer> callable = new SleepingProgressingCallable("C1", 20);
 		Task<Integer> task = instance.startTask(callable, taskName);
 		long taskId = task.getId();
 		assertEquals(1, taskId);
@@ -268,7 +304,7 @@ public class TaskManagerTest
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
-		Thread.sleep(2500);
+		Thread.sleep(1500);
 		assertEquals(false, future.isCancelled());
 		assertEquals(true, future.isDone());
 		tasks = instance.getTasks();

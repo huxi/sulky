@@ -17,6 +17,9 @@
  */
 package de.huxhorn.sulky.tasks;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.Immutable;
+import net.jcip.annotations.ThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +44,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @param <T> the type of the result.
  */
+@ThreadSafe
 public class TaskManager<T>
 {
 	/**
@@ -60,31 +64,22 @@ public class TaskManager<T>
 	private boolean usingEventQueue;
 	private final ExecutorService executorService;
 
-	/**
-	 * locked with tasksLock
-	 */
+	@GuardedBy("tasksLock")
 	private final List<Task<T>> internalCreatedTasks;
 
-	/**
-	 * locked with tasksLock
-	 */
+	@GuardedBy("tasksLock")
 	private final Map<Long, Task<T>> tasks;
 
-	/**
-	 * locked with tasksLock
-	 */
+	@GuardedBy("tasksLock")
 	private final Map<Integer, Task<T>> callableTasks;
 
-	/**
-	 * locked with tasksLock
-	 */
+	@GuardedBy("tasksLock")
 	private final List<ProgressChange<T>> internalProgressChanges;
 
-	/**
-	 * locked with tasksLock
-	 */
+	@GuardedBy("tasksLock")
 	private long nextTaskId;
 
+	@GuardedBy("taskListenersLock")
 	private final List<TaskListener<T>> taskListeners;
 
 	private final PropertyChangeListener progressChangeListener;
@@ -715,6 +710,7 @@ public class TaskManager<T>
 		}
 	}
 
+	@Immutable
 	private final static class TaskImpl<V>
 		implements Task<V>
 	{
