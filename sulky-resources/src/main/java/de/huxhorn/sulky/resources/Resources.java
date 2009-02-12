@@ -806,13 +806,14 @@ public final class Resources
 					// empty lines are allready ignored in readLinkInputStream
 					// Stack is cloned to support multiple lines...
 					String basePath = PathTools.getParentPath(resourceLinkPath);
-					currentLinkTarget = PathTools.getAbsolutePath(basePath, currentLinkTarget);
+					String previousLinkTarget=currentLinkTarget;
+					currentLinkTarget = PathTools.getAbsolutePath(basePath, previousLinkTarget);
 					if(currentLinkTarget == null)
 					{
 						if(logger.isDebugEnabled())
 						{
 							logger
-								.debug("getAbsolutePath(\"" + basePath + "\", \"" + currentLinkTarget + "\") returned null - no valid absolute path found.");
+								.debug("getAbsolutePath(\"" + basePath + "\", \"" + previousLinkTarget + "\") returned null - no valid absolute path found.");
 						}
 					}
 					else
