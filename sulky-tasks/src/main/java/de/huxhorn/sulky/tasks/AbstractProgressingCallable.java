@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * <p>This class is an abstract implementation of the ProgressingCallable interface.</p>
@@ -63,6 +64,8 @@ public abstract class AbstractProgressingCallable<T>
 	private long initialSleepSteps;
 	private long laterSleepSteps;
 	private long lastSleepStep;
+	private final ReentrantReadWriteLock rwLock;
+
 
 	public AbstractProgressingCallable()
 	{
@@ -76,6 +79,8 @@ public abstract class AbstractProgressingCallable<T>
 
 	public AbstractProgressingCallable(long initialSleepSteps, long laterSleepSteps)
 	{
+		rwLock = new ReentrantReadWriteLock();
+
 		this.changeSupport = new PropertyChangeSupport(this);
 		this.progress = -1;
 		this.numberOfSteps = 0;
@@ -143,13 +148,22 @@ public abstract class AbstractProgressingCallable<T>
 	 */
 	private void setProgress(int progress)
 	{
-		if(this.progress != progress)
+		ReentrantReadWriteLock.WriteLock lock = rwLock.writeLock();
+		lock.lock();
+		try
 		{
-			if(logger.isDebugEnabled()) logger.debug("New progress: {}", progress);
-			Object oldValue = this.progress;
-			this.progress = progress;
-			Object newValue = this.progress;
-			changeSupport.firePropertyChange(PROGRESS_PROPERTY_NAME, oldValue, newValue);
+			if(this.progress != progress)
+			{
+				if(logger.isDebugEnabled()) logger.debug("New progress: {}", progress);
+				Object oldValue = this.progress;
+				this.progress = progress;
+				Object newValue = this.progress;
+				changeSupport.firePropertyChange(PROGRESS_PROPERTY_NAME, oldValue, newValue);
+			}
+		}
+		finally
+		{
+			lock.unlock();
 		}
 
 	}
@@ -161,7 +175,16 @@ public abstract class AbstractProgressingCallable<T>
 	 */
 	public int getProgress()
 	{
-		return progress;
+		ReentrantReadWriteLock.ReadLock lock = rwLock.readLock();
+		lock.lock();
+		try
+		{
+			return progress;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	public void addPropertyChangeListener(PropertyChangeListener listener)

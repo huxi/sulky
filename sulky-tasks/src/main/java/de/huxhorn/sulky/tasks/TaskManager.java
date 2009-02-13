@@ -102,7 +102,8 @@ public class TaskManager<T>
 	 * <p/>
 	 * By default, it is not using the event dispatch thread to fire task events.
 	 *
-	 * @param executorService the executor service to be used by this task manager.
+	 * @param executorService the executor service to be used by this task manager. Must not be null.
+	 * @throws IllegalArgumentException if executorService is null.
 	 */
 	public TaskManager(ExecutorService executorService)
 	{
@@ -112,11 +113,16 @@ public class TaskManager<T>
 	/**
 	 * Creates a new task manager with the given executor service and the given us.
 	 *
-	 * @param executorService the executor service to be used by this task manager.
+	 * @param executorService the executor service to be used by this task manager. Must not be null.
 	 * @param usingEventQueue whether or not the event dispatch thread should be used to fire task events.
+	 * @throws IllegalArgumentException if executorService is null.
 	 */
 	public TaskManager(ExecutorService executorService, boolean usingEventQueue)
 	{
+		if(executorService == null)
+		{
+			throw new IllegalArgumentException("executorService must not be null!");
+		}
 		this.tasksLock = new ReentrantReadWriteLock();
 		this.taskListenersLock = new ReentrantReadWriteLock();
 		this.nextTaskId = 1;
@@ -797,6 +803,32 @@ public class TaskManager<T>
 		public int hashCode()
 		{
 			return (int) id;
+		}
+
+		@Override
+		public String toString()
+		{
+			StringBuilder result = new StringBuilder();
+			result.append("Task[id=").append(id)
+				.append(", name=\"").append(name).append("\"");
+			if(callable instanceof ProgressingCallable)
+			{
+				ProgressingCallable pc = (ProgressingCallable) callable;
+				result.append(", progress=");
+				int progress = pc.getProgress();
+				if(progress < 0)
+				{
+					result.append("unknown");
+				}
+				else
+				{
+					result.append(progress);
+				}
+
+			}
+			result.append("]");
+
+			return result.toString();
 		}
 	}
 }

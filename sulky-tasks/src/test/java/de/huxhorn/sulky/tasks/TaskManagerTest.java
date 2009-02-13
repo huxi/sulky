@@ -104,6 +104,18 @@ public class TaskManagerTest
 		}, null);
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public void missingExecutor()
+	{
+		new TaskManager(null);
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void missingExecutor2()
+	{
+		new TaskManager(null, true);
+	}
+
 	@Test
 	public void withDescription()
 	{
@@ -590,10 +602,8 @@ public class TaskManagerTest
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
-		List<String> expectedMsgs = new ArrayList<String>();
-		expectedMsgs.add(TestTaskListener.CREATED + callable);
-		expectedMsgs.add(TestTaskListener.CANCELED + callable);
-		assertEquals(expectedMsgs, messages);
+		assertTrue(messages.contains(TestTaskListener.CREATED + callable));
+		assertTrue(messages.contains(TestTaskListener.CANCELED + callable));
 		tasks = instance.getTasks();
 		assertEquals(0, tasks.size());
 	}
