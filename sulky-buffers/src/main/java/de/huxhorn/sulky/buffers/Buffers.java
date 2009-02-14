@@ -17,50 +17,16 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import de.huxhorn.sulky.conditions.Condition;
-
-import java.util.Collection;
-
 public class Buffers
 {
 	private Buffers()
 	{
 	}
 
-	public static <E> void filter(Buffer<E> buffer, Condition condition, AppendOperation<E> toAppendTo)
-	{
-		for(E element : buffer)
-		{
-			if(condition.isTrue(element))
-			{
-				toAppendTo.add(element);
-			}
-		}
-	}
-
-	public static <E> void filter(Buffer<E> buffer, FilterJob<E> filterJob)
-	{
-		filter(buffer, filterJob.getCondition(), filterJob.getAppendOperation());
-	}
-
-	public static <E> void filter(Buffer<E> buffer, Collection<FilterJob<E>> filterJobs)
-	{
-		for(E element : buffer)
-		{
-			for(FilterJob<E> job : filterJobs)
-			{
-				if(job.getCondition().isTrue(element))
-				{
-					job.getAppendOperation().add(element);
-				}
-			}
-		}
-	}
-
 	/**
 	 * Executes buffer.dispose() if Buffer implements DisposeOperation.
 	 *
-	 * @param buffer
+	 * @param buffer the buffer to be disposed.
 	 */
 	public static void dispose(Buffer<?> buffer)
 	{
@@ -74,7 +40,7 @@ public class Buffers
 	/**
 	 * Executes buffer.reset() if Buffer implements ResetOperation.
 	 *
-	 * @param buffer
+	 * @param buffer the buffer to be reset.
 	 */
 	public static void reset(Buffer<?> buffer)
 	{
