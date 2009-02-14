@@ -26,11 +26,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>de.huxhorn.sulky</groupId>
-			<artifactId>de.huxhorn.sulky.conditions</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>de.huxhorn.sulky</groupId>
 			<artifactId>de.huxhorn.sulky.generics</artifactId>
 			<scope>compile</scope>
 		</dependency>
