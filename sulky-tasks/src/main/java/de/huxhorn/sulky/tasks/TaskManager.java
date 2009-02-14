@@ -269,6 +269,20 @@ public class TaskManager<T>
 		return task;
 	}
 
+	public int getNumberOfTasks()
+	{
+		ReentrantReadWriteLock.ReadLock lock = tasksLock.readLock();
+		lock.lock();
+		try
+		{
+			return tasks.size();
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
 	/**
 	 * Returns the Task associated with the Task ID.
 	 *
@@ -785,6 +799,16 @@ public class TaskManager<T>
 			return taskManager;
 		}
 
+		public int getProgress()
+		{
+			if(callable instanceof ProgressingCallable)
+			{
+				ProgressingCallable pc = (ProgressingCallable) callable;
+				return pc.getProgress();
+			}
+			return -1;
+		}
+
 		@Override
 		public boolean equals(Object o)
 		{
@@ -811,20 +835,15 @@ public class TaskManager<T>
 			StringBuilder result = new StringBuilder();
 			result.append("Task[id=").append(id)
 				.append(", name=\"").append(name).append("\"");
-			if(callable instanceof ProgressingCallable)
+			result.append(", progress=");
+			int progress = getProgress();
+			if(progress < 0)
 			{
-				ProgressingCallable pc = (ProgressingCallable) callable;
-				result.append(", progress=");
-				int progress = pc.getProgress();
-				if(progress < 0)
-				{
-					result.append("unknown");
-				}
-				else
-				{
-					result.append(progress);
-				}
-
+				result.append("unknown");
+			}
+			else
+			{
+				result.append(progress);
 			}
 			result.append("]");
 

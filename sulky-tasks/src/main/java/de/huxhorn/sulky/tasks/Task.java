@@ -32,6 +32,8 @@ public interface Task<T>
 
 	String getDescription();
 
+	int getProgress();
+
 	Map<String, String> getMetaData();
 
 	Future<T> getFuture();
