@@ -323,6 +323,11 @@ public class SerializingFileBuffer<E>
 		return new BasicBufferIterator<E>(this);
 	}
 
+	public File getDataFile()
+	{
+		return dataFile;
+	}
+
 	static private void closeQuietly(RandomAccessFile raf)
 	{
 		final Logger logger = LoggerFactory.getLogger(SerializingFileBuffer.class);

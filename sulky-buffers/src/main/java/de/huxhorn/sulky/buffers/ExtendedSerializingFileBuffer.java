@@ -472,6 +472,11 @@ public class ExtendedSerializingFileBuffer<E>
 		return magicValue;
 	}
 
+	public File getDataFile()
+	{
+		return dataFile;
+	}
+
 	public long getSize()
 	{
 		RandomAccessFile raf = null;

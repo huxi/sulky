@@ -17,9 +17,10 @@
  */
 package de.huxhorn.sulky.buffers;
 
+import java.io.File;
+
 public interface FileBuffer<E>
 	extends Buffer<E>, AppendOperation<E>, ResetOperation
 {
-
-
+	File getDataFile();
 }
