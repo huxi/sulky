@@ -119,6 +119,6 @@ public class XmlEncoder<E>
 
 	public String toString()
 	{
-		return "XmlSerializer[compressing=" + compressing + ", enums=" + Arrays.toString(enums) + "]";
+		return "XmlEncoder[compressing=" + compressing + ", enums=" + Arrays.toString(enums) + "]";
 	}
 }

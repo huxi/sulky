@@ -82,7 +82,7 @@ public class SerializableDecoder<E extends Serializable>
 
 	public String toString()
 	{
-		return "SerializableDeserializer[compressing=" + compressing + "]";
+		return "SerializableDecoder[compressing=" + compressing + "]";
 	}
 
 }

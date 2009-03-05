@@ -18,8 +18,7 @@
 package de.huxhorn.sulky.buffers;
 
 import de.huxhorn.sulky.codec.Codec;
-import de.huxhorn.sulky.codec.Decoder;
-import de.huxhorn.sulky.codec.Encoder;
+import de.huxhorn.sulky.codec.DelegatingCodecBase;
 import de.huxhorn.sulky.codec.XmlDecoder;
 import de.huxhorn.sulky.codec.XmlEncoder;
 
@@ -48,11 +47,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * If present (and it should be), it is contained in the first four bytes of the data-file and can be evaluated by external classes, e.g. FileFilters.
  * An application would use one (or more) specific magic value to identify it's own files.
  * </li>
- * <li>Configurable Serializer and Deserializer so the way the elements are actually written and read can be changed as needed.
+ * <li>Configurable Codec so the way the elements are actually written and read can be changed as needed.
  * </li>
  * <li>
  * Optional meta data that can be used to provide additional informations about the content of the buffer.
- * It might be used to identify the correct pair of Serializer and Deserrializer required by the buffer
+ * It might be used to identify the correct Codec required by the buffer
  * </li>
  * <li>Optional ElementProcessors that are executed after elements are added to the buffer.</li>
  * </ul>
@@ -61,7 +60,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @param <E> the type of objects that are stored in this buffer.
  */
-public class ExtendedSerializingFileBuffer<E>
+public class CodecFileBuffer<E>
 	implements FileBuffer<E>
 {
 	private static final int MAGIC_VALUE_SIZE = 4;
@@ -69,7 +68,7 @@ public class ExtendedSerializingFileBuffer<E>
 	private static final long DATA_OFFSET_SIZE = 8;
 	private static final long DATA_LENGTH_SIZE = 4;
 
-	private final Logger logger = LoggerFactory.getLogger(ExtendedSerializingFileBuffer.class);
+	private final Logger logger = LoggerFactory.getLogger(CodecFileBuffer.class);
 
 	private ReadWriteLock readWriteLock;
 
@@ -89,40 +88,33 @@ public class ExtendedSerializingFileBuffer<E>
 	private Map<String, String> metaData;
 	private long initialDataOffset;
 
-	/*
-	private Serializer<E> serializer;
-	private Deserializer<E> deserializer;
-    */
-
 	private Codec<E> codec;
-
-	private Encoder<Map<String, String>> metaSerializer;
-	private Decoder<Map<String, String>> metaDeserializer;
+	private Codec<Map<String, String>> metaCodec;
 	private List<ElementProcessor<E>> elementProcessors;
 
 	/**
-	 * Shortcut for ExtendedSerializingFileBuffer(magicValue, metaData, null, null, serializeFile, null).
+	 * Shortcut for CodecFileBuffer(magicValue, metaData, null, null, serializeFile, null).
 	 *
 	 * @param magicValue        the magic value of the buffer.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
+	 * @see CodecFileBuffer#CodecFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
-	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, File dataFile)
+	public CodecFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, File dataFile)
 	{
 		this(magicValue, preferredMetaData, null, dataFile, null);
 	}
 
 	/**
-	 * Shortcut for ExtendedSerializingFileBuffer(magicValue, metaData, null, null, serializeFile, null).
+	 * Shortcut for CodecFileBuffer(magicValue, metaData, null, null, serializeFile, null).
 	 *
 	 * @param magicValue        the magic value of the buffer.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param codec             the codec used by this buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
+	 * @see CodecFileBuffer#CodecFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
-	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
+	public CodecFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
 	{
 		this(magicValue, preferredMetaData, codec, dataFile, null);
 	}
@@ -137,7 +129,7 @@ public class ExtendedSerializingFileBuffer<E>
 	 * @param indexFile         the index file of the buffer.
 	 * @throws NullPointerException if magicValue is null.
 	 */
-	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
+	public CodecFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
 	{
 		this.readWriteLock = new ReentrantReadWriteLock(true);
 		if(magicValue == null)
@@ -145,13 +137,12 @@ public class ExtendedSerializingFileBuffer<E>
 			throw new NullPointerException("magicValue must not be null!");
 		}
 		this.magicValue = magicValue;
-		this.metaSerializer = new XmlEncoder<Map<String, String>>(true);
-		this.metaDeserializer = new XmlDecoder<Map<String, String>>(true);
+		this.metaCodec = new MetaCodec();
 		if(preferredMetaData != null)
 		{
 			this.preferredMetaData = new HashMap<String, String>(preferredMetaData);
 		}
-		this.codec=codec;
+		this.codec = codec;
 
 		setDataFile(dataFile);
 
@@ -311,7 +302,7 @@ public class ExtendedSerializingFileBuffer<E>
 			int length = 0;
 			if(preferredMetaData != null)
 			{
-				buffer = metaSerializer.encode(preferredMetaData);
+				buffer = metaCodec.encode(preferredMetaData);
 				if(buffer != null)
 				{
 					length = buffer.length;
@@ -369,7 +360,7 @@ public class ExtendedSerializingFileBuffer<E>
 					byte[] buffer = new byte[metaLength];
 					raf.readFully(buffer);
 
-					metaData = metaDeserializer.decode(buffer);
+					metaData = metaCodec.decode(buffer);
 				}
 				else
 				{
@@ -505,7 +496,7 @@ public class ExtendedSerializingFileBuffer<E>
 	 *
 	 * @param index must be in the range <tt>[0..(getSize()-1)]</tt>.
 	 * @return the element at the given index.
-	 * @throws IllegalStateException if no Deserializer has been set.
+	 * @throws IllegalStateException if no Decoder has been set.
 	 */
 	public E get(long index)
 	{
@@ -584,7 +575,7 @@ public class ExtendedSerializingFileBuffer<E>
 	 * Adds the element to the end of the buffer.
 	 *
 	 * @param element to add.
-	 * @throws IllegalStateException if no Serializer has been set.
+	 * @throws IllegalStateException if no Encoder has been set.
 	 */
 	public void add(E element)
 	{
@@ -654,7 +645,7 @@ public class ExtendedSerializingFileBuffer<E>
 	 * Adds all elements to the end of the buffer.
 	 *
 	 * @param elements to add.
-	 * @throws IllegalStateException if no Serializer has been set.
+	 * @throws IllegalStateException if no Encoder has been set.
 	 */
 	public void addAll(List<E> elements)
 	{
@@ -779,7 +770,7 @@ public class ExtendedSerializingFileBuffer<E>
 
 	static private void closeQuietly(RandomAccessFile raf)
 	{
-		final Logger logger = LoggerFactory.getLogger(ExtendedSerializingFileBuffer.class);
+		final Logger logger = LoggerFactory.getLogger(CodecFileBuffer.class);
 
 		if(raf != null)
 		{
@@ -909,7 +900,7 @@ public class ExtendedSerializingFileBuffer<E>
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder();
-		result.append("ExtendedSerializingFileBuffer[");
+		result.append("CodecFileBuffer[");
 
 		result.append("magicValue=");
 		if(magicValue == null)
@@ -961,5 +952,14 @@ public class ExtendedSerializingFileBuffer<E>
 
 		result.append("]");
 		return result.toString();
+	}
+
+	private static class MetaCodec
+		extends DelegatingCodecBase<Map<String, String>>
+	{
+		public MetaCodec()
+		{
+			super(new XmlEncoder<Map<String, String>>(true), new XmlDecoder<Map<String, String>>(true));
+		}
 	}
 }

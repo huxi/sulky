@@ -81,6 +81,6 @@ public class XmlDecoder<E>
 
 	public String toString()
 	{
-		return "XmlDeserializer[compressing=" + compressing + "]";
+		return "XmlDecoder[compressing=" + compressing + "]";
 	}
 }
