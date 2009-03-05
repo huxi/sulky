@@ -25,7 +25,7 @@ public class DelegatingCodecBase<E>
 
 	protected DelegatingCodecBase()
 	{
-	    this(null, null);
+		this(null, null);
 	}
 
 	protected DelegatingCodecBase(Encoder<E> encoder, Decoder<E> decoder)
@@ -56,11 +56,19 @@ public class DelegatingCodecBase<E>
 
 	public byte[] encode(E object)
 	{
+		if(encoder == null)
+		{
+			throw new IllegalStateException("encoder must not be null!");
+		}
 		return encoder.encode(object);
 	}
 
 	public E decode(byte[] bytes)
 	{
+		if(decoder == null)
+		{
+			throw new IllegalStateException("decoder must not be null!");
+		}
 		return decoder.decode(bytes);
 	}
 }
