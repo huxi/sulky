@@ -17,11 +17,11 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import de.huxhorn.sulky.generics.io.Deserializer;
-import de.huxhorn.sulky.generics.io.Serializer;
-import de.huxhorn.sulky.generics.io.XmlDeserializer;
-import de.huxhorn.sulky.generics.io.XmlSerializer;
-import de.huxhorn.sulky.generics.io.Codec;
+import de.huxhorn.sulky.codec.Codec;
+import de.huxhorn.sulky.codec.Decoder;
+import de.huxhorn.sulky.codec.Encoder;
+import de.huxhorn.sulky.codec.XmlDecoder;
+import de.huxhorn.sulky.codec.XmlEncoder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,8 +96,8 @@ public class ExtendedSerializingFileBuffer<E>
 
 	private Codec<E> codec;
 
-	private Serializer<Map<String, String>> metaSerializer;
-	private Deserializer<Map<String, String>> metaDeserializer;
+	private Encoder<Map<String, String>> metaSerializer;
+	private Decoder<Map<String, String>> metaDeserializer;
 	private List<ElementProcessor<E>> elementProcessors;
 
 	/**
@@ -106,7 +106,7 @@ public class ExtendedSerializingFileBuffer<E>
 	 * @param magicValue        the magic value of the buffer.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Codec, java.io.File, java.io.File) for description.
+	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
 	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, File dataFile)
 	{
@@ -120,7 +120,7 @@ public class ExtendedSerializingFileBuffer<E>
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param codec             the codec used by this buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Codec, java.io.File, java.io.File) for description.
+	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
 	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
 	{
@@ -145,8 +145,8 @@ public class ExtendedSerializingFileBuffer<E>
 			throw new NullPointerException("magicValue must not be null!");
 		}
 		this.magicValue = magicValue;
-		this.metaSerializer = new XmlSerializer<Map<String, String>>(true);
-		this.metaDeserializer = new XmlDeserializer<Map<String, String>>(true);
+		this.metaSerializer = new XmlEncoder<Map<String, String>>(true);
+		this.metaDeserializer = new XmlDecoder<Map<String, String>>(true);
 		if(preferredMetaData != null)
 		{
 			this.preferredMetaData = new HashMap<String, String>(preferredMetaData);
@@ -311,7 +311,7 @@ public class ExtendedSerializingFileBuffer<E>
 			int length = 0;
 			if(preferredMetaData != null)
 			{
-				buffer = metaSerializer.serialize(preferredMetaData);
+				buffer = metaSerializer.encode(preferredMetaData);
 				if(buffer != null)
 				{
 					length = buffer.length;
@@ -369,7 +369,7 @@ public class ExtendedSerializingFileBuffer<E>
 					byte[] buffer = new byte[metaLength];
 					raf.readFully(buffer);
 
-					metaData = metaDeserializer.deserialize(buffer);
+					metaData = metaDeserializer.decode(buffer);
 				}
 				else
 				{
@@ -833,7 +833,7 @@ public class ExtendedSerializingFileBuffer<E>
 		}
 		byte[] buffer = new byte[bufferSize];
 		randomSerializeFile.readFully(buffer);
-		return codec.deserialize(buffer);
+		return codec.decode(buffer);
 	}
 
 	private void internalWriteOffset(RandomAccessFile randomIndexFile, long index, long offset)
@@ -855,7 +855,7 @@ public class ExtendedSerializingFileBuffer<E>
 		{
 			throw new IllegalStateException("Codec has not been initialized!");
 		}
-		byte[] buffer = codec.serialize(element);
+		byte[] buffer = codec.encode(element);
 
 		int bufferSize = buffer.length;
 

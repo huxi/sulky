@@ -15,14 +15,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.generics.io;
+package de.huxhorn.sulky.codec;
+
+import java.beans.Encoder;
+import java.beans.Expression;
+import java.beans.PersistenceDelegate;
 
 /**
- *
- * @param <E>
- * @deprecated Use sulky-codec instead.
+ * As described in http://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html
  */
-public interface Deserializer<E>
+public class EnumPersistenceDelegate
+	extends PersistenceDelegate
 {
-	E deserialize(byte[] bytes);
+	protected boolean mutatesTo(Object oldInstance, Object newInstance)
+	{
+		return oldInstance == newInstance;
+	}
+
+	protected Expression instantiate(Object oldInstance, Encoder out)
+	{
+		Enum e = (Enum) oldInstance;
+		return new Expression(e, e.getClass(), "valueOf", new Object[]{e.name()});
+	}
 }

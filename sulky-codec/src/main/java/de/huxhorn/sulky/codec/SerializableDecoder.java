@@ -15,30 +15,26 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.generics.io;
+package de.huxhorn.sulky.codec;
 
 import org.apache.commons.io.IOUtils;
 
-import java.beans.XMLDecoder;
 import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.zip.GZIPInputStream;
 
-/**
- *
- * @param <E>
- * @deprecated Use sulky-codec instead.
- */
-public class XmlDeserializer<E>
-	implements Deserializer<E>
+public class SerializableDecoder<E extends Serializable>
+	implements Decoder<E>
 {
 	private boolean compressing;
 
-	public XmlDeserializer()
+	public SerializableDecoder()
 	{
 		this(false);
 	}
 
-	public XmlDeserializer(boolean compressing)
+	public SerializableDecoder(boolean compressing)
 	{
 		setCompressing(compressing);
 	}
@@ -53,23 +49,22 @@ public class XmlDeserializer<E>
 		this.compressing = compressing;
 	}
 
-	public E deserialize(byte[] bytes)
+	public E decode(byte[] bytes)
 	{
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		XMLDecoder decoder;
+		ObjectInputStream ois = null;
 		try
 		{
 			if(compressing)
 			{
 				GZIPInputStream gis = new GZIPInputStream(bis);
-				decoder = new XMLDecoder(gis);
+				ois = new ObjectInputStream(gis);
 			}
 			else
 			{
-				decoder = new XMLDecoder(bis);
+				ois = new ObjectInputStream(bis);
 			}
-
-			Object result = decoder.readObject();
+			Object result = ois.readObject();
 			//noinspection unchecked
 			return (E) result;
 		}
@@ -80,12 +75,14 @@ public class XmlDeserializer<E>
 		}
 		finally
 		{
+			IOUtils.closeQuietly(ois);
 			IOUtils.closeQuietly(bis);
 		}
 	}
 
 	public String toString()
 	{
-		return "XmlDeserializer[compressing=" + compressing + "]";
+		return "SerializableDeserializer[compressing=" + compressing + "]";
 	}
+
 }

@@ -24,6 +24,11 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.zip.GZIPInputStream;
 
+/**
+ *
+ * @param <E>
+ * @deprecated Use sulky-codec instead.
+ */
 public class SerializableDeserializer<E extends Serializable>
 	implements Deserializer<E>
 {

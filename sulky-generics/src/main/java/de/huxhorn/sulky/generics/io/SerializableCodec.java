@@ -19,6 +19,11 @@ package de.huxhorn.sulky.generics.io;
 
 import java.io.Serializable;
 
+/**
+ *
+ * @param <E>
+ * @deprecated Use sulky-codec instead.
+ */
 public class SerializableCodec<E extends Serializable>
 	extends DelegatingCodecBase<E>
 {

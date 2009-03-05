@@ -15,14 +15,40 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.generics.io;
+package de.huxhorn.sulky.codec;
 
-/**
- *
- * @param <E>
- * @deprecated Use sulky-codec instead.
- */
-public interface Deserializer<E>
+import java.io.Serializable;
+
+public class SerializableCodec<E extends Serializable>
+	extends DelegatingCodecBase<E>
 {
-	E deserialize(byte[] bytes);
+	public SerializableCodec()
+	{
+		this(false);
+	}
+
+	public SerializableCodec(boolean compressing)
+	{
+		super(new SerializableEncoder<E>(compressing), new SerializableDecoder<E>(compressing));
+	}
+
+	public void setCompressing(boolean compressing)
+	{
+		{
+			Encoder<E> s = getEncoder();
+			if(s instanceof SerializableEncoder)
+			{
+				SerializableEncoder ss= (SerializableEncoder) s;
+				ss.setCompressing(compressing);
+			}
+		}
+		{
+			Decoder<E> d = getDecoder();
+			if(d instanceof SerializableDecoder)
+			{
+				SerializableDecoder sd= (SerializableDecoder) d;
+				sd.setCompressing(compressing);
+			}
+		}
+	}
 }

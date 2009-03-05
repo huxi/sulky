@@ -17,6 +17,11 @@
  */
 package de.huxhorn.sulky.generics.io;
 
+/**
+ *
+ * @param <E>
+ * @deprecated Use sulky-codec instead.
+ */
 public interface Serializer<E>
 {
 	byte[] serialize(E object);

@@ -40,7 +40,6 @@
 			<scope>compile</scope>
 		</dependency>
 
-
 		<!-- main test only! -->
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
