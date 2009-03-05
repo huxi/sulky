@@ -21,6 +21,8 @@ import de.huxhorn.sulky.generics.io.Deserializer;
 import de.huxhorn.sulky.generics.io.SerializableDeserializer;
 import de.huxhorn.sulky.generics.io.SerializableSerializer;
 import de.huxhorn.sulky.generics.io.Serializer;
+import de.huxhorn.sulky.generics.io.Codec;
+import de.huxhorn.sulky.generics.io.SerializableCodec;
 
 import org.junit.After;
 import static org.junit.Assert.*;
@@ -46,8 +48,7 @@ public class ExtendedSerializingFileBufferTest
 	private String[] values;
 	private Integer magicValue;
 	private Map<String, String> metaData;
-	private Serializer<String> serializer;
-	private Deserializer<String> deserializer;
+	private Codec<String> codec;
 
 	@Before
 	public void setUp()
@@ -59,8 +60,7 @@ public class ExtendedSerializingFileBufferTest
 		dataFile = new File(tempOutputPath, "dump");
 		indexFile = new File(tempOutputPath, "dump.index");
 
-		serializer = new SerializableSerializer<String>();
-		deserializer = new SerializableDeserializer<String>();
+		codec = new SerializableCodec<String>();
 
 		values = new String[]
 			{
@@ -95,13 +95,13 @@ public class ExtendedSerializingFileBufferTest
 	@Test(expected = NullPointerException.class)
 	public void readWriteNoMagic()
 	{
-		new ExtendedSerializingFileBuffer<String>(null, null, serializer, deserializer, dataFile, indexFile);
+		new ExtendedSerializingFileBuffer<String>(null, null, codec, dataFile, indexFile);
 	}
 
 	@Test
 	public void readWriteNoMetaAdd()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 		for(String current : values)
 		{
 			instance.add(current);
@@ -126,7 +126,7 @@ public class ExtendedSerializingFileBufferTest
 
 		assertNull(instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		assertEquals(values.length, (int) otherInstance.getSize());
 
@@ -138,7 +138,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void readWriteMetaAdd()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		for(String current : values)
 		{
 			instance.add(current);
@@ -162,7 +162,7 @@ public class ExtendedSerializingFileBufferTest
 
 		assertEquals(metaData, instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(values.length, (int) otherInstance.getSize());
 
@@ -174,7 +174,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void readWriteNoMetaAddAll()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
 
@@ -195,7 +195,7 @@ public class ExtendedSerializingFileBufferTest
 
 		assertNull(instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		assertEquals(values.length, (int) otherInstance.getSize());
 
@@ -207,7 +207,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void readWriteMetaAddAll()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
 
@@ -228,7 +228,7 @@ public class ExtendedSerializingFileBufferTest
 
 		assertEquals(metaData, instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(values.length, (int) otherInstance.getSize());
 
@@ -240,7 +240,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void readWriteMetaMixed()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		instance.addAll(values);
 		for(String current : values)
 		{
@@ -271,7 +271,7 @@ public class ExtendedSerializingFileBufferTest
 
 		assertEquals(metaData, instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(4 * values.length, (int) otherInstance.getSize());
 
@@ -283,7 +283,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void readInvalid()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertNull(instance.get(0));
 
@@ -296,7 +296,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void readWriteNoMetaMixed()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 		instance.addAll(values);
 		for(String current : values)
 		{
@@ -327,7 +327,7 @@ public class ExtendedSerializingFileBufferTest
 
 		assertNull(instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		assertEquals(4 * values.length, (int) otherInstance.getSize());
 
@@ -339,13 +339,13 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void meta()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(0, (int) instance.getSize());
 
 		assertEquals(metaData, instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(0, (int) instance.getSize());
 
@@ -357,13 +357,13 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void noMeta()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		assertEquals(0, (int) instance.getSize());
 
 		assertNull(instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		assertEquals(0, (int) instance.getSize());
 
@@ -375,7 +375,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void resetMeta()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
@@ -386,7 +386,7 @@ public class ExtendedSerializingFileBufferTest
 
 		assertEquals(metaData, instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(0, otherInstance.getSize());
 
@@ -416,7 +416,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void resetNoMeta()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
@@ -426,7 +426,7 @@ public class ExtendedSerializingFileBufferTest
 
 		assertNull(instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		assertEquals(0, otherInstance.getSize());
 
@@ -456,7 +456,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void elementProcessorsAdd()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		List<ElementProcessor<String>> elementProcessors = new ArrayList<ElementProcessor<String>>();
 		CapturingElementProcessor capture = new CapturingElementProcessor();
 		elementProcessors.add(capture);
@@ -469,7 +469,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void elementProcessorsAddAll()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		List<ElementProcessor<String>> elementProcessors = new ArrayList<ElementProcessor<String>>();
 		CapturingElementProcessor capture = new CapturingElementProcessor();
 		elementProcessors.add(capture);
@@ -488,7 +488,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void deleteDataFileAdd()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		for(String current : values)
 		{
 			instance.add(current);
@@ -519,14 +519,14 @@ public class ExtendedSerializingFileBufferTest
 
 		assertEquals(metaData, instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		assertEquals(metaData, otherInstance.getMetaData());
 	}
 
 	@Test
 	public void deleteDataFileAddAll()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
 		dataFile.delete();
@@ -551,14 +551,14 @@ public class ExtendedSerializingFileBufferTest
 
 		assertEquals(metaData, instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		assertEquals(metaData, otherInstance.getMetaData());
 	}
 
 	@Test
 	public void deleteDataFileGet()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		for(String current : values)
 		{
 			instance.add(current);
@@ -575,7 +575,7 @@ public class ExtendedSerializingFileBufferTest
 	@Test
 	public void deleteIndexFileAdd()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		for(String current : values)
 		{
 			instance.add(current);
@@ -606,14 +606,14 @@ public class ExtendedSerializingFileBufferTest
 
 		assertEquals(metaData, instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		assertEquals(metaData, otherInstance.getMetaData());
 	}
 
 	@Test
 	public void deleteIndexFileAddAll()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
 		indexFile.delete();
@@ -638,7 +638,7 @@ public class ExtendedSerializingFileBufferTest
 
 		assertEquals(metaData, instance.getMetaData());
 
-		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> otherInstance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		assertEquals(metaData, otherInstance.getMetaData());
 	}
 
@@ -650,11 +650,11 @@ public class ExtendedSerializingFileBufferTest
 	 */
 	public void deleteIndexFileReopen()
 	{
-		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		ExtendedSerializingFileBuffer<String> instance = new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
 		indexFile.delete();
-		new ExtendedSerializingFileBuffer<String>(magicValue, metaData, serializer, deserializer, dataFile, indexFile);
+		new ExtendedSerializingFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 	}
 
 	private static class CapturingElementProcessor

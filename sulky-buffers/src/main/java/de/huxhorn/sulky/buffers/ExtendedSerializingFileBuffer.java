@@ -21,6 +21,7 @@ import de.huxhorn.sulky.generics.io.Deserializer;
 import de.huxhorn.sulky.generics.io.Serializer;
 import de.huxhorn.sulky.generics.io.XmlDeserializer;
 import de.huxhorn.sulky.generics.io.XmlSerializer;
+import de.huxhorn.sulky.generics.io.Codec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,8 +89,12 @@ public class ExtendedSerializingFileBuffer<E>
 	private Map<String, String> metaData;
 	private long initialDataOffset;
 
+	/*
 	private Serializer<E> serializer;
 	private Deserializer<E> deserializer;
+    */
+
+	private Codec<E> codec;
 
 	private Serializer<Map<String, String>> metaSerializer;
 	private Deserializer<Map<String, String>> metaDeserializer;
@@ -101,11 +106,11 @@ public class ExtendedSerializingFileBuffer<E>
 	 * @param magicValue        the magic value of the buffer.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
+	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Codec, java.io.File, java.io.File) for description.
 	 */
 	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, File dataFile)
 	{
-		this(magicValue, preferredMetaData, null, null, dataFile, null);
+		this(magicValue, preferredMetaData, null, dataFile, null);
 	}
 
 	/**
@@ -113,14 +118,13 @@ public class ExtendedSerializingFileBuffer<E>
 	 *
 	 * @param magicValue        the magic value of the buffer.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
-	 * @param serializer        the serializer used by this buffer. Might be null.
-	 * @param deserializer      the serializer used by this buffer.  Might be null.
+	 * @param codec             the codec used by this buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
+	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Codec, java.io.File, java.io.File) for description.
 	 */
-	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Serializer<E> serializer, Deserializer<E> deserializer, File dataFile)
+	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
 	{
-		this(magicValue, preferredMetaData, serializer, deserializer, dataFile, null);
+		this(magicValue, preferredMetaData, codec, dataFile, null);
 	}
 
 	/**
@@ -128,14 +132,12 @@ public class ExtendedSerializingFileBuffer<E>
 	 *
 	 * @param magicValue        the magic value of the buffer.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
-	 * @param serializer        the serializer used by this buffer. Might be null.
-	 * @param deserializer      the serializer used by this buffer.  Might be null.
+	 * @param codec             the codec used by this buffer. Might be null.
 	 * @param dataFile          the data file.
 	 * @param indexFile         the index file of the buffer.
 	 * @throws NullPointerException if magicValue is null.
-	 * @see ExtendedSerializingFileBuffer#ExtendedSerializingFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.generics.io.Serializer, de.huxhorn.sulky.generics.io.Deserializer, java.io.File, java.io.File) for description.
 	 */
-	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Serializer<E> serializer, Deserializer<E> deserializer, File dataFile, File indexFile)
+	public ExtendedSerializingFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
 	{
 		this.readWriteLock = new ReentrantReadWriteLock(true);
 		if(magicValue == null)
@@ -149,8 +151,7 @@ public class ExtendedSerializingFileBuffer<E>
 		{
 			this.preferredMetaData = new HashMap<String, String>(preferredMetaData);
 		}
-		this.serializer = serializer;
-		this.deserializer = deserializer;
+		this.codec=codec;
 
 		setDataFile(dataFile);
 
@@ -413,24 +414,14 @@ public class ExtendedSerializingFileBuffer<E>
 		return initialDataOffset;
 	}
 
-	public Serializer<E> getSerializer()
+	public Codec<E> getCodec()
 	{
-		return serializer;
+		return codec;
 	}
 
-	public void setSerializer(Serializer<E> serializer)
+	public void setCodec(Codec<E> codec)
 	{
-		this.serializer = serializer;
-	}
-
-	public Deserializer<E> getDeserializer()
-	{
-		return deserializer;
-	}
-
-	public void setDeserializer(Deserializer<E> deserializer)
-	{
-		this.deserializer = deserializer;
+		this.codec = codec;
 	}
 
 	public List<ElementProcessor<E>> getElementProcessors()
@@ -825,9 +816,9 @@ public class ExtendedSerializingFileBuffer<E>
 	private E internalReadElement(RandomAccessFile randomSerializeFile, long offset)
 		throws IOException, ClassNotFoundException, ClassCastException
 	{
-		if(deserializer == null)
+		if(codec == null)
 		{
-			throw new IllegalStateException("Deserializer has not been initialized!");
+			throw new IllegalStateException("Codec has not been initialized!");
 		}
 
 		if(randomSerializeFile.length() < offset + DATA_LENGTH_SIZE)
@@ -842,7 +833,7 @@ public class ExtendedSerializingFileBuffer<E>
 		}
 		byte[] buffer = new byte[bufferSize];
 		randomSerializeFile.readFully(buffer);
-		return deserializer.deserialize(buffer);
+		return codec.deserialize(buffer);
 	}
 
 	private void internalWriteOffset(RandomAccessFile randomIndexFile, long index, long offset)
@@ -860,11 +851,11 @@ public class ExtendedSerializingFileBuffer<E>
 	private int internalWriteElement(RandomAccessFile randomSerializeFile, long offset, E element)
 		throws IOException
 	{
-		if(serializer == null)
+		if(codec == null)
 		{
-			throw new IllegalStateException("Serializer has not been initialized!");
+			throw new IllegalStateException("Codec has not been initialized!");
 		}
-		byte[] buffer = serializer.serialize(element);
+		byte[] buffer = codec.serialize(element);
 
 		int bufferSize = buffer.length;
 
@@ -966,10 +957,7 @@ public class ExtendedSerializingFileBuffer<E>
 		}
 		result.append(", ");
 
-		result.append("serializer=").append(serializer);
-		result.append(", ");
-
-		result.append("deserializer=").append(deserializer);
+		result.append("codec=").append(codec);
 
 		result.append("]");
 		return result.toString();

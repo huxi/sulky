@@ -25,6 +25,14 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * This class does only support XML serialization for the simple case where the class to serialize
+ * adheres to the Java Beans guidelines.
+ *
+ * It must be reimplemented if PersistenceDelegates are required.
+ *
+ * @param <E>
+ */
 public class XmlSerializer<E>
 	implements Serializer<E>
 {
@@ -43,6 +51,12 @@ public class XmlSerializer<E>
 		this(compressing, NO_ENUMS);
 	}
 
+	/**
+	 * Special c'tor to support enums in JDK < 1.6.
+	 * You have to list all enum types.
+	 * @param compressing if the data is supposed to be gzipped.
+	 * @param enums a list of all enum classes that need to be handles.
+	 */
 	public XmlSerializer(boolean compressing, Class... enums)
 	{
 		setCompressing(compressing);
