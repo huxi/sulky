@@ -15,35 +15,57 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.generics.io;
+package de.huxhorn.sulky.codec;
 
 import org.apache.commons.io.IOUtils;
 
+import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.util.Arrays;
 import java.util.zip.GZIPOutputStream;
 
-
 /**
+ * This class does only support XML serialization for the simple case where the class to serialize
+ * adheres to the Java Beans guidelines.
+ * <p/>
+ * It must be reimplemented if PersistenceDelegates are required.
  *
  * @param <E>
- * @deprecated Use sulky-codec instead.
  */
-public class SerializableSerializer<E extends Serializable>
-	implements Serializer<E>
+public class XmlEncoder<E>
+	implements Encoder<E>
 {
+	private static final Class[] NO_ENUMS = {};
 	private boolean compressing;
+	private final Class[] enums;
+	private EnumPersistenceDelegate enumDelegate;
 
-	public SerializableSerializer()
+	public XmlEncoder()
 	{
 		this(false);
 	}
 
-	public SerializableSerializer(boolean compressing)
+	public XmlEncoder(boolean compressing)
 	{
-		this.compressing = compressing;
+		this(compressing, NO_ENUMS);
+	}
+
+	/**
+	 * Special c'tor to support enums in JDK < 1.6.
+	 * You have to list all enum types.
+	 *
+	 * @param compressing if the data is supposed to be gzipped.
+	 * @param enums       a list of all enum classes that need to be handles.
+	 */
+	public XmlEncoder(boolean compressing, Class... enums)
+	{
+		setCompressing(compressing);
+		this.enums = enums;
+		if(this.enums != null && this.enums.length > 0)
+		{
+			enumDelegate = new EnumPersistenceDelegate();
+		}
 	}
 
 	public boolean isCompressing()
@@ -56,24 +78,31 @@ public class SerializableSerializer<E extends Serializable>
 		this.compressing = compressing;
 	}
 
-	public byte[] serialize(E object)
+	public byte[] encode(E object)
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = null;
+		XMLEncoder encoder;
 		try
 		{
 			if(compressing)
 			{
 				GZIPOutputStream gos = new GZIPOutputStream(bos);
-				oos = new ObjectOutputStream(gos);
+				encoder = new XMLEncoder(gos);
 			}
 			else
 			{
-				oos = new ObjectOutputStream(bos);
+				encoder = new XMLEncoder(bos);
 			}
-			oos.writeObject(object);
-			oos.flush();
-			oos.close();
+			if(enums != null)
+			{
+				for(Class c : enums)
+				{
+					encoder.setPersistenceDelegate(c, enumDelegate);
+				}
+			}
+
+			encoder.writeObject(object);
+			encoder.close();
 			return bos.toByteArray();
 		}
 		catch(IOException e)
@@ -83,13 +112,13 @@ public class SerializableSerializer<E extends Serializable>
 		}
 		finally
 		{
-			IOUtils.closeQuietly(oos);
 			IOUtils.closeQuietly(bos);
 		}
 	}
 
+
 	public String toString()
 	{
-		return "SerializableSerializer[compressing=" + compressing + "]";
+		return "XmlSerializer[compressing=" + compressing + ", enums=" + Arrays.toString(enums) + "]";
 	}
 }

@@ -15,14 +15,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.generics.io;
+package de.huxhorn.sulky.codec;
 
-/**
- *
- * @param <E>
- * @deprecated Use sulky-codec instead.
- */
-public interface Deserializer<E>
+public interface Encoder<E>
 {
-	E deserialize(byte[] bytes);
+	byte[] encode(E object);
 }

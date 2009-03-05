@@ -32,6 +32,7 @@ import java.util.zip.GZIPOutputStream;
  * It must be reimplemented if PersistenceDelegates are required.
  *
  * @param <E>
+ * @deprecated Use sulky-codec instead.
  */
 public class XmlSerializer<E>
 	implements Serializer<E>

@@ -17,6 +17,12 @@
  */
 package de.huxhorn.sulky.generics.io;
 
+
+/**
+ *
+ * @param <E>
+ * @deprecated Use sulky-codec instead.
+ */
 public interface Codec<E>
 	extends Serializer<E>, Deserializer<E>
 {

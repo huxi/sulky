@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.generics.io;
+package de.huxhorn.sulky.codec;
 
 import org.apache.commons.io.IOUtils;
 
@@ -23,22 +23,17 @@ import java.beans.XMLDecoder;
 import java.io.ByteArrayInputStream;
 import java.util.zip.GZIPInputStream;
 
-/**
- *
- * @param <E>
- * @deprecated Use sulky-codec instead.
- */
-public class XmlDeserializer<E>
-	implements Deserializer<E>
+public class XmlDecoder<E>
+	implements Decoder<E>
 {
 	private boolean compressing;
 
-	public XmlDeserializer()
+	public XmlDecoder()
 	{
 		this(false);
 	}
 
-	public XmlDeserializer(boolean compressing)
+	public XmlDecoder(boolean compressing)
 	{
 		setCompressing(compressing);
 	}
@@ -53,7 +48,7 @@ public class XmlDeserializer<E>
 		this.compressing = compressing;
 	}
 
-	public E deserialize(byte[] bytes)
+	public E decode(byte[] bytes)
 	{
 		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
 		XMLDecoder decoder;

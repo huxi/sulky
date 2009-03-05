@@ -15,27 +15,52 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.generics.io;
+package de.huxhorn.sulky.codec;
 
-import java.beans.Encoder;
-import java.beans.Expression;
-import java.beans.PersistenceDelegate;
-
-/**
- * As described in http://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html
- * @deprecated Use sulky-codec instead.
- */
-public class EnumPersistenceDelegate
-	extends PersistenceDelegate
+public class DelegatingCodecBase<E>
+	implements Codec<E>
 {
-	protected boolean mutatesTo(Object oldInstance, Object newInstance)
+	private Encoder<E> encoder;
+	private Decoder<E> decoder;
+
+	protected DelegatingCodecBase()
 	{
-		return oldInstance == newInstance;
+	    this(null, null);
 	}
 
-	protected Expression instantiate(Object oldInstance, Encoder out)
+	protected DelegatingCodecBase(Encoder<E> encoder, Decoder<E> decoder)
 	{
-		Enum e = (Enum) oldInstance;
-		return new Expression(e, e.getClass(), "valueOf", new Object[]{e.name()});
+		this.encoder = encoder;
+		this.decoder = decoder;
+	}
+
+	protected Encoder<E> getEncoder()
+	{
+		return encoder;
+	}
+
+	protected void setEncoder(Encoder<E> encoder)
+	{
+		this.encoder = encoder;
+	}
+
+	protected Decoder<E> getDecoder()
+	{
+		return decoder;
+	}
+
+	protected void setDecoder(Decoder<E> decoder)
+	{
+		this.decoder = decoder;
+	}
+
+	public byte[] encode(E object)
+	{
+		return encoder.encode(object);
+	}
+
+	public E decode(byte[] bytes)
+	{
+		return decoder.decode(bytes);
 	}
 }

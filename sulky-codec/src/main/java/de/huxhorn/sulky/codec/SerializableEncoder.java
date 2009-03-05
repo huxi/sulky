@@ -15,32 +15,29 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.generics.io;
+package de.huxhorn.sulky.codec;
 
 import org.apache.commons.io.IOUtils;
 
-import java.beans.XMLDecoder;
-import java.io.ByteArrayInputStream;
-import java.util.zip.GZIPInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.zip.GZIPOutputStream;
 
-/**
- *
- * @param <E>
- * @deprecated Use sulky-codec instead.
- */
-public class XmlDeserializer<E>
-	implements Deserializer<E>
+public class SerializableEncoder<E extends Serializable>
+	implements Encoder<E>
 {
 	private boolean compressing;
 
-	public XmlDeserializer()
+	public SerializableEncoder()
 	{
 		this(false);
 	}
 
-	public XmlDeserializer(boolean compressing)
+	public SerializableEncoder(boolean compressing)
 	{
-		setCompressing(compressing);
+		this.compressing = compressing;
 	}
 
 	public boolean isCompressing()
@@ -53,39 +50,40 @@ public class XmlDeserializer<E>
 		this.compressing = compressing;
 	}
 
-	public E deserialize(byte[] bytes)
+	public byte[] encode(E object)
 	{
-		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		XMLDecoder decoder;
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		ObjectOutputStream oos = null;
 		try
 		{
 			if(compressing)
 			{
-				GZIPInputStream gis = new GZIPInputStream(bis);
-				decoder = new XMLDecoder(gis);
+				GZIPOutputStream gos = new GZIPOutputStream(bos);
+				oos = new ObjectOutputStream(gos);
 			}
 			else
 			{
-				decoder = new XMLDecoder(bis);
+				oos = new ObjectOutputStream(bos);
 			}
-
-			Object result = decoder.readObject();
-			//noinspection unchecked
-			return (E) result;
+			oos.writeObject(object);
+			oos.flush();
+			oos.close();
+			return bos.toByteArray();
 		}
-		catch(Throwable e)
+		catch(IOException e)
 		{
-			// silently ignore any problems 
+			e.printStackTrace();
 			return null;
 		}
 		finally
 		{
-			IOUtils.closeQuietly(bis);
+			IOUtils.closeQuietly(oos);
+			IOUtils.closeQuietly(bos);
 		}
 	}
 
 	public String toString()
 	{
-		return "XmlDeserializer[compressing=" + compressing + "]";
+		return "SerializableEncoder[compressing=" + compressing + "]";
 	}
 }

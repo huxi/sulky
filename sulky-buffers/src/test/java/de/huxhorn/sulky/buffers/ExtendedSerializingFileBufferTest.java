@@ -17,12 +17,8 @@
  */
 package de.huxhorn.sulky.buffers;
 
-import de.huxhorn.sulky.generics.io.Deserializer;
-import de.huxhorn.sulky.generics.io.SerializableDeserializer;
-import de.huxhorn.sulky.generics.io.SerializableSerializer;
-import de.huxhorn.sulky.generics.io.Serializer;
-import de.huxhorn.sulky.generics.io.Codec;
-import de.huxhorn.sulky.generics.io.SerializableCodec;
+import de.huxhorn.sulky.codec.Codec;
+import de.huxhorn.sulky.codec.SerializableCodec;
 
 import org.junit.After;
 import static org.junit.Assert.*;
