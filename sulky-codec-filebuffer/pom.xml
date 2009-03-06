@@ -3,17 +3,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
-	<artifactId>de.huxhorn.sulky.buffers</artifactId>
+	<artifactId>de.huxhorn.sulky.codec.filebuffer</artifactId>
 	<version>${parent.version}</version>
 	<packaging>jar</packaging>
-	<name>Sulky Buffers</name>
-	<description>This file is part of the sulky modules. It contains the definition of buffers, operations on buffers and certain buffer implementations.</description>
+	<name>Sulky Codec Filebuffer</name>
+	<description>This file is part of the sulky modules. It contains a Codec-aware filebuffer..</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 
 	<scm>
-		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-buffers</connection>
-		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-buffers</developerConnection>
-		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-buffers/</url>
+		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-codec-filebuffer</connection>
+		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-codec-filebuffer</developerConnection>
+		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-codec-filebuffer/</url>
 	</scm>
 
 	<parent>
@@ -24,6 +24,17 @@
 	</parent>
 
 	<dependencies>
+		<dependency>
+			<groupId>de.huxhorn.sulky</groupId>
+			<artifactId>de.huxhorn.sulky.codec</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>de.huxhorn.sulky</groupId>
+			<artifactId>de.huxhorn.sulky.buffers</artifactId>
+			<scope>compile</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
