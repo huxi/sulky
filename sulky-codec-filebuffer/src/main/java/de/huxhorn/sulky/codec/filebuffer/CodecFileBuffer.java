@@ -15,12 +15,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.huxhorn.sulky.buffers;
+package de.huxhorn.sulky.codec.filebuffer;
 
 import de.huxhorn.sulky.codec.Codec;
 import de.huxhorn.sulky.codec.DelegatingCodecBase;
 import de.huxhorn.sulky.codec.XmlDecoder;
 import de.huxhorn.sulky.codec.XmlEncoder;
+import de.huxhorn.sulky.buffers.FileBuffer;
+import de.huxhorn.sulky.buffers.ElementProcessor;
+import de.huxhorn.sulky.buffers.BasicBufferIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
