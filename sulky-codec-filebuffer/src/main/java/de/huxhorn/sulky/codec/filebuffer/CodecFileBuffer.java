@@ -18,9 +18,6 @@
 package de.huxhorn.sulky.codec.filebuffer;
 
 import de.huxhorn.sulky.codec.Codec;
-import de.huxhorn.sulky.codec.DelegatingCodecBase;
-import de.huxhorn.sulky.codec.XmlDecoder;
-import de.huxhorn.sulky.codec.XmlEncoder;
 import de.huxhorn.sulky.buffers.FileBuffer;
 import de.huxhorn.sulky.buffers.ElementProcessor;
 import de.huxhorn.sulky.buffers.BasicBufferIterator;
@@ -88,11 +85,11 @@ public class CodecFileBuffer<E>
 	private static final String INDEX_EXTENSION = ".index";
 	private Integer magicValue;
 	private Map<String, String> preferredMetaData;
-	private Map<String, String> metaData;
+	private MetaData metaData;
 	private long initialDataOffset;
 
 	private Codec<E> codec;
-	private Codec<Map<String, String>> metaCodec;
+	private Codec<MetaData> metaCodec;
 	private List<ElementProcessor<E>> elementProcessors;
 
 	/**
@@ -140,7 +137,7 @@ public class CodecFileBuffer<E>
 			throw new NullPointerException("magicValue must not be null!");
 		}
 		this.magicValue = magicValue;
-		this.metaCodec = new MetaCodec();
+		this.metaCodec = new MetaDataCodec();
 		if(preferredMetaData != null)
 		{
 			this.preferredMetaData = new HashMap<String, String>(preferredMetaData);
@@ -303,9 +300,11 @@ public class CodecFileBuffer<E>
 		{
 			byte[] buffer = null;
 			int length = 0;
-			if(preferredMetaData != null)
+			MetaData actualMetaData = null;
+			if(preferredMetaData != null && preferredMetaData.size()>0)
 			{
-				buffer = metaCodec.encode(preferredMetaData);
+				actualMetaData=new MetaData(preferredMetaData);
+				buffer = metaCodec.encode(actualMetaData);
 				if(buffer != null)
 				{
 					length = buffer.length;
@@ -321,7 +320,7 @@ public class CodecFileBuffer<E>
 				raf.write(buffer);
 			}
 			setInitialDataOffset(offset + META_LENGTH_SIZE + length);
-			metaData = preferredMetaData;
+			metaData = actualMetaData;
 		}
 		catch(Throwable e)
 		{
@@ -431,13 +430,9 @@ public class CodecFileBuffer<E>
 	/**
 	 * @return the actual meta data of the buffer.
 	 */
-	public Map<String, String> getMetaData()
+	public MetaData getMetaData()
 	{
-		if(metaData == null)
-		{
-			return null;
-		}
-		return Collections.unmodifiableMap(metaData);
+		return metaData;
 	}
 
 	/**
@@ -955,14 +950,5 @@ public class CodecFileBuffer<E>
 
 		result.append("]");
 		return result.toString();
-	}
-
-	private static class MetaCodec
-		extends DelegatingCodecBase<Map<String, String>>
-	{
-		public MetaCodec()
-		{
-			super(new XmlEncoder<Map<String, String>>(true), new XmlDecoder<Map<String, String>>(true));
-		}
 	}
 }

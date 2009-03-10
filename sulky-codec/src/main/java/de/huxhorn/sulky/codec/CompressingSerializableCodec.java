@@ -19,12 +19,12 @@ package de.huxhorn.sulky.codec;
 
 import java.io.Serializable;
 
-public class SerializableCodec<E extends Serializable>
+public class CompressingSerializableCodec<E extends Serializable>
 	extends DelegatingCodecBase<E>
 {
-	public SerializableCodec()
+	public CompressingSerializableCodec()
 	{
-		super(new SerializableEncoder<E>(false),
-			new SerializableDecoder<E>(false));
+		super(new SerializableEncoder<E>(true),
+			new SerializableDecoder<E>(true));
 	}
 }
