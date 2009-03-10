@@ -157,7 +157,7 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
@@ -165,7 +165,7 @@ public class CodecFileBufferTest
 
 		assertEquals(magicValue, otherInstance.getMagicValue());
 
-		assertEquals(metaData, otherInstance.getMetaData());
+		assertEquals(new MetaData(metaData), otherInstance.getMetaData());
 	}
 
 	@Test
@@ -223,7 +223,7 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
@@ -231,7 +231,7 @@ public class CodecFileBufferTest
 
 		assertEquals(magicValue, otherInstance.getMagicValue());
 
-		assertEquals(metaData, otherInstance.getMetaData());
+		assertEquals(new MetaData(metaData), otherInstance.getMetaData());
 	}
 
 	@Test
@@ -266,7 +266,7 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
@@ -274,7 +274,7 @@ public class CodecFileBufferTest
 
 		assertEquals(magicValue, otherInstance.getMagicValue());
 
-		assertEquals(metaData, otherInstance.getMetaData());
+		assertEquals(new MetaData(metaData), otherInstance.getMetaData());
 	}
 
 	@Test
@@ -340,7 +340,7 @@ public class CodecFileBufferTest
 
 		assertEquals(0, (int) instance.getSize());
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
@@ -348,7 +348,7 @@ public class CodecFileBufferTest
 
 		assertEquals(magicValue, otherInstance.getMagicValue());
 
-		assertEquals(metaData, otherInstance.getMetaData());
+		assertEquals(new MetaData(metaData), otherInstance.getMetaData());
 	}
 
 	@Test
@@ -381,7 +381,7 @@ public class CodecFileBufferTest
 
 		assertEquals(0, instance.getSize());
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
@@ -389,7 +389,7 @@ public class CodecFileBufferTest
 
 		assertEquals(magicValue, otherInstance.getMagicValue());
 
-		assertEquals(metaData, otherInstance.getMetaData());
+		assertEquals(new MetaData(metaData), otherInstance.getMetaData());
 
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
@@ -514,10 +514,10 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
-		assertEquals(metaData, otherInstance.getMetaData());
+		assertEquals(new MetaData(metaData), otherInstance.getMetaData());
 	}
 
 	@Test
@@ -546,10 +546,10 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
-		assertEquals(metaData, otherInstance.getMetaData());
+		assertEquals(new MetaData(metaData), otherInstance.getMetaData());
 	}
 
 	@Test
@@ -562,7 +562,7 @@ public class CodecFileBufferTest
 		}
 		assertEquals(values.length, (int) instance.getSize());
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		assertNotNull(instance.get(values.length - 1));
 		dataFile.delete();
@@ -601,10 +601,10 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
-		assertEquals(metaData, otherInstance.getMetaData());
+		assertEquals(new MetaData(metaData), otherInstance.getMetaData());
 	}
 
 	@Test
@@ -633,10 +633,10 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		assertEquals(metaData, instance.getMetaData());
+		assertEquals(new MetaData(metaData), instance.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
-		assertEquals(metaData, otherInstance.getMetaData());
+		assertEquals(new MetaData(metaData), otherInstance.getMetaData());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
