@@ -17,10 +17,10 @@
  */
 package de.huxhorn.sulky.codec.filebuffer;
 
-import de.huxhorn.sulky.codec.Codec;
-import de.huxhorn.sulky.buffers.FileBuffer;
-import de.huxhorn.sulky.buffers.ElementProcessor;
 import de.huxhorn.sulky.buffers.BasicBufferIterator;
+import de.huxhorn.sulky.buffers.ElementProcessor;
+import de.huxhorn.sulky.buffers.FileBuffer;
+import de.huxhorn.sulky.codec.Codec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +63,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class CodecFileBuffer<E>
 	implements FileBuffer<E>
 {
-	private static final int MAGIC_VALUE_SIZE = 4;
-	private static final int META_LENGTH_SIZE = 4;
 	private static final long DATA_OFFSET_SIZE = 8;
 	private static final long DATA_LENGTH_SIZE = 4;
 
@@ -83,14 +81,11 @@ public class CodecFileBuffer<E>
 	 */
 	private File indexFile;
 	private static final String INDEX_EXTENSION = ".index";
-	private Integer magicValue;
 	private Map<String, String> preferredMetaData;
-	private MetaData metaData;
-	private long initialDataOffset;
 
 	private Codec<E> codec;
-	private Codec<MetaData> metaCodec;
 	private List<ElementProcessor<E>> elementProcessors;
+	private CodecFileHeader codecFileHeader;
 
 	/**
 	 * Shortcut for CodecFileBuffer(magicValue, metaData, null, null, serializeFile, null).
@@ -136,8 +131,12 @@ public class CodecFileBuffer<E>
 		{
 			throw new NullPointerException("magicValue must not be null!");
 		}
-		this.magicValue = magicValue;
-		this.metaCodec = new MetaDataCodec();
+
+		if(preferredMetaData != null)
+		{
+			preferredMetaData = new HashMap<String, String>(preferredMetaData);
+		}
+		this.codecFileHeader=new CodecFileHeader(dataFile, magicValue, preferredMetaData);
 		if(preferredMetaData != null)
 		{
 			this.preferredMetaData = new HashMap<String, String>(preferredMetaData);
@@ -174,9 +173,9 @@ public class CodecFileBuffer<E>
 		lock.lock();
 		try
 		{
-			validateMagicValue();
-			initializeMetaData();
-			if(dataFile.length() > initialDataOffset)
+			codecFileHeader.validateMagicValue();
+			codecFileHeader.initializeMetaData();
+			if(dataFile.length() > codecFileHeader.getInitialDataOffset())
 			{
 				if(!indexFile.exists() || indexFile.length() < DATA_OFFSET_SIZE)
 				{
@@ -191,221 +190,9 @@ public class CodecFileBuffer<E>
 		}
 	}
 
-	private boolean initFilesIfNecessary()
-	{
-		if(!dataFile.exists() || dataFile.length() < MAGIC_VALUE_SIZE + META_LENGTH_SIZE)
-		{
-			Lock lock = readWriteLock.writeLock();
-			lock.lock();
-			try
-			{
-				writeMagicValue();
-				writeMetaData();
-				indexFile.delete();
-				return true;
-			}
-			finally
-			{
-				lock.unlock();
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Locking is already performed for this method.
-	 *
-	 * @throws IllegalArgumentException if magicValue could not be read or differs from the specified value of this buffer.
-	 */
-	protected void validateMagicValue()
-	{
-		RandomAccessFile raf = null;
-		Throwable throwable = null;
-		try
-		{
-			raf = new RandomAccessFile(dataFile, "r");
-			if(raf.length() >= MAGIC_VALUE_SIZE)
-			{
-				raf.seek(0);
-				int readMagicValue = raf.readInt();
-				if(magicValue != readMagicValue)
-				{
-					throw new IllegalArgumentException("Read magic value 0x" + Integer
-						.toHexString(readMagicValue) + " differs from expected magic value 0x" + Integer
-						.toHexString(magicValue) + "!");
-				}
-			}
-			else
-			{
-				throw new IllegalArgumentException("Could not read magic value from " + dataFile
-					.getAbsolutePath() + "!");
-			}
-		}
-		catch(IllegalArgumentException ex)
-		{
-			// rethrow
-			throw ex;
-		}
-		catch(Throwable e)
-		{
-			throwable = e;
-		}
-		finally
-		{
-			closeQuietly(raf);
-		}
-		if(throwable != null)
-		{
-			throw new IllegalArgumentException("Could not read magic value from " + dataFile
-				.getAbsolutePath() + "!", throwable);
-		}
-	}
-
-	/**
-	 * Locking is already performed for this method.
-	 *
-	 * @throws IllegalArgumentException if magicValue could not be written.
-	 */
-	protected void writeMagicValue()
-	{
-		RandomAccessFile raf = null;
-		try
-		{
-			raf = new RandomAccessFile(dataFile, "rw");
-			raf.seek(0);
-			raf.writeInt(magicValue);
-		}
-		catch(Throwable e)
-		{
-			throw new IllegalArgumentException("Could not write magic value to " + dataFile
-				.getAbsolutePath() + "!", e);
-		}
-		finally
-		{
-			closeQuietly(raf);
-		}
-	}
-
-	/**
-	 * Locking is already performed for this method.
-	 *
-	 * @throws IllegalArgumentException if metaData could not be written.
-	 */
-	protected void writeMetaData()
-	{
-		int offset = MAGIC_VALUE_SIZE;
-
-		RandomAccessFile raf = null;
-		try
-		{
-			byte[] buffer = null;
-			int length = 0;
-			MetaData actualMetaData = null;
-			if(preferredMetaData != null && preferredMetaData.size()>0)
-			{
-				actualMetaData=new MetaData(preferredMetaData);
-				buffer = metaCodec.encode(actualMetaData);
-				if(buffer != null)
-				{
-					length = buffer.length;
-				}
-			}
-
-			raf = new RandomAccessFile(dataFile, "rw");
-			raf.seek(offset);
-			raf.writeInt(length);
-			if(length > 0)
-			{
-				raf.seek(offset + META_LENGTH_SIZE);
-				raf.write(buffer);
-			}
-			setInitialDataOffset(offset + META_LENGTH_SIZE + length);
-			metaData = actualMetaData;
-		}
-		catch(Throwable e)
-		{
-			throw new IllegalArgumentException("Could not write meta data to " + dataFile
-				.getAbsolutePath() + "!", e);
-		}
-		finally
-		{
-			closeQuietly(raf);
-		}
-	}
-
-	/**
-	 * Locking is already performed for this method.
-	 *
-	 * @throws IllegalArgumentException if metaData could not be read.
-	 */
-	protected void initializeMetaData()
-	{
-		int offset = MAGIC_VALUE_SIZE;
-
-		RandomAccessFile raf = null;
-		Throwable throwable = null;
-		try
-		{
-			raf = new RandomAccessFile(dataFile, "r");
-			if(raf.length() >= offset + META_LENGTH_SIZE)
-			{
-				raf.seek(offset);
-				int metaLength = raf.readInt();
-				if(metaLength > 0)
-				{
-					if(raf.length() < offset + META_LENGTH_SIZE + metaLength)
-					{
-						throw new IllegalArgumentException("Invalid length (" + metaLength + ") at offset: " + offset + "!");
-					}
-					setInitialDataOffset(offset + META_LENGTH_SIZE + metaLength);
-					raf.seek(offset + META_LENGTH_SIZE);
-					byte[] buffer = new byte[metaLength];
-					raf.readFully(buffer);
-
-					metaData = metaCodec.decode(buffer);
-				}
-				else
-				{
-					metaData = null;
-					setInitialDataOffset(offset + META_LENGTH_SIZE);
-				}
-			}
-			else
-			{
-				throw new IllegalArgumentException("Could not read meta data from " + dataFile
-					.getAbsolutePath() + "!");
-			}
-		}
-		catch(RuntimeException ex)
-		{
-			// rethrow
-			throw ex;
-		}
-		catch(Throwable e)
-		{
-			throwable = e;
-		}
-		finally
-		{
-			closeQuietly(raf);
-		}
-		if(throwable != null)
-		{
-			throw new IllegalArgumentException("Could not read meta data from " + dataFile
-				.getAbsolutePath() + "!", throwable);
-		}
-	}
 
 
-	protected void setInitialDataOffset(long initialDataOffset)
-	{
-		this.initialDataOffset = initialDataOffset;
-	}
 
-	protected long getInitialDataOffset()
-	{
-		return initialDataOffset;
-	}
 
 	public Codec<E> getCodec()
 	{
@@ -427,12 +214,33 @@ public class CodecFileBuffer<E>
 		this.elementProcessors = elementProcessors;
 	}
 
+	private boolean initFilesIfNecessary()
+	{
+		if(!dataFile.exists() || dataFile.length() < CodecFileHeader.MAGIC_VALUE_SIZE + CodecFileHeader.META_LENGTH_SIZE)
+		{
+			Lock lock = readWriteLock.writeLock();
+			lock.lock();
+			try
+			{
+				codecFileHeader.writeMagicValue();
+				codecFileHeader.writeMetaData();
+				indexFile.delete();
+				return true;
+			}
+			finally
+			{
+				lock.unlock();
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * @return the actual meta data of the buffer.
 	 */
 	public MetaData getMetaData()
 	{
-		return metaData;
+		return codecFileHeader.getMetaData();
 	}
 
 	/**
@@ -449,7 +257,7 @@ public class CodecFileBuffer<E>
 
 	public Integer getMagicValue()
 	{
-		return magicValue;
+		return codecFileHeader.getMagicValue();
 	}
 
 	public File getDataFile()
@@ -589,7 +397,7 @@ public class CodecFileBuffer<E>
 			randomDataFile = new RandomAccessFile(dataFile, "rw");
 			long elementsCount = internalGetSize(randomIndexFile);
 
-			long offset = initialDataOffset;
+			long offset = codecFileHeader.getInitialDataOffset();
 			if(elementsCount > 0)
 			{
 				long prevElement = elementsCount - 1;
@@ -665,7 +473,7 @@ public class CodecFileBuffer<E>
 
 					long elementsCount = internalGetSize(randomIndexFile);
 
-					long offset = initialDataOffset;
+					long offset = codecFileHeader.getInitialDataOffset();
 					if(elementsCount > 0)
 					{
 						long prevElement = elementsCount - 1;
@@ -744,8 +552,8 @@ public class CodecFileBuffer<E>
 		{
 			indexFile.delete();
 			dataFile.delete();
-			writeMagicValue();
-			writeMetaData();
+			codecFileHeader.writeMagicValue();
+			codecFileHeader.writeMetaData();
 		}
 		finally
 		{
@@ -900,28 +708,11 @@ public class CodecFileBuffer<E>
 		StringBuilder result = new StringBuilder();
 		result.append("CodecFileBuffer[");
 
-		result.append("magicValue=");
-		if(magicValue == null)
-		{
-			result.append("null");
-		}
-		else
-		{
-			result.append("0x");
-			String hexValue = Integer.toHexString(magicValue);
-			int zeroes = 8 - hexValue.length();
-			for(int i = 0; i < zeroes; i++)
-			{
-				result.append("0");
-			}
-			result.append(hexValue);
-		}
+		result.append("codecFileHeader=");
+		result.append(codecFileHeader);
 		result.append(", ");
 
 		result.append("preferredMetaData=").append(preferredMetaData);
-		result.append(", ");
-
-		result.append("metaData=").append(metaData);
 		result.append(", ");
 
 		result.append("dataFile=");
