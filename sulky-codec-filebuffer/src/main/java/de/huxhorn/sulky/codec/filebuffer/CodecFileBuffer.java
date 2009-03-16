@@ -18,9 +18,11 @@
 package de.huxhorn.sulky.codec.filebuffer;
 
 import de.huxhorn.sulky.buffers.BasicBufferIterator;
+import de.huxhorn.sulky.buffers.Dispose;
+import de.huxhorn.sulky.buffers.DisposeOperation;
 import de.huxhorn.sulky.buffers.ElementProcessor;
 import de.huxhorn.sulky.buffers.FileBuffer;
-import de.huxhorn.sulky.buffers.ResetOperation;
+import de.huxhorn.sulky.buffers.Reset;
 import de.huxhorn.sulky.codec.Codec;
 
 import org.slf4j.Logger;
@@ -63,7 +65,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @param <E> the type of objects that are stored in this buffer.
  */
 public class CodecFileBuffer<E>
-	implements FileBuffer<E>
+	implements FileBuffer<E>, DisposeOperation
 {
 	private static final long DATA_OFFSET_SIZE = 8;
 	private static final long DATA_LENGTH_SIZE = 4;
@@ -589,11 +591,7 @@ public class CodecFileBuffer<E>
 			{
 				for(ElementProcessor<E> current : elementProcessors)
 				{
-					if(current instanceof ResetOperation)
-					{
-						ResetOperation reset = (ResetOperation) current;
-						reset.reset();
-					}
+					Reset.reset(current);
 				}
 			}
 		}
@@ -656,7 +654,7 @@ public class CodecFileBuffer<E>
 		return randomIndexFile.length() / DATA_OFFSET_SIZE;
 	}
 
-	private E internalReadElement(RandomAccessFile randomSerializeFile, long offset)
+	private E internalReadElement(RandomAccessFile randomDataFile, long offset)
 		throws IOException, ClassNotFoundException, ClassCastException
 	{
 		if(codec == null)
@@ -664,18 +662,18 @@ public class CodecFileBuffer<E>
 			throw new IllegalStateException("Codec has not been initialized!");
 		}
 
-		if(randomSerializeFile.length() < offset + DATA_LENGTH_SIZE)
+		if(randomDataFile.length() < offset + DATA_LENGTH_SIZE)
 		{
 			throw new IndexOutOfBoundsException("Invalid offset: " + offset + "! Couldn't read length of data!");
 		}
-		randomSerializeFile.seek(offset);
-		int bufferSize = randomSerializeFile.readInt();
-		if(randomSerializeFile.length() < offset + DATA_LENGTH_SIZE + bufferSize)
+		randomDataFile.seek(offset);
+		int bufferSize = randomDataFile.readInt();
+		if(randomDataFile.length() < offset + DATA_LENGTH_SIZE + bufferSize)
 		{
 			throw new IndexOutOfBoundsException("Invalid length (" + bufferSize + ") at offset: " + offset + "!");
 		}
 		byte[] buffer = new byte[bufferSize];
-		randomSerializeFile.readFully(buffer);
+		randomDataFile.readFully(buffer);
 		return codec.decode(buffer);
 	}
 
@@ -691,7 +689,7 @@ public class CodecFileBuffer<E>
 		randomIndexFile.writeLong(offset);
 	}
 
-	private int internalWriteElement(RandomAccessFile randomSerializeFile, long offset, E element)
+	private int internalWriteElement(RandomAccessFile randomDataFile, long offset, E element)
 		throws IOException
 	{
 		if(codec == null)
@@ -702,9 +700,9 @@ public class CodecFileBuffer<E>
 
 		int bufferSize = buffer.length;
 
-		randomSerializeFile.seek(offset);
-		randomSerializeFile.writeInt(bufferSize);
-		randomSerializeFile.write(buffer);
+		randomDataFile.seek(offset);
+		randomDataFile.writeInt(bufferSize);
+		randomDataFile.write(buffer);
 		return bufferSize;
 	}
 
@@ -787,5 +785,23 @@ public class CodecFileBuffer<E>
 
 		result.append("]");
 		return result.toString();
+	}
+
+	public void dispose()
+	{
+
+		if(elementProcessors != null)
+		{
+			for(ElementProcessor current : elementProcessors)
+			{
+				Dispose.dispose(current);
+			}
+		}
+		// TODO: implement dispose()
+	}
+
+	public boolean isDisposed()
+	{
+		return false;  // TODO: implement isDisposed()
 	}
 }
