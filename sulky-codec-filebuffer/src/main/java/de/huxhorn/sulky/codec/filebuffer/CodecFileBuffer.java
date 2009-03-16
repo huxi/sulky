@@ -20,6 +20,7 @@ package de.huxhorn.sulky.codec.filebuffer;
 import de.huxhorn.sulky.buffers.BasicBufferIterator;
 import de.huxhorn.sulky.buffers.ElementProcessor;
 import de.huxhorn.sulky.buffers.FileBuffer;
+import de.huxhorn.sulky.buffers.ResetOperation;
 import de.huxhorn.sulky.codec.Codec;
 
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InvalidClassException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -134,8 +136,8 @@ public class CodecFileBuffer<E>
 
 	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile, FileHeaderStrategy fileHeaderStrategy)
 	{
-		this.magicValue=magicValue;
-		this.fileHeaderStrategy=fileHeaderStrategy;
+		this.magicValue = magicValue;
+		this.fileHeaderStrategy = fileHeaderStrategy;
 		this.readWriteLock = new ReentrantReadWriteLock(true);
 
 		if(preferredMetaData != null)
@@ -176,39 +178,40 @@ public class CodecFileBuffer<E>
 	{
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
-		this.fileHeader=null;
+		this.fileHeader = null;
 		try
 		{
 			FileHeader fileHeader = fileHeaderStrategy.readFileHeader(dataFile);
 			if(fileHeader == null)
 			{
-				throw new IllegalArgumentException("Could not read file header from file '"+dataFile.getAbsolutePath()+"'. File isn't compatible.");
+				throw new IllegalArgumentException("Could not read file header from file '" + dataFile
+					.getAbsolutePath() + "'. File isn't compatible.");
 			}
 			if(fileHeader.getMagicValue() != magicValue)
 			{
-				throw new IllegalArgumentException("Wrong magic value. Expected 0x"+Integer.toHexString(magicValue)+" but was "+Integer.toHexString(fileHeader.getMagicValue())+"!");
+				throw new IllegalArgumentException("Wrong magic value. Expected 0x" + Integer
+					.toHexString(magicValue) + " but was " + Integer.toHexString(fileHeader.getMagicValue()) + "!");
 			}
 			if(dataFile.length() > fileHeader.getDataOffset())
 			{
 				if(!indexFile.exists() || indexFile.length() < DATA_OFFSET_SIZE)
 				{
-					throw new IllegalArgumentException("dataFile contains data but indexFile " + indexFile.getAbsolutePath() + " is not valid!");
+					throw new IllegalArgumentException("dataFile contains data but indexFile " + indexFile
+						.getAbsolutePath() + " is not valid!");
 				}
 			}
-			this.fileHeader=fileHeader;
+			this.fileHeader = fileHeader;
 		}
 		catch(IOException ex)
 		{
-			throw new IllegalArgumentException("Could not read magic value from file '"+dataFile.getAbsolutePath()+"'!", ex);
+			throw new IllegalArgumentException("Could not read magic value from file '" + dataFile
+				.getAbsolutePath() + "'!", ex);
 		}
 		finally
 		{
 			lock.unlock();
 		}
 	}
-
-
-
 
 
 	public Codec<E> getCodec()
@@ -223,11 +226,27 @@ public class CodecFileBuffer<E>
 
 	public List<ElementProcessor<E>> getElementProcessors()
 	{
-		return elementProcessors;
+		if(elementProcessors == null)
+		{
+			return null;
+		}
+		return Collections.unmodifiableList(elementProcessors);
 	}
 
 	public void setElementProcessors(List<ElementProcessor<E>> elementProcessors)
 	{
+		if(elementProcessors != null)
+		{
+			if(elementProcessors.size() == 0)
+			{
+				// performance enhancement
+				elementProcessors = null;
+			}
+			else
+			{
+				elementProcessors = new ArrayList<ElementProcessor<E>>(elementProcessors);
+			}
+		}
 		this.elementProcessors = elementProcessors;
 	}
 
@@ -240,13 +259,13 @@ public class CodecFileBuffer<E>
 			try
 			{
 				dataFile.delete();
-				fileHeader=fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData);
+				fileHeader = fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData);
 				indexFile.delete();
 				return true;
 			}
 			catch(IOException e)
 			{
-				if(logger.isWarnEnabled()) logger.warn("Exception while initializing file!",e);
+				if(logger.isWarnEnabled()) logger.warn("Exception while initializing file!", e);
 			}
 			finally
 			{
@@ -566,6 +585,17 @@ public class CodecFileBuffer<E>
 			indexFile.delete();
 			dataFile.delete();
 			fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData);
+			if(elementProcessors != null)
+			{
+				for(ElementProcessor<E> current : elementProcessors)
+				{
+					if(current instanceof ResetOperation)
+					{
+						ResetOperation reset = (ResetOperation) current;
+						reset.reset();
+					}
+				}
+			}
 		}
 		catch(IOException e)
 		{
