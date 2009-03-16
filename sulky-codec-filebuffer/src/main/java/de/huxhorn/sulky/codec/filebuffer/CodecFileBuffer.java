@@ -85,7 +85,10 @@ public class CodecFileBuffer<E>
 
 	private Codec<E> codec;
 	private List<ElementProcessor<E>> elementProcessors;
-	private CodecFileHeader codecFileHeader;
+	//private CodecFileHeader codecFileHeader;
+	private FileHeaderStrategy fileHeaderStrategy;
+	private int magicValue;
+	private FileHeader fileHeader;
 
 	/**
 	 * Shortcut for CodecFileBuffer(magicValue, metaData, null, null, serializeFile, null).
@@ -93,9 +96,9 @@ public class CodecFileBuffer<E>
 	 * @param magicValue        the magic value of the buffer.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see CodecFileBuffer#CodecFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
+	 * @see CodecFileBuffer#CodecFileBuffer(int, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
-	public CodecFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, File dataFile)
+	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, File dataFile)
 	{
 		this(magicValue, preferredMetaData, null, dataFile, null);
 	}
@@ -107,9 +110,9 @@ public class CodecFileBuffer<E>
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param codec             the codec used by this buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see CodecFileBuffer#CodecFileBuffer(Integer, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
+	 * @see CodecFileBuffer#CodecFileBuffer(int, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
-	public CodecFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
+	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
 	{
 		this(magicValue, preferredMetaData, codec, dataFile, null);
 	}
@@ -124,19 +127,21 @@ public class CodecFileBuffer<E>
 	 * @param indexFile         the index file of the buffer.
 	 * @throws NullPointerException if magicValue is null.
 	 */
-	public CodecFileBuffer(Integer magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
+	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
 	{
+		this(magicValue, preferredMetaData, codec, dataFile, indexFile, new DefaultFileHeaderStrategy());
+	}
+
+	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile, FileHeaderStrategy fileHeaderStrategy)
+	{
+		this.magicValue=magicValue;
+		this.fileHeaderStrategy=fileHeaderStrategy;
 		this.readWriteLock = new ReentrantReadWriteLock(true);
-		if(magicValue == null)
-		{
-			throw new NullPointerException("magicValue must not be null!");
-		}
 
 		if(preferredMetaData != null)
 		{
 			preferredMetaData = new HashMap<String, String>(preferredMetaData);
 		}
-		this.codecFileHeader=new CodecFileHeader(dataFile, magicValue, preferredMetaData);
 		if(preferredMetaData != null)
 		{
 			this.preferredMetaData = new HashMap<String, String>(preferredMetaData);
@@ -171,18 +176,30 @@ public class CodecFileBuffer<E>
 	{
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
+		this.fileHeader=null;
 		try
 		{
-			codecFileHeader.validateMagicValue();
-			codecFileHeader.initializeMetaData();
-			if(dataFile.length() > codecFileHeader.getInitialDataOffset())
+			FileHeader fileHeader = fileHeaderStrategy.readFileHeader(dataFile);
+			if(fileHeader == null)
+			{
+				throw new IllegalArgumentException("Could not read file header from file '"+dataFile.getAbsolutePath()+"'. File isn't compatible.");
+			}
+			if(fileHeader.getMagicValue() != magicValue)
+			{
+				throw new IllegalArgumentException("Wrong magic value. Expected 0x"+Integer.toHexString(magicValue)+" but was "+Integer.toHexString(fileHeader.getMagicValue())+"!");
+			}
+			if(dataFile.length() > fileHeader.getDataOffset())
 			{
 				if(!indexFile.exists() || indexFile.length() < DATA_OFFSET_SIZE)
 				{
-					throw new IllegalArgumentException("dataFile contains data but indexFile " + indexFile
-						.getAbsolutePath() + " is not valid!");
+					throw new IllegalArgumentException("dataFile contains data but indexFile " + indexFile.getAbsolutePath() + " is not valid!");
 				}
 			}
+			this.fileHeader=fileHeader;
+		}
+		catch(IOException ex)
+		{
+			throw new IllegalArgumentException("Could not read magic value from file '"+dataFile.getAbsolutePath()+"'!", ex);
 		}
 		finally
 		{
@@ -216,16 +233,20 @@ public class CodecFileBuffer<E>
 
 	private boolean initFilesIfNecessary()
 	{
-		if(!dataFile.exists() || dataFile.length() < CodecFileHeader.MAGIC_VALUE_SIZE + CodecFileHeader.META_LENGTH_SIZE)
+		if(!dataFile.exists() || dataFile.length() < fileHeaderStrategy.getMinimalSize())
 		{
 			Lock lock = readWriteLock.writeLock();
 			lock.lock();
 			try
 			{
-				codecFileHeader.writeMagicValue();
-				codecFileHeader.writeMetaData();
+				dataFile.delete();
+				fileHeader=fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData);
 				indexFile.delete();
 				return true;
+			}
+			catch(IOException e)
+			{
+				if(logger.isWarnEnabled()) logger.warn("Exception while initializing file!",e);
 			}
 			finally
 			{
@@ -235,12 +256,9 @@ public class CodecFileBuffer<E>
 		return false;
 	}
 
-	/**
-	 * @return the actual meta data of the buffer.
-	 */
-	public MetaData getMetaData()
+	public FileHeader getFileHeader()
 	{
-		return codecFileHeader.getMetaData();
+		return fileHeader;
 	}
 
 	/**
@@ -253,11 +271,6 @@ public class CodecFileBuffer<E>
 			return null;
 		}
 		return Collections.unmodifiableMap(preferredMetaData);
-	}
-
-	public Integer getMagicValue()
-	{
-		return codecFileHeader.getMagicValue();
 	}
 
 	public File getDataFile()
@@ -397,7 +410,7 @@ public class CodecFileBuffer<E>
 			randomDataFile = new RandomAccessFile(dataFile, "rw");
 			long elementsCount = internalGetSize(randomIndexFile);
 
-			long offset = codecFileHeader.getInitialDataOffset();
+			long offset = fileHeader.getDataOffset();
 			if(elementsCount > 0)
 			{
 				long prevElement = elementsCount - 1;
@@ -473,7 +486,7 @@ public class CodecFileBuffer<E>
 
 					long elementsCount = internalGetSize(randomIndexFile);
 
-					long offset = codecFileHeader.getInitialDataOffset();
+					long offset = fileHeader.getDataOffset();
 					if(elementsCount > 0)
 					{
 						long prevElement = elementsCount - 1;
@@ -552,8 +565,11 @@ public class CodecFileBuffer<E>
 		{
 			indexFile.delete();
 			dataFile.delete();
-			codecFileHeader.writeMagicValue();
-			codecFileHeader.writeMetaData();
+			fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData);
+		}
+		catch(IOException e)
+		{
+			if(logger.isWarnEnabled()) logger.warn("Exception while resetting file!", e);
 		}
 		finally
 		{
@@ -708,8 +724,8 @@ public class CodecFileBuffer<E>
 		StringBuilder result = new StringBuilder();
 		result.append("CodecFileBuffer[");
 
-		result.append("codecFileHeader=");
-		result.append(codecFileHeader);
+		result.append("fileHeader=");
+		result.append(fileHeader);
 		result.append(", ");
 
 		result.append("preferredMetaData=").append(preferredMetaData);
