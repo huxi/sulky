@@ -16,7 +16,7 @@
 	   -->
 
 	<root>
-		<level value="WARN"/>
+		<level value="DEBUG"/>
 		<appender-ref ref="CONSOLE"/>
 		<!--
 			  <appender-ref ref="Localhorst"/>
