@@ -23,7 +23,7 @@
 		<commonsLoggingVersion>1.1</commonsLoggingVersion>
 		-->
 		<slf4jVersion>1.5.6</slf4jVersion>
-		<logbackVersion>0.9.14</logbackVersion>
+		<logbackVersion>0.9.15</logbackVersion>
 	</properties>
 
 	<licenses>
