@@ -463,7 +463,7 @@ public class TaskManager<T>
 				}
 				catch(InterruptedException e)
 				{
-					if(logger.isInfoEnabled()) logger.info("Interrupted...", e);
+					if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 					break;
 				}
 			}
