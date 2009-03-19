@@ -68,7 +68,11 @@ public class CodecFileBuffer<E>
 	implements FileBuffer<E>, DisposeOperation
 {
 	private static final long DATA_OFFSET_SIZE = 8;
-	private static final long DATA_LENGTH_SIZE = 4;
+
+	/**
+	 * The size of the data size, i.e. an int.
+	 */
+	public static final long DATA_LENGTH_SIZE = 4;
 
 	private final Logger logger = LoggerFactory.getLogger(CodecFileBuffer.class);
 
