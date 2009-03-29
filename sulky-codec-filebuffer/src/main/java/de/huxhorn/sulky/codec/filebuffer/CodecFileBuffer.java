@@ -303,6 +303,11 @@ public class CodecFileBuffer<E>
 		return dataFile;
 	}
 
+	public File getIndexFile()
+	{
+		return indexFile;
+	}
+
 	public long getSize()
 	{
 		RandomAccessFile raf = null;
