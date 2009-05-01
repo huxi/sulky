@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.parent</artifactId>
-	<version><!-- SV -->0.9.7</version>
+	<version><!-- SV -->0.9.8-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Sulky parent pom file</name>
 	<description>This file is part of the sulky modules. It's the parent pom that contains general project informations.</description>
@@ -263,7 +263,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.4</version>
+				<version>2.5</version>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
