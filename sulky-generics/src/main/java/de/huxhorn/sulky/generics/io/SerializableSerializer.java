@@ -27,7 +27,6 @@ import java.util.zip.GZIPOutputStream;
 
 
 /**
- *
  * @param <E>
  * @deprecated Use sulky-codec instead.
  */

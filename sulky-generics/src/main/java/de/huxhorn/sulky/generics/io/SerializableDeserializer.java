@@ -25,7 +25,6 @@ import java.io.Serializable;
 import java.util.zip.GZIPInputStream;
 
 /**
- *
  * @param <E>
  * @deprecated Use sulky-codec instead.
  */
@@ -75,7 +74,7 @@ public class SerializableDeserializer<E extends Serializable>
 		}
 		catch(Throwable e)
 		{
-			// silently ignore any problems 
+			// silently ignore any problems
 			return null;
 		}
 		finally
@@ -89,5 +88,4 @@ public class SerializableDeserializer<E extends Serializable>
 	{
 		return "SerializableDeserializer[compressing=" + compressing + "]";
 	}
-
 }
