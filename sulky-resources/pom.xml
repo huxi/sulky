@@ -18,7 +18,7 @@
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>
-		<version><!-- SV -->0.9.7</version>
+		<version><!-- SV -->0.9.8-SNAPSHOT</version>
 		<relativePath>../sulky-parent/pom.xml</relativePath>
 	</parent>
 
