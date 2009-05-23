@@ -22,11 +22,11 @@ import de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import java.io.IOException;
 import java.io.ByteArrayInputStream;
-import java.util.zip.GZIPInputStream;
-import java.util.Map;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 public class MetaDataDecoder
 	implements Decoder<MetaData>
@@ -89,30 +89,31 @@ public class MetaDataDecoder
 		{
 			return null;
 		}
-		int entryCount=data.getEntryCount();
-		if(entryCount==0)
-		{
-			return null;
-		}
-		Map<String, String> dataMap=new HashMap<String, String>();
-		for(int i=0;i<entryCount;i++)
+		int entryCount = data.getEntryCount();
+		Map<String, String> dataMap = new HashMap<String, String>();
+		for(int i = 0; i < entryCount; i++)
 		{
 			MetaDataProto.MapEntry entry = data.getEntry(i);
-			String key=null;
-			String value=null;
+			String key = null;
+			String value = null;
 			if(entry.hasKey())
 			{
-				key=entry.getKey();
+				key = entry.getKey();
 			}
 			if(entry.hasValue())
 			{
-				value=entry.getValue();
+				value = entry.getValue();
 			}
-			if(key!=null)
+			if(key != null)
 			{
 				dataMap.put(key, value);
 			}
 		}
-		return new MetaData(dataMap);
+		boolean sparse = false;
+		if(data.hasSparse())
+		{
+			sparse = data.getSparse();
+		}
+		return new MetaData(sparse, dataMap);
 	}
 }
