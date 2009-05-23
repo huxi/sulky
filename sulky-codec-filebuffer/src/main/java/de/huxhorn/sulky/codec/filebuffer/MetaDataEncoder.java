@@ -20,10 +20,10 @@ package de.huxhorn.sulky.codec.filebuffer;
 import de.huxhorn.sulky.codec.Encoder;
 import de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto;
 
-import java.util.Map;
-import java.util.zip.GZIPOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
+import java.util.zip.GZIPOutputStream;
 
 public class MetaDataEncoder
 	implements Encoder<MetaData>
@@ -80,17 +80,19 @@ public class MetaDataEncoder
 			return null;
 		}
 
+		boolean sparse = metaData.isSparse();
 		Map<String, String> data = metaData.getData();
-		if(data == null || data.size() == 0)
+
+		MetaDataProto.MetaData.Builder builder = MetaDataProto.MetaData.newBuilder();
+		if(sparse)
 		{
-			return null;
+			builder.setSparse(sparse);
 		}
-		MetaDataProto.MetaData.Builder builder=MetaDataProto.MetaData.newBuilder();
-		for(Map.Entry<String, String> current: data.entrySet())
+		for(Map.Entry<String, String> current : data.entrySet())
 		{
-			String key=current.getKey();
-			String value=current.getValue();
-			if(key!=null)
+			String key = current.getKey();
+			String value = current.getValue();
+			if(key != null)
 			{
 				builder.addEntry(MetaDataProto.MapEntry.newBuilder().setKey(key).setValue(value).build());
 			}

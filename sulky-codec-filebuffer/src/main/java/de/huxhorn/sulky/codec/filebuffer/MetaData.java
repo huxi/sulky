@@ -17,10 +17,10 @@
  */
 package de.huxhorn.sulky.codec.filebuffer;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Immutable class representing the meta-data of a CodecFileBuffer.
@@ -28,16 +28,30 @@ import java.io.Serializable;
 public final class MetaData
 	implements Serializable, Cloneable
 {
-	private static final long serialVersionUID = -6009546000098481072L;
-	private final Map<String, String> data;
+	private static final long serialVersionUID = 8435511960228370781L;
 
-	public MetaData(Map<String, String> data)
+	private final Map<String, String> data;
+	private final boolean sparse;
+
+	/*
+	 public MetaData(Map<String, String> data)
+	 {
+		 this
+	 }
+ */
+	public MetaData(boolean sparse, Map<String, String> data)
 	{
-		if(data==null)
+		if(data == null)
 		{
 			throw new IllegalArgumentException("data must not be null!");
 		}
 		this.data = new HashMap<String, String>(data);
+		this.sparse = sparse;
+	}
+
+	public boolean isSparse()
+	{
+		return sparse;
 	}
 
 	@Override
@@ -48,6 +62,7 @@ public final class MetaData
 
 		MetaData metaData = (MetaData) o;
 
+		if(this.sparse != metaData.sparse) return false;
 		if(!data.equals(metaData.data)) return false;
 
 		return true;
@@ -60,16 +75,17 @@ public final class MetaData
 	}
 
 	/**
-	 *
 	 * @return an unmodifiable map of meta data.
 	 */
 	public Map<String, String> getData()
 	{
-		if(data != null)
-		{
-			return Collections.unmodifiableMap(data);
-		}
-		return null;
+		return Collections.unmodifiableMap(data);
+	}
+
+	@Override
+	public String toString()
+	{
+		return "MetaData[sparse=" + sparse + ", data=" + data + "]";
 	}
 
 	public MetaData clone()
