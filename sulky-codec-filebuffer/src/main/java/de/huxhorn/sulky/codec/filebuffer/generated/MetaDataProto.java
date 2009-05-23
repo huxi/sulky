@@ -33,6 +33,7 @@ public final class MetaDataProto {
     }
     
     // repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;
+    public static final int ENTRY_FIELD_NUMBER = 1;
     private java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry> entry_ =
       java.util.Collections.emptyList();
     public java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry> getEntryList() {
@@ -110,6 +111,17 @@ public final class MetaDataProto {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
+    public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeDelimitedFrom(input).buildParsed();
+    }
+    public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
+               .buildParsed();
+    }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
@@ -128,6 +140,7 @@ public final class MetaDataProto {
     public static Builder newBuilder(de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData prototype) {
       return new Builder().mergeFrom(prototype);
     }
+    public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
@@ -163,7 +176,7 @@ public final class MetaDataProto {
       }
       
       public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData build() {
-        if (!isInitialized()) {
+        if (result != null && !isInitialized()) {
           throw new com.google.protobuf.UninitializedMessageException(
             result);
         }
@@ -180,6 +193,9 @@ public final class MetaDataProto {
       }
       
       public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");  }
         if (result.entry_ != java.util.Collections.EMPTY_LIST) {
           result.entry_ =
             java.util.Collections.unmodifiableList(result.entry_);
@@ -263,6 +279,9 @@ public final class MetaDataProto {
         return result.getEntry(index);
       }
       public Builder setEntry(int index, de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         result.entry_.set(index, value);
         return this;
       }
@@ -271,6 +290,9 @@ public final class MetaDataProto {
         return this;
       }
       public Builder addEntry(de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         if (result.entry_.isEmpty()) {
           result.entry_ = new java.util.ArrayList<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry>();
         }
@@ -329,12 +351,14 @@ public final class MetaDataProto {
     }
     
     // required string key = 1;
+    public static final int KEY_FIELD_NUMBER = 1;
     private boolean hasKey;
     private java.lang.String key_ = "";
     public boolean hasKey() { return hasKey; }
     public java.lang.String getKey() { return key_; }
     
     // optional string value = 2;
+    public static final int VALUE_FIELD_NUMBER = 2;
     private boolean hasValue;
     private java.lang.String value_ = "";
     public boolean hasValue() { return hasValue; }
@@ -412,6 +436,17 @@ public final class MetaDataProto {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
+    public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeDelimitedFrom(input).buildParsed();
+    }
+    public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
+               .buildParsed();
+    }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
@@ -430,6 +465,7 @@ public final class MetaDataProto {
     public static Builder newBuilder(de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry prototype) {
       return new Builder().mergeFrom(prototype);
     }
+    public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
@@ -465,7 +501,7 @@ public final class MetaDataProto {
       }
       
       public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry build() {
-        if (!isInitialized()) {
+        if (result != null && !isInitialized()) {
           throw new com.google.protobuf.UninitializedMessageException(
             result);
         }
@@ -482,6 +518,9 @@ public final class MetaDataProto {
       }
       
       public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry buildPartial() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "build() has already been called on this Builder.");  }
         de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry returnMe = result;
         result = null;
         return returnMe;
@@ -560,7 +599,10 @@ public final class MetaDataProto {
         return result.getKey();
       }
       public Builder setKey(java.lang.String value) {
-        result.hasKey = true;
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasKey = true;
         result.key_ = value;
         return this;
       }
@@ -578,7 +620,10 @@ public final class MetaDataProto {
         return result.getValue();
       }
       public Builder setValue(java.lang.String value) {
-        result.hasValue = true;
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  result.hasValue = true;
         result.value_ = value;
         return this;
       }
