@@ -21,7 +21,7 @@ public class DefaultFileHeaderStrategy
 
 	public DefaultFileHeaderStrategy()
 	{
-		this.metaCodec=new MetaDataCodec();
+		this.metaCodec = new MetaDataCodec();
 	}
 
 	public Integer readMagicValue(File dataFile)
@@ -29,27 +29,36 @@ public class DefaultFileHeaderStrategy
 	{
 
 		RandomAccessFile raf = null;
-		Integer result=null;
+		Integer result = null;
 		try
 		{
 			raf = new RandomAccessFile(dataFile, "r");
-			long fileLength=raf.length();
+			long fileLength = raf.length();
 			if(fileLength >= MAGIC_VALUE_SIZE)
 			{
 				raf.seek(0);
-				int codecMagic=raf.readInt();
+				int codecMagic = raf.readInt();
 				if(codecMagic == CODEC_FILE_HEADER_MAGIC_VALUE)
 				{
-					result=raf.readInt();
+					result = raf.readInt();
 				}
 				else
 				{
-					if(logger.isWarnEnabled()) logger.warn("Couldn't read magic value because codecMagic was 0x"+Integer.toHexString(codecMagic)+" instaed of 0x"+Integer.toHexString(CODEC_FILE_HEADER_MAGIC_VALUE)+"!");
+					if(logger.isWarnEnabled())
+					{
+						logger
+							.warn("Couldn't read magic value because codecMagic was 0x" + Integer
+								.toHexString(codecMagic) + " instaed of 0x" + Integer
+								.toHexString(CODEC_FILE_HEADER_MAGIC_VALUE) + "!");
+					}
 				}
 			}
 			else
 			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't read magic value because file size is "+fileLength+"!");
+				if(logger.isWarnEnabled())
+				{
+					logger.warn("Couldn't read magic value because file size is " + fileLength + "!");
+				}
 			}
 		}
 		finally
@@ -59,14 +68,15 @@ public class DefaultFileHeaderStrategy
 		return result;
 	}
 
-	public FileHeader writeFileHeader(File dataFile, int magicValue, Map<String, String> metaData)
+	public FileHeader writeFileHeader(File dataFile, int magicValue, Map<String, String> metaData, boolean sparse)
 		throws IOException
 	{
 		RandomAccessFile raf = null;
-		FileHeader result=null;
-		if(dataFile.isFile() && dataFile.length()>0)
+		FileHeader result = null;
+		if(dataFile.isFile() && dataFile.length() > 0)
 		{
-			throw new IllegalArgumentException("File '"+dataFile.getAbsolutePath()+"' already exists and has a size of "+ dataFile.length()+".");
+			throw new IllegalArgumentException("File '" + dataFile
+				.getAbsolutePath() + "' already exists and has a size of " + dataFile.length() + ".");
 		}
 		try
 		{
@@ -76,10 +86,10 @@ public class DefaultFileHeaderStrategy
 			raf.writeInt(magicValue);
 			byte[] buffer = null;
 			int length = 0;
-			MetaData resultMetaData = null;
-			if(metaData != null && metaData.size()>0)
+			MetaData resultMetaData = new MetaData(metaData, sparse);
+
+			if((metaData != null && metaData.size() > 0) || sparse)
 			{
-				resultMetaData=new MetaData(metaData);
 				buffer = metaCodec.encode(resultMetaData);
 				if(buffer != null)
 				{
@@ -93,8 +103,8 @@ public class DefaultFileHeaderStrategy
 				raf.write(buffer);
 			}
 			raf.close();
-			raf=null;
-			result=new FileHeader(magicValue, resultMetaData, MAGIC_VALUE_SIZE + META_LENGTH_SIZE + length);
+			raf = null;
+			result = new FileHeader(magicValue, resultMetaData, MAGIC_VALUE_SIZE + META_LENGTH_SIZE + length);
 
 		}
 		finally
@@ -108,17 +118,17 @@ public class DefaultFileHeaderStrategy
 		throws IOException
 	{
 		RandomAccessFile raf = null;
-		FileHeader result=null;
+		FileHeader result = null;
 		try
 		{
 			raf = new RandomAccessFile(dataFile, "r");
 			if(raf.length() >= MAGIC_VALUE_SIZE)
 			{
 				raf.seek(0);
-				int codecMagic=raf.readInt();
+				int codecMagic = raf.readInt();
 				if(codecMagic == CODEC_FILE_HEADER_MAGIC_VALUE)
 				{
-					int magicValue=raf.readInt();
+					int magicValue = raf.readInt();
 					int offset = MAGIC_VALUE_SIZE;
 					raf.seek(offset);
 					int metaLength = raf.readInt();
@@ -132,11 +142,11 @@ public class DefaultFileHeaderStrategy
 						byte[] buffer = new byte[metaLength];
 						raf.readFully(buffer);
 
-						result=new FileHeader(magicValue, metaCodec.decode(buffer), offset + META_LENGTH_SIZE + metaLength);
+						result = new FileHeader(magicValue, metaCodec.decode(buffer), offset + META_LENGTH_SIZE + metaLength);
 					}
 					else
 					{
-						result=new FileHeader(magicValue, null, offset + META_LENGTH_SIZE);
+						result = new FileHeader(magicValue, new MetaData(false), offset + META_LENGTH_SIZE);
 					}
 				}
 			}

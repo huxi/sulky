@@ -33,19 +33,27 @@ public final class MetaData
 	private final Map<String, String> data;
 	private final boolean sparse;
 
-	/*
-	 public MetaData(Map<String, String> data)
-	 {
-		 this
-	 }
- */
-	public MetaData(boolean sparse, Map<String, String> data)
+	public MetaData(Map<String, String> data)
+	{
+		this(data, false);
+	}
+
+	public MetaData(boolean sparse)
+	{
+		this(null, sparse);
+	}
+
+	public MetaData(Map<String, String> data, boolean sparse)
 	{
 		if(data == null)
 		{
-			throw new IllegalArgumentException("data must not be null!");
+			data = Collections.emptyMap();
 		}
-		this.data = new HashMap<String, String>(data);
+		else
+		{
+			data = new HashMap<String, String>(data);
+		}
+		this.data = data;
 		this.sparse = sparse;
 	}
 
