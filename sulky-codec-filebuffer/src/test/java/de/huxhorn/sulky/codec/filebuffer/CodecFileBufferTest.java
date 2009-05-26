@@ -115,7 +115,7 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
+		FileHeader fileHeader = instance.getFileHeader();
 
 		assertNull(fileHeader.getMetaData());
 
@@ -123,7 +123,7 @@ public class CodecFileBufferTest
 
 		assertEquals(values.length, (int) otherInstance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
@@ -133,6 +133,7 @@ public class CodecFileBufferTest
 	@Test
 	public void readWriteMetaAdd()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		for(String current : values)
 		{
@@ -155,17 +156,17 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(values.length, (int) otherInstance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
-		assertEquals(new MetaData(metaData), otherHeader.getMetaData());
+		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
 	}
 
 	@Test
@@ -190,14 +191,14 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
+		FileHeader fileHeader = instance.getFileHeader();
 		assertNull(fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		assertEquals(values.length, (int) otherInstance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
 		assertNull(otherHeader.getMetaData());
@@ -206,6 +207,7 @@ public class CodecFileBufferTest
 	@Test
 	public void readWriteMetaAddAll()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
@@ -225,22 +227,23 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(values.length, (int) otherInstance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
-		assertEquals(new MetaData(metaData), otherHeader.getMetaData());
+		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
 	}
 
 	@Test
 	public void readWriteMetaMixed()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		instance.addAll(values);
 		for(String current : values)
@@ -270,17 +273,17 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(4 * values.length, (int) otherInstance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
-		assertEquals(new MetaData(metaData), otherHeader.getMetaData());
+		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
 	}
 
 	@Test
@@ -328,14 +331,14 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
+		FileHeader fileHeader = instance.getFileHeader();
 		assertNull(fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		assertEquals(4 * values.length, (int) otherInstance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
@@ -345,21 +348,22 @@ public class CodecFileBufferTest
 	@Test
 	public void meta()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(0, (int) instance.getSize());
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(0, (int) instance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
-		assertEquals(new MetaData(metaData), otherHeader.getMetaData());
+		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
 	}
 
 	@Test
@@ -369,14 +373,14 @@ public class CodecFileBufferTest
 
 		assertEquals(0, (int) instance.getSize());
 
-		FileHeader fileHeader=instance.getFileHeader();
+		FileHeader fileHeader = instance.getFileHeader();
 		assertNull(fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, null, codec, dataFile, indexFile);
 
 		assertEquals(0, (int) instance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
 		assertNull(otherHeader.getMetaData());
@@ -385,6 +389,7 @@ public class CodecFileBufferTest
 	@Test
 	public void resetMeta()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		instance.addAll(values);
@@ -394,17 +399,17 @@ public class CodecFileBufferTest
 
 		assertEquals(0, instance.getSize());
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 
 		assertEquals(0, otherInstance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
-		assertEquals(new MetaData(metaData), otherHeader.getMetaData());
+		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
 
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
@@ -436,7 +441,7 @@ public class CodecFileBufferTest
 		instance.reset();
 		assertEquals(0, instance.getSize());
 
-		FileHeader fileHeader=instance.getFileHeader();
+		FileHeader fileHeader = instance.getFileHeader();
 
 		assertNull(fileHeader.getMetaData());
 
@@ -444,7 +449,7 @@ public class CodecFileBufferTest
 
 		assertEquals(0, otherInstance.getSize());
 
-		FileHeader otherHeader=otherInstance.getFileHeader();
+		FileHeader otherHeader = otherInstance.getFileHeader();
 		assertEquals(magicValue, otherHeader.getMagicValue());
 
 		assertNull(otherHeader.getMetaData());
@@ -503,6 +508,7 @@ public class CodecFileBufferTest
 	@Test
 	public void deleteDataFileAdd()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		for(String current : values)
 		{
@@ -532,17 +538,18 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
-		FileHeader otherHeader=otherInstance.getFileHeader();
-		assertEquals(new MetaData(metaData), otherHeader.getMetaData());
+		FileHeader otherHeader = otherInstance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
 	}
 
 	@Test
 	public void deleteDataFileAddAll()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
@@ -566,17 +573,18 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
-		FileHeader otherHeader=otherInstance.getFileHeader();
-		assertEquals(new MetaData(metaData), otherHeader.getMetaData());
+		FileHeader otherHeader = otherInstance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
 	}
 
 	@Test
 	public void deleteDataFileGet()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		for(String current : values)
 		{
@@ -584,8 +592,8 @@ public class CodecFileBufferTest
 		}
 		assertEquals(values.length, (int) instance.getSize());
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		assertNotNull(instance.get(values.length - 1));
 		dataFile.delete();
@@ -595,6 +603,7 @@ public class CodecFileBufferTest
 	@Test
 	public void deleteIndexFileAdd()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		for(String current : values)
 		{
@@ -624,17 +633,18 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
-		FileHeader otherHeader=otherInstance.getFileHeader();
-		assertEquals(new MetaData(metaData), otherHeader.getMetaData());
+		FileHeader otherHeader = otherInstance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
 	}
 
 	@Test
 	public void deleteIndexFileAddAll()
 	{
+		boolean sparse = false;
 		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
 		instance.addAll(values);
 		assertEquals(values.length, (int) instance.getSize());
@@ -658,12 +668,12 @@ public class CodecFileBufferTest
 			index++;
 		}
 
-		FileHeader fileHeader=instance.getFileHeader();
-		assertEquals(new MetaData(metaData), fileHeader.getMetaData());
+		FileHeader fileHeader = instance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), fileHeader.getMetaData());
 
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, metaData, codec, dataFile, indexFile);
-		FileHeader otherHeader=otherInstance.getFileHeader();
-		assertEquals(new MetaData(metaData), otherHeader.getMetaData());
+		FileHeader otherHeader = otherInstance.getFileHeader();
+		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

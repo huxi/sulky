@@ -67,12 +67,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class CodecFileBuffer<E>
 	implements FileBuffer<E>, DisposeOperation
 {
-	private static final long DATA_OFFSET_SIZE = 8;
 
-	/**
-	 * The size of the data size, i.e. an int.
-	 */
-	public static final long DATA_LENGTH_SIZE = 4;
 
 	private final Logger logger = LoggerFactory.getLogger(CodecFileBuffer.class);
 
@@ -97,32 +92,79 @@ public class CodecFileBuffer<E>
 	private FileHeaderStrategy fileHeaderStrategy;
 	private int magicValue;
 	private FileHeader fileHeader;
+	private boolean preferredSparse;
+	private DataStrategy<E> dataStrategy = new DefaultDataStrategy<E>();
+	private IndexStrategy indexStrategy = new DefaultIndexStrategy();
 
 	/**
-	 * Shortcut for CodecFileBuffer(magicValue, metaData, null, null, serializeFile, null).
+	 * Shortcut for CodecFileBuffer(magicValue, preferredSparse, preferredMetaData, null, null, serializeFile, null).
+	 *
+	 * @param magicValue        the magic value of the buffer.
+	 * @param preferredSparse   if the file is supposed to be sparse.
+	 * @param preferredMetaData the meta data of the buffer. Might be null.
+	 * @param dataFile          the data file.
+	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
+	 */
+	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, File dataFile)
+	{
+		this(magicValue, preferredSparse, preferredMetaData, null, dataFile, null);
+	}
+
+	/**
+	 * Shortcut for CodecFileBuffer(magicValue, false, preferredMetaData, null, null, serializeFile, null).
 	 *
 	 * @param magicValue        the magic value of the buffer.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see CodecFileBuffer#CodecFileBuffer(int, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
+	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
 	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, File dataFile)
 	{
-		this(magicValue, preferredMetaData, null, dataFile, null);
+		this(magicValue, false, preferredMetaData, null, dataFile, null);
 	}
 
 	/**
-	 * Shortcut for CodecFileBuffer(magicValue, metaData, null, null, serializeFile, null).
+	 * Shortcut for CodecFileBuffer(magicValue, preferredSparse, preferredMetaData, null, null, serializeFile, null).
+	 *
+	 * @param magicValue        the magic value of the buffer.
+	 * @param preferredSparse   if the file is supposed to be sparse.
+	 * @param preferredMetaData the meta data of the buffer. Might be null.
+	 * @param codec             the codec used by this buffer. Might be null.
+	 * @param dataFile          the data file.
+	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
+	 */
+	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
+	{
+		this(magicValue, preferredSparse, preferredMetaData, codec, dataFile, null);
+	}
+
+	/**
+	 * Shortcut for CodecFileBuffer(magicValue, false, preferredMetaData, null, null, serializeFile, null).
 	 *
 	 * @param magicValue        the magic value of the buffer.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param codec             the codec used by this buffer. Might be null.
 	 * @param dataFile          the data file.
-	 * @see CodecFileBuffer#CodecFileBuffer(int, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
+	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
 	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
 	{
-		this(magicValue, preferredMetaData, codec, dataFile, null);
+		this(magicValue, false, preferredMetaData, codec, dataFile, null);
+	}
+
+	/**
+	 * TODO: add description :p
+	 *
+	 * @param magicValue        the magic value of the buffer.
+	 * @param preferredSparse   if the file is supposed to be sparse.
+	 * @param preferredMetaData the meta data of the buffer. Might be null.
+	 * @param codec             the codec used by this buffer. Might be null.
+	 * @param dataFile          the data file.
+	 * @param indexFile         the index file of the buffer.
+	 */
+	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
+	{
+		this(magicValue, preferredSparse, preferredMetaData, codec, dataFile, indexFile, new DefaultFileHeaderStrategy());
 	}
 
 	/**
@@ -133,19 +175,18 @@ public class CodecFileBuffer<E>
 	 * @param codec             the codec used by this buffer. Might be null.
 	 * @param dataFile          the data file.
 	 * @param indexFile         the index file of the buffer.
-	 * @throws NullPointerException if magicValue is null.
 	 */
 	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
 	{
-		this(magicValue, preferredMetaData, codec, dataFile, indexFile, new DefaultFileHeaderStrategy());
+		this(magicValue, false, preferredMetaData, codec, dataFile, indexFile, new DefaultFileHeaderStrategy());
 	}
 
-	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile, FileHeaderStrategy fileHeaderStrategy)
+	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile, FileHeaderStrategy fileHeaderStrategy)
 	{
 		this.magicValue = magicValue;
 		this.fileHeaderStrategy = fileHeaderStrategy;
 		this.readWriteLock = new ReentrantReadWriteLock(true);
-
+		this.preferredSparse = preferredSparse;
 		if(preferredMetaData != null)
 		{
 			preferredMetaData = new HashMap<String, String>(preferredMetaData);
@@ -200,7 +241,7 @@ public class CodecFileBuffer<E>
 			}
 			if(dataFile.length() > fileHeader.getDataOffset())
 			{
-				if(!indexFile.exists() || indexFile.length() < DATA_OFFSET_SIZE)
+				if(!indexFile.exists()) // || indexFile.length() < DATA_OFFSET_SIZE)
 				{
 					throw new IllegalArgumentException("dataFile contains data but indexFile " + indexFile
 						.getAbsolutePath() + " is not valid!");
@@ -265,7 +306,8 @@ public class CodecFileBuffer<E>
 			try
 			{
 				dataFile.delete();
-				fileHeader = fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData);
+				fileHeader = fileHeaderStrategy
+					.writeFileHeader(dataFile, magicValue, preferredMetaData, preferredSparse);
 				indexFile.delete();
 				return true;
 			}
@@ -321,7 +363,7 @@ public class CodecFileBuffer<E>
 				return 0;
 			}
 			raf = new RandomAccessFile(indexFile, "r");
-			return internalGetSize(raf);
+			return indexStrategy.getSize(raf);
 		}
 		catch(Throwable e)
 		{
@@ -364,18 +406,8 @@ public class CodecFileBuffer<E>
 			}
 			randomSerializeIndexFile = new RandomAccessFile(indexFile, "r");
 			randomSerializeFile = new RandomAccessFile(dataFile, "r");
-			elementsCount = internalGetSize(randomSerializeIndexFile);
-			if(index >= 0 && index < elementsCount)
-			{
-				long offset = internalOffsetOfElement(randomSerializeIndexFile, index);
-				if(offset < 0)
-				{
-					return null;
-				}
-				result = internalReadElement(randomSerializeFile, offset);
 
-				return result;
-			}
+			return dataStrategy.get(index, randomSerializeIndexFile, randomSerializeFile, codec, indexStrategy);
 		}
 		catch(Throwable e)
 		{
@@ -438,6 +470,9 @@ public class CodecFileBuffer<E>
 		{
 			randomIndexFile = new RandomAccessFile(indexFile, "rw");
 			randomDataFile = new RandomAccessFile(dataFile, "rw");
+
+			dataStrategy.add(element, randomIndexFile, randomDataFile, codec, indexStrategy);
+			/*
 			long elementsCount = internalGetSize(randomIndexFile);
 
 			long offset = fileHeader.getDataOffset();
@@ -462,7 +497,7 @@ public class CodecFileBuffer<E>
 			internalWriteElement(randomDataFile, offset, element);
 
 			internalWriteOffset(randomIndexFile, elementsCount, offset);
-
+			*/
 			// call proecssors if available
 			List<ElementProcessor<E>> localProcessors = elementProcessors;
 			if(localProcessors != null)
@@ -514,52 +549,16 @@ public class CodecFileBuffer<E>
 					randomIndexFile = new RandomAccessFile(indexFile, "rw");
 					randomDataFile = new RandomAccessFile(dataFile, "rw");
 
-					long elementsCount = internalGetSize(randomIndexFile);
+					dataStrategy.addAll(elements, randomIndexFile, randomDataFile, codec, indexStrategy);
 
-					long offset = fileHeader.getDataOffset();
-					if(elementsCount > 0)
-					{
-						long prevElement = elementsCount - 1;
-						long readOffset = internalOffsetOfElement(randomIndexFile, prevElement);
-						if(readOffset > 0)
-						{
-							int elementSize = internalReadElementSize(randomDataFile, readOffset);
-							if(elementSize > 0)
-							{
-								offset = readOffset + elementSize + DATA_LENGTH_SIZE;
-							}
-							else
-							{
-								randomIndexFile.setLength(0);
-								elementsCount = 0;
-							}
-						}
-					}
-					long[] offsets = new long[elements.size()];
-					int index = 0;
-					for(E element : elements)
-					{
-						offsets[index] = offset;
-						offset = offset + internalWriteElement(randomDataFile, offset, element) + DATA_LENGTH_SIZE;
-						index++;
-					}
-
-					index = 0;
-					for(long curOffset : offsets)
-					{
-						internalWriteOffset(randomIndexFile, elementsCount + index, curOffset);
-						index++;
-					}
 					// call proecssors if available
-					List<ElementProcessor<E>> localProcessors = elementProcessors;
-					if(localProcessors != null)
+					if(elementProcessors != null)
 					{
 						for(ElementProcessor<E> current : elementProcessors)
 						{
 							current.processElements(elements);
 						}
 					}
-					//if(logger.isInfoEnabled()) logger.info("Elements after batch-write: {}", index+elementsCount);
 				}
 				catch(Throwable e)
 				{
@@ -595,7 +594,7 @@ public class CodecFileBuffer<E>
 		{
 			indexFile.delete();
 			dataFile.delete();
-			fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData);
+			fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData, preferredSparse);
 			if(elementProcessors != null)
 			{
 				for(ElementProcessor<E> current : elementProcessors)
@@ -644,88 +643,6 @@ public class CodecFileBuffer<E>
 		}
 	}
 
-	private long internalOffsetOfElement(RandomAccessFile randomIndexFile, long index)
-		throws IOException
-	{
-		long offsetOffset = DATA_OFFSET_SIZE * index;
-		if(randomIndexFile.length() < offsetOffset + DATA_OFFSET_SIZE)
-		{
-			return -1;
-		}
-		randomIndexFile.seek(offsetOffset);
-		return randomIndexFile.readLong();
-	}
-
-	private long internalGetSize(RandomAccessFile randomIndexFile)
-		throws IOException
-	{
-		//if(logger.isDebugEnabled()) logger.debug("size={}", result);
-		return randomIndexFile.length() / DATA_OFFSET_SIZE;
-	}
-
-	private E internalReadElement(RandomAccessFile randomDataFile, long offset)
-		throws IOException, ClassNotFoundException, ClassCastException
-	{
-		if(codec == null)
-		{
-			throw new IllegalStateException("Codec has not been initialized!");
-		}
-
-		if(randomDataFile.length() < offset + DATA_LENGTH_SIZE)
-		{
-			throw new IndexOutOfBoundsException("Invalid offset: " + offset + "! Couldn't read length of data!");
-		}
-		randomDataFile.seek(offset);
-		int bufferSize = randomDataFile.readInt();
-		if(randomDataFile.length() < offset + DATA_LENGTH_SIZE + bufferSize)
-		{
-			throw new IndexOutOfBoundsException("Invalid length (" + bufferSize + ") at offset: " + offset + "!");
-		}
-		byte[] buffer = new byte[bufferSize];
-		randomDataFile.readFully(buffer);
-		return codec.decode(buffer);
-	}
-
-	private void internalWriteOffset(RandomAccessFile randomIndexFile, long index, long offset)
-		throws IOException
-	{
-		long offsetOffset = DATA_OFFSET_SIZE * index;
-		if(randomIndexFile.length() < offsetOffset)
-		{
-			throw new IOException("Invalid offsetOffset " + offsetOffset + "!");
-		}
-		randomIndexFile.seek(offsetOffset);
-		randomIndexFile.writeLong(offset);
-	}
-
-	private int internalWriteElement(RandomAccessFile randomDataFile, long offset, E element)
-		throws IOException
-	{
-		if(codec == null)
-		{
-			throw new IllegalStateException("Codec has not been initialized!");
-		}
-		byte[] buffer = codec.encode(element);
-
-		int bufferSize = buffer.length;
-
-		randomDataFile.seek(offset);
-		randomDataFile.writeInt(bufferSize);
-		randomDataFile.write(buffer);
-		return bufferSize;
-	}
-
-	private int internalReadElementSize(RandomAccessFile randomDataFile, long offset)
-		throws IOException
-	{
-		long size = randomDataFile.length();
-		if(size >= offset + DATA_LENGTH_SIZE)
-		{
-			randomDataFile.seek(offset);
-			return randomDataFile.readInt();
-		}
-		return -1;
-	}
 
 	private void setDataFile(File dataFile)
 	{

@@ -20,7 +20,6 @@ package de.huxhorn.sulky.codec.filebuffer;
 import static junit.framework.Assert.assertEquals;
 import org.junit.After;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -33,7 +32,6 @@ public class DefaultFileHeaderStrategyTest
 	private DefaultFileHeaderStrategy instance;
 	private File file;
 	private int magicValue;
-	private MetaData metaData;
 	private HashMap<String, String> metaDataMap;
 
 	@Before
@@ -46,7 +44,7 @@ public class DefaultFileHeaderStrategyTest
 		magicValue = 0xDEADBEEF;
 		metaDataMap = new HashMap<String, String>();
 		metaDataMap.put("foo", "bar");
-		metaData=new MetaData(metaDataMap);
+		metaDataMap.put("foo2", "bar2");
 	}
 
 	@After
@@ -59,33 +57,79 @@ public class DefaultFileHeaderStrategyTest
 	public void missingMetaData()
 		throws IOException
 	{
-		FileHeader fileHeader=instance.writeFileHeader(file, magicValue, null);
-		assertNotNull(fileHeader);
-		assertNull(fileHeader.getMetaData());
-		assertEquals(magicValue, fileHeader.getMagicValue());
+		boolean sparse = false;
+		MetaData metaData = new MetaData(sparse);
 
-		Integer readMagicValue=instance.readMagicValue(file);
-		assertNotNull(readMagicValue);
-		assertEquals(magicValue, (int)readMagicValue);
-
-		FileHeader readFileHeader=instance.readFileHeader(file);
-		assertEquals(fileHeader, readFileHeader);
-	}
-
-
-	public void includingMetaData()
-		throws IOException
-	{
-		FileHeader fileHeader=instance.writeFileHeader(file, magicValue, metaDataMap);
+		FileHeader fileHeader = instance.writeFileHeader(file, magicValue, null, sparse);
 		assertNotNull(fileHeader);
 		assertEquals(metaData, fileHeader.getMetaData());
 		assertEquals(magicValue, fileHeader.getMagicValue());
 
-		Integer readMagicValue=instance.readMagicValue(file);
+		Integer readMagicValue = instance.readMagicValue(file);
 		assertNotNull(readMagicValue);
-		assertEquals(magicValue, (int)readMagicValue);
+		assertEquals(magicValue, (int) readMagicValue);
 
-		FileHeader readFileHeader=instance.readFileHeader(file);
+		FileHeader readFileHeader = instance.readFileHeader(file);
+		assertEquals(fileHeader, readFileHeader);
+	}
+
+	@Test
+	public void sparseMissingMetaData()
+		throws IOException
+	{
+		boolean sparse = true;
+		MetaData metaData = new MetaData(sparse);
+
+		FileHeader fileHeader = instance.writeFileHeader(file, magicValue, null, sparse);
+		assertNotNull(fileHeader);
+		assertEquals(metaData, fileHeader.getMetaData());
+		assertEquals(magicValue, fileHeader.getMagicValue());
+
+		Integer readMagicValue = instance.readMagicValue(file);
+		assertNotNull(readMagicValue);
+		assertEquals(magicValue, (int) readMagicValue);
+
+		FileHeader readFileHeader = instance.readFileHeader(file);
+		assertEquals(fileHeader, readFileHeader);
+	}
+
+	@Test
+	public void includingMetaData()
+		throws IOException
+	{
+		boolean sparse = false;
+		MetaData metaData = new MetaData(metaDataMap, sparse);
+
+		FileHeader fileHeader = instance.writeFileHeader(file, magicValue, metaDataMap, sparse);
+		assertNotNull(fileHeader);
+		assertEquals(metaData, fileHeader.getMetaData());
+		assertEquals(magicValue, fileHeader.getMagicValue());
+
+		Integer readMagicValue = instance.readMagicValue(file);
+		assertNotNull(readMagicValue);
+		assertEquals(magicValue, (int) readMagicValue);
+
+		FileHeader readFileHeader = instance.readFileHeader(file);
+		assertEquals(fileHeader, readFileHeader);
+	}
+
+	@Test
+	public void sparseIncludingMetaData()
+		throws IOException
+	{
+		boolean sparse = true;
+		MetaData metaData = new MetaData(metaDataMap, sparse);
+
+		FileHeader fileHeader = instance.writeFileHeader(file, magicValue, metaDataMap, sparse);
+		assertNotNull(fileHeader);
+		assertEquals(metaData, fileHeader.getMetaData());
+		assertEquals(magicValue, fileHeader.getMagicValue());
+
+		Integer readMagicValue = instance.readMagicValue(file);
+		assertNotNull(readMagicValue);
+		assertEquals(magicValue, (int) readMagicValue);
+
+		FileHeader readFileHeader = instance.readFileHeader(file);
 		assertEquals(fileHeader, readFileHeader);
 	}
 }

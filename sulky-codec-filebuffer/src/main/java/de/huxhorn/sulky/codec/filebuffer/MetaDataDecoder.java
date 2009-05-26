@@ -114,6 +114,6 @@ public class MetaDataDecoder
 		{
 			sparse = data.getSparse();
 		}
-		return new MetaData(sparse, dataMap);
+		return new MetaData(dataMap, sparse);
 	}
 }
