@@ -93,8 +93,8 @@ public class CodecFileBuffer<E>
 	private int magicValue;
 	private FileHeader fileHeader;
 	private boolean preferredSparse;
-	private DataStrategy<E> dataStrategy = new DefaultDataStrategy<E>();
-	private IndexStrategy indexStrategy = new DefaultIndexStrategy();
+	private DataStrategy<E> dataStrategy;
+	private IndexStrategy indexStrategy;
 
 	/**
 	 * Shortcut for CodecFileBuffer(magicValue, preferredSparse, preferredMetaData, null, null, serializeFile, null).
@@ -105,10 +105,10 @@ public class CodecFileBuffer<E>
 	 * @param dataFile          the data file.
 	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
-	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, File dataFile)
-	{
-		this(magicValue, preferredSparse, preferredMetaData, null, dataFile, null);
-	}
+//	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, File dataFile)
+//	{
+//		this(magicValue, preferredSparse, preferredMetaData, null, dataFile, null);
+//	}
 
 	/**
 	 * Shortcut for CodecFileBuffer(magicValue, false, preferredMetaData, null, null, serializeFile, null).
@@ -118,10 +118,10 @@ public class CodecFileBuffer<E>
 	 * @param dataFile          the data file.
 	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
-	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, File dataFile)
-	{
-		this(magicValue, false, preferredMetaData, null, dataFile, null);
-	}
+//	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, File dataFile)
+//	{
+//		this(magicValue, false, preferredMetaData, null, dataFile, null);
+//	}
 
 	/**
 	 * Shortcut for CodecFileBuffer(magicValue, preferredSparse, preferredMetaData, null, null, serializeFile, null).
@@ -133,10 +133,10 @@ public class CodecFileBuffer<E>
 	 * @param dataFile          the data file.
 	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
-	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
-	{
-		this(magicValue, preferredSparse, preferredMetaData, codec, dataFile, null);
-	}
+//	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
+//	{
+//		this(magicValue, preferredSparse, preferredMetaData, codec, dataFile, null);
+//	}
 
 	/**
 	 * Shortcut for CodecFileBuffer(magicValue, false, preferredMetaData, null, null, serializeFile, null).
@@ -147,10 +147,10 @@ public class CodecFileBuffer<E>
 	 * @param dataFile          the data file.
 	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
 	 */
-	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
-	{
-		this(magicValue, false, preferredMetaData, codec, dataFile, null);
-	}
+//	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
+//	{
+//		this(magicValue, false, preferredMetaData, codec, dataFile, null);
+//	}
 
 	/**
 	 * TODO: add description :p
@@ -162,10 +162,10 @@ public class CodecFileBuffer<E>
 	 * @param dataFile          the data file.
 	 * @param indexFile         the index file of the buffer.
 	 */
-	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
-	{
-		this(magicValue, preferredSparse, preferredMetaData, codec, dataFile, indexFile, new DefaultFileHeaderStrategy());
-	}
+//	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
+//	{
+//		this(magicValue, preferredSparse, preferredMetaData, codec, dataFile, indexFile, new DefaultFileHeaderStrategy());
+//	}
 
 	/**
 	 * TODO: add description :p
@@ -176,13 +176,14 @@ public class CodecFileBuffer<E>
 	 * @param dataFile          the data file.
 	 * @param indexFile         the index file of the buffer.
 	 */
-	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
+	public CodecFileBuffer(int magicValue, boolean sparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
 	{
-		this(magicValue, false, preferredMetaData, codec, dataFile, indexFile, new DefaultFileHeaderStrategy());
+		this(magicValue, sparse, preferredMetaData, codec, dataFile, indexFile, new DefaultFileHeaderStrategy());
 	}
 
 	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile, FileHeaderStrategy fileHeaderStrategy)
 	{
+		this.indexStrategy = new DefaultIndexStrategy();
 		this.magicValue = magicValue;
 		this.fileHeaderStrategy = fileHeaderStrategy;
 		this.readWriteLock = new ReentrantReadWriteLock(true);
@@ -247,7 +248,7 @@ public class CodecFileBuffer<E>
 						.getAbsolutePath() + " is not valid!");
 				}
 			}
-			this.fileHeader = fileHeader;
+			setFileHeader(fileHeader);
 		}
 		catch(IOException ex)
 		{
@@ -306,8 +307,7 @@ public class CodecFileBuffer<E>
 			try
 			{
 				dataFile.delete();
-				fileHeader = fileHeaderStrategy
-					.writeFileHeader(dataFile, magicValue, preferredMetaData, preferredSparse);
+				setFileHeader(fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData, preferredSparse));
 				indexFile.delete();
 				return true;
 			}
@@ -472,32 +472,6 @@ public class CodecFileBuffer<E>
 			randomDataFile = new RandomAccessFile(dataFile, "rw");
 
 			dataStrategy.add(element, randomIndexFile, randomDataFile, codec, indexStrategy);
-			/*
-			long elementsCount = internalGetSize(randomIndexFile);
-
-			long offset = fileHeader.getDataOffset();
-			if(elementsCount > 0)
-			{
-				long prevElement = elementsCount - 1;
-				long readOffset = internalOffsetOfElement(randomIndexFile, prevElement);
-				if(readOffset > 0)
-				{
-					int elementSize = internalReadElementSize(randomDataFile, readOffset);
-					if(elementSize > 0)
-					{
-						offset = readOffset + elementSize + DATA_LENGTH_SIZE;
-					}
-					else
-					{
-						randomIndexFile.setLength(0);
-						elementsCount = 0;
-					}
-				}
-			}
-			internalWriteElement(randomDataFile, offset, element);
-
-			internalWriteOffset(randomIndexFile, elementsCount, offset);
-			*/
 			// call proecssors if available
 			List<ElementProcessor<E>> localProcessors = elementProcessors;
 			if(localProcessors != null)
@@ -729,5 +703,19 @@ public class CodecFileBuffer<E>
 	public boolean isDisposed()
 	{
 		return false;  // TODO: implement isDisposed()
+	}
+
+	private void setFileHeader(FileHeader fileHeader)
+	{
+		MetaData metaData = fileHeader.getMetaData();
+		if(metaData.isSparse())
+		{
+			dataStrategy=new SparseDataStrategy<E>();
+		}
+		else
+		{
+			dataStrategy=new DefaultDataStrategy<E>();
+		}
+		this.fileHeader = fileHeader;
 	}
 }

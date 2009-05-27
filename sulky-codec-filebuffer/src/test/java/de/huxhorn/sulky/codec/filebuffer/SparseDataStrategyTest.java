@@ -150,6 +150,7 @@ public class SparseDataStrategyTest
 			closeQuietly(randomIndexFile);
 			closeQuietly(randomDataFile);
 		}
+		// TODO: overwrite + set to null 
 	}
 
 	@Test

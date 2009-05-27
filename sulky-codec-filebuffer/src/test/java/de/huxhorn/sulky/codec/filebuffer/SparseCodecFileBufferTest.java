@@ -17,11 +17,11 @@
  */
 package de.huxhorn.sulky.codec.filebuffer;
 
-public class CodecFileBufferTest
+public class SparseCodecFileBufferTest
 	extends CodecFileBufferTestBase
 {
 	protected void initSparse()
 	{
-		sparse=false;
+		sparse=true;
 	}
 }
