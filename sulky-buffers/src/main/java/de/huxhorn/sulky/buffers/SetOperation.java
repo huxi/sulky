@@ -25,7 +25,7 @@ public interface SetOperation<E>
 	 * @param index  the index of the given object
 	 * @param object the object to be set at index
 	 * @return true if the object could be set at the given index, false if that was not possible (for example because that spot was already used and the buffer is a write-once buffer)
-	 * @throws IllegalStateException if isSetSupported returns false.
+	 * @throws UnsupportedOperationException if isSetSupported returns false.
 	 */
 	boolean set(long index, E object);
 

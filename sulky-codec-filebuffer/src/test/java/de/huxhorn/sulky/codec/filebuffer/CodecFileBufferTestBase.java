@@ -38,15 +38,15 @@ public abstract class CodecFileBufferTestBase
 {
 	private final Logger logger = LoggerFactory.getLogger(CodecFileBufferTestBase.class);
 
-	private File tempOutputPath;
-	private File dataFile;
-	private File indexFile;
+	protected File tempOutputPath;
+	protected File dataFile;
+	protected File indexFile;
 
-	private String[] values;
-	private int magicValue;
-	private Map<String, String> metaData;
-	private Codec<String> codec;
-	private FileHeaderStrategy fileHeaderStrategy;
+	protected String[] values;
+	protected int magicValue;
+	protected Map<String, String> metaData;
+	protected Codec<String> codec;
+	protected FileHeaderStrategy fileHeaderStrategy;
 	protected boolean sparse;
 
 	protected abstract void initSparse();
@@ -670,6 +670,13 @@ public abstract class CodecFileBufferTestBase
 		CodecFileBuffer<String> otherInstance = new CodecFileBuffer<String>(magicValue, sparse, metaData, codec, dataFile, indexFile, fileHeaderStrategy);
 		FileHeader otherHeader = otherInstance.getFileHeader();
 		assertEquals(new MetaData(metaData, sparse), otherHeader.getMetaData());
+	}
+
+	@Test
+	public void isSetSupported()
+	{
+		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, sparse, metaData, codec, dataFile, indexFile, fileHeaderStrategy);
+		assertEquals(sparse, instance.isSetSupported());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

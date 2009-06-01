@@ -17,11 +17,20 @@
  */
 package de.huxhorn.sulky.codec.filebuffer;
 
+import org.junit.Test;
+
 public class CodecFileBufferTest
 	extends CodecFileBufferTestBase
 {
 	protected void initSparse()
 	{
-		sparse=false;
+		sparse = false;
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public void set()
+	{
+		CodecFileBuffer<String> instance = new CodecFileBuffer<String>(magicValue, sparse, null, codec, dataFile, indexFile, fileHeaderStrategy);
+		instance.set(0, "Will fail!");
 	}
 }

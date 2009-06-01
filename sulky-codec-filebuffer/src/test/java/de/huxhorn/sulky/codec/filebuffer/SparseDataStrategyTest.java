@@ -150,7 +150,128 @@ public class SparseDataStrategyTest
 			closeQuietly(randomIndexFile);
 			closeQuietly(randomDataFile);
 		}
-		// TODO: overwrite + set to null 
+	}
+
+	@Test
+	public void setOverwrite()
+		throws IOException, ClassNotFoundException
+	{
+		String value1 = "Foo";
+		String value2 = "Bar";
+		long index1 = 17;
+		long index2 = 42;
+		RandomAccessFile randomIndexFile = null;
+		RandomAccessFile randomDataFile = null;
+		try
+		{
+			randomIndexFile = new RandomAccessFile(indexFile, "rw");
+			randomDataFile = new RandomAccessFile(dataFile, "rw");
+			boolean result1 = instance.set(index1, value1, randomIndexFile, randomDataFile, codec, indexStrategy);
+			boolean result2 = instance.set(index2, value2, randomIndexFile, randomDataFile, codec, indexStrategy);
+			boolean result3 = instance.set(index2, value1, randomIndexFile, randomDataFile, codec, indexStrategy);
+			String readValue1 = instance.get(index1, randomIndexFile, randomDataFile, codec, indexStrategy);
+			String readValue2 = instance.get(index2, randomIndexFile, randomDataFile, codec, indexStrategy);
+			assertEquals(index2 + 1, indexStrategy.getSize(randomIndexFile));
+			assertEquals(value1, readValue1);
+			assertEquals(value1, readValue2);
+			assertTrue(result1);
+			assertTrue(result2);
+			assertTrue(result3);
+			for(int i = 0; i < index2; i++)
+			{
+				if(i != index1)
+				{
+					assertNull(instance.get(i, randomIndexFile, randomDataFile, codec, indexStrategy));
+				}
+			}
+		}
+		finally
+		{
+			closeQuietly(randomIndexFile);
+			closeQuietly(randomDataFile);
+		}
+		// TODO: overwrite + set to null
+	}
+
+	@Test
+	public void setNoOverwrite()
+		throws IOException, ClassNotFoundException
+	{
+		instance.setSupportingOverwrite(false);
+		String value1 = "Foo";
+		String value2 = "Bar";
+		long index1 = 17;
+		long index2 = 42;
+		RandomAccessFile randomIndexFile = null;
+		RandomAccessFile randomDataFile = null;
+		try
+		{
+			randomIndexFile = new RandomAccessFile(indexFile, "rw");
+			randomDataFile = new RandomAccessFile(dataFile, "rw");
+			boolean result1 = instance.set(index1, value1, randomIndexFile, randomDataFile, codec, indexStrategy);
+			boolean result2 = instance.set(index2, value2, randomIndexFile, randomDataFile, codec, indexStrategy);
+			boolean result3 = instance.set(index2, value1, randomIndexFile, randomDataFile, codec, indexStrategy);
+			String readValue1 = instance.get(index1, randomIndexFile, randomDataFile, codec, indexStrategy);
+			String readValue2 = instance.get(index2, randomIndexFile, randomDataFile, codec, indexStrategy);
+			assertEquals(index2 + 1, indexStrategy.getSize(randomIndexFile));
+			assertEquals(value1, readValue1);
+			assertEquals(value2, readValue2);
+			assertTrue(result1);
+			assertTrue(result2);
+			assertFalse(result3);
+			for(int i = 0; i < index2; i++)
+			{
+				if(i != index1)
+				{
+					assertNull(instance.get(i, randomIndexFile, randomDataFile, codec, indexStrategy));
+				}
+			}
+		}
+		finally
+		{
+			closeQuietly(randomIndexFile);
+			closeQuietly(randomDataFile);
+		}
+	}
+
+	@Test
+	public void setOverwriteNull()
+		throws IOException, ClassNotFoundException
+	{
+		String value1 = "Foo";
+		String value2 = "Bar";
+		long index1 = 17;
+		long index2 = 42;
+		RandomAccessFile randomIndexFile = null;
+		RandomAccessFile randomDataFile = null;
+		try
+		{
+			randomIndexFile = new RandomAccessFile(indexFile, "rw");
+			randomDataFile = new RandomAccessFile(dataFile, "rw");
+			boolean result1 = instance.set(index1, value1, randomIndexFile, randomDataFile, codec, indexStrategy);
+			boolean result2 = instance.set(index2, value2, randomIndexFile, randomDataFile, codec, indexStrategy);
+			boolean result3 = instance.set(index2, null, randomIndexFile, randomDataFile, codec, indexStrategy);
+			String readValue1 = instance.get(index1, randomIndexFile, randomDataFile, codec, indexStrategy);
+			String readValue2 = instance.get(index2, randomIndexFile, randomDataFile, codec, indexStrategy);
+			assertEquals(index2 + 1, indexStrategy.getSize(randomIndexFile));
+			assertEquals(value1, readValue1);
+			assertNull(readValue2);
+			assertTrue(result1);
+			assertTrue(result2);
+			assertTrue(result3);
+			for(int i = 0; i < index2; i++)
+			{
+				if(i != index1)
+				{
+					assertNull(instance.get(i, randomIndexFile, randomDataFile, codec, indexStrategy));
+				}
+			}
+		}
+		finally
+		{
+			closeQuietly(randomIndexFile);
+			closeQuietly(randomDataFile);
+		}
 	}
 
 	@Test
