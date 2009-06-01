@@ -72,7 +72,7 @@ public class CodecFileBuffer<E>
 
 	private final Logger logger = LoggerFactory.getLogger(CodecFileBuffer.class);
 
-	private ReadWriteLock readWriteLock;
+	private final ReadWriteLock readWriteLock;
 
 	/**
 	 * the file that contains the serialized objects.

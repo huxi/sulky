@@ -42,7 +42,7 @@ public class SerializingFileBuffer<E>
 {
 	private final Logger logger = LoggerFactory.getLogger(SerializingFileBuffer.class);
 
-	private ReadWriteLock readWriteLock;
+	private final ReadWriteLock readWriteLock;
 
 	/**
 	 * the file that contains the serialized objects.
