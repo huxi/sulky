@@ -38,6 +38,16 @@ public class SparseDataStrategy<E>
 
 	private boolean supportingOverwrite;
 
+	public SparseDataStrategy()
+	{
+		this(true);
+	}
+
+	public SparseDataStrategy(boolean supportingOverwrite)
+	{
+		this.supportingOverwrite = supportingOverwrite;
+	}
+
 	public boolean isSupportingOverwrite()
 	{
 		return supportingOverwrite;
@@ -104,7 +114,11 @@ public class SparseDataStrategy<E>
 		throws IOException, UnsupportedOperationException
 	{
 		long offset = indexStrategy.getOffset(indexFile, index);
-		if(offset < 0 || supportingOverwrite)
+		if(!supportingOverwrite && offset >= 0)
+		{
+			return false;
+		}
+		if(element != null)
 		{
 			offset = dataFile.length();
 			internalWriteElement(dataFile, offset, index, element, codec);
@@ -112,7 +126,12 @@ public class SparseDataStrategy<E>
 			indexStrategy.setOffset(indexFile, index, offset);
 			return true;
 		}
-		return false;
+		else
+		{
+			// set offset to -1 to signal a null value.
+			indexStrategy.setOffset(indexFile, index, -1);
+			return true;
+		}
 	}
 
 	public boolean isSetSupported()

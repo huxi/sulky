@@ -23,6 +23,7 @@ import de.huxhorn.sulky.buffers.DisposeOperation;
 import de.huxhorn.sulky.buffers.ElementProcessor;
 import de.huxhorn.sulky.buffers.FileBuffer;
 import de.huxhorn.sulky.buffers.Reset;
+import de.huxhorn.sulky.buffers.SetOperation;
 import de.huxhorn.sulky.codec.Codec;
 
 import org.slf4j.Logger;
@@ -65,7 +66,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @param <E> the type of objects that are stored in this buffer.
  */
 public class CodecFileBuffer<E>
-	implements FileBuffer<E>, DisposeOperation
+	implements FileBuffer<E>, SetOperation<E>, DisposeOperation
 {
 
 
@@ -710,12 +711,60 @@ public class CodecFileBuffer<E>
 		MetaData metaData = fileHeader.getMetaData();
 		if(metaData.isSparse())
 		{
-			dataStrategy=new SparseDataStrategy<E>();
+			dataStrategy = new SparseDataStrategy<E>();
 		}
 		else
 		{
-			dataStrategy=new DefaultDataStrategy<E>();
+			dataStrategy = new DefaultDataStrategy<E>();
 		}
 		this.fileHeader = fileHeader;
+	}
+
+	public boolean set(long index, E element)
+	{
+		initFilesIfNecessary();
+		RandomAccessFile randomIndexFile = null;
+		RandomAccessFile randomDataFile = null;
+		Lock lock = readWriteLock.writeLock();
+		lock.lock();
+		Throwable throwable = null;
+		boolean result = false;
+		try
+		{
+			randomIndexFile = new RandomAccessFile(indexFile, "rw");
+			randomDataFile = new RandomAccessFile(dataFile, "rw");
+
+			result = dataStrategy.set(index, element, randomIndexFile, randomDataFile, codec, indexStrategy);
+			// call proecssors if available
+			List<ElementProcessor<E>> localProcessors = elementProcessors;
+			if(localProcessors != null)
+			{
+				for(ElementProcessor<E> current : elementProcessors)
+				{
+					current.processElement(element);
+				}
+			}
+		}
+		catch(IOException e)
+		{
+			throwable = e;
+		}
+		finally
+		{
+			closeQuietly(randomDataFile);
+			closeQuietly(randomIndexFile);
+			lock.unlock();
+		}
+		if(throwable != null)
+		{
+			// it's a really bad idea to log while locked *sigh*
+			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
+		}
+		return result;
+	}
+
+	public boolean isSetSupported()
+	{
+		return dataStrategy != null && dataStrategy.isSetSupported();
 	}
 }
