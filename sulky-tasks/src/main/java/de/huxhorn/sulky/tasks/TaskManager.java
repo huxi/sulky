@@ -120,8 +120,8 @@ public class TaskManager<T>
 		{
 			throw new IllegalArgumentException("executorService must not be null!");
 		}
-		this.tasksLock = new ReentrantReadWriteLock();
-		this.taskListenersLock = new ReentrantReadWriteLock();
+		this.tasksLock = new ReentrantReadWriteLock(true);
+		this.taskListenersLock = new ReentrantReadWriteLock(true);
 		this.nextTaskId = 1;
 		this.usingEventQueue = usingEventQueue;
 		this.internalCreatedTasks = new ArrayList<Task<T>>();
@@ -244,7 +244,6 @@ public class TaskManager<T>
 
 		Future<T> future = executorService.submit(callable);
 		Task<T> task;
-//		synchronized(tasks)
 		ReentrantReadWriteLock.WriteLock lock = tasksLock.writeLock();
 		lock.lock();
 		try
@@ -288,7 +287,6 @@ public class TaskManager<T>
 	 */
 	public Task<T> getTaskById(long taskId)
 	{
-		//synchronized(tasks)
 		ReentrantReadWriteLock.ReadLock lock = tasksLock.readLock();
 		lock.lock();
 		try
@@ -310,7 +308,6 @@ public class TaskManager<T>
 	public Task<T> getTaskByCallable(Callable<T> callable)
 	{
 		int callableIdentity = System.identityHashCode(callable);
-		//synchronized(tasks)
 		ReentrantReadWriteLock.ReadLock lock = tasksLock.readLock();
 		lock.lock();
 		try
@@ -332,7 +329,6 @@ public class TaskManager<T>
 	{
 		Map<Long, Task<T>> result;
 
-		//synchronized(tasks)
 		ReentrantReadWriteLock.ReadLock lock = tasksLock.readLock();
 		lock.lock();
 		try
@@ -405,7 +401,6 @@ public class TaskManager<T>
 					List<Task<T>> doneTasks = null;
 					List<Task<T>> createdTasks = null;
 
-					//synchronized(tasks)
 					ReentrantReadWriteLock.WriteLock lock = tasksLock.writeLock();
 					lock.lock();
 					try
@@ -441,7 +436,7 @@ public class TaskManager<T>
 								callableTasks.remove(callableIdentity);
 							}
 						}
-					} // synchronized (tasks)
+					}
 					finally
 					{
 						lock.unlock();
@@ -477,7 +472,6 @@ public class TaskManager<T>
 	 */
 	public void addTaskListener(TaskListener<T> listener)
 	{
-		//synchronized(taskListeners)
 		ReentrantReadWriteLock.WriteLock lock = taskListenersLock.writeLock();
 		lock.lock();
 		try
@@ -497,7 +491,6 @@ public class TaskManager<T>
 	 */
 	public void removeTaskListener(TaskListener<T> listener)
 	{
-		//synchronized(taskListeners)
 		ReentrantReadWriteLock.WriteLock lock = taskListenersLock.writeLock();
 		lock.lock();
 		try
@@ -529,7 +522,6 @@ public class TaskManager<T>
 
 		public void run()
 		{
-			//synchronized(taskListeners)
 			ReentrantReadWriteLock.ReadLock lock = taskListenersLock.readLock();
 			lock.lock();
 			try
@@ -707,7 +699,6 @@ public class TaskManager<T>
 				int progress = (Integer) newValue;
 				int callableIdentity = System.identityHashCode(source);
 
-				//synchronized(tasks)
 				ReentrantReadWriteLock.WriteLock lock = tasksLock.writeLock();
 				// using write lock because internalProgressChanges is changed.
 				lock.lock();

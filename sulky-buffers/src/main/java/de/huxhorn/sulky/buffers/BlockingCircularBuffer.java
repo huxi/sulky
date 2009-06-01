@@ -30,7 +30,7 @@ public class BlockingCircularBuffer<E>
 {
 	private final Logger logger = LoggerFactory.getLogger(BlockingCircularBuffer.class);
 
-	private Lock lock;
+	private final Lock lock;
 	private OverwritingCircularBuffer<E> events;
 	private static final int DEFAULT_CONGESTION_DELAY = 500;
 	private int congestionDelay;
@@ -38,7 +38,7 @@ public class BlockingCircularBuffer<E>
 	public BlockingCircularBuffer(int bufferSize, int congestionDelay)
 	{
 		events = new OverwritingCircularBuffer<E>(bufferSize);
-		lock = new ReentrantLock();
+		lock = new ReentrantLock(true);
 		this.congestionDelay = congestionDelay;
 	}
 

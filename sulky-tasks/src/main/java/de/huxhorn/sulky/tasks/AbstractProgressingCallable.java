@@ -79,7 +79,7 @@ public abstract class AbstractProgressingCallable<T>
 
 	public AbstractProgressingCallable(long initialSleepSteps, long laterSleepSteps)
 	{
-		rwLock = new ReentrantReadWriteLock();
+		rwLock = new ReentrantReadWriteLock(true);
 
 		this.changeSupport = new PropertyChangeSupport(this);
 		this.progress = -1;
