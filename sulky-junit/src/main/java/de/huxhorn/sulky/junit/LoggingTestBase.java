@@ -17,8 +17,13 @@
  */
 package de.huxhorn.sulky.junit;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import org.junit.After;
@@ -197,6 +202,14 @@ public class LoggingTestBase
 		{
 			System.out.println("### Disabling all logging.");
 		}
+
+		/*
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		loggerContext.reset();
+		Logger root = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
+		root.setLevel(Level.OFF);
+		*/
+
 		String configString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<configuration>\n" +
 			"    <root>\n" +
@@ -220,6 +233,23 @@ public class LoggingTestBase
 		{
 			System.out.println("### Enabling all logging.\n### Logs are written to '" + file.getAbsolutePath() + "'.");
 		}
+
+		/*
+		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		loggerContext.reset();
+		Logger root = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
+		root.setLevel(Level.ALL);
+		PatternLayout patternLayout = new PatternLayout();
+		patternLayout.setPattern("%-4relative [%thread] %-5level %logger{35} - %msg%n");
+		FileAppender<LoggingEvent> appender = new FileAppender<LoggingEvent>();
+		appender.setLayout(patternLayout);
+		appender.setFile(file.getAbsolutePath());
+		appender.setName("FILE");
+		appender.setContext(loggerContext);
+		appender.start();
+		root.addAppender(appender);
+		*/
+
 		String configString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 			"<configuration>\n" +
 			"    <appender name=\"FILE\" class=\"ch.qos.logback.core.FileAppender\">\n" +
