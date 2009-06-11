@@ -17,13 +17,13 @@
  */
 package de.huxhorn.sulky.junit;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
+//import ch.qos.logback.classic.Level;
+//import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.PatternLayout;
+//import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.core.FileAppender;
+//import ch.qos.logback.classic.spi.LoggingEvent;
+//import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import org.junit.After;
@@ -236,18 +236,29 @@ public class LoggingTestBase
 
 		/*
 		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+		if(verbose)
+		{
+			StatusPrinter.print(loggerContext);
+		}
 		loggerContext.reset();
 		Logger root = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
 		root.setLevel(Level.ALL);
 		PatternLayout patternLayout = new PatternLayout();
 		patternLayout.setPattern("%-4relative [%thread] %-5level %logger{35} - %msg%n");
+		patternLayout.setContext(loggerContext);
 		FileAppender<LoggingEvent> appender = new FileAppender<LoggingEvent>();
 		appender.setLayout(patternLayout);
 		appender.setFile(file.getAbsolutePath());
 		appender.setName("FILE");
 		appender.setContext(loggerContext);
-		appender.start();
 		root.addAppender(appender);
+		appender.start();
+
+		if(verbose)
+		{
+			System.out.println("### Status after enabling all logging.\n### Logs are written to '" + file.getAbsolutePath() + "'.");
+			StatusPrinter.print(loggerContext);
+		}
 		*/
 
 		String configString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
