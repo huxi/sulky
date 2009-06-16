@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// XXX Use Joda instead
 public class DateTimeFormatter
 {
 	private static final String SIMPLE_DATE_FORMAT_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
