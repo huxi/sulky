@@ -22,7 +22,7 @@
 	<properties>
 		<sulkyVersion>${pom.version}</sulkyVersion>
 		<slf4jVersion>1.5.8</slf4jVersion>
-		<logbackVersion>0.9.16</logbackVersion>
+		<logbackVersion>0.9.17</logbackVersion>
 	</properties>
 
 	<licenses>
