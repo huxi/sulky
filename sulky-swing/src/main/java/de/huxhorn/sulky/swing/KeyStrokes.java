@@ -36,12 +36,17 @@ public class KeyStrokes
 	 */
 	public static final String COMMAND_MODIFIERS;
 
+	/**
+	 * Contains Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() 
+	 */
+	public static final int COMMAND_KEYMASK;
+
 	static
 	{
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		int keymask = toolkit.getMenuShortcutKeyMask();
+		COMMAND_KEYMASK = toolkit.getMenuShortcutKeyMask();
 
-		COMMAND_MODIFIERS = getModifiersString(keymask);
+		COMMAND_MODIFIERS = getModifiersString(COMMAND_KEYMASK);
 	}
 
 	/**
