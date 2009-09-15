@@ -26,7 +26,6 @@ public final class MetaDataProto {
       return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_descriptor;
     }
     
-    @Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_fieldAccessorTable;
@@ -51,7 +50,6 @@ public final class MetaDataProto {
     public boolean hasSparse() { return hasSparse; }
     public boolean getSparse() { return sparse_; }
     
-    @Override
     public final boolean isInitialized() {
       for (de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry element : getEntryList()) {
         if (!element.isInitialized()) return false;
@@ -59,7 +57,6 @@ public final class MetaDataProto {
       return true;
     }
     
-    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       for (de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry element : getEntryList()) {
@@ -72,7 +69,6 @@ public final class MetaDataProto {
     }
     
     private int memoizedSerializedSize = -1;
-    @Override
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -98,7 +94,7 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData parseFrom(
         com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -109,7 +105,7 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData parseFrom(
         byte[] data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -120,7 +116,7 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData parseFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
@@ -131,7 +127,7 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData parseDelimitedFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
                .buildParsed();
@@ -143,43 +139,49 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData parseFrom(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
     
-    public static Builder newBuilder() { return new Builder(); }
-    public Builder newBuilderForType() { return new Builder(); }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData prototype) {
-      return new Builder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData result;
+      
       // Construct using de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData.newBuilder()
       private Builder() {}
       
-      de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData result = new de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData();
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData();
+        return builder;
+      }
       
-      @Override
       protected de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData internalGetResult() {
         return result;
       }
       
-      @Override
       public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
         result = new de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData();
         return this;
       }
       
-      @Override
       public Builder clone() {
-        return new Builder().mergeFrom(result);
+        return create().mergeFrom(result);
       }
       
-      @Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData.getDescriptor();
@@ -189,10 +191,12 @@ public final class MetaDataProto {
         return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData.getDefaultInstance();
       }
       
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
       public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData build() {
         if (result != null && !isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
-            result);
+          throw newUninitializedMessageException(result);
         }
         return buildPartial();
       }
@@ -200,7 +204,7 @@ public final class MetaDataProto {
       private de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         if (!isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
+          throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
         }
         return buildPartial();
@@ -209,7 +213,8 @@ public final class MetaDataProto {
       public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData buildPartial() {
         if (result == null) {
           throw new IllegalStateException(
-            "build() has already been called on this Builder.");  }
+            "build() has already been called on this Builder.");
+        }
         if (result.entry_ != java.util.Collections.EMPTY_LIST) {
           result.entry_ =
             java.util.Collections.unmodifiableList(result.entry_);
@@ -219,7 +224,6 @@ public final class MetaDataProto {
         return returnMe;
       }
       
-      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData) {
           return mergeFrom((de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData)other);
@@ -244,18 +248,9 @@ public final class MetaDataProto {
         return this;
       }
       
-      @Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return mergeFrom(input,
-          com.google.protobuf.ExtensionRegistry.getEmptyRegistry());
-      }
-      
-      @Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistry extensionRegistry)
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder(
@@ -362,6 +357,10 @@ public final class MetaDataProto {
     static {
       de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.getDescriptor();
     }
+    
+    static {
+      de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.internalForceInit();
+    }
   }
   
   public static final class MapEntry extends
@@ -383,7 +382,6 @@ public final class MetaDataProto {
       return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_descriptor;
     }
     
-    @Override
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
       return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_fieldAccessorTable;
@@ -403,13 +401,11 @@ public final class MetaDataProto {
     public boolean hasValue() { return hasValue; }
     public java.lang.String getValue() { return value_; }
     
-    @Override
     public final boolean isInitialized() {
       if (!hasKey) return false;
       return true;
     }
     
-    @Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (hasKey()) {
@@ -422,7 +418,6 @@ public final class MetaDataProto {
     }
     
     private int memoizedSerializedSize = -1;
-    @Override
     public int getSerializedSize() {
       int size = memoizedSerializedSize;
       if (size != -1) return size;
@@ -448,7 +443,7 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry parseFrom(
         com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -459,7 +454,7 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry parseFrom(
         byte[] data,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
@@ -470,7 +465,7 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry parseFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
@@ -481,7 +476,7 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry parseDelimitedFrom(
         java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeDelimitedFrom(input, extensionRegistry)
                .buildParsed();
@@ -493,43 +488,49 @@ public final class MetaDataProto {
     }
     public static de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry parseFrom(
         com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistry extensionRegistry)
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
     
-    public static Builder newBuilder() { return new Builder(); }
-    public Builder newBuilderForType() { return new Builder(); }
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder(de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry prototype) {
-      return new Builder().mergeFrom(prototype);
+      return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
     
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder> {
+      private de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry result;
+      
       // Construct using de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry.newBuilder()
       private Builder() {}
       
-      de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry result = new de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry();
+      private static Builder create() {
+        Builder builder = new Builder();
+        builder.result = new de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry();
+        return builder;
+      }
       
-      @Override
       protected de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry internalGetResult() {
         return result;
       }
       
-      @Override
       public Builder clear() {
+        if (result == null) {
+          throw new IllegalStateException(
+            "Cannot call clear() after build().");
+        }
         result = new de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry();
         return this;
       }
       
-      @Override
       public Builder clone() {
-        return new Builder().mergeFrom(result);
+        return create().mergeFrom(result);
       }
       
-      @Override
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
         return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry.getDescriptor();
@@ -539,10 +540,12 @@ public final class MetaDataProto {
         return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry.getDefaultInstance();
       }
       
+      public boolean isInitialized() {
+        return result.isInitialized();
+      }
       public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry build() {
         if (result != null && !isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
-            result);
+          throw newUninitializedMessageException(result);
         }
         return buildPartial();
       }
@@ -550,7 +553,7 @@ public final class MetaDataProto {
       private de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
         if (!isInitialized()) {
-          throw new com.google.protobuf.UninitializedMessageException(
+          throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
         }
         return buildPartial();
@@ -559,13 +562,13 @@ public final class MetaDataProto {
       public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry buildPartial() {
         if (result == null) {
           throw new IllegalStateException(
-            "build() has already been called on this Builder.");  }
+            "build() has already been called on this Builder.");
+        }
         de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry returnMe = result;
         result = null;
         return returnMe;
       }
       
-      @Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
         if (other instanceof de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry) {
           return mergeFrom((de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry)other);
@@ -587,18 +590,9 @@ public final class MetaDataProto {
         return this;
       }
       
-      @Override
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return mergeFrom(input,
-          com.google.protobuf.ExtensionRegistry.getEmptyRegistry());
-      }
-      
-      @Override
       public Builder mergeFrom(
           com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistry extensionRegistry)
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         com.google.protobuf.UnknownFieldSet.Builder unknownFields =
           com.google.protobuf.UnknownFieldSet.newBuilder(
@@ -647,7 +641,7 @@ public final class MetaDataProto {
       }
       public Builder clearKey() {
         result.hasKey = false;
-        result.key_ = "";
+        result.key_ = getDefaultInstance().getKey();
         return this;
       }
       
@@ -668,13 +662,17 @@ public final class MetaDataProto {
       }
       public Builder clearValue() {
         result.hasValue = false;
-        result.value_ = "";
+        result.value_ = getDefaultInstance().getValue();
         return this;
       }
     }
     
     static {
       de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.getDescriptor();
+    }
+    
+    static {
+      de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.internalForceInit();
     }
   }
   
@@ -696,14 +694,15 @@ public final class MetaDataProto {
   private static com.google.protobuf.Descriptors.FileDescriptor
       descriptor;
   static {
-    java.lang.String descriptorData =
+    java.lang.String[] descriptorData = {
       "\n%src/main/protobuf/MetaDataProto.proto\022" +
       "!de.huxhorn.sulky.codec.filebuffer\"]\n\010Me" +
       "taData\022:\n\005entry\030\001 \003(\0132+.de.huxhorn.sulky" +
       ".codec.filebuffer.MapEntry\022\025\n\006sparse\030\002 \001" +
       "(\010:\005false\"&\n\010MapEntry\022\013\n\003key\030\001 \002(\t\022\r\n\005va" +
       "lue\030\002 \001(\tB/\n+de.huxhorn.sulky.codec.file" +
-      "buffer.generatedH\001";
+      "buffer.generatedH\001"
+    };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
@@ -733,4 +732,6 @@ public final class MetaDataProto {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
   }
+  
+  public static void internalForceInit() {}
 }
