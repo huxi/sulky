@@ -21,9 +21,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 public class Windows
 {
+	public static void setIconImage(Window window, Image image)
+	{
+		final Logger logger = LoggerFactory.getLogger(Windows.class);
+
+		Throwable error = null;
+		try
+		{
+			Method setIconMethod = Window.class.getMethod("setIconImage", Image.class);
+
+			setIconMethod.invoke(window, image);
+		}
+		catch(NoSuchMethodException e)
+		{
+			if(logger.isInfoEnabled()) logger.info("No setIconImage-method found...");
+		}
+		catch(IllegalAccessException e)
+		{
+			error = e;
+		}
+		catch(InvocationTargetException e)
+		{
+			error = e;
+		}
+		if(error != null)
+		{
+			if(logger.isWarnEnabled()) logger.warn("Exception while executing setIconImage-method!", error);
+		}
+	}
+
 	public static void showWindow(Window window, Window centerParent, boolean pack)
 	{
 		final Logger logger = LoggerFactory.getLogger(Windows.class);
