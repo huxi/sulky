@@ -14,8 +14,7 @@
 
 	<scm>
 		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-parent</connection>
-		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-parent
-		</developerConnection>
+		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-parent</developerConnection>
 		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-parent/</url>
 	</scm>
 
@@ -55,6 +54,16 @@
 		</site>
 		<!-- scp doesn't work anymore -->
 		<repository>
+			<id>private-sulky-repos</id>
+			<url>sftp://ftp.huxhorn.de/lilith/repository</url>
+		</repository>
+		<snapshotRepository>
+			<id>private-sulky-snapshot-repos</id>
+			<uniqueVersion>false</uniqueVersion>
+			<url>sftp://ftp.huxhorn.de/lilith/snapshot-repository</url>
+		</snapshotRepository>
+<!--
+		<repository>
 			<id>sulky-repos</id>
 			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>
 		</repository>
@@ -63,6 +72,7 @@
 			<uniqueVersion>false</uniqueVersion>
 			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/snapshot-repository</url>
 		</snapshotRepository>
+-->
 	</distributionManagement>
 
 	<!--
