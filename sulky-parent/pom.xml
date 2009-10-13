@@ -22,6 +22,9 @@
 		<sulkyVersion>${pom.version}</sulkyVersion>
 		<slf4jVersion>1.5.8</slf4jVersion>
 		<logbackVersion>0.9.17</logbackVersion>
+		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<licenses>
@@ -190,7 +193,7 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.6</version>
+				<version>4.7</version>
 			</dependency>
 
 			<dependency>
