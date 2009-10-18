@@ -10,12 +10,6 @@
 	<description>This file is part of the sulky modules.</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 
-	<scm>
-		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-codec</connection>
-		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-codec</developerConnection>
-		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-codec/</url>
-	</scm>
-
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>
