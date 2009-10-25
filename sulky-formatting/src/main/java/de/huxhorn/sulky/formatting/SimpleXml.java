@@ -44,7 +44,7 @@ public class SimpleXml
 	 * Reverses escape with the exception of the zero-byte escape.
 	 *
 	 * @param input
-	 * @return
+	 * @return the unescaped string.
 	 */
 	public static String unescape(String input)
 	{

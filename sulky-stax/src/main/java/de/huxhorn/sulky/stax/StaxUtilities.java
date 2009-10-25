@@ -48,7 +48,7 @@ public class StaxUtilities
 	 * @param reader
 	 * @param namespaceURI
 	 * @param nodeName
-	 * @return
+	 * @return the read text.
 	 * @throws XMLStreamException
 	 */
 	public static String readSimpleTextNodeIfAvailable(XMLStreamReader reader, String namespaceURI, String nodeName)
@@ -78,7 +78,7 @@ public class StaxUtilities
 	 * Shortcut for readText(reader, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE).
 	 *
 	 * @param reader
-	 * @return
+	 * @return the read text.
 	 * @throws XMLStreamException
 	 */
 	public static String readText(XMLStreamReader reader)
