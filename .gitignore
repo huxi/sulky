@@ -1,0 +1,6 @@
+target
+.DS_Store
+buildNumber.properties
+*.iml
+*.iws
+*.ipr
