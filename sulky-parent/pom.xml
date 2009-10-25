@@ -13,15 +13,16 @@
 	<inceptionYear>2007</inceptionYear>
 
 	<scm>
-		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-parent</connection>
-		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-parent</developerConnection>
-		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-parent/</url>
+		<connection>scm:git:git://sulky.git.sourceforge.net/gitroot/sulky/sulky</connection>
+		<developerConnection>scm:git:ssh://huxhorn@sulky.git.sourceforge.net/gitroot/sulky/sulky</developerConnection>
+		<url>http://sulky.git.sourceforge.net/git/gitweb.cgi?p=sulky/sulky</url>
 	</scm>
 
 	<properties>
 		<sulkyVersion>${pom.version}</sulkyVersion>
 		<slf4jVersion>1.5.8</slf4jVersion>
 		<logbackVersion>0.9.17</logbackVersion>
+        <scm.version>1.2</scm.version>
 		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -322,15 +323,23 @@
 					<issueLinkTemplate>http://apps.sourceforge.net/trac/lilith/ticket/%ISSUE%</issueLinkTemplate>
 				</configuration>
 			</plugin>
+
+			<!-- 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changelog-plugin</artifactId>
 				<version>2.1</version>
 				<configuration>
-					<type>range</type>
-					<range>90</range>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.scm</groupId>
+						<artifactId>maven-scm-provider-git</artifactId>
+						<version>${scm.version}</version>
+					</dependency>
+				</dependencies>
 				</configuration>
 			</plugin>
+			-->
 		</plugins>
 	</reporting>
 
@@ -404,7 +413,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.0</version>
+				<version>${scm.version}</version>
 				<configuration>
 					<goals>install</goals>
 				</configuration>
