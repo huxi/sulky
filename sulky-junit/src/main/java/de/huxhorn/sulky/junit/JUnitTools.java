@@ -70,7 +70,7 @@ public class JUnitTools
 	 * @return the deserialized instance.
 	 * @throws java.io.IOException    In case of error during (de)serialization.
 	 * @throws ClassNotFoundException In case of error during (de)serialization.
-	 * @see
+	 * @see java.beans.PersistenceDelegate
 	 */
 	public static <T extends Serializable> T serializeXml(T original, Class... enums)
 		throws IOException, ClassNotFoundException

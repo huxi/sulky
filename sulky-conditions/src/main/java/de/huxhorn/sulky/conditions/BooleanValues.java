@@ -61,9 +61,7 @@ public class BooleanValues
 		return value;
 	}
 
-	/**
-	 * @noinspection CloneDoesntCallSuperClone
-	 */
+	@SuppressWarnings({"CloneDoesntCallSuperClone"})
 	@Override
 	public BooleanValues clone()
 		throws CloneNotSupportedException
