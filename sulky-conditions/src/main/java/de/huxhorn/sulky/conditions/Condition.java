@@ -27,7 +27,7 @@ public interface Condition
 	/**
 	 * This method is expected to perform a deep clone, i.e. all sub-conditions must be cloned, too.
 	 *
-	 * @return
+	 * @return a clone of the Condition.
 	 * @throws CloneNotSupportedException
 	 */
 	Condition clone()
