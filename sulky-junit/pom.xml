@@ -10,12 +10,6 @@
 	<description>This file is part of the sulky modules. It contains JUnit utilities..</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 
-	<scm>
-		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-junit</connection>
-		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-junit</developerConnection>
-		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-junit/</url>
-	</scm>
-
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>

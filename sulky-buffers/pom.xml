@@ -10,12 +10,6 @@
 	<description>This file is part of the sulky modules. It contains the definition of buffers, operations on buffers and certain buffer implementations.</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 
-	<scm>
-		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-buffers</connection>
-		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-buffers</developerConnection>
-		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-buffers/</url>
-	</scm>
-
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>

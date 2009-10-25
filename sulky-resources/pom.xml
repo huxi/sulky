@@ -9,12 +9,6 @@
 	<name>Sulky resources</name>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 
-	<scm>
-		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-resources</connection>
-		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk/sulky-resources</developerConnection>
-		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/sulky-resources/</url>
-	</scm>
-
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>

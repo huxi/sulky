@@ -6,13 +6,13 @@
 	<artifactId>de.huxhorn.sulky.master</artifactId>
 	<version><!-- SV -->0.9.9-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Sulky master pom file</name>
+	<name>Sulky</name>
 	<description>This file is part of the sulky modules. It's the master pom file that is used to build all other modules.</description>
 	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
 	<scm>
-		<connection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk</connection>
-		<developerConnection>scm:svn:https://sulky.svn.sourceforge.net/svnroot/sulky/trunk</developerConnection>
-		<url>http://sulky.svn.sourceforge.net/viewvc/sulky/trunk/</url>
+		<connection>scm:git:git://sulky.git.sourceforge.net/gitroot/sulky/sulky</connection>
+		<developerConnection>scm:git:ssh://huxhorn@sulky.git.sourceforge.net/gitroot/sulky/sulky</developerConnection>
+		<url>http://sulky.git.sourceforge.net/git/gitweb.cgi?p=sulky/sulky</url>
 	</scm>
 
 	<distributionManagement>
@@ -53,5 +53,33 @@
 		<module>sulky-io</module>
 	</modules>
 
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.1.1</version>
+			</plugin>
+	
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<aggregate>true</aggregate>
+					<links>
+						<link>
+						http://java.sun.com/j2se/1.5.0/docs/api
+						</link>
+					</links>
+					<groups>
+						<group>
+							<title>Sulky</title>
+							<packages>de.huxhorn.sulky:de.huxhorn.sulky.*</packages>
+						</group>
+					</groups>
+				</configuration>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>
 
