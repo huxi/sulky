@@ -17,13 +17,8 @@
  */
 package de.huxhorn.sulky.junit;
 
-//import ch.qos.logback.classic.Level;
-//import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-//import ch.qos.logback.classic.PatternLayout;
 import ch.qos.logback.classic.joran.JoranConfigurator;
-//import ch.qos.logback.classic.spi.LoggingEvent;
-//import ch.qos.logback.core.FileAppender;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import org.junit.After;
@@ -48,7 +43,7 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class LoggingTestBase
 {
-	protected boolean verbose = true;
+	protected boolean verbose = false;
 	protected boolean deleteLogFiles = false;
 	private Boolean logging;
 	private File loggingFile;
