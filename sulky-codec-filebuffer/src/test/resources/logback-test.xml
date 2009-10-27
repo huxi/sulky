@@ -8,23 +8,19 @@
 	</appender>
 
 	<!--
-	   <appender name="Localhorst" class="ch.qos.logback.classic.net.SocketAppender">
-		   <RemoteHost>localhost</RemoteHost>
-		   <LocationInfo>false</LocationInfo>
-		   <Port>4445</Port>
-	   </appender>
-	   -->
+	<appender name="Localhorst" class="ch.qos.logback.classic.net.SocketAppender">
+		<RemoteHost>localhost</RemoteHost>
+		<LocationInfo>false</LocationInfo>
+		<Port>4445</Port>
+	</appender>
+	-->
 
 	<root>
 		<level value="DEBUG"/>
 		<appender-ref ref="CONSOLE"/>
 		<!--
-			  <appender-ref ref="Localhorst"/>
-			  -->
+		<appender-ref ref="Localhorst"/>
+		-->
 	</root>
-	<!--
-	   <logger name="class">
-		   <level value="INFO"/>
-	   </logger>
-	   -->
+	<logger name="de.huxhorn.sulky.codec.filebuffer" level="WARN"/>
 </configuration>
