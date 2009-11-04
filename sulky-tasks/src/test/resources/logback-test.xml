@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-
+	
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<param name="Pattern" value="%-5level - %d{HH:mm:ss.SSS} [%thread] - %file:%line - %msg%n%ex{full}"/>
@@ -10,17 +10,20 @@
 	<!--
 	<appender name="Localhorst" class="ch.qos.logback.classic.net.SocketAppender">
 		<RemoteHost>localhost</RemoteHost>
-		<LocationInfo>false</LocationInfo>
 		<Port>4445</Port>
+		<ReconnectionDelay>1</ReconnectionDelay>
+		<IncludeCallerData>true</IncludeCallerData>
 	</appender>
 	-->
-
-	<root>
-		<level value="DEBUG"/>
+	
+	<root level="DEBUG">
 		<appender-ref ref="CONSOLE"/>
 		<!--
 		<appender-ref ref="Localhorst"/>
 		-->
 	</root>
-   <logger name="de.huxhorn.sulky.tasks" level="WARN"/>
+
+	<logger name="de.huxhorn.sulky.tasks" level="WARN"/>
+
 </configuration>
+
