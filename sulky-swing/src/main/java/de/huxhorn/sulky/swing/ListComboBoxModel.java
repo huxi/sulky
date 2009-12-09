@@ -45,7 +45,11 @@ public class ListComboBoxModel
 
 	public Object getElementAt(int index)
 	{
-		return store.get(index);
+		if(index >= 0 && index < store.size())
+		{
+			return store.get(index);
+		}
+		return null;
 	}
 
 	public int getSize()
@@ -64,7 +68,7 @@ public class ListComboBoxModel
 				selectedItem == null && anObject != null)
 		{
 			selectedItem = anObject;
-			fireContentsChanged(this, -1, -1);
+			fireContentsChanged(this, 0, getSize());
 		}
 	}
 
