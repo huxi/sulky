@@ -93,6 +93,12 @@
 			
 			<dependency>
 				<groupId>de.huxhorn.sulky</groupId>
+				<artifactId>de.huxhorn.sulky.buffers.table</artifactId>
+				<version>${sulkyVersion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>de.huxhorn.sulky</groupId>
 				<artifactId>de.huxhorn.sulky.conditions</artifactId>
 				<version>${sulkyVersion}</version>
 			</dependency>
