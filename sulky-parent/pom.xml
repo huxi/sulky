@@ -20,7 +20,7 @@
 	
 	<properties>
 		<sulkyVersion>${pom.version}</sulkyVersion>
-		<slf4jVersion>1.5.10</slf4jVersion>
+		<slf4jVersion>1.5.11</slf4jVersion>
 		<logbackVersion>0.9.18</logbackVersion>
 		<scm.version>1.2</scm.version>
 		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
@@ -208,7 +208,7 @@
 			<dependency>
 				<groupId>com.google.protobuf</groupId>
 				<artifactId>protobuf-java</artifactId>
-				<version>2.2.0</version>
+				<version>2.3.0</version>
 			</dependency>
 			
 			<dependency>
