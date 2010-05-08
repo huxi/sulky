@@ -23,9 +23,13 @@
 		<slf4jVersion>1.5.11</slf4jVersion>
 		<logbackVersion>0.9.20</logbackVersion>
 		<scm.version>1.2</scm.version>
+
 		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<!-- making sure that gpg2 works -->
+		<gpg.useagent>true</gpg.useagent>
+		<gpg.keyname>740A1840</gpg.keyname>
 	</properties>
 	
 	<licenses>
@@ -473,6 +477,10 @@
 					<version>2.0.1</version>
 				</plugin>
 				<plugin>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.0</version>
+				</plugin>
+				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
 					<version>2.1</version>
 				</plugin>
@@ -484,7 +492,6 @@
 					<artifactId>maven-war-plugin</artifactId>
 					<version>2.1-beta-1</version>
 				</plugin>
-				
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>cobertura-maven-plugin</artifactId>
@@ -611,5 +618,33 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+				<name>performRelease</name>
+				<value>true</value>
+			</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
 
