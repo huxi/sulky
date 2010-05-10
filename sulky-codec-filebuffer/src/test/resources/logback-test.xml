@@ -2,9 +2,9 @@
 <configuration>
 	
 	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-		<layout class="ch.qos.logback.classic.PatternLayout">
+		<encoder>
 			<param name="Pattern" value="%-5level - %d{HH:mm:ss.SSS} [%thread] - %file:%line - %msg%n%ex{full}"/>
-		</layout>
+		</encoder>
 	</appender>
 
 	<!--
