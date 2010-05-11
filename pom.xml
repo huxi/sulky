@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.master</artifactId>
-	<version><!-- SV -->0.9.11-SNAPSHOT</version>
+	<version><!-- SV -->0.9.11</version>
 	<packaging>pom</packaging>
 	<name>Sulky</name>
 	<description>This file is part of the sulky modules. It's the master pom file that is used to build all other modules.</description>
@@ -15,23 +15,32 @@
 		<url>http://sulky.git.sourceforge.net/git/gitweb.cgi?p=sulky/sulky</url>
 	</scm>
 
+	<properties>
+		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+
 	<distributionManagement>
+
 		<site>
-			<id>sulky.huxhorn.de</id>
-			<url>scp://huxhorn.de/kunden/homepages/37/d18379763/htdocs/sulky/projects/${pom.artifactId}</url>
+			<id>local-site</id>
+			<url>file://${user.home}/local-maven/site/sulky/${pom.artifactId}</url>
 		</site>
-		<!--
-			  scp doesn't work anymore
-			  -->
+
 		<repository>
-			<id>sulky-repos</id>
-			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>
+			<id>local-repository</id>
+			<name>Local Repository</name>
+			<url>file://${user.home}/local-maven/deploy/release</url>
 		</repository>
+		
 		<snapshotRepository>
-			<id>sulky-snapshot-repos</id>
+			<id>local-snapshot-repository</id>
+			<name>Local Snapshot Repository</name>
 			<uniqueVersion>false</uniqueVersion>
-			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/snapshot-repository</url>
+			<url>file://${user.home}/local-maven/deploy/snapshot</url>
 		</snapshotRepository>
+
 	</distributionManagement>
 
 	<modules>

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.parent</artifactId>
-	<version><!-- SV -->0.9.11-SNAPSHOT</version>
+	<version><!-- SV -->0.9.11</version>
 	<packaging>pom</packaging>
 	<name>Sulky parent pom file</name>
 	<description>This file is part of the sulky modules. It's the parent pom that contains general project informations.
@@ -61,31 +61,25 @@
 	</mailingLists>
 	
 	<distributionManagement>
+
 		<site>
-			<id>sulky.huxhorn.de</id>
-			<url>scp://huxhorn.de/kunden/homepages/37/d18379763/htdocs/sulky/projects/</url>
+			<id>local-site</id>
+			<url>file://${user.home}/local-maven/site/sulky/${pom.artifactId}</url>
 		</site>
-		<!-- scp doesn't work anymore -->
+
 		<repository>
-			<id>private-sulky-repos</id>
-			<url>sftp://ftp.huxhorn.de/lilith/repository</url>
+			<id>local-repository</id>
+			<name>Local Repository</name>
+			<url>file://${user.home}/local-maven/deploy/release</url>
 		</repository>
+		
 		<snapshotRepository>
-			<id>private-sulky-snapshot-repos</id>
+			<id>local-snapshot-repository</id>
+			<name>Local Snapshot Repository</name>
 			<uniqueVersion>false</uniqueVersion>
-			<url>sftp://ftp.huxhorn.de/lilith/snapshot-repository</url>
+			<url>file://${user.home}/local-maven/deploy/snapshot</url>
 		</snapshotRepository>
-		<!--
-		<repository>
-			<id>sulky-repos</id>
-			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/repository</url>
-		</repository>
-		<snapshotRepository>
-			<id>sulky-snapshot-repos</id>
-			<uniqueVersion>false</uniqueVersion>
-			<url>sftp://web.sourceforge.net/home/groups/s/su/sulky/htdocs/snapshot-repository</url>
-		</snapshotRepository>
-		-->
+
 	</distributionManagement>
 
 	<!--
