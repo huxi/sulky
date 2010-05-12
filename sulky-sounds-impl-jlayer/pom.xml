@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>
-		<version><!-- SV -->0.9.11</version>
+		<version><!-- SV -->0.9.12-SNAPSHOT</version>
 		<relativePath>../sulky-parent/pom.xml</relativePath>
 	</parent>
 	

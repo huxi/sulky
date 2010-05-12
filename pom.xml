@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.master</artifactId>
-	<version><!-- SV -->0.9.11</version>
+	<version><!-- SV -->0.9.12-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Sulky</name>
 	<description>This file is part of the sulky modules. It's the master pom file that is used to build all other modules.</description>
@@ -25,7 +25,7 @@
 
 		<site>
 			<id>local-site</id>
-			<url>file://${user.home}/local-maven/site/sulky/${pom.artifactId}</url>
+			<url>file://${user.home}/local-maven/site/sulky</url>
 		</site>
 
 		<repository>
