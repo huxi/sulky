@@ -64,6 +64,10 @@ public class DefaultIndexStrategy
 	public long getOffset(RandomAccessFile indexFile, long index)
 		throws IOException
 	{
+		if(index < 0)
+		{
+			return -1;
+		}
 		long offsetOffset = DATA_OFFSET_SIZE * index;
 		if(indexFile.length() < offsetOffset + DATA_OFFSET_SIZE)
 		{
