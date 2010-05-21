@@ -31,14 +31,14 @@
 		<repository>
 			<id>local-repository</id>
 			<name>Local Repository</name>
-			<url>file://${user.home}/local-maven/deploy/release</url>
+			<url>file://${user.home}/local-maven/deploy/repository</url>
 		</repository>
 		
 		<snapshotRepository>
 			<id>local-snapshot-repository</id>
 			<name>Local Snapshot Repository</name>
 			<uniqueVersion>false</uniqueVersion>
-			<url>file://${user.home}/local-maven/deploy/snapshot</url>
+			<url>file://${user.home}/local-maven/deploy/snapshot-repository</url>
 		</snapshotRepository>
 
 	</distributionManagement>
