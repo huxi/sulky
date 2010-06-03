@@ -64,7 +64,7 @@
 
 		<site>
 			<id>local-site</id>
-			<url>file://${user.home}/local-maven/site/sulky/${pom.artifactId}</url>
+			<url>file://${user.home}/local-maven/site/sulky/</url>
 		</site>
 
 		<repository>
