@@ -28,6 +28,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<!-- making sure that gpg2 works -->
+		<gpg.executable>gpg2</gpg.executable>
 		<gpg.useagent>true</gpg.useagent>
 		<gpg.keyname>740A1840</gpg.keyname>
 	</properties>
@@ -472,7 +473,7 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-gpg-plugin</artifactId>
-					<version>1.0</version>
+					<version>1.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-source-plugin</artifactId>
