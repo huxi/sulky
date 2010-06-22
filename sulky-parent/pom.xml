@@ -21,7 +21,7 @@
 	<properties>
 		<sulkyVersion>${pom.version}</sulkyVersion>
 		<slf4jVersion>1.6.0</slf4jVersion>
-		<logbackVersion>0.9.21</logbackVersion>
+		<logbackVersion>0.9.22</logbackVersion>
 		<scm.version>1.2</scm.version>
 
 		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
