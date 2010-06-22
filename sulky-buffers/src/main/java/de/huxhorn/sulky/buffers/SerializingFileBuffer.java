@@ -104,9 +104,9 @@ public class SerializingFileBuffer<E>
 	public long getSize()
 	{
 		RandomAccessFile raf = null;
+		Throwable throwable;
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
-		Throwable throwable;
 		try
 		{
 			if(!indexFile.canRead())
@@ -206,9 +206,9 @@ public class SerializingFileBuffer<E>
 	{
 		RandomAccessFile randomSerializeIndexFile = null;
 		RandomAccessFile randomSerializeFile = null;
+		Throwable throwable = null;
 		Lock lock = readWriteLock.writeLock();
 		lock.lock();
-		Throwable throwable = null;
 		try
 		{
 			randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
@@ -252,9 +252,9 @@ public class SerializingFileBuffer<E>
 			{
 				RandomAccessFile randomSerializeIndexFile = null;
 				RandomAccessFile randomSerializeFile = null;
+				Throwable throwable = null;
 				Lock lock = readWriteLock.writeLock();
 				lock.lock();
-				Throwable throwable = null;
 				try
 				{
 					randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
@@ -314,16 +314,26 @@ public class SerializingFileBuffer<E>
 
 	public void reset()
 	{
+		boolean dataDeleted;
+		boolean indexDeleted;
 		Lock lock = readWriteLock.writeLock();
 		lock.lock();
 		try
 		{
-			indexFile.delete();
-			dataFile.delete();
+			indexDeleted=indexFile.delete();
+			dataDeleted=dataFile.delete();
 		}
 		finally
 		{
 			lock.unlock();
+		}
+		if(!indexDeleted)
+		{
+			if(logger.isDebugEnabled()) logger.debug("Couldn't delete index file {}.", indexFile.getAbsolutePath());
+		}
+		if(!dataDeleted)
+		{
+			if(logger.isDebugEnabled()) logger.debug("Couldn't delete data file {}.", dataFile.getAbsolutePath());
 		}
 	}
 
@@ -471,7 +481,10 @@ public class SerializingFileBuffer<E>
 		File parent = file.getParentFile();
 		if(parent != null)
 		{
-			parent.mkdirs();
+			if(parent.mkdirs())
+			{
+				if(logger.isDebugEnabled()) logger.debug("Created directory {}.", parent.getAbsolutePath());
+			}
 			if(!parent.isDirectory())
 			{
 				throw new IllegalArgumentException(parent.getAbsolutePath() + " is not a directory!");

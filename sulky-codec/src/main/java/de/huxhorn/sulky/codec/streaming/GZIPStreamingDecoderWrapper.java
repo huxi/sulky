@@ -36,9 +36,7 @@ package de.huxhorn.sulky.codec.streaming;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 public class GZIPStreamingDecoderWrapper<E>
 	implements StreamingDecoder<E>

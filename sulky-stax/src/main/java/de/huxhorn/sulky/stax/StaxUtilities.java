@@ -374,7 +374,7 @@ public class StaxUtilities
 		value = processWhiteSpace(value, whiteSpace);
 		if(qualified && namespaceURI != null)
 		{
-			if(prefix == null && !NO_PREFIX.equals(prefix))
+			if(prefix == null || NO_PREFIX.equals(prefix))
 			{
 				writer.writeAttribute(namespaceURI, name, value);
 			}

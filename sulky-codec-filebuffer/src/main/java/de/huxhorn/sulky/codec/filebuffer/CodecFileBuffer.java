@@ -244,9 +244,9 @@ public class CodecFileBuffer<E>
 	{
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
-		this.fileHeader = null;
 		try
 		{
+			this.fileHeader = null;
 			FileHeader fileHeader = fileHeaderStrategy.readFileHeader(dataFile);
 			if(fileHeader == null)
 			{
@@ -320,23 +320,39 @@ public class CodecFileBuffer<E>
 	{
 		if(!dataFile.exists() || dataFile.length() < fileHeaderStrategy.getMinimalSize())
 		{
+			Throwable t=null;
+			boolean dataDeleted=false;
+			boolean indexDeleted=false;
 			Lock lock = readWriteLock.writeLock();
 			lock.lock();
 			try
 			{
-				dataFile.delete();
+				dataDeleted=dataFile.delete();
 				setFileHeader(fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData, preferredSparse));
-				indexFile.delete();
-				return true;
+				indexDeleted=indexFile.delete();
 			}
 			catch(IOException e)
 			{
-				if(logger.isWarnEnabled()) logger.warn("Exception while initializing file!", e);
+				t=e;
 			}
 			finally
 			{
 				lock.unlock();
 			}
+			if(!indexDeleted)
+			{
+				if(logger.isDebugEnabled()) logger.debug("Couldn't delete index file {}.", indexFile.getAbsolutePath());
+			}
+			if(!dataDeleted)
+			{
+				if(logger.isDebugEnabled()) logger.debug("Couldn't delete data file {}.", dataFile.getAbsolutePath());
+			}
+			if(t!=null)
+			{
+				if(logger.isWarnEnabled()) logger.warn("Exception while initializing files!", t);
+				return false;
+			}
+			return true;
 		}
 		return false;
 	}
@@ -371,9 +387,9 @@ public class CodecFileBuffer<E>
 	public long getSize()
 	{
 		RandomAccessFile raf = null;
+		Throwable throwable;
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
-		Throwable throwable;
 		try
 		{
 			if(!indexFile.canRead())
@@ -580,12 +596,15 @@ public class CodecFileBuffer<E>
 
 	public void reset()
 	{
+		Throwable t=null;
+		boolean indexDeleted=false;
+		boolean dataDeleted=false;
 		Lock lock = readWriteLock.writeLock();
 		lock.lock();
 		try
 		{
-			indexFile.delete();
-			dataFile.delete();
+			indexDeleted=indexFile.delete();
+			dataDeleted=dataFile.delete();
 			fileHeaderStrategy.writeFileHeader(dataFile, magicValue, preferredMetaData, preferredSparse);
 			if(elementProcessors != null)
 			{
@@ -597,11 +616,23 @@ public class CodecFileBuffer<E>
 		}
 		catch(IOException e)
 		{
-			if(logger.isWarnEnabled()) logger.warn("Exception while resetting file!", e);
+			t=e;
 		}
 		finally
 		{
 			lock.unlock();
+		}
+		if(!indexDeleted)
+		{
+			if(logger.isDebugEnabled()) logger.debug("Couldn't delete index file {}.", indexFile.getAbsolutePath());
+		}
+		if(!dataDeleted)
+		{
+			if(logger.isDebugEnabled()) logger.debug("Couldn't delete data file {}.", dataFile.getAbsolutePath());
+		}
+		if(t != null)
+		{
+			if(logger.isWarnEnabled()) logger.warn("Exception while resetting file!", t);
 		}
 	}
 
@@ -653,7 +684,10 @@ public class CodecFileBuffer<E>
 		File parent = file.getParentFile();
 		if(parent != null)
 		{
-			parent.mkdirs();
+			if(parent.mkdirs())
+			{
+				if(logger.isDebugEnabled()) logger.debug("Created directory {}.", parent.getAbsolutePath());
+			}
 			if(!parent.isDirectory())
 			{
 				throw new IllegalArgumentException(parent.getAbsolutePath() + " is not a directory!");

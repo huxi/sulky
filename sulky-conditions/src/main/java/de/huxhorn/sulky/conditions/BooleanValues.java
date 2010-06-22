@@ -70,7 +70,7 @@ public class BooleanValues
 	/**
 	 * Returns either true or false, depending on the instance.
 	 *
-	 * @param element
+	 * @param element the element to be evaluated.
 	 * @return either true or false, depending on the instance.
 	 */
 	public boolean isTrue(Object element)
@@ -83,7 +83,7 @@ public class BooleanValues
 	public BooleanValues clone()
 		throws CloneNotSupportedException
 	{
-		return this;
+		return this; // this is not a bug!
 	}
 
 	private Object readResolve()
