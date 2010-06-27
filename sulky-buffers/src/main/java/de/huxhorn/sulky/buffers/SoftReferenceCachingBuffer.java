@@ -49,7 +49,7 @@ public class SoftReferenceCachingBuffer<E>
 {
 	private final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);
 
-	private static final ReferenceQueue refQueue = new ReferenceQueue();
+	private static final ReferenceQueue REFERENCE_QUEUE = new ReferenceQueue();
 
 	static
 	{
@@ -154,7 +154,7 @@ public class SoftReferenceCachingBuffer<E>
 		{
 			// the following cast is safe since we are not using the content in the reference queue......
 			//noinspection unchecked
-			super(referent, refQueue);
+			super(referent, REFERENCE_QUEUE);
 			this.index = index;
 			this.cache = cache;
 		}
@@ -183,7 +183,7 @@ public class SoftReferenceCachingBuffer<E>
 			{
 				try
 				{
-					Reference ref = refQueue.remove();
+					Reference ref = REFERENCE_QUEUE.remove();
 					if(ref instanceof MySoftReference)
 					{
 						MySoftReference reference = (MySoftReference) ref;
