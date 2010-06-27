@@ -59,7 +59,7 @@ public class BooleanValues
 	}
 
 	private final boolean value;
-	private transient final String string;
+	private final transient String string;
 
 	BooleanValues(boolean b)
 	{

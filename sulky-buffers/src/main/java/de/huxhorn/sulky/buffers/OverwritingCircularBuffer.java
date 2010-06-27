@@ -48,12 +48,12 @@ public class OverwritingCircularBuffer<E>
 	implements CircularBuffer<E>, RandomAccess, Cloneable, Serializable
 {
 	private int bufferSize;
-	transient private int startIndex;
-	transient private int endIndex;
-	transient private long overflowCounter;
-	transient private long size;
-	transient private boolean full;
-	transient private Object[] array;
+	private transient int startIndex;
+	private transient int endIndex;
+	private transient long overflowCounter;
+	private transient long size;
+	private transient boolean full;
+	private transient Object[] array;
 
 	public OverwritingCircularBuffer(int bufferSize)
 	{

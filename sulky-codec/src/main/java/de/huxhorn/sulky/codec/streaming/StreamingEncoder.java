@@ -39,5 +39,5 @@ import java.io.OutputStream;
 
 public interface StreamingEncoder<T>
 {
-	public void encode(T obj, OutputStream into) throws IOException;
+	void encode(T obj, OutputStream into) throws IOException;
 }

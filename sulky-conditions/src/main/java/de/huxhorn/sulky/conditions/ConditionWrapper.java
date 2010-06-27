@@ -37,7 +37,7 @@ package de.huxhorn.sulky.conditions;
 public interface ConditionWrapper
 	extends Condition
 {
-	public Condition getCondition();
+	Condition getCondition();
 
-	public void setCondition(Condition condition);
+	void setCondition(Condition condition);
 }

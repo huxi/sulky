@@ -649,7 +649,7 @@ public class CodecFileBuffer<E>
 		return new BasicBufferIterator<E>(this);
 	}
 
-	static private void closeQuietly(RandomAccessFile raf)
+	private static void closeQuietly(RandomAccessFile raf)
 	{
 		final Logger logger = LoggerFactory.getLogger(CodecFileBuffer.class);
 

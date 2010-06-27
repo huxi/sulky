@@ -736,7 +736,7 @@ public class TaskManager<T>
 	}
 
 	//@Immutable
-	private final static class TaskImpl<V>
+	private static final class TaskImpl<V>
 		implements Task<V>
 	{
 		private final long id;
