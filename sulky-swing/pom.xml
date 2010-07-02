@@ -34,20 +34,18 @@
 			<scope>compile</scope>
 		</dependency>
 
-		<!-- main test only! -->
+		<!--
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-core</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
+			<scope>test</scope>
 		</dependency>
-
+		-->
 	</dependencies>
 </project>

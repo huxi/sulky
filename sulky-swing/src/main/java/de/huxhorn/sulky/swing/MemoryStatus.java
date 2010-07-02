@@ -48,7 +48,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 
 public class MemoryStatus
 	extends JComponent
@@ -451,6 +450,7 @@ public class MemoryStatus
 		}
 	}
 
+	/*
 	public static void main(String[] args)
 	{
 		SwingUtilities.invokeLater(new Runnable()
@@ -474,4 +474,5 @@ public class MemoryStatus
 			}
 		});
 	}
+	*/
 }
