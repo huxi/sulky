@@ -36,6 +36,7 @@
 			<scope>compile</scope>
 		</dependency>
 		
+		<!--
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -53,6 +54,6 @@
 			<artifactId>logback-classic</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		-->
 	</dependencies>
 </project>
