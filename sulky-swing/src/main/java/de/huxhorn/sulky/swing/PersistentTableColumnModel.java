@@ -48,6 +48,8 @@ import javax.swing.table.TableColumn;
 public class PersistentTableColumnModel
 	extends DefaultTableColumnModel
 {
+	private static final long serialVersionUID = 367475030324866809L;
+
 	protected List<TableColumn> allTableColumns = new ArrayList<TableColumn>();
 
 	/**

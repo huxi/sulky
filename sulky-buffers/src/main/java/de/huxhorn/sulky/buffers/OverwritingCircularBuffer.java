@@ -47,6 +47,8 @@ import java.util.RandomAccess;
 public class OverwritingCircularBuffer<E>
 	implements CircularBuffer<E>, RandomAccess, Cloneable, Serializable
 {
+	private static final long serialVersionUID = 3423268103026176567L;
+
 	private int bufferSize;
 	private transient int startIndex;
 	private transient int endIndex;
