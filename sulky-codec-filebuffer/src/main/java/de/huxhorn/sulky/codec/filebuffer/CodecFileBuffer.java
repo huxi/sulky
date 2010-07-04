@@ -389,7 +389,7 @@ public class CodecFileBuffer<E>
 		RandomAccessFile raf = null;
 		Throwable throwable;
 		Lock lock = readWriteLock.readLock();
-		lock.lock();
+		lock.lock(); // this issue is a false positive
 		try
 		{
 			if(!indexFile.canRead())
@@ -651,17 +651,15 @@ public class CodecFileBuffer<E>
 
 	private static void closeQuietly(RandomAccessFile raf)
 	{
-		final Logger logger = LoggerFactory.getLogger(CodecFileBuffer.class);
-
 		if(raf != null)
 		{
 			try
 			{
 				raf.close();
 			}
-			catch(IOException e)
+			catch(Throwable e)
 			{
-				if(logger.isDebugEnabled()) logger.debug("Close on random access file threw exception!", e);
+				// ignore
 			}
 		}
 	}
