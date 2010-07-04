@@ -189,6 +189,7 @@ public class CodecFileBuffer<E>
 	 * TODO: add description :p
 	 *
 	 * @param magicValue        the magic value of the buffer.
+	 * @param sparse            whether or not this buffer is sparse, i.e. not continuous.
 	 * @param preferredMetaData the meta data of the buffer. Might be null.
 	 * @param codec             the codec used by this buffer. Might be null.
 	 * @param dataFile          the data file.
@@ -430,7 +431,6 @@ public class CodecFileBuffer<E>
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
 		Throwable throwable = null;
-		long elementsCount = 0;
 		try
 		{
 			if(!dataFile.canRead() || !indexFile.canRead())
