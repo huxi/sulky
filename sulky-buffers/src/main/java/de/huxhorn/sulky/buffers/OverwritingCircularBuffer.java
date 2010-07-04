@@ -126,10 +126,10 @@ public class OverwritingCircularBuffer<E>
 
 	public E getRelative(int index)
 	{
-		long size = getAvailableElements();
-		if(index < 0 || index >= size)
+		long availableElements = getAvailableElements();
+		if(index < 0 || index >= availableElements)
 		{
-			throw new IndexOutOfBoundsException("Invalid index " + index + "! Must be 0.." + (size - 1) + ".");
+			throw new IndexOutOfBoundsException("Invalid index " + index + "! Must be 0.." + (availableElements - 1) + ".");
 		}
 		int realIndex = (startIndex + index) % bufferSize;
 		//noinspection unchecked
@@ -138,10 +138,10 @@ public class OverwritingCircularBuffer<E>
 
 	public E setRelative(int index, E element)
 	{
-		long size = getAvailableElements();
-		if(index < 0 || index >= size)
+		long availableElements = getAvailableElements();
+		if(index < 0 || index >= availableElements)
 		{
-			throw new IndexOutOfBoundsException("Invalid index " + index + "! Must be 0.." + (size - 1) + ".");
+			throw new IndexOutOfBoundsException("Invalid index " + index + "! Must be 0.." + (availableElements - 1) + ".");
 		}
 		int realIndex = (startIndex + index) % bufferSize;
 		//noinspection unchecked
@@ -171,10 +171,10 @@ public class OverwritingCircularBuffer<E>
 
 	public List<E> removeAll()
 	{
-		long size = getAvailableElements();
-		List<E> result = new ArrayList<E>((int) size);
+		long availableElements = getAvailableElements();
+		List<E> result = new ArrayList<E>((int) availableElements);
 
-		for(int i = 0; i < size; i++)
+		for(int i = 0; i < availableElements; i++)
 		{
 			result.add(removeFirst());
 		}
@@ -292,9 +292,9 @@ public class OverwritingCircularBuffer<E>
 
 		final CircularBuffer that = (CircularBuffer) o;
 
-		long size = getAvailableElements();
-		if(size != that.getAvailableElements()) return false;
-		for(int i = 0; i < size; i++)
+		long availableElements = getAvailableElements();
+		if(availableElements != that.getAvailableElements()) return false;
+		for(int i = 0; i < availableElements; i++)
 		{
 			Object thisValue = getRelative(i);
 			Object thatValue = that.getRelative(i);
@@ -385,11 +385,11 @@ public class OverwritingCircularBuffer<E>
 		s.defaultWriteObject();
 
 		// Write out getAvailableElements
-		long size = getAvailableElements();
-		s.writeLong(size);
+		long availableElements = getAvailableElements();
+		s.writeLong(availableElements);
 
 		// Write out all elements
-		for(int i = 0; i < size; i++)
+		for(int i = 0; i < availableElements; i++)
 		{
 			s.writeObject(getRelative(i));
 		}

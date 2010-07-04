@@ -248,18 +248,18 @@ public class CodecFileBuffer<E>
 		try
 		{
 			this.fileHeader = null;
-			FileHeader fileHeader = fileHeaderStrategy.readFileHeader(dataFile);
-			if(fileHeader == null)
+			FileHeader header = fileHeaderStrategy.readFileHeader(dataFile);
+			if(header == null)
 			{
 				throw new IllegalArgumentException("Could not read file header from file '" + dataFile
 					.getAbsolutePath() + "'. File isn't compatible.");
 			}
-			if(fileHeader.getMagicValue() != magicValue)
+			if(header.getMagicValue() != magicValue)
 			{
 				throw new IllegalArgumentException("Wrong magic value. Expected 0x" + Integer
-					.toHexString(magicValue) + " but was " + Integer.toHexString(fileHeader.getMagicValue()) + "!");
+					.toHexString(magicValue) + " but was " + Integer.toHexString(header.getMagicValue()) + "!");
 			}
-			if(dataFile.length() > fileHeader.getDataOffset())
+			if(dataFile.length() > header.getDataOffset())
 			{
 				if(!indexFile.exists()) // || indexFile.length() < DATA_OFFSET_SIZE)
 				{
@@ -267,7 +267,7 @@ public class CodecFileBuffer<E>
 						.getAbsolutePath() + " is not valid!");
 				}
 			}
-			setFileHeader(fileHeader);
+			setFileHeader(header);
 		}
 		catch(IOException ex)
 		{

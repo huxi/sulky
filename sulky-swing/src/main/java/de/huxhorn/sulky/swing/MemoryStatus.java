@@ -203,19 +203,19 @@ public class MemoryStatus
 
 	private void paintMemoryStatus(Graphics g, Rectangle paintingBounds)
 	{
-		MemoryInfo memoryInfo = this.memoryInfo;
+		MemoryInfo info = this.memoryInfo;
 		Graphics2D g2 = (Graphics2D) g;
 		//g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setComposite(AlphaComposite.Clear);
 		g2.fillRect(0, 0, paintingBounds.width, paintingBounds.height);
 		g2.setComposite(AlphaComposite.SrcOver);
-		if(memoryInfo != null)
+		if(info != null)
 		{
 			if(!usingTotal)
 			{
-				double usedFraction = (((double) memoryInfo.getUsed() / (double) memoryInfo.getMax()));
-				double totalFraction = (((double) memoryInfo.getTotal() / (double) memoryInfo.getMax()));
+				double usedFraction = (((double) info.getUsed() / (double) info.getMax()));
+				double totalFraction = (((double) info.getTotal() / (double) info.getMax()));
 				int usedWidth = (int) (paintingBounds.width * usedFraction + 0.5);
 				int totalWidth = (int) (paintingBounds.width * totalFraction + 0.5);
 
@@ -227,14 +227,14 @@ public class MemoryStatus
 			}
 			else
 			{
-				double usedFraction = (((double) memoryInfo.getUsed() / (double) memoryInfo.getTotal()));
+				double usedFraction = (((double) info.getUsed() / (double) info.getTotal()));
 				int usedWidth = (int) (paintingBounds.width * usedFraction + 0.5);
 
 				drawBar(g2, 0, usedWidth, paintingBounds.height, USED_COLOR);
 			}
 			// text
 			{
-				String text = HumanReadable.getHumanReadableSize(memoryInfo.getUsed(), usingBinaryUnits, true) + "B";
+				String text = HumanReadable.getHumanReadableSize(info.getUsed(), usingBinaryUnits, true) + "B";
 				FontRenderContext frc = g2.getFontRenderContext();
 
 				TextLayout tl = new TextLayout(text, getFont(), frc);
