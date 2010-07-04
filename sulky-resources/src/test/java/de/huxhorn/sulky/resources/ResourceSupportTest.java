@@ -1127,18 +1127,10 @@ public class ResourceSupportTest
 		resourcesupport = new ResourceSupport(new Foobar());
 	}
 
-	@Test
+	@Test(expected = IllegalArgumentException.class)
 	public void constructor()
 	{
-		try
-		{
-			resourcesupport = new ResourceSupport(null);
-			fail("Should throw NullPointerException!");
-		}
-		catch(NullPointerException ex)
-		{
-			if(logger.isDebugEnabled()) logger.debug("Expected exception", ex);
-		}
+		resourcesupport = new ResourceSupport(null);
 	}
 
 	@Test
