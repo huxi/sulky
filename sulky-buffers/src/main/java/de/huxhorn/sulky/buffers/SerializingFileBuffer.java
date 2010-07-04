@@ -106,7 +106,7 @@ public class SerializingFileBuffer<E>
 		RandomAccessFile raf = null;
 		Throwable throwable;
 		Lock lock = readWriteLock.readLock();
-		lock.lock(); // this issue is a false positive
+		lock.lock(); // FindBugs "Multithreaded correctness - Method does not release lock on all exception paths" is a false positive
 		try
 		{
 			if(!indexFile.canRead())
@@ -208,7 +208,7 @@ public class SerializingFileBuffer<E>
 		RandomAccessFile randomSerializeFile = null;
 		Throwable throwable = null;
 		Lock lock = readWriteLock.writeLock();
-		lock.lock(); // this issue is a false positive
+		lock.lock(); // FindBugs "Multithreaded correctness - Method does not release lock on all exception paths" is a false positive
 		try
 		{
 			randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
@@ -254,7 +254,7 @@ public class SerializingFileBuffer<E>
 				RandomAccessFile randomSerializeFile = null;
 				Throwable throwable = null;
 				Lock lock = readWriteLock.writeLock();
-				lock.lock(); // this issue is a false positive
+				lock.lock(); // FindBugs "Multithreaded correctness - Method does not release lock on all exception paths" is a false positive
 				try
 				{
 					randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
