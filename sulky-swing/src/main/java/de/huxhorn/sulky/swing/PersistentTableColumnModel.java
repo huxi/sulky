@@ -297,6 +297,8 @@ public class PersistentTableColumnModel
 	public static class TableColumnLayoutInfo
 		implements Serializable
 	{
+		private static final long serialVersionUID = 8018128012962924414L;
+
 		private String columnName;
 		private int width;
 		private boolean visible;
