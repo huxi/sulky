@@ -194,7 +194,8 @@ public class OverwritingCircularBuffer<E>
 
 	public void clear()
 	{
-		startIndex = endIndex = 0;
+		startIndex = 0;
+		endIndex = 0;
 		full = false;
 
 		// just because of garbage collection...
