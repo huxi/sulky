@@ -132,6 +132,7 @@ public final class LocalizableFactory
 		}
 
 		public Object invoke(Object proxy, Method method, Object[] args)
+			// see java.lang.reflect.InvocationHandler, yeah, right :p - Illegal Throws : Throwing 'Throwable' is not allowed.
 			throws Throwable
 		{
 			try
