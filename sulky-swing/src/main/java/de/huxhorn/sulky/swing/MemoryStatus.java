@@ -443,7 +443,7 @@ public class MemoryStatus
 		{
 			if(evt.getClickCount() >= 2 && evt.getButton() == MouseEvent.BUTTON1)
 			{
-				System.gc(); // this is not a bug!
+				System.gc(); // this is not a bug! - Performance - Explicit garbage collection; extremely dubious except in benchmarking code
 				if(logger.isInfoEnabled()) logger.info("Executed garbage-collection.");
 				updateMemoryBar();
 			}
