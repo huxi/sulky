@@ -518,7 +518,7 @@ public final class Resources
 	{
 		String fullName = clazz.getName();
 
-		int idx = fullName.lastIndexOf(".");
+		int idx = fullName.lastIndexOf('.');
 		if(idx == -1)
 		{
 			return fullName;
