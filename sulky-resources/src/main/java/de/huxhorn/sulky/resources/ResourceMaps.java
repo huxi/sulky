@@ -49,7 +49,7 @@ import java.util.Map;
  * <p/>
  * They are a replacement for ResourceBundle and provide similar functionality.
  */
-public class ResourceMaps
+public final class ResourceMaps
 {
 	private static final MapLoader MAP_LOADER = MapLoader.getInstance();
 	private static final String[] MAP_SUFFIXES;

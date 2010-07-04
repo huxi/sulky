@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.buffers;
 
-public class Flush
+public final class Flush
 {
 	private Flush()
 	{}

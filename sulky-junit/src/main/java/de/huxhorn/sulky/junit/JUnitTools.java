@@ -51,7 +51,7 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class JUnitTools
+public final class JUnitTools
 {
 	private JUnitTools()
 	{}

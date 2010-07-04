@@ -41,7 +41,7 @@ import java.awt.*;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
-public class Windows
+public final class Windows
 {
 	private Windows()
 	{}

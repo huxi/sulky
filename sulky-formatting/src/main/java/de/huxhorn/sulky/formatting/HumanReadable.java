@@ -37,7 +37,7 @@ package de.huxhorn.sulky.formatting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class HumanReadable
+public final class HumanReadable
 {
 	private HumanReadable()
 	{}

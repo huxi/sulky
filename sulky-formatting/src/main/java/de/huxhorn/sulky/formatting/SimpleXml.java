@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.formatting;
 
-public class SimpleXml
+public final class SimpleXml
 {
 	private SimpleXml()
 	{}

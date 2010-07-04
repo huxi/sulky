@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.buffers;
 
-public class Reset
+public final class Reset
 {
 	private Reset()
 	{}

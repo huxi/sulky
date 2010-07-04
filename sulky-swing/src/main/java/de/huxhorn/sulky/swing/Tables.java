@@ -39,7 +39,7 @@ import java.lang.reflect.Method;
 
 import javax.swing.*;
 
-public class Tables
+public final class Tables
 {
 	private Tables()
 	{}

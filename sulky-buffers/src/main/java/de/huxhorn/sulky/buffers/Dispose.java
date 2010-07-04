@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.buffers;
 
-public class Dispose
+public final class Dispose
 {
 	private Dispose()
 	{}

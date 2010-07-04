@@ -36,7 +36,7 @@ package de.huxhorn.sulky.conditions;
 
 import java.util.List;
 
-public class Conditions
+public final class Conditions
 {
 	private Conditions()
 	{}

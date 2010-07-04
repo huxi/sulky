@@ -45,7 +45,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-public class StaxUtilities
+public final class StaxUtilities
 {
 	private static final char TAB = 0x09;
 	private static final char LINE_FEED = 0x0A;

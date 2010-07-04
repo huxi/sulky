@@ -42,7 +42,7 @@ import java.awt.event.InputEvent;
 
 import javax.swing.*;
 
-public class KeyStrokes
+public final class KeyStrokes
 {
 	public static final String COMMAND_ALIAS = "command";
 

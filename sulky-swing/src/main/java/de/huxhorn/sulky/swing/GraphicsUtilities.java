@@ -49,7 +49,7 @@ import javax.imageio.ImageIO;
 /**
  * Inspired by Filthy Rich Clients...
  */
-public class GraphicsUtilities
+public final class GraphicsUtilities
 {
 	private GraphicsUtilities()
 	{}

@@ -46,7 +46,7 @@ import java.util.StringTokenizer;
  * In addition to the traditional "." and ".." path elements this class also supports
  * a shorthand version for path structures like "../.." which can be written as "...".
  */
-public class PathTools
+public final class PathTools
 {
 	private PathTools()
 	{}

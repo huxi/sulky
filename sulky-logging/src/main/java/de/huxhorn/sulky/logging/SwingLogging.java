@@ -46,7 +46,7 @@ import javax.swing.text.Style;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 
-public class SwingLogging
+public final class SwingLogging
 {
 	private SwingLogging()
 	{}
