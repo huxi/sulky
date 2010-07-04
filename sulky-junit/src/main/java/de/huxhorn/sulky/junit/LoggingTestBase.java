@@ -112,7 +112,10 @@ public class LoggingTestBase
 		}
 		if(loggingFile != null && deleteLogFiles)
 		{
-			loggingFile.delete();
+			if(!loggingFile.delete())
+			{
+				System.out.println("Couldn't delete file " + loggingFile.getAbsolutePath() + "!");
+			}
 		}
 	}
 
