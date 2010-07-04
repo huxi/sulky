@@ -427,7 +427,6 @@ public class CodecFileBuffer<E>
 	{
 		RandomAccessFile randomSerializeIndexFile = null;
 		RandomAccessFile randomSerializeFile = null;
-		E result = null;
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
 		Throwable throwable = null;
@@ -455,35 +454,23 @@ public class CodecFileBuffer<E>
 		}
 
 		// it's a really bad idea to log while locked *sigh*
-		if(throwable != null)
+		if(logger.isWarnEnabled())
 		{
-			if(logger.isWarnEnabled())
+			if(throwable instanceof ClassNotFoundException
+				|| throwable instanceof InvalidClassException)
 			{
-				if(throwable instanceof ClassNotFoundException
-					|| throwable instanceof InvalidClassException)
-				{
-					logger.warn("Couldn't deserialize object at index " + index + "!\n" + throwable);
-				}
-				else if(throwable instanceof ClassCastException)
-				{
-					logger.warn("Couldn't cast deserialized object at index " + index + "!\n" + throwable);
-				}
-				else
-				{
-					logger.warn("Couldn't retrieve element at index " + index + "!", throwable);
-				}
+				logger.warn("Couldn't deserialize object at index " + index + "!\n" + throwable);
+			}
+			else if(throwable instanceof ClassCastException)
+			{
+				logger.warn("Couldn't cast deserialized object at index " + index + "!\n" + throwable);
+			}
+			else
+			{
+				logger.warn("Couldn't retrieve element at index " + index + "!", throwable);
 			}
 		}
-		else if(index < 0 || index >= elementsCount)
-		{
-			if(logger.isInfoEnabled())
-			{
-				logger.info("index (" + index + ") must be in the range [0..<" + elementsCount + "]. Returning null.");
-			}
-			return null;
-		}
-
-		return result;
+		return null;
 	}
 
 	/**
