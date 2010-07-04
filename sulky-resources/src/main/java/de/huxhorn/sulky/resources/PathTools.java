@@ -69,7 +69,7 @@ public final class PathTools
 	 *                 is relative.
 	 * @return the new path that was resolved according to <code>basePath</code>
 	 *         if necessary.
-	 * @throws NullPointerException if either basePath or path are null.
+	 * @throws IllegalArgumentException if either basePath or path are null.
 	 * @see #evaluatePath(java.lang.String) evaluatePath can be used to evaluate/reduce dots
 	 *      contained in resolved paths.
 	 */
@@ -79,7 +79,7 @@ public final class PathTools
 
 		if(basePath == null)
 		{
-			NullPointerException ex = new NullPointerException("basePath must not be null!");
+			IllegalArgumentException ex = new IllegalArgumentException("basePath must not be null!");
 			if(logger.isDebugEnabled())
 			{
 				logger.debug("Parameter 'basePath' of method 'resolvePath' must not be null!", ex);
@@ -88,7 +88,7 @@ public final class PathTools
 		}
 		if(path == null)
 		{
-			NullPointerException ex = new NullPointerException("path must not be null!");
+			IllegalArgumentException ex = new IllegalArgumentException("path must not be null!");
 			if(logger.isDebugEnabled()) logger.debug("Parameter 'path' of method 'resolvePath' must not be null!", ex);
 			throw ex;
 		}
@@ -121,7 +121,7 @@ public final class PathTools
 	 *
 	 * @param path the path to be evaluated
 	 * @return a path that contains at most one single ..-style path element as the first element.
-	 * @throws NullPointerException if path is null.
+	 * @throws IllegalArgumentException if path is null.
 	 * @see #resolvePath(java.lang.String, java.lang.String) resolvePath can be used to obtain a single path from a basePath and another path.
 	 */
 	public static String evaluatePath(String path)
@@ -144,7 +144,7 @@ public final class PathTools
 	 * @param path     the relative path.
 	 * @return the absolute path or null if no such path was found, e.g. because
 	 *         basePath wasn't absolute or because a path-underflow happened.
-	 * @throws NullPointerException if either basePath or path is null.
+	 * @throws IllegalArgumentException if either basePath or path is null.
 	 */
 	public static String getAbsolutePath(String basePath, String path)
 	{

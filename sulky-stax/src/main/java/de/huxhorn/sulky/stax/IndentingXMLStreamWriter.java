@@ -44,7 +44,6 @@ import javax.xml.stream.XMLStreamWriter;
 public class IndentingXMLStreamWriter
 	implements XMLStreamWriter
 {
-	private final Logger logger = LoggerFactory.getLogger(IndentingXMLStreamWriter.class);
 
 	private static final String SYSTEM_LINE_SEPARATOR = System.getProperty("line.separator");
 	private XMLStreamWriter writer;
@@ -68,20 +67,21 @@ public class IndentingXMLStreamWriter
 		if(writer == null)
 		{
 			// so we have consistent behaviour in case of debug or not.
-			throw new NullPointerException("writer must not be null!");
+			throw new IllegalArgumentException("writer must not be null!");
 		}
 		if(lineSeparator == null)
 		{
-			throw new NullPointerException("lineSeparator must not be null!");
+			throw new IllegalArgumentException("lineSeparator must not be null!");
 		}
 		if(indentString == null)
 		{
-			throw new NullPointerException("indentString must not be null!");
+			throw new IllegalArgumentException("indentString must not be null!");
 		}
 
 		this.writer = writer;
 		this.lineSeparator = lineSeparator;
 		this.indentString = indentString;
+		final Logger logger = LoggerFactory.getLogger(IndentingXMLStreamWriter.class);
 		if(logger.isDebugEnabled()) logger.debug("writer-class: {}", writer.getClass());
 		this.indentLevel = 0;
 		this.wroteText = false;

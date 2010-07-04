@@ -71,7 +71,7 @@ public class ResourceSupport
 		Logger logger = LoggerFactory.getLogger(ResourceSupport.class);
 		if(object == null)
 		{
-			NullPointerException ex = new NullPointerException("obj must not be null!");
+			IllegalArgumentException ex = new IllegalArgumentException("obj must not be null!");
 			if(logger.isDebugEnabled())
 			{
 				logger.debug("Parameter 'obj' of method 'ResourceSupport' must not be null!", ex);

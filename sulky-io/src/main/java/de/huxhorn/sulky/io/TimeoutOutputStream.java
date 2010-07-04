@@ -55,7 +55,7 @@ public class TimeoutOutputStream
 		watchdogThreadRunning = new AtomicBoolean(false);
 		if(stream == null)
 		{
-			throw new NullPointerException("stream must not be null!");
+			throw new IllegalArgumentException("stream must not be null!");
 		}
 		if(timeout <= 0)
 		{
