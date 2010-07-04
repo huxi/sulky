@@ -66,6 +66,9 @@ public class KeyStrokes
 		COMMAND_MODIFIERS = getModifiersString(COMMAND_KEYMASK);
 	}
 
+	private KeyStrokes()
+	{}
+	
 	/**
 	 * Creates a string containing the text representation of the given modifiers.
 	 * Calling this method with the value (InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK)

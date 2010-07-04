@@ -36,6 +36,9 @@ package de.huxhorn.sulky.formatting;
 
 public class SimpleXml
 {
+	private SimpleXml()
+	{}
+	
 	/**
 	 * Replaces the characters '&amp;', '&lt;', '&gt;' and '&quot;' with their respective xml-entities. Does also replace a zero byte with space.
 	 *

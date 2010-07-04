@@ -41,6 +41,9 @@ import javax.swing.*;
 
 public class Tables
 {
+	private Tables()
+	{}
+	
 	private static final Method CONVERT_ROW_INDEX_TO_MODEL_METHOD;
 
 	private static final Method SET_AUTO_CREATE_ROW_SORTER_METHOD;

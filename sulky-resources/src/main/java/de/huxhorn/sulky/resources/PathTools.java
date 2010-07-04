@@ -48,6 +48,9 @@ import java.util.StringTokenizer;
  */
 public class PathTools
 {
+	private PathTools()
+	{}
+	
 	/**
 	 * This method will resolve the given <code>path</code> in relation
 	 * with <code>basePath</code> if necessary.

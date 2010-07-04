@@ -43,6 +43,9 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Windows
 {
+	private Windows()
+	{}
+
 	public static void setIconImage(Window window, Image image)
 	{
 		final Logger logger = LoggerFactory.getLogger(Windows.class);

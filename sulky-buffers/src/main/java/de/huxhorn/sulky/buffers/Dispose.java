@@ -36,6 +36,9 @@ package de.huxhorn.sulky.buffers;
 
 public class Dispose
 {
+	private Dispose()
+	{}
+	
 	/**
 	 * Executes dispose() on the given object if it implements DisposeOperation. Does nothing otherwise.
 	 *

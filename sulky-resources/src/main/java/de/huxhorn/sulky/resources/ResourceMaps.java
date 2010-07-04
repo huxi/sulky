@@ -62,6 +62,9 @@ public class ResourceMaps
 		MAP_SUFFIXES = suffs;
 	}
 
+	private ResourceMaps()
+	{}
+	
 	/**
 	 * Returns a map containing the key-value-pairs of all bundles
 	 * retrieved by calling getResources(clazz, resourceMapBaseName, BUNDLE_SUFFIXES, locale).

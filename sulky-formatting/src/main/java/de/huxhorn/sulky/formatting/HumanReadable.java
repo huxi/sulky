@@ -39,6 +39,9 @@ import org.slf4j.LoggerFactory;
 
 public class HumanReadable
 {
+	private HumanReadable()
+	{}
+	
 	static class Unit
 	{
 		private String name;

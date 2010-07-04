@@ -59,6 +59,9 @@ public class StaxUtilities
 	public static final String XML_SCHEMA_INSTANCE_SCHEMA_LOCATION_ATTRIBUTE = "schemaLocation";
 	public static final String NO_PREFIX = "";
 
+	private StaxUtilities()
+	{}
+	
 	/**
 	 * Shortcut for readSimpleTextNodeIfAvailable(reader, namespaceURI, nodeName, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE).
 	 *

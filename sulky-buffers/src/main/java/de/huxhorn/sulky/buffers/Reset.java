@@ -36,6 +36,9 @@ package de.huxhorn.sulky.buffers;
 
 public class Reset
 {
+	private Reset()
+	{}
+	
 	/**
 	 * Executes reset() on the given object if it implements ResetOperation. Does nothing otherwise.
 	 *

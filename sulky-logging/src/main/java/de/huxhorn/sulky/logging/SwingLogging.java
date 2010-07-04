@@ -48,6 +48,9 @@ import javax.swing.text.html.StyleSheet;
 
 public class SwingLogging
 {
+	private SwingLogging()
+	{}
+	
 	public static void logInputMaps(JComponent component)
 	{
 		final Logger logger = LoggerFactory.getLogger(SwingLogging.class);

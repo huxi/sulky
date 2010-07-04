@@ -51,6 +51,9 @@ import javax.imageio.ImageIO;
  */
 public class GraphicsUtilities
 {
+	private GraphicsUtilities()
+	{}
+	
 	private static GraphicsConfiguration getConfiguration()
 	{
 		return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();

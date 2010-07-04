@@ -38,13 +38,16 @@ import java.util.List;
 
 public class Conditions
 {
+	private Conditions()
+	{}
+
 	/**
 	 * Returns true if condition contains otherCondition.
 	 * <p/>
 	 * Conditions "contain" themselves so this method returns true if condition equals otherCondition.
 	 *
-	 * @param condition
-	 * @param otherCondition
+	 * @param condition the condition to be checked for containment
+	 * @param otherCondition the condition that might contain condition.
 	 * @return true if condition contains otherCondition.
 	 */
 	public static boolean contains(Condition condition, Condition otherCondition)

@@ -53,6 +53,9 @@ import java.lang.reflect.Method;
 
 public class JUnitTools
 {
+	private JUnitTools()
+	{}
+	
 	/**
 	 * Serializes the original and returns the deserialized instance.
 	 * Serialization is using ObjectOutputStream/ObjectInputStream.
