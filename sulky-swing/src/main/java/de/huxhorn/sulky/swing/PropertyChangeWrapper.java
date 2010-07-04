@@ -63,14 +63,23 @@ public class PropertyChangeWrapper
 		}
 		else
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					wrapped.propertyChange(evt);
-				}
-			});
+			SwingUtilities.invokeLater(new PropertyChangeRunnable(evt));
+		}
+	}
+
+	private class PropertyChangeRunnable
+		implements Runnable
+	{
+		private PropertyChangeEvent event;
+
+		public PropertyChangeRunnable(PropertyChangeEvent event)
+		{
+			this.event=event;
 		}
 
+		public void run()
+		{
+			getWrapped().propertyChange(event);
+		}
 	}
 }
