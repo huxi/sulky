@@ -48,6 +48,7 @@ import javax.swing.*;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class BufferTableModel<T>
 	implements RowBasedTableModel<T>, DisposeOperation
@@ -57,8 +58,8 @@ public abstract class BufferTableModel<T>
 	private Buffer<T> buffer;
 	private CircularBuffer<T> circularBuffer;
 	private final EventListenerList eventListenerList;
-	private boolean disposed;
-	private boolean paused;
+	private final AtomicBoolean disposed=new AtomicBoolean();
+	private final AtomicBoolean paused=new AtomicBoolean();
 
 	private int pauseRowCount;
 	private int lastRowCount;
@@ -67,7 +68,7 @@ public abstract class BufferTableModel<T>
 	{
 		eventListenerList = new EventListenerList();
 		lastRowCount = 0;
-		disposed = false;
+		disposed.set(false);
 		setBuffer(buffer);
 
 		Thread t = new Thread(new BufferTableModel.TableChangeDetectionRunnable(), "TableChangeDetection");
@@ -79,7 +80,7 @@ public abstract class BufferTableModel<T>
 
 	public synchronized boolean isPaused()
 	{
-		return paused;
+		return paused.get();
 	}
 
 	public synchronized void setPaused(boolean paused)
@@ -88,7 +89,7 @@ public abstract class BufferTableModel<T>
 		{
 			pauseRowCount = getRowCount();
 		}
-		this.paused = paused;
+		this.paused.set(paused);
 		notifyAll();
 	}
 
@@ -136,14 +137,14 @@ public abstract class BufferTableModel<T>
 
 	public synchronized void dispose()
 	{
-		disposed = true;
+		disposed.set(true);
 		Dispose.dispose(buffer);
 		notifyAll();
 	}
 
-	public boolean isDisposed()
+	public synchronized boolean isDisposed()
 	{
-		return disposed;
+		return disposed.get();
 	}
 
 	private int internalRowCount()
@@ -334,7 +335,7 @@ public abstract class BufferTableModel<T>
 					{
 						for(; ;)
 						{
-							if(!isPaused())
+							if(!isPaused()) // is this really double-checked locking?
 							{
 								break;
 							}
