@@ -274,6 +274,7 @@
 					<type>range</type>
 					<range>120</range>
 					<displayFileDetailUrl>http://github.com/huxi/lilith/blob/master/%FILE%</displayFileDetailUrl>
+					<!--
 					<dependencies>
 						<dependency>
 							<groupId>org.apache.maven.scm</groupId>
@@ -281,6 +282,7 @@
 							<version>1.3</version>
 						</dependency>
 					</dependencies>
+					-->
 				</configuration>
 			</plugin>
 			
