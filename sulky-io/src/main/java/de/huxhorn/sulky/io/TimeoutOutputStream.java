@@ -75,7 +75,7 @@ public class TimeoutOutputStream
 		}
 		catch(InterruptedException e)
 		{
-			// ignore
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -239,10 +239,12 @@ public class TimeoutOutputStream
 			}
 			catch(IOException e)
 			{
+				ThreadInterruptionSafeguard.interruptIfNecessary(e);
 				//if(logger.isWarnEnabled()) logger.warn("Exception while closing stream.", e);
 			}
 			catch(InterruptedException e)
 			{
+				ThreadInterruptionSafeguard.interruptIfNecessary(e);
 				//if(logger.isInfoEnabled()) logger.info("Interrupted....", e);
 			}
 			catch(RuntimeException e)

@@ -551,7 +551,7 @@ public class TimeoutOutputStreamTest
 	{
 		try
 		{
-			Thread.sleep(10);
+			Thread.sleep(100);
 		}
 		catch(InterruptedException e)
 		{
