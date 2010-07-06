@@ -90,7 +90,7 @@ public final class ThreadInterruptionSafeguard
 				Thread.currentThread().interrupt();
 				break;
 			}
-			current=t.getCause();
+			current=current.getCause();
 		}
 		while(current !=null);
 	}
