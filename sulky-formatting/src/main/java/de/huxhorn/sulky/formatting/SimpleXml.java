@@ -95,7 +95,6 @@ public final class SimpleXml
 	 * @param replacementChar the character to replace invalid characters with.
 	 * @return The in String, with non-valid characters replaced by replacementChar.
 	 */
-	@SuppressWarnings({"MagicNumber","MagicCharacter"})
 	public static String replaceNonValidXMLCharacters(String in, char replacementChar)
 	{
 		StringBuilder out = null;
