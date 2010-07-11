@@ -27,8 +27,8 @@
 		-->
 		
 		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
+			<groupId>de.huxhorn.sulky</groupId>
+			<artifactId>de.huxhorn.sulky.io</artifactId>
 			<scope>compile</scope>
 		</dependency>
 		

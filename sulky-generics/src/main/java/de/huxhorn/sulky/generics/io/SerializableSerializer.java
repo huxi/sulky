@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.generics.io;
 
-import org.apache.commons.io.IOUtils;
+import de.huxhorn.sulky.io.IOUtilities;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -99,8 +99,8 @@ public class SerializableSerializer<E extends Serializable>
 		}
 		finally
 		{
-			IOUtils.closeQuietly(oos);
-			IOUtils.closeQuietly(bos);
+			IOUtilities.closeQuietly(oos);
+			IOUtilities.closeQuietly(bos);
 		}
 	}
 

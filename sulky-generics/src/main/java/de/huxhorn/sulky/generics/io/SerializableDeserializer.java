@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.generics.io;
 
-import org.apache.commons.io.IOUtils;
+import de.huxhorn.sulky.io.IOUtilities;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -96,8 +96,8 @@ public class SerializableDeserializer<E extends Serializable>
 		}
 		finally
 		{
-			IOUtils.closeQuietly(ois);
-			IOUtils.closeQuietly(bis);
+			IOUtilities.closeQuietly(ois);
+			IOUtilities.closeQuietly(bis);
 		}
 	}
 

@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.codec;
 
-import org.apache.commons.io.IOUtils;
+import de.huxhorn.sulky.io.IOUtilities;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
@@ -92,8 +92,8 @@ public class SerializableDecoder<E extends Serializable>
 		}
 		finally
 		{
-			IOUtils.closeQuietly(ois);
-			IOUtils.closeQuietly(bis);
+			IOUtilities.closeQuietly(ois);
+			IOUtilities.closeQuietly(bis);
 		}
 	}
 

@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.codec;
 
-import org.apache.commons.io.IOUtils;
+import de.huxhorn.sulky.io.IOUtilities;
 
 import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
@@ -129,7 +129,7 @@ public class XmlEncoder<E>
 		}
 		finally
 		{
-			IOUtils.closeQuietly(bos);
+			IOUtilities.closeQuietly(bos);
 		}
 	}
 
