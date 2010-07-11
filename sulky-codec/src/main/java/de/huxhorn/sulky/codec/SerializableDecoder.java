@@ -87,6 +87,7 @@ public class SerializableDecoder<E extends Serializable>
 		}
 		catch(Throwable e)
 		{
+			IOUtilities.interruptIfNecessary(e);
 			// silently ignore any problems 
 			return null;
 		}

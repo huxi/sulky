@@ -40,6 +40,7 @@ import de.huxhorn.sulky.buffers.Dispose;
 import de.huxhorn.sulky.buffers.DisposeOperation;
 import de.huxhorn.sulky.buffers.Reset;
 
+import de.huxhorn.sulky.io.IOUtilities;
 import de.huxhorn.sulky.swing.RowBasedTableModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -263,6 +264,7 @@ public abstract class BufferTableModel<T>
 					catch(Throwable ex)
 					{
 						if(logger.isWarnEnabled()) logger.warn("Exception while firing change!", ex);
+						IOUtilities.interruptIfNecessary(ex);
 					}
 				}
 			}

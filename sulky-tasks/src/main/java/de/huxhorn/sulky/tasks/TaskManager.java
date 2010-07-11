@@ -34,6 +34,7 @@
 
 package de.huxhorn.sulky.tasks;
 
+import de.huxhorn.sulky.io.IOUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -620,6 +621,7 @@ public class TaskManager<T>
 						logger
 							.error("TaskListener " + listener + " threw an exception while progressUpdated was called!", t);
 					}
+					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}
@@ -639,6 +641,7 @@ public class TaskManager<T>
 						logger
 							.error("TaskListener " + listener + " threw an exception while progressUpdated was called!", t);
 					}
+					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}
@@ -658,6 +661,7 @@ public class TaskManager<T>
 						logger
 							.error("TaskListener " + listener + " threw an exception while executionFailed was called!", t);
 					}
+					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}
@@ -677,6 +681,7 @@ public class TaskManager<T>
 						logger
 							.error("TaskListener " + listener + " threw an exception while executionFinished was called!", t);
 					}
+					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}
@@ -696,6 +701,7 @@ public class TaskManager<T>
 						logger
 							.error("TaskListener " + listener + " threw an exception while executionCanceled was called!", t);
 					}
+					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}

@@ -34,6 +34,8 @@
 
 package de.huxhorn.sulky.swing;
 
+import de.huxhorn.sulky.io.IOUtilities;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -57,6 +59,7 @@ public final class Tables
 		}
 		catch(Throwable e)
 		{
+			IOUtilities.interruptIfNecessary(e);
 			// ignore
 		}
 		SET_AUTO_CREATE_ROW_SORTER_METHOD = method;
@@ -68,6 +71,7 @@ public final class Tables
 		}
 		catch(Throwable e)
 		{
+			IOUtilities.interruptIfNecessary(e);
 			// ignore
 		}
 		CONVERT_ROW_INDEX_TO_MODEL_METHOD = method;
@@ -103,6 +107,7 @@ public final class Tables
 			}
 			catch(Throwable e)
 			{
+				IOUtilities.interruptIfNecessary(e);
 				// ignore
 			}
 		}

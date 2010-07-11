@@ -34,6 +34,7 @@
 
 package de.huxhorn.sulky.buffers;
 
+import de.huxhorn.sulky.io.IOUtilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -122,13 +123,14 @@ public class SerializingFileBuffer<E>
 		}
 		finally
 		{
-			closeQuietly(raf);
+			IOUtilities.closeQuietly(raf);
 			lock.unlock();
 		}
 		// it's a really bad idea to log while locked *sigh*
 		if(throwable != null)
 		{
 			if(logger.isDebugEnabled()) logger.debug("Couldn't retrieve size!", throwable);
+			IOUtilities.interruptIfNecessary(throwable);
 		}
 		return 0;
 	}
@@ -165,30 +167,28 @@ public class SerializingFileBuffer<E>
 		}
 		finally
 		{
-			closeQuietly(randomSerializeFile);
-			closeQuietly(randomSerializeIndexFile);
+			IOUtilities.closeQuietly(randomSerializeFile);
+			IOUtilities.closeQuietly(randomSerializeIndexFile);
 			lock.unlock();
 		}
 
 		// it's a really bad idea to log while locked *sigh*
 		if(throwable != null)
 		{
-			if(logger.isWarnEnabled())
+			if(throwable instanceof ClassNotFoundException
+				|| throwable instanceof InvalidClassException)
 			{
-				if(throwable instanceof ClassNotFoundException
-					|| throwable instanceof InvalidClassException)
-				{
-					logger.warn("Couldn't deserialize object at index " + index + "!\n" + throwable);
-				}
-				else if(throwable instanceof ClassCastException)
-				{
-					logger.warn("Couldn't cast deserialized object at index " + index + "!\n" + throwable);
-				}
-				else
-				{
-					logger.warn("Couldn't retrieve element at index " + index + "!", throwable);
-				}
+				if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index " + index + "!\n" + throwable);
 			}
+			else if(throwable instanceof ClassCastException)
+			{
+				if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index " + index + "!\n" + throwable);
+			}
+			else
+			{
+				if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index " + index + "!", throwable);
+			}
+			IOUtilities.interruptIfNecessary(throwable);
 		}
 		else if(index < 0 || index >= elementsCount)
 		{
@@ -231,14 +231,15 @@ public class SerializingFileBuffer<E>
 		}
 		finally
 		{
-			closeQuietly(randomSerializeFile);
-			closeQuietly(randomSerializeIndexFile);
+			IOUtilities.closeQuietly(randomSerializeFile);
+			IOUtilities.closeQuietly(randomSerializeIndexFile);
 			lock.unlock();
 		}
 		if(throwable != null)
 		{
 			// it's a really bad idea to log while locked *sigh*
 			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
+			IOUtilities.interruptIfNecessary(throwable);
 		}
 
 	}
@@ -292,14 +293,15 @@ public class SerializingFileBuffer<E>
 				}
 				finally
 				{
-					closeQuietly(randomSerializeFile);
-					closeQuietly(randomSerializeIndexFile);
+					IOUtilities.closeQuietly(randomSerializeFile);
+					IOUtilities.closeQuietly(randomSerializeIndexFile);
 					lock.unlock();
 				}
 				if(throwable != null)
 				{
 					// it's a really bad idea to log while locked *sigh*
 					if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
+					IOUtilities.interruptIfNecessary(throwable);
 				}
 			}
 
@@ -353,21 +355,6 @@ public class SerializingFileBuffer<E>
 	public File getDataFile()
 	{
 		return dataFile;
-	}
-
-	private static void closeQuietly(RandomAccessFile raf)
-	{
-		if(raf != null)
-		{
-			try
-			{
-				raf.close();
-			}
-			catch(Throwable e)
-			{
-				// ignore
-			}
-		}
 	}
 
 	private long internalOffsetOfElement(RandomAccessFile randomSerializeIndexFile, long index)
