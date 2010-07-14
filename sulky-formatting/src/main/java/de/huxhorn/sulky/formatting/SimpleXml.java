@@ -36,13 +36,40 @@ package de.huxhorn.sulky.formatting;
 
 public final class SimpleXml
 {
+	// below constants are the valid ranges of XML characters
+	// according to http://www.w3.org/TR/REC-xml#charsets
+    private static final int XML_CHAR_RANGE_A_START = 0x000020;
+    private static final int XML_CHAR_RANGE_A_END   = 0x00D7FF;
+    private static final int XML_CHAR_RANGE_B_START = 0x00E000;
+    private static final int XML_CHAR_RANGE_B_END   = 0x00FFFD;
+    private static final int XML_CHAR_RANGE_C_START = 0x010000;
+    private static final int XML_CHAR_RANGE_C_END   = 0x10FFFF;
+
 	private SimpleXml()
 	{}
-	
+
+    /**
+     * Tests a given character whether or not it is a valid XML character.
+	 *
+	 * For reference, please see
+	 * <a href="http://www.w3.org/TR/REC-xml#charsets">the
+	 * specification</a>.
+	 *
+     * @param character The character to test
+     * @return whether or not the supplied character is a valid XML character
+     */
+    public static boolean isValidXMLCharacter(char character)
+    {
+        return character == '\t' || character == '\r' || character == '\n' ||
+			(character >= XML_CHAR_RANGE_A_START && character <= XML_CHAR_RANGE_A_END) ||
+			(character >= XML_CHAR_RANGE_B_START && character <= XML_CHAR_RANGE_B_END) ||
+			(character >= XML_CHAR_RANGE_C_START && character <= XML_CHAR_RANGE_C_END);
+    }
+
 	/**
 	 * Replaces the characters '&amp;', '&lt;', '&gt;' and '&quot;' with their respective xml-entities. Does also replace a zero byte with space.
 	 *
-	 * @param input
+	 * @param input the input that will be xml-escaped
 	 * @return the xml-escaped input.
 	 */
 	public static String escape(String input)
@@ -63,7 +90,7 @@ public final class SimpleXml
 	/**
 	 * Reverses escape with the exception of the zero-byte escape.
 	 *
-	 * @param input
+	 * @param input the input that will be xml-unescaped
 	 * @return the unescaped string.
 	 */
 	public static String unescape(String input)
@@ -80,16 +107,22 @@ public final class SimpleXml
 	}
 
 	/**
+	 * <p>
 	 * This method ensures that the output String has only
 	 * valid XML unicode characters as specified by the
-	 * XML 1.0 standard. For reference, please see
-	 * <a href="http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char">the
-	 * standard</a>.
-	 * <p/>
+	 * XML 1.0 standard.
+	 * For reference, please see
+	 * <a href="http://www.w3.org/TR/REC-xml#charsets">the
+	 * specification</a>.
+	 * </p>
+	 * <p>
 	 * Based on code from http://cse-mjmcl.cse.bris.ac.uk/blog/2007/02/14/1171465494443.html
-	 * <p/>
+	 * </p>
+	 *
+	 * <p>
 	 * This method takes into account that no change will be necessary most of the time so
 	 * nothing will be allocated/changed until the first non-valid character is found.
+	 * </p>
 	 *
 	 * @param in              The String whose non-valid characters we want to remove.
 	 * @param replacementChar the character to replace invalid characters with.
@@ -99,33 +132,25 @@ public final class SimpleXml
 	{
 		StringBuilder out = null;
 
-		if(!((replacementChar == 0x9) ||
-			(replacementChar == 0xA) ||
-			(replacementChar == 0xD) ||
-			((replacementChar >= 0x20) && (replacementChar <= 0xD7FF)) ||
-			((replacementChar >= 0xE000) && (replacementChar <= 0xFFFD)) ||
-			((replacementChar >= 0x10000) && (replacementChar <= 0x10FFFF))))
+		if(!isValidXMLCharacter(replacementChar))
 		{
-			throw new IllegalArgumentException("Replacement character 0x" + Integer
-				.toString(replacementChar, 16) + " is invalid itself!");
+			throw new IllegalArgumentException("Replacement character 0x"
+				+ Integer.toString(replacementChar, 16) + " is invalid itself!");
 		}
 
 		for(int i = 0; i < in.length(); i++)
 		{
 			char current = in.charAt(i);
-			if(!((current == 0x9) ||
-				(current == 0xA) ||
-				(current == 0xD) ||
-				((current >= 0x20) && (current <= 0xD7FF)) ||
-				((current >= 0xE000) && (current <= 0xFFFD)) ||
-				((current >= 0x10000) && (current <= 0x10FFFF))))
+
+			if(isValidXMLCharacter(current))
 			{
-				if(out == null)
-				{
-					out = new StringBuilder(in);
-				}
-				out.setCharAt(i, replacementChar);
+                continue;
 			}
+            if(out == null)
+            {
+                out = new StringBuilder(in);
+            }
+            out.setCharAt(i, replacementChar);
 		}
 		if(out != null)
 		{
