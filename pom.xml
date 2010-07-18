@@ -61,6 +61,7 @@
 		<module>sulky-swing</module>
 		<module>sulky-buffers-table</module>
 		<module>sulky-tasks</module>
+		<module>sulky-buffers-filtering</module>
 		<module>sulky-resources</module>
 	</modules>
 
