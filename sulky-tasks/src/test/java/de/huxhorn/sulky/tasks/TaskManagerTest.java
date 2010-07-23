@@ -2,7 +2,9 @@ package de.huxhorn.sulky.tasks;
 
 import org.junit.After;
 import static org.junit.Assert.*;
+
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +24,12 @@ public class TaskManagerTest
 
 	private TaskManager<Integer> instance;
 	private String taskName;
+
+	@BeforeClass
+	public static void enableHeadless()
+	{
+		System.setProperty("java.awt.headless", "true");
+	}
 
 	@Before
 	public void setUp()
