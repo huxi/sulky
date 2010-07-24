@@ -64,7 +64,7 @@ public class BooleanValues
 	BooleanValues(boolean b)
 	{
 		this.value = b;
-		this.string = "" + b;
+  	    this.string = String.valueOf(b);
 	}
 
 	/**
@@ -78,6 +78,7 @@ public class BooleanValues
 		return value;
 	}
 
+    //@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="CN_IDIOM_NO_SUPER_CALL",justification="")
 	@SuppressWarnings({"CloneDoesntCallSuperClone"})
 	@Override
 	public BooleanValues clone()
