@@ -66,6 +66,11 @@ public class ColorTintFilter
 	private final Color mixColor;
 	private final float mixValue;
 
+    private static final float MIN_MIX_VALUE = 0.0f;
+    private static final float MAX_MIX_VALUE = 1.0f;
+
+    private static final int RGB_MAX = 256;
+
 	private int[] preMultipliedRed;
 	private int[] preMultipliedGreen;
 	private int[] preMultipliedBlue;
@@ -88,33 +93,33 @@ public class ColorTintFilter
 		}
 
 		this.mixColor = mixColor;
-		if(mixValue < 0.0f)
+		if(mixValue < MIN_MIX_VALUE)
 		{
-			mixValue = 0.0f;
+			mixValue = MIN_MIX_VALUE;
 		}
-		else if(mixValue > 1.0f)
+		else if(mixValue > MAX_MIX_VALUE)
 		{
-			mixValue = 1.0f;
+			mixValue = MAX_MIX_VALUE;
 		}
 		this.mixValue = mixValue;
 
-		int mix_r = (int) (mixColor.getRed() * mixValue);
-		int mix_g = (int) (mixColor.getGreen() * mixValue);
-		int mix_b = (int) (mixColor.getBlue() * mixValue);
+		int mixRed = (int) (mixValue * mixColor.getRed());
+		int mixGreen = (int) (mixValue * mixColor.getGreen());
+		int mixBlue = (int) (mixValue * mixColor.getBlue());
 
 		// Since we use only lookup tables to apply the filter, this filter
 		// could be implemented as a LookupOp.
-		float factor = 1.0f - mixValue;
-		preMultipliedRed = new int[256];
-		preMultipliedGreen = new int[256];
-		preMultipliedBlue = new int[256];
+		float factor = MAX_MIX_VALUE - mixValue;
+		preMultipliedRed = new int[RGB_MAX];
+		preMultipliedGreen = new int[RGB_MAX];
+		preMultipliedBlue = new int[RGB_MAX];
 
-		for(int i = 0; i < 256; i++)
+		for(int i = 0; i < RGB_MAX; i++)
 		{
 			int value = (int) (i * factor);
-			preMultipliedRed[i] = value + mix_r;
-			preMultipliedGreen[i] = value + mix_g;
-			preMultipliedBlue[i] = value + mix_b;
+			preMultipliedRed[i] = value + mixRed;
+			preMultipliedGreen[i] = value + mixGreen;
+			preMultipliedBlue[i] = value + mixBlue;
 		}
 	}
 
