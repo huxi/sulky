@@ -436,6 +436,7 @@ public class MemoryStatus
 		}
 	}
 
+    //@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="DM_GC",justification="")
 	class GcMouseListener
 		extends MouseAdapter
 	{
@@ -443,7 +444,7 @@ public class MemoryStatus
 		{
 			if(evt.getClickCount() >= 2 && evt.getButton() == MouseEvent.BUTTON1)
 			{
-				System.gc(); // this is not a bug! - Performance - Explicit garbage collection; extremely dubious except in benchmarking code
+				System.gc(); //NOSONAR
 				if(logger.isInfoEnabled()) logger.info("Executed garbage-collection.");
 				updateMemoryBar();
 			}
