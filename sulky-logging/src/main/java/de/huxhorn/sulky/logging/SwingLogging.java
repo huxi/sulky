@@ -141,7 +141,7 @@ public final class SwingLogging
 		while(styleNames.hasMoreElements())
 		{
 			Object styleName = styleNames.nextElement();
-			Style style = styleSheet.getStyle("" + styleName);
+			Style style = styleSheet.getStyle(String.valueOf(styleName));
 			msg.append("StyleName: ").append(styleName).append("\nStyle: ").append(style).append("\n\n");
 		}
 		StyleSheet[] styleSheets = styleSheet.getStyleSheets();

@@ -165,7 +165,7 @@ public final class HumanReadable
 		}
 		if(correctUnit == null)
 		{
-			return "" + size + " ";
+			return String.valueOf(size) + " ";
 		}
 		StringBuilder result = new StringBuilder();
 		result.append(fraction);
