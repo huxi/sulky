@@ -163,11 +163,11 @@ public final class HumanReadable
 				break;
 			}
 		}
+		StringBuilder result = new StringBuilder();
 		if(correctUnit == null)
 		{
-			return String.valueOf(size) + " ";
+			return result.append(size).append(" ").toString();
 		}
-		StringBuilder result = new StringBuilder();
 		result.append(fraction);
 		long remainder = size % correctUnit.getFactor();
 		//if(remainder!=0)
