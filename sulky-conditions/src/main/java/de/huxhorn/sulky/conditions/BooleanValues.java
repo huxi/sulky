@@ -84,7 +84,8 @@ public class BooleanValues
 	public BooleanValues clone()
 		throws CloneNotSupportedException
 	{
-		return this; // this is not a bug!
+        // this is not a bug! - Bad practice - clone method does not call super.clone()
+		return this; //NOSONAR
 	}
 
 	private Object readResolve()
