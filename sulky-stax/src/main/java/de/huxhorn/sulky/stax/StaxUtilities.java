@@ -58,6 +58,8 @@ public final class StaxUtilities
 	public static final String XML_SCHEMA_INSTANCE_PREFIX = "xsi";
 	public static final String XML_SCHEMA_INSTANCE_SCHEMA_LOCATION_ATTRIBUTE = "schemaLocation";
 	public static final String NO_PREFIX = "";
+	private static final String NEWLINE = "\n";
+	private static final String INDENT = "\t";
 
 	private StaxUtilities()
 	{}
@@ -451,7 +453,7 @@ public final class StaxUtilities
 						resultBuffer.append(chars, startWritePos, index - startWritePos);
 						if(previousChar != '\n')
 						{
-							resultBuffer.append("\n");
+							resultBuffer.append(NEWLINE);
 							previousChar = ch;
 						}
 						else
@@ -470,7 +472,7 @@ public final class StaxUtilities
 						resultBuffer.append(chars, startWritePos, index - startWritePos);
 						if(previousChar != '\r')
 						{
-							resultBuffer.append("\n");
+							resultBuffer.append(NEWLINE);
 							previousChar = ch;
 						}
 						else
@@ -748,30 +750,30 @@ public final class StaxUtilities
 		{
 			int type = reader.getEventType();
 			StringBuilder msgBuf = new StringBuilder(msg);
-			msgBuf.append("\n");
-			msgBuf.append("\t").append("eventType=").append(getEventTypeString(type)).append("\n");
+			msgBuf.append(NEWLINE);
+			msgBuf.append(INDENT).append("eventType=").append(getEventTypeString(type)).append(NEWLINE);
 			if(type == XMLStreamConstants.START_ELEMENT || type == XMLStreamConstants.END_ELEMENT)
 			{
-				msgBuf.append("\t").append("localName=").append(reader.getLocalName()).append("\n");
-				msgBuf.append("\t").append("namespaceURI=").append(reader.getNamespaceURI()).append("\n");
+				msgBuf.append(INDENT).append("localName=").append(reader.getLocalName()).append(NEWLINE);
+				msgBuf.append(INDENT).append("namespaceURI=").append(reader.getNamespaceURI()).append(NEWLINE);
 			}
 			if(type == XMLStreamConstants.START_ELEMENT)
 			{
 				int attCount = reader.getAttributeCount();
-				msgBuf.append("\t").append("attributeCount=").append(attCount).append("\n");
+				msgBuf.append(INDENT).append("attributeCount=").append(attCount).append(NEWLINE);
 				for(int i = 0; i < attCount; i++)
 				{
-					msgBuf.append("\t\t").append("#####\n");
-					msgBuf.append("\t\t").append("attributeNamespace=").append(reader.getAttributeNamespace(i))
-						.append("\n");
-					msgBuf.append("\t\t").append("attributeLocalName=").append(reader.getAttributeLocalName(i))
-						.append("\n");
-					msgBuf.append("\t\t").append("attributeValue=").append(reader.getAttributeValue(i)).append("\n");
-					msgBuf.append("\t\t").append("attributePrefix=").append(reader.getAttributePrefix(i)).append("\n");
+					msgBuf.append(INDENT).append(INDENT).append("#####\n");
+					msgBuf.append(INDENT).append(INDENT).append("attributeNamespace=").append(reader.getAttributeNamespace(i))
+						.append(NEWLINE);
+					msgBuf.append(INDENT).append(INDENT).append("attributeLocalName=").append(reader.getAttributeLocalName(i))
+						.append(NEWLINE);
+					msgBuf.append(INDENT).append(INDENT).append("attributeValue=").append(reader.getAttributeValue(i)).append(NEWLINE);
+					msgBuf.append(INDENT).append(INDENT).append("attributePrefix=").append(reader.getAttributePrefix(i)).append(NEWLINE);
 				}
 
 			}
-			msgBuf.append("\treaderClass: ").append(reader.getClass().getName());
+			msgBuf.append(INDENT).append("readerClass: ").append(reader.getClass().getName());
 			logger.debug(msgBuf.toString());
 		}
 
