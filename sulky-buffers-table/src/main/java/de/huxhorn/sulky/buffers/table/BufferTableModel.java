@@ -330,31 +330,27 @@ public abstract class BufferTableModel<T>
 						if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 						return;
 					}
+                    continue;
 				}
-				else
-				{
-					synchronized(BufferTableModel.this)
-					{
-						for(; ;)
-						{
-							if(!isPaused()) // is this really double-checked locking?
-							{
-								break;
-							}
-							else
-							{
-								try
-								{
-									BufferTableModel.this.wait();
-								}
-								catch(InterruptedException e)
-								{
-									if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
-									return;
-								}
-							}
-						}
-					}
+                synchronized(BufferTableModel.this)
+                {
+                    for(; ;)
+                    {
+                        // Double Checked Locking : The double-checked locking idiom is broken and should be avoided.
+                        if(!isPaused()) // is this really double-checked locking?
+                        {
+                            break;
+                        }
+                        try
+                        {
+                            BufferTableModel.this.wait();
+                        }
+                        catch(InterruptedException e)
+                        {
+                            if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
+                            return;
+                        }
+                    }
 				}
 			}
 		}
