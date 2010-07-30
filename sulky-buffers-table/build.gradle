@@ -1,0 +1,8 @@
+archivesBaseName = 'de.huxhorn.sulky.buffers.table'
+
+dependencies {
+	compile libraries.'slf4j-api'
+	compile project(':sulky-buffers')
+	compile project(':sulky-swing')
+}
+

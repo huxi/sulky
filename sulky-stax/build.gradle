@@ -1,0 +1,7 @@
+archivesBaseName = 'de.huxhorn.sulky.stax'
+
+dependencies {
+	compile libraries.'slf4j-api'
+	compile libraries.'stax-api'
+}
+

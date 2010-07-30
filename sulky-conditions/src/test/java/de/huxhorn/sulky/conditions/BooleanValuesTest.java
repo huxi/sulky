@@ -34,11 +34,16 @@
 
 package de.huxhorn.sulky.conditions;
 
+import org.junit.Test;
+
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 public class BooleanValuesTest
 	extends ConditionTestBase
 {
+	@Test
 	public void testTrue()
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
@@ -47,6 +52,7 @@ public class BooleanValuesTest
 		internalTestCondition(condition);
 	}
 
+	@Test
 	public void testFalse()
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{

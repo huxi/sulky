@@ -34,14 +34,21 @@
 
 package de.huxhorn.sulky.conditions;
 
+import org.junit.Test;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 public class OrTest
 	extends ConditionTestBase
 {
-	public void testEmpty()
+	@Test
+	public void empty()
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
 		Or condition = new Or();
@@ -57,6 +64,7 @@ public class OrTest
 		internalTestCondition(condition);
 	}
 
+	@Test
 	public void testTrue()
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
@@ -75,6 +83,7 @@ public class OrTest
 		internalTestCondition(condition);
 	}
 
+	@Test
 	public void testFalse()
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{

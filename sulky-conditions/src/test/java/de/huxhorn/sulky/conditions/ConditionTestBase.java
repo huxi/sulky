@@ -34,16 +34,15 @@
 
 package de.huxhorn.sulky.conditions;
 
-import junit.framework.TestCase;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import static org.junit.Assert.assertEquals;
+
 public class ConditionTestBase
-	extends TestCase
 {
 	public void internalTestCondition(Condition condition)
 		throws CloneNotSupportedException, IOException, ClassNotFoundException

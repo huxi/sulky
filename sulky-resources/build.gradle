@@ -1,0 +1,6 @@
+archivesBaseName = 'de.huxhorn.sulky.resources'
+
+dependencies {
+	compile libraries.'slf4j-api'
+}
+

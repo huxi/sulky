@@ -1,0 +1,6 @@
+archivesBaseName = 'de.huxhorn.sulky.generics'
+
+dependencies {
+	compile project(':sulky-io')
+}
+

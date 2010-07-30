@@ -1,0 +1,10 @@
+archivesBaseName = 'de.huxhorn.sulky.buffers.filtering'
+
+dependencies {
+	compile libraries.'slf4j-api'
+	compile project(':sulky-io')
+	compile project(':sulky-buffers')
+	compile project(':sulky-conditions')
+	compile project(':sulky-tasks')
+}
+

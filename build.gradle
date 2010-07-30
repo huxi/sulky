@@ -1,0 +1,69 @@
+defaultTasks 'clean', 'build'
+
+versions = [
+'easymock': '2.4',
+'slf4j': '1.6.1',
+'logback': '0.9.24'
+]
+
+libraries = [ 
+'junit': 'junit:junit:4.8.1',
+'easymock': "org.easymock:easymock:${versions.easymock}",
+'easymockclassextension': "org.easymock:easymockclassextension:${versions.easymock}",
+// 'joda-time': 'joda-time:joda-time:1.6',
+'commons-lang': 'commons-lang:commons-lang:2.3',
+'protobuf': 'com.google.protobuf:protobuf-java:2.3.0',
+'slf4j-api': "org.slf4j:slf4j-api:${versions.slf4j}",
+'jcl-over-slf4j': "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
+'logback-core': "ch.qos.logback:logback-core:${versions.logback}",
+'logback-access': "ch.qos.logback:logback-access:${versions.logback}",
+'logback-classic': "ch.qos.logback:logback-classic:${versions.logback}",
+'logback-core': "ch.qos.logback:logback-core:${versions.logback}",
+'jlayer': 'de.huxhorn.sulky:de.huxhorn.sulky.3rdparty.jlayer:1.0',
+'stax-api': 'stax:stax-api:1.0.1'
+]
+
+dependsOnChildren()
+
+task build << {
+	// this is just a dummy task so it's possible to call release on the master
+}
+
+allprojects {
+    group = 'de.huxhorn.sulky'
+    version = '0.9.12'
+    
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+
+    sourceCompatibility = 1.5
+    targetCompatibility = 1.5
+
+    repositories {
+       mavenCentral()
+    }
+
+    dependencies {
+        testCompile libraries.junit
+        testCompile libraries.'slf4j-api'
+        testCompile libraries.'logback-classic'
+    }
+
+
+    jar {
+        manifest.attributes provider: 'gradle'
+    }
+
+    gradle.taskGraph.whenReady {taskGraph ->
+		if (!taskGraph.hasTask(':release')) {
+			version = version+'-SNAPSHOT'
+		}
+	}
+
+	task release(dependsOn: 'build') << {
+		println 'Finished release.'
+	}
+}

@@ -1,0 +1,10 @@
+archivesBaseName = 'de.huxhorn.sulky.codec.filebuffer'
+
+dependencies {
+	compile libraries.'slf4j-api'
+	compile libraries.'protobuf'
+	compile project(':sulky-io')
+	compile project(':sulky-codec')
+	compile project(':sulky-buffers')
+}
+

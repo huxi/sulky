@@ -34,12 +34,18 @@
 
 package de.huxhorn.sulky.conditions;
 
+import org.junit.Test;
+
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class NotTest
 	extends ConditionTestBase
 {
-	public void testEmpty()
+	@Test
+	public void empty()
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
 		Not condition = new Not();
@@ -48,6 +54,7 @@ public class NotTest
 		internalTestCondition(condition);
 	}
 
+	@Test
 	public void testTrue()
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
@@ -57,6 +64,7 @@ public class NotTest
 		internalTestCondition(condition);
 	}
 
+	@Test
 	public void testFalse()
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{

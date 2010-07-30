@@ -34,13 +34,19 @@
 
 package de.huxhorn.sulky.conditions;
 
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ConditionsTest
 	extends ConditionTestBase
 {
-	public void testConditionsContains()
+	@Test
+	public void conditionsContains()
 	{
 		assertFalse(Conditions.contains(null, null));
 		assertFalse(Conditions.contains(null, BooleanValues.TRUE));
