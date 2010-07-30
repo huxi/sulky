@@ -79,7 +79,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * <li>Optional ElementProcessors that are executed after elements are added to the buffer.</li>
  * </ul>
  * <p/>
- * TODO: more docu :p
+ * TODO: more documentation :p
  *
  * @param <E> the type of objects that are stored in this buffer.
  */
@@ -498,7 +498,7 @@ public class CodecFileBuffer<E>
 			randomDataFile = new RandomAccessFile(dataFile, "rw");
 
 			dataStrategy.add(element, randomIndexFile, randomDataFile, codec, indexStrategy);
-			// call proecssors if available
+			// call processors if available
 			List<ElementProcessor<E>> localProcessors = elementProcessors;
 			if(localProcessors != null)
 			{
@@ -552,7 +552,7 @@ public class CodecFileBuffer<E>
 
 					dataStrategy.addAll(elements, randomIndexFile, randomDataFile, codec, indexStrategy);
 
-					// call proecssors if available
+					// call processors if available
 					if(elementProcessors != null)
 					{
 						for(ElementProcessor<E> current : elementProcessors)
@@ -764,7 +764,7 @@ public class CodecFileBuffer<E>
 			randomDataFile = new RandomAccessFile(dataFile, "rw");
 
 			result = dataStrategy.set(index, element, randomIndexFile, randomDataFile, codec, indexStrategy);
-			// call proecssors if available
+			// call processors if available
 			List<ElementProcessor<E>> localProcessors = elementProcessors;
 			if(localProcessors != null)
 			{
