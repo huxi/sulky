@@ -336,8 +336,7 @@ public abstract class BufferTableModel<T>
                 {
                     for(; ;)
                     {
-                        // Double Checked Locking : The double-checked locking idiom is broken and should be avoided.
-                        if(!isPaused()) // is this really double-checked locking?
+                        if(!isPaused())
                         {
                             break;
                         }
