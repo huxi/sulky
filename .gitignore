@@ -1,3 +1,5 @@
+build
+.gradle
 target
 .DS_Store
 buildNumber.properties
