@@ -73,7 +73,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * <li>Configurable Codec so the way the elements are actually written and read can be changed as needed.
  * </li>
  * <li>
- * Optional meta data that can be used to provide additional informations about the content of the buffer.
+ * Optional meta data that can be used to provide additional information about the content of the buffer.
  * It might be used to identify the correct Codec required by the buffer
  * </li>
  * <li>Optional ElementProcessors that are executed after elements are added to the buffer.</li>
@@ -632,7 +632,7 @@ public class CodecFileBuffer<E>
 	}
 
 	/**
-	 * @return will always return false, i.e. it does not check for diskspace!
+	 * @return will always return false, i.e. it does not check for disk space!
 	 */
 	public boolean isFull()
 	{

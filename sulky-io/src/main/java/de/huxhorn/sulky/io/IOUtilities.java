@@ -61,7 +61,7 @@ import java.io.Writer;
  * {@link #closeQuietly(RandomAccessFile)} method for use with {@link RandomAccessFile}.
  *
  * This class is a direct result of http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4385444
- * as well as the corresponding log4j bugreport at https://issues.apache.org/bugzilla/show_bug.cgi?id=44157
+ * as well as the corresponding log4j bug report at https://issues.apache.org/bugzilla/show_bug.cgi?id=44157
  *
  * It was brought to my attention by the following post to the logback-user-mailinglist:
  * http://www.qos.ch/pipermail/logback-user/2010-July/001644.html

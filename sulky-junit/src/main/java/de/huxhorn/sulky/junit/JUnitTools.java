@@ -133,7 +133,7 @@ public final class JUnitTools
 		}
 		else
 		{
-			assertEquals("Hashcodes of " + original + " and " + result + " differ!", original.hashCode(), result.hashCode());
+			assertEquals("Hashes of " + original + " and " + result + " differ!", original.hashCode(), result.hashCode());
 			assertEquals(original, result);
 		}
 		return result;
@@ -156,7 +156,7 @@ public final class JUnitTools
 		}
 		else
 		{
-			assertEquals("Hashcodes of " + original + " and " + result + " differ!", original.hashCode(), result.hashCode());
+			assertEquals("Hashes of " + original + " and " + result + " differ!", original.hashCode(), result.hashCode());
 			assertEquals(original, result);
 		}
 		return result;
@@ -191,7 +191,7 @@ public final class JUnitTools
 		}
 		else
 		{
-			assertEquals("Hashcodes of " + original + " and " + result + " differ!", original.hashCode(), result.hashCode());
+			assertEquals("Hashes of " + original + " and " + result + " differ!", original.hashCode(), result.hashCode());
 			assertEquals(original, result);
 		}
 

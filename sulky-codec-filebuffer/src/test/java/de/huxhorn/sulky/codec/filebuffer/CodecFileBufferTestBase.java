@@ -84,17 +84,17 @@ public abstract class CodecFileBufferTestBase
 
 		values = new String[]
 			{
-				"Null, sozusagen ganix",
-				"Eins",
-				"Zwei",
-				"Drei",
-				"Vier",
-				"Fuenef",
-				"Sechse",
-				"Siebene",
-				"Achtele",
-				"Neune",
-				"Zehne"
+				"Null, sort of nothing",
+				"One",
+				"Two",
+				"Three",
+				"Four",
+				"Five",
+				"Six",
+				"Seven",
+				"Eight",
+				"Nine",
+				"Ten"
 			};
 
 		magicValue = 0xDEADBEEF;

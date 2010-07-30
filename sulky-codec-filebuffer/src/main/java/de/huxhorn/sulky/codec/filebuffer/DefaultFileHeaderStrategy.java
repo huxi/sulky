@@ -48,7 +48,7 @@ public class DefaultFileHeaderStrategy
 					{
 						logger
 							.warn("Couldn't read magic value because codecMagic was 0x" + Integer
-								.toHexString(codecMagic) + " instaed of 0x" + Integer
+								.toHexString(codecMagic) + " in staid of 0x" + Integer
 								.toHexString(CODEC_FILE_HEADER_MAGIC_VALUE) + "!");
 					}
 				}

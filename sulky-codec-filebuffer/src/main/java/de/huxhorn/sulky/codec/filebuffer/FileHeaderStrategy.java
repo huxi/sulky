@@ -51,7 +51,7 @@ public interface FileHeaderStrategy
 	/**
 	 * @param dataFile   the file to write the header to. Must be empty or nonexistent.
 	 * @param magicValue the magic value of the file.
-	 * @param sparse     if the file is suposed to support sparse entries.
+	 * @param sparse     if the file is supposed to support sparse entries.
 	 * @param metaData   the meta data of the file, can be null.
 	 * @return the written FileHeader
 	 * @throws IllegalArgumentException if file exists and isn't empty.
