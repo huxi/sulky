@@ -57,6 +57,8 @@ import java.util.Collection;
 
 /**
  */
+
+@SuppressWarnings({"PMD.SystemPrintln"})
 @RunWith(Parameterized.class)
 public class LoggingTestBase
 {
@@ -119,6 +121,7 @@ public class LoggingTestBase
 		}
 	}
 
+    @SuppressWarnings({"PMD.AvoidPrintStackTrace"})
 	public static void resetLogging(boolean verbose)
 	{
 		if(verbose)
@@ -155,12 +158,14 @@ public class LoggingTestBase
 			catch(JoranException ex)
 			{
 				System.err.println("!!! Error configuring logging framework with '" + configUrl + "'!");
+                // this is not a bug! - Avoid Print Stack Trace : Avoid printStackTrace(); use a logger call instead.
 				ex.printStackTrace();
 				StatusPrinter.print(loggerContext);
 			}
 		}
 	}
 
+    @SuppressWarnings({"PMD.AvoidPrintStackTrace"})
 	private static void configureLoggingFromString(String loggingConfig, boolean verbose)
 	{
 		ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
@@ -199,6 +204,7 @@ public class LoggingTestBase
 			catch(JoranException ex)
 			{
 				System.err.println("!!! Error configuring logging framework with '" + loggingConfig + "'!");
+                // this is not a bug! - Avoid Print Stack Trace : Avoid printStackTrace(); use a logger call instead.
 				ex.printStackTrace();
 				StatusPrinter.print(loggerContext);
 			}
