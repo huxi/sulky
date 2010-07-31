@@ -57,11 +57,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * processed. If laterSleepSteps is defined this value is used if more than 5*initialSleepSteps steps have
  * been processed.</p>
  * <p/>
- * <p>It can be usefull to use a smaller value for initialSleepSteps to support faster cancelation at the start of an
+ * <p>It can be useful to use a smaller value for initialSleepSteps to support faster cancellation at the start of an
  * operation, e.g. in case of an accidental start by the user, while using a larger value for laterSleepSteps
  * after an initial warm-up-period for performance reason (switching threads is expensive).</p>
  * <p/>
- * <p>The sleep itself is necessary to allow cancelation from the executor. The InterruptedException should not
+ * <p>The sleep itself is necessary to allow cancellation from the executor. The InterruptedException should not
  * be caught by the caller. If it is caught, e.g. to perform some cleanup, care should be taken to leave
  * the call-method at the earliest possible time.</p>
  *

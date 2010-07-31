@@ -215,7 +215,7 @@ public final class StaxUtilities
 		String attributeValue = reader.getAttributeValue(namespaceURI, name);
 		if(attributeValue == null)
 		{
-			// this actually seems to be ok... attributes are unique
+			// this actually seems to be okay... attributes are unique
 			attributeValue = reader.getAttributeValue(null, name);
 		}
 		return processWhiteSpace(attributeValue, whiteSpace);
@@ -633,7 +633,7 @@ public final class StaxUtilities
 	/**
 	 * Writes either characters or CDATA.
 	 * <p/>
-	 * CDATA is onlyused if tryUsingCData is true and text does not contain the CDATA end token.
+	 * CDATA is only used if tryUsingCData is true and text does not contain the CDATA end token.
 	 *
 	 * @param writer
 	 * @param text          the text to be written. Must not be null.
@@ -702,7 +702,7 @@ public final class StaxUtilities
 			case XMLStreamConstants.START_ELEMENT:
 				return "START_ELEMENT";
 			default:
-				return "<uknown type!>";
+				return "<unknown type!>";
 		}
 	}
 
