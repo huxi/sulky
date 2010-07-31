@@ -2,24 +2,24 @@ defaultTasks 'clean', 'build'
 
 versions = [
 'easymock': '2.4',
-'slf4j': '1.6.1',
-'logback': '0.9.24'
+'logback': '0.9.24',
+'slf4j': '1.6.1'
 ]
 
 libraries = [ 
-'junit': 'junit:junit:4.8.1',
+'commons-lang': 'commons-lang:commons-lang:2.3',
 'easymock': "org.easymock:easymock:${versions.easymock}",
 'easymockclassextension': "org.easymock:easymockclassextension:${versions.easymock}",
-// 'joda-time': 'joda-time:joda-time:1.6',
-'commons-lang': 'commons-lang:commons-lang:2.3',
-'protobuf': 'com.google.protobuf:protobuf-java:2.3.0',
-'slf4j-api': "org.slf4j:slf4j-api:${versions.slf4j}",
 'jcl-over-slf4j': "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
-'logback-core': "ch.qos.logback:logback-core:${versions.logback}",
+'jlayer': 'de.huxhorn.sulky:de.huxhorn.sulky.3rdparty.jlayer:1.0',
+'junit': 'junit:junit:4.8.1',
 'logback-access': "ch.qos.logback:logback-access:${versions.logback}",
 'logback-classic': "ch.qos.logback:logback-classic:${versions.logback}",
-'jlayer': 'de.huxhorn.sulky:de.huxhorn.sulky.3rdparty.jlayer:1.0',
+'logback-core': "ch.qos.logback:logback-core:${versions.logback}",
+'protobuf': 'com.google.protobuf:protobuf-java:2.3.0',
+'slf4j-api': "org.slf4j:slf4j-api:${versions.slf4j}",
 'stax-api': 'stax:stax-api:1.0.1'
+// 'joda-time': 'joda-time:joda-time:1.6',
 ]
 
 dependsOnChildren()
