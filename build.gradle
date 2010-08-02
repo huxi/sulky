@@ -73,7 +73,7 @@ subprojects {
     dependencies {
         testCompile libraries.junit
         testCompile libraries.'slf4j-api'
-        testCompile libraries.'logback-classic'
+        testRuntime libraries.'logback-classic'
     }
 
 
