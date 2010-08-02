@@ -42,7 +42,7 @@ artifactMapping = [
 dependsOnChildren()
 
 allprojects {
-	defaultTasks 'clean', 'build'
+	defaultTasks 'clean', 'build', 'uploadArchives'
     group = 'de.huxhorn.sulky'
     version = '0.9.12'
 }
@@ -99,7 +99,7 @@ subprojects {
 			pom.whenConfigured { pom ->
 				// dep is a native Maven dependency object (With properties artifactId, groupId, ...)
 				for(dep in pom.dependencies) {
-					println(dep.artifactId)
+					//println(dep.artifactId)
 					mapping=artifactMapping[dep.artifactId];
 					if(mapping) {
 						println("Mapping ${dep.artifactId} to ${mapping}...")
