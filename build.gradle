@@ -1,5 +1,3 @@
-defaultTasks 'clean', 'build'
-
 versions = [
 'easymock': '2.4',
 'logback':  '0.9.24',
@@ -21,13 +19,35 @@ libraries = [
 'stax-api':               'stax:stax-api:1.0.1'
 ]
 
+artifactMapping = [
+'sulky-buffers':            'de.huxhorn.sulky.buffers',
+'sulky-buffers-filtering':  'de.huxhorn.sulky.buffers.filtering',
+'sulky-buffers-table':      'de.huxhorn.sulky.buffers.table',
+'sulky-codec':              'de.huxhorn.sulky.codec',
+'sulky-codec-filebuffer':   'de.huxhorn.sulky.codec.filebuffer',
+'sulky-conditions':         'de.huxhorn.sulky.conditions',
+'sulky-formatting':         'de.huxhorn.sulky.formatting',
+'sulky-generics':           'de.huxhorn.sulky.generics',
+'sulky-io':                 'de.huxhorn.sulky.io',
+'sulky-junit':              'de.huxhorn.sulky.junit',
+'sulky-logging':            'de.huxhorn.sulky.logging',
+'sulky-resources':          'de.huxhorn.sulky.resources',
+'sulky-sounds-api':         'de.huxhorn.sulky.sounds-api',
+'sulky-sounds-impl-jlayer': 'de.huxhorn.sulky.sounds-impl-jlayer',
+'sulky-stax':               'de.huxhorn.sulky.stax',
+'sulky-swing':              'de.huxhorn.sulky.swing',
+'sulky-tasks':              'de.huxhorn.sulky.tasks'
+]
+
 dependsOnChildren()
 
 allprojects {
+	defaultTasks 'clean', 'build'
     group = 'de.huxhorn.sulky'
     version = '0.9.12'
-    
 }
+
+def localMavenRepo = new File("${System.properties.'user.home'}/.m2/repository").toURL().toString()
 
 subprojects {
     apply plugin: 'java'
@@ -37,9 +57,17 @@ subprojects {
 
     sourceCompatibility = 1.5
     targetCompatibility = 1.5
-
+    
+    mapped=artifactMapping[project.name];
+    if(!mapped)
+    {
+    	throw new IllegalStateException("${project.name} does not have an entry in artifactMapping!");
+    }
+    archivesBaseName=mapped
+    
     repositories {
        mavenCentral()
+       mavenRepo urls: localMavenRepo
     }
 
     dependencies {
@@ -63,4 +91,22 @@ subprojects {
 		}
 	}
 
+	// the following is a workaround for http://jira.codehaus.org/browse/GRADLE-443
+	uploadArchives {
+		repositories.mavenDeployer {
+			repository(url: localMavenRepo)
+			// In the future Gradle will allow to use dynamic props for dependencies to deal with optionals
+			pom.whenConfigured { pom ->
+				// dep is a native Maven dependency object (With properties artifactId, groupId, ...)
+				for(dep in pom.dependencies) {
+					println(dep.artifactId)
+					mapping=artifactMapping[dep.artifactId];
+					if(mapping) {
+						println("Mapping ${dep.artifactId} to ${mapping}...")
+						dep.artifactId=mapping
+					}
+				}
+			}
+		}
+	}
 }

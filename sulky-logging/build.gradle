@@ -1,5 +1,3 @@
-archivesBaseName = 'de.huxhorn.sulky.logging'
-
 dependencies {
 	compile libraries.'slf4j-api'
 }

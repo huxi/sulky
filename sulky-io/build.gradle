@@ -1,5 +1,3 @@
-archivesBaseName = 'de.huxhorn.sulky.io'
-
 dependencies {
 	testCompile libraries.easymock
 	testCompile libraries.easymockclassextension
