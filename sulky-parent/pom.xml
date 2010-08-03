@@ -79,7 +79,6 @@
 		<snapshotRepository>
 			<id>local-snapshot-repository</id>
 			<name>Local Snapshot Repository</name>
-			<uniqueVersion>false</uniqueVersion>
 			<url>file://${user.home}/local-maven/deploy/snapshot-repository</url>
 		</snapshotRepository>
 
