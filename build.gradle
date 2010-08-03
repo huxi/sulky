@@ -59,6 +59,8 @@ subprojects {
     sourceCompatibility = 1.5
     targetCompatibility = 1.5
     
+    compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-g']
+
     mapped=artifactMapping[project.name];
     if(!mapped)
     {
