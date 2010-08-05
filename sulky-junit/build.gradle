@@ -1,7 +1,0 @@
-dependencies {
-	compile libraries.junit
-	compile libraries.'slf4j-api'
-	compile libraries.'logback-core'
-	compile libraries.'logback-classic'
-}
-

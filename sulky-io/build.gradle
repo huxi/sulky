@@ -1,5 +1,0 @@
-dependencies {
-	testCompile libraries.easymock
-	testCompile libraries.easymockclassextension
-}
-

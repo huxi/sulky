@@ -1,117 +1,91 @@
-versions = [
-'easymock': '2.4',
-'logback':  '0.9.24',
-'slf4j':    '1.6.1'
-]
+apply from: 'dependencyDefinitions.gradle'
+apply from: 'config.gradle'
 
-libraries = [ 
-'commons-lang':           'commons-lang:commons-lang:2.3',
-'easymock':               "org.easymock:easymock:${versions.easymock}",
-'easymockclassextension': "org.easymock:easymockclassextension:${versions.easymock}",
-'jcl-over-slf4j':         "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
-'jlayer':                 'de.huxhorn.sulky:de.huxhorn.sulky.3rdparty.jlayer:1.0',
-'junit':                  'junit:junit:4.8.1',
-'logback-access':         "ch.qos.logback:logback-access:${versions.logback}",
-'logback-classic':        "ch.qos.logback:logback-classic:${versions.logback}",
-'logback-core':           "ch.qos.logback:logback-core:${versions.logback}",
-'protobuf':               'com.google.protobuf:protobuf-java:2.3.0',
-'slf4j-api':              "org.slf4j:slf4j-api:${versions.slf4j}",
-'stax-api':               'stax:stax-api:1.0.1'
-]
-
-artifactMapping = [
-'sulky-buffers':            'de.huxhorn.sulky.buffers',
-'sulky-buffers-filtering':  'de.huxhorn.sulky.buffers.filtering',
-'sulky-buffers-table':      'de.huxhorn.sulky.buffers.table',
-'sulky-codec':              'de.huxhorn.sulky.codec',
-'sulky-codec-filebuffer':   'de.huxhorn.sulky.codec.filebuffer',
-'sulky-conditions':         'de.huxhorn.sulky.conditions',
-'sulky-formatting':         'de.huxhorn.sulky.formatting',
-'sulky-generics':           'de.huxhorn.sulky.generics',
-'sulky-io':                 'de.huxhorn.sulky.io',
-'sulky-junit':              'de.huxhorn.sulky.junit',
-'sulky-logging':            'de.huxhorn.sulky.logging',
-'sulky-resources':          'de.huxhorn.sulky.resources',
-'sulky-sounds-api':         'de.huxhorn.sulky.sounds-api',
-'sulky-sounds-impl-jlayer': 'de.huxhorn.sulky.sounds-impl-jlayer',
-'sulky-stax':               'de.huxhorn.sulky.stax',
-'sulky-swing':              'de.huxhorn.sulky.swing',
-'sulky-tasks':              'de.huxhorn.sulky.tasks'
-]
-
-dependsOnChildren()
-
-allprojects {
-	defaultTasks 'clean', 'build', 'uploadArchives'
-    group = 'de.huxhorn.sulky'
-    version = '0.9.12'
+project(':sulky-io').dependencies {
+	testCompile libraries.easymock
+	testCompile libraries.easymockclassextension
 }
 
-def localReleaseRepo = new File("${System.properties.'user.home'}/local-gradle-repository/release").toURL().toString()
-def localSnapshotRepo = new File("${System.properties.'user.home'}/local-gradle-repository/snapshot").toURL().toString()
-
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'eclipse'
-    apply plugin: 'maven'
-    apply plugin: 'project-reports'
-
-    sourceCompatibility = 1.5
-    targetCompatibility = 1.5
-    
-    compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-g']
-
-    mapped=artifactMapping[project.name];
-    if(!mapped)
-    {
-    	throw new IllegalStateException("${project.name} does not have an entry in artifactMapping!");
-    }
-    archivesBaseName=mapped
-    
-    repositories {
-       mavenCentral()
-       mavenRepo urls: localReleaseRepo
-       mavenRepo urls: localSnapshotRepo
-    }
-
-    dependencies {
-        testCompile libraries.junit
-        testCompile libraries.'slf4j-api'
-        testRuntime libraries.'logback-classic'
-    }
-
-
-    jar {
-        manifest.attributes provider: 'gradle'
-    }
-
-	task release(dependsOn: [build.taskDependencies]) << {
-		println 'Finished release.'
-	}
-
-    gradle.taskGraph.whenReady {taskGraph ->
-		if (!taskGraph.hasTask(release)) {
-			version = version+'-SNAPSHOT'
-		}
-	}
-
-	// the following is a workaround for http://jira.codehaus.org/browse/GRADLE-443
-	uploadArchives {
-		repositories.mavenDeployer {
-			repository(url: localReleaseRepo)
-			snapshotRepository(url: localSnapshotRepo)
-			// In the future Gradle will allow to use dynamic props for dependencies to deal with optionals
-			pom.whenConfigured { pom ->
-				// dep is a native Maven dependency object (With properties artifactId, groupId, ...)
-				for(dep in pom.dependencies) {
-					//println(dep.artifactId)
-					mapping=artifactMapping[dep.artifactId];
-					if(mapping) {
-						println("Mapping ${dep.artifactId} to ${mapping}...")
-						dep.artifactId=mapping
-					}
-				}
-			}
-		}
-	}
+project(':sulky-generics').dependencies {
+	compile project(':sulky-io')
 }
+
+project(':sulky-junit').dependencies {
+	compile libraries.junit
+	compile libraries.'slf4j-api'
+	compile libraries.'logback-core'
+	compile libraries.'logback-classic'
+}
+
+project(':sulky-codec').dependencies {
+	compile libraries.'slf4j-api'
+	compile project(':sulky-io')
+}
+
+project(':sulky-buffers').dependencies {
+	compile libraries.'slf4j-api'
+	compile project(':sulky-io')
+}
+
+project(':sulky-codec-filebuffer').dependencies {
+	compile libraries.'slf4j-api'
+	compile libraries.'protobuf'
+	compile project(':sulky-io')
+	compile project(':sulky-codec')
+	compile project(':sulky-buffers')
+}
+
+project(':sulky-stax').dependencies {
+	compile libraries.'slf4j-api'
+	compile libraries.'stax-api'
+}
+
+//project(':sulky-conditions').dependencies {
+//}
+
+//project(':sulky-sounds-api').dependencies {
+//}
+
+project(':sulky-sounds-impl-jlayer').dependencies {
+	compile libraries.'slf4j-api'
+	compile project(':sulky-sounds-api')
+	compile libraries.'jlayer'
+}
+
+project(':sulky-logging').dependencies {
+	compile libraries.'slf4j-api'
+}
+
+project(':sulky-formatting').dependencies {
+	compile libraries.'slf4j-api'
+}
+
+project(':sulky-swing').dependencies {
+	compile libraries.'slf4j-api'
+	compile project(':sulky-formatting')
+	compile project(':sulky-generics')
+}
+
+project(':sulky-buffers-table').dependencies {
+	compile libraries.'slf4j-api'
+	compile project(':sulky-buffers')
+	compile project(':sulky-swing')
+}
+
+project(':sulky-tasks').dependencies {
+	compile libraries.'slf4j-api'
+	compile project(':sulky-io')
+}
+
+project(':sulky-buffers-filtering').dependencies {
+	compile libraries.'slf4j-api'
+	compile project(':sulky-io')
+	compile project(':sulky-buffers')
+	compile project(':sulky-conditions')
+	compile project(':sulky-tasks')
+}
+
+project(':sulky-resources').dependencies {
+	compile libraries.'slf4j-api'
+}
+

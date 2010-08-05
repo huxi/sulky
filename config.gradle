@@ -1,0 +1,165 @@
+artifactMapping = [
+'sulky-buffers':            'de.huxhorn.sulky.buffers',
+'sulky-buffers-filtering':  'de.huxhorn.sulky.buffers.filtering',
+'sulky-buffers-table':      'de.huxhorn.sulky.buffers.table',
+'sulky-codec':              'de.huxhorn.sulky.codec',
+'sulky-codec-filebuffer':   'de.huxhorn.sulky.codec.filebuffer',
+'sulky-conditions':         'de.huxhorn.sulky.conditions',
+'sulky-formatting':         'de.huxhorn.sulky.formatting',
+'sulky-generics':           'de.huxhorn.sulky.generics',
+'sulky-io':                 'de.huxhorn.sulky.io',
+'sulky-junit':              'de.huxhorn.sulky.junit',
+'sulky-logging':            'de.huxhorn.sulky.logging',
+'sulky-resources':          'de.huxhorn.sulky.resources',
+'sulky-sounds-api':         'de.huxhorn.sulky.sounds-api',
+'sulky-sounds-impl-jlayer': 'de.huxhorn.sulky.sounds-impl-jlayer',
+'sulky-stax':               'de.huxhorn.sulky.stax',
+'sulky-swing':              'de.huxhorn.sulky.swing',
+'sulky-tasks':              'de.huxhorn.sulky.tasks'
+]
+
+dependsOnChildren()
+
+allprojects {
+	defaultTasks 'clean', 'build', 'uploadArchives'
+	group = 'de.huxhorn.sulky'
+	version = '0.9.12'
+}
+
+def localReleaseRepo = new File("${System.properties.'user.home'}/local-gradle-repository/release").toURL().toString()
+def localSnapshotRepo = new File("${System.properties.'user.home'}/local-gradle-repository/snapshot").toURL().toString()
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'maven'
+    apply plugin: 'project-reports'
+
+    sourceCompatibility = 1.5
+    targetCompatibility = 1.5
+    
+    compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-g']
+
+    defaultProject= {
+    	url 'http://sulky.huxhorn.de'
+    	
+    	inceptionYear '2007'
+    	
+    	scm {
+    		connection 'scm:git:git://github.com/huxi/sulky.git'
+    		developerConnection 'scm:git:ssh://git@github.com:huxi/sulky.git'
+    		url 'http://github.com/huxi/sulky/'
+    	}
+    	
+		licenses {
+			license {
+				name 'GNU Lesser General Public License v3 (LGPL)'
+				url 'http://www.gnu.org/copyleft/lesser.html'
+				distribution 'repo'
+			}
+			
+			license {
+				name 'The Apache Software License, Version 2.0'
+				url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+				distribution 'repo'
+			}
+		}
+		
+		issueManagement {
+			system 'trac'
+			url 'http://apps.sourceforge.net/trac/sulky/'
+		}
+		
+		mailingLists {
+			mailingList {
+				name 'Developer List'
+				subscribe 'sulky-devel-join@lists.sourceforge.net'
+				unsubscribe 'sulky-devel-leave@lists.sourceforge.net'
+				post 'sulky-devel@lists.sourceforge.net'
+				archive 'http://sourceforge.net/mailarchive/forum.php?forum_name=sulky-devel'
+			}
+		}
+		
+		developers {
+			developer {
+				id 'huxhorn'
+				email 'huxhorn@users.sourceforge.net'
+				name 'Joern Huxhorn'
+				organization 'Joern Huxhorn'
+				organizationUrl 'http://sulky.huxhorn.de'
+				roles {
+					role 'Developer'
+				}
+			}
+		}
+		
+		properties {
+			'project.build.sourceEncoding' 'UTF-8'
+			'project.reporting.outputEncoding' 'UTF-8'
+		}
+	}
+
+    mapped=artifactMapping[project.name];
+    if(!mapped)
+    {
+    	throw new IllegalStateException("${project.name} does not have an entry in artifactMapping!");
+    }
+    archivesBaseName=mapped
+    
+    repositories {
+       mavenCentral()
+       mavenRepo urls: localReleaseRepo
+       mavenRepo urls: localSnapshotRepo
+    }
+
+    dependencies {
+        testCompile libraries.junit
+        testCompile libraries.'slf4j-api'
+        testRuntime libraries.'logback-classic'
+    }
+
+
+    jar {
+        manifest.attributes provider: 'gradle'
+    }
+
+	task release(dependsOn: [build.taskDependencies]) << {
+		println 'Finished release.'
+	}
+
+    gradle.taskGraph.whenReady {taskGraph ->
+		if (!taskGraph.hasTask(release)) {
+			version = version+'-SNAPSHOT'
+		}
+	}
+
+	def deployer = null
+
+	// the following is a workaround for http://jira.codehaus.org/browse/GRADLE-443
+	uploadArchives {
+		deployer = repositories.mavenDeployer {
+			repository(url: localReleaseRepo)
+			snapshotRepository(url: localSnapshotRepo)
+			// In the future Gradle will allow to use dynamic props for dependencies to deal with optionals
+			pom.whenConfigured { pom ->
+				// dep is a native Maven dependency object (With properties artifactId, groupId, ...)
+				for(dep in pom.dependencies) {
+					//println(dep.artifactId)
+					mapping=artifactMapping[dep.artifactId];
+					if(mapping) {
+						println("Mapping ${dep.artifactId} to ${mapping}...")
+						dep.artifactId=mapping
+					}
+				}
+			}
+		}
+	}
+	
+	installer = install.repositories.mavenInstaller
+	
+	installer.pom.project defaultProject
+	
+	deployer.pom.project defaultProject
+
+}
+

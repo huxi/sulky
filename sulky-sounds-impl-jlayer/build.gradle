@@ -1,6 +1,0 @@
-dependencies {
-	compile libraries.'slf4j-api'
-	compile project(':sulky-sounds-api')
-	compile libraries.'jlayer'
-}
-
