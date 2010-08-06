@@ -99,17 +99,7 @@ public class BlobRepositoryImpl
 		File tempFile = File.createTempFile("Blob", ".tmp", baseDirectory);
 		if(logger.isDebugEnabled()) logger.debug("Created temporary file '{}'.", tempFile);
 
-		String hashString;
-		try
-		{
-			hashString = copyAndHash(input, tempFile);
-		}
-		catch(IOException ex)
-		{
-			if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve data from input!", ex);
-			deleteTempFile(tempFile);
-			throw ex;
-		}
+		String hashString = copyAndHash(input, tempFile);
 
 		long tempLength = tempFile.length();
 		File destinationFile=prepareFile(hashString);
@@ -131,6 +121,7 @@ public class BlobRepositoryImpl
 				return null;
 			}
 		}
+		
 		if(tempFile.renameTo(destinationFile))
 		{
 			if(logger.isDebugEnabled()) logger.debug("Created blob file '{}'", destinationFile.getAbsolutePath());
@@ -338,7 +329,8 @@ public class BlobRepositoryImpl
 		return new File(parentFile, hashRest);
 	}
 
-	private String copyAndHash(InputStream input, File into) throws IOException
+	private String copyAndHash(InputStream input, File into)
+		throws IOException
 	{
 		MessageDigest digest;
 		try
@@ -351,8 +343,9 @@ public class BlobRepositoryImpl
 			if(logger.isErrorEnabled()) logger.error(message, ex);
 			throw new IOException(message, ex);
 		}
-		DigestInputStream dis = new DigestInputStream(input, digest);
 
+		DigestInputStream dis = new DigestInputStream(input, digest);
+		IOException ex;
 		FileOutputStream fos=null;
 		try
 		{
@@ -366,11 +359,18 @@ public class BlobRepositoryImpl
 			}
 			return formatter.toString();
 		}
+		catch(IOException e)
+		{
+			ex=e;
+		}
 		finally
 		{
-			IOUtils.closeQuietly(input);
+			IOUtils.closeQuietly(dis);
 			IOUtils.closeQuietly(fos);
 		}
+		if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve data from input!", ex);
+		deleteTempFile(into);
+		throw ex;
 	}
 
 	private void deleteIfEmpty(File parent)

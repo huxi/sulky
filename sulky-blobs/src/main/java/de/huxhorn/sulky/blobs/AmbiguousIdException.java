@@ -43,18 +43,19 @@ import java.util.Arrays;
 public class AmbiguousIdException
 	extends Exception
 {
-	private String id;
-	private String[] candidates;
+	private final String id;
+	private final String[] candidates;
 
 	public AmbiguousIdException(String id, String[] candidates)
 	{
 		super("The id '"+id+"' does not uniquely identify a blob. Candidates are: "+ Arrays.toString(candidates));
 		this.id = id;
-		if(candidates != null)
+		if(candidates == null)
 		{
-			this.candidates = new String[candidates.length];
-			System.arraycopy(candidates, 0, this.candidates, 0, candidates.length);
+			throw new IllegalArgumentException("candidates must not be null!");
 		}
+		this.candidates = new String[candidates.length];
+		System.arraycopy(candidates, 0, this.candidates, 0, candidates.length);
 	}
 
 	/**
@@ -74,10 +75,6 @@ public class AmbiguousIdException
 	 */
 	public String[] getCandidates()
 	{
-		if(this.candidates == null)
-		{
-			return null;
-		}
 		String[] result=new String[this.candidates.length];
 		System.arraycopy(this.candidates, 0, result, 0, this.candidates.length);
 		return result;
