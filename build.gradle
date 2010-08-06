@@ -89,3 +89,8 @@ project(':sulky-resources').dependencies {
 	compile libraries.'slf4j-api'
 }
 
+project(':sulky-blobs').dependencies {
+	compile libraries.'slf4j-api'
+	compile libraries.'commons-io'
+}
+

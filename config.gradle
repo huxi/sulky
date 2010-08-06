@@ -1,4 +1,5 @@
 artifactMapping = [
+'sulky-blobs':              'de.huxhorn.sulky.blobs',
 'sulky-buffers':            'de.huxhorn.sulky.buffers',
 'sulky-buffers-filtering':  'de.huxhorn.sulky.buffers.filtering',
 'sulky-buffers-table':      'de.huxhorn.sulky.buffers.table',
@@ -21,6 +22,10 @@ artifactMapping = [
 dependsOnChildren()
 
 allprojects {
+	apply plugin: 'project-reports'
+	apply plugin: 'eclipse'
+	apply plugin: 'idea'
+	
 	defaultTasks 'clean', 'build', 'uploadArchives'
 	group = 'de.huxhorn.sulky'
 	version = '0.9.12'
@@ -31,9 +36,8 @@ def localSnapshotRepo = new File("${System.properties.'user.home'}/local-gradle-
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'eclipse'
     apply plugin: 'maven'
-    apply plugin: 'project-reports'
+    //apply plugin: 'code-quality'
 
     sourceCompatibility = 1.5
     targetCompatibility = 1.5

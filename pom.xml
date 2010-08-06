@@ -63,6 +63,7 @@
 		<module>sulky-tasks</module>
 		<module>sulky-buffers-filtering</module>
 		<module>sulky-resources</module>
+		<module>sulky-blobs</module>
 	</modules>
 
 	<reporting>
