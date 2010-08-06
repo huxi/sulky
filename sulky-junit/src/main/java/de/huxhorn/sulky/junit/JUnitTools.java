@@ -74,8 +74,9 @@ public final class JUnitTools
 		oos.close();
 		ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 		ObjectInputStream ois = new ObjectInputStream(is);
-		//noinspection unchecked
-		return (T) ois.readObject();
+		@SuppressWarnings({"unchecked"})
+		T t =(T) ois.readObject();
+		return t;
 	}
 
 	/**
@@ -170,8 +171,9 @@ public final class JUnitTools
 
 		//assertTrue("clone() method isn't accessible!", method.isAccessible());
 
-		//noinspection unchecked
-		return (T) method.invoke(original);
+		@SuppressWarnings({"unchecked"})
+		T t = (T) method.invoke(original);
+		return t;
 	}
 
 	public static <T extends Cloneable> T testClone(T original)

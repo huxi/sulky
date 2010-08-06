@@ -150,10 +150,10 @@ public class SoftReferenceCachingBuffer<E>
 		private long index;
 		private Map<Long, MySoftReference<E>> cache;
 
+		@SuppressWarnings({"unchecked"})
 		public MySoftReference(Map<Long, MySoftReference<E>> cache, long index, E referent)
 		{
 			// the following cast is safe since we are not using the content in the reference queue......
-			//noinspection unchecked
 			super(referent, REFERENCE_QUEUE);
 			this.index = index;
 			this.cache = cache;

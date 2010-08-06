@@ -51,8 +51,9 @@ public class StreamingSerializableCodec<E extends Serializable>
 		try
 		{
 			result = ois.readObject();
-			//noinspection unchecked
-			return (E) result;
+			@SuppressWarnings({"unchecked"})
+			E e=(E) result;
+			return e;
 		}
 		catch (ClassNotFoundException e)
 		{

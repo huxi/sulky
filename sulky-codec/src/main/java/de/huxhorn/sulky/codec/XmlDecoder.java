@@ -82,8 +82,9 @@ public class XmlDecoder<E>
 			}
 
 			Object result = decoder.readObject();
-			//noinspection unchecked
-			return (E) result;
+			@SuppressWarnings({"unchecked"})
+			E e = (E) result;
+			return e;
 		}
 		catch(Throwable e)
 		{

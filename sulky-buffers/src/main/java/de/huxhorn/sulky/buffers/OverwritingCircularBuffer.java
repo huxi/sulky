@@ -132,8 +132,9 @@ public class OverwritingCircularBuffer<E>
 			throw new IndexOutOfBoundsException("Invalid index " + index + "! Must be 0.." + (availableElements - 1) + ".");
 		}
 		int realIndex = (startIndex + index) % bufferSize;
-		//noinspection unchecked
-		return (E) array[realIndex];
+		@SuppressWarnings({"unchecked"})
+		E result = (E) array[realIndex];
+		return result;
 	}
 
 	public E setRelative(int index, E element)
@@ -144,7 +145,7 @@ public class OverwritingCircularBuffer<E>
 			throw new IndexOutOfBoundsException("Invalid index " + index + "! Must be 0.." + (availableElements - 1) + ".");
 		}
 		int realIndex = (startIndex + index) % bufferSize;
-		//noinspection unchecked
+		@SuppressWarnings({"unchecked"})
 		E result = (E) array[realIndex];
 		array[realIndex] = element;
 		return result;
@@ -156,7 +157,7 @@ public class OverwritingCircularBuffer<E>
 		{
 			return null;
 		}
-		//noinspection unchecked
+		@SuppressWarnings({"unchecked"})
 		E result = (E) array[startIndex];
 		array[startIndex] = null;
 		int newStart = startIndex + 1;
@@ -369,6 +370,7 @@ public class OverwritingCircularBuffer<E>
 	transient private boolean full;
 	transient private E[] array;
 */
+		
 		OverwritingCircularBuffer<E> v = (OverwritingCircularBuffer<E>) super.clone();
 		v.array = array.clone();
 		return v;

@@ -396,8 +396,9 @@ public class SerializingFileBuffer<E>
 		GZIPInputStream gis = new GZIPInputStream(bis);
 		ObjectInputStream ois = new ObjectInputStream(gis);
 		//if(logger.isDebugEnabled()) logger.debug("Read element from offset {}.", offset);
-		//noinspection unchecked
-		return (E) ois.readObject();
+		@SuppressWarnings({"unchecked"})
+		E e= (E) ois.readObject();
+		return e;
 	}
 
 	private void internalWriteOffset(RandomAccessFile randomSerializeIndexFile, long index, long offset)

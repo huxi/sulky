@@ -82,8 +82,9 @@ public class SerializableDecoder<E extends Serializable>
 				ois = new ObjectInputStream(bis);
 			}
 			Object result = ois.readObject();
-			//noinspection unchecked
-			return (E) result;
+			@SuppressWarnings({"unchecked"})
+			E e =(E) result;
+			return e;
 		}
 		catch(Throwable e)
 		{
