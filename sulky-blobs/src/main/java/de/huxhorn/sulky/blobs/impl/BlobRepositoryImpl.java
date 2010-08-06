@@ -243,6 +243,10 @@ public class BlobRepositoryImpl
 				String message="Couldn't create directory '"+baseDirectory.getAbsolutePath()+"'!";
 				if(logger.isWarnEnabled()) logger.warn(message);
 			}
+			else
+			{
+				if(logger.isDebugEnabled()) logger.debug("Created directory '{}'.", baseDirectory.getAbsolutePath());
+			}
 		}
 		if(!baseDirectory.isDirectory())
 		{
