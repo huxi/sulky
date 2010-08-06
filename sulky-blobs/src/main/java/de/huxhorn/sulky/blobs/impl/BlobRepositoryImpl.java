@@ -130,7 +130,8 @@ public class BlobRepositoryImpl
 			return hashString;
 		}
 
-		if(logger.isWarnEnabled()) logger.warn("Couldn't rename '{}' to '{}'!", tempFile.getAbsolutePath(), destinationFile.getAbsolutePath());
+		if(logger.isWarnEnabled()) logger.warn("Couldn't rename temp file '{}' to destination file '{}'!", tempFile.getAbsolutePath(), destinationFile.getAbsolutePath());
+		deleteTempFile(tempFile);
 		return null;
 	}
 
