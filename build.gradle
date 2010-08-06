@@ -92,5 +92,6 @@ project(':sulky-resources').dependencies {
 project(':sulky-blobs').dependencies {
 	compile libraries.'slf4j-api'
 	compile libraries.'commons-io'
+	testCompile project(':sulky-junit')
 }
 

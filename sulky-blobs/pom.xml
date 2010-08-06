@@ -46,5 +46,11 @@
 			<artifactId>logback-classic</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>de.huxhorn.sulky</groupId>
+			<artifactId>de.huxhorn.sulky.junit</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 </project>

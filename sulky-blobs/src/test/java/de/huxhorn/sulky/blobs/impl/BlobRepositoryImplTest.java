@@ -35,6 +35,7 @@
 package de.huxhorn.sulky.blobs.impl;
 
 import de.huxhorn.sulky.blobs.AmbiguousIdException;
+import de.huxhorn.sulky.junit.LoggingTestBase;
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,11 +54,17 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class BlobRepositoryImplTest
+	extends LoggingTestBase
 {
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 	private static final String TEST_DATA = "Foo\nBar";
 	private static final String TEST_DATA_ID = "a044399675c6f9d097735c6eb2075d18f5e3cc56";
+
+	public BlobRepositoryImplTest(Boolean logging)
+	{
+		super(logging);
+	}
 
 	@Test
 	public void put() throws IOException, AmbiguousIdException
