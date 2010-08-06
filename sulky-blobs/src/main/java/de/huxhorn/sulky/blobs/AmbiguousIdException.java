@@ -50,7 +50,11 @@ public class AmbiguousIdException
 	{
 		super("The id '"+id+"' does not uniquely identify a blob. Candidates are: "+ Arrays.toString(candidates));
 		this.id = id;
-		this.candidates = candidates;
+		if(candidates != null)
+		{
+			this.candidates = new String[candidates.length];
+			System.arraycopy(candidates, 0, this.candidates, 0, candidates.length);
+		}
 	}
 
 	/**
@@ -70,6 +74,12 @@ public class AmbiguousIdException
 	 */
 	public String[] getCandidates()
 	{
-		return candidates;
+		if(this.candidates == null)
+		{
+			return null;
+		}
+		String[] result=new String[this.candidates.length];
+		System.arraycopy(this.candidates, 0, result, 0, this.candidates.length);
+		return result;
 	}
 }

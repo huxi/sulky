@@ -96,43 +96,28 @@ public class BlobRepositoryImpl
 		throws IOException
 	{
 		prepare();
-		MessageDigest digest;
-		try
-		{
-			digest = MessageDigest.getInstance(ALGORITHM);
-		}
-		catch(NoSuchAlgorithmException ex)
-		{
-			throw new RuntimeException("Algorithm "+ALGORITHM+" does not exist!", ex);
-		}
 		File tempFile = File.createTempFile("Blob", ".tmp", baseDirectory);
 		if(logger.isDebugEnabled()) logger.debug("Created temporary file '{}'.", tempFile);
-		DigestInputStream dis = new DigestInputStream(input, digest);
 
-		FileOutputStream fos=new FileOutputStream(tempFile);
-		long size=IOUtils.copyLarge(dis, fos);
-		byte[] hash = digest.digest();
-		Formatter formatter = new Formatter();
-		for (byte b : hash)
+		String hashString;
+		try
 		{
-			formatter.format("%02x", b);
+			hashString = copyAndHash(input, tempFile);
 		}
-		String hashString = formatter.toString();
-		if(logger.isDebugEnabled()) logger.debug("Hash: {}", hashString);
-		String hashStart = hashString.substring(0, HASH_DIRECTORY_NAME_LENGTH);
-		String hashRest = hashString.substring(HASH_DIRECTORY_NAME_LENGTH);
-		if(logger.isDebugEnabled()) logger.debug("HashStart='{}', hashRest='{}'", hashStart, hashRest);
+		catch(IOException ex)
+		{
+			if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve data from input!", ex);
+			deleteTempFile(tempFile);
+			throw ex;
+		}
 
-		File parentFile = new File(baseDirectory, hashStart);
-		if(parentFile.mkdirs())
-		{
-			if(logger.isDebugEnabled()) logger.debug("Created directory {}.", parentFile.getAbsolutePath());
-		}
-		File destinationFile=new File(parentFile, hashRest);
+		long tempLength = tempFile.length();
+		File destinationFile=prepareFile(hashString);
+
 		if(destinationFile.isFile())
 		{
-			long length = destinationFile.length();
-			if(length == size)
+			long destinationLength = destinationFile.length();
+			if(destinationLength == tempLength)
 			{
 				if(logger.isInfoEnabled()) logger.info("Blob {} did already exist.", hashString);
 				deleteTempFile(tempFile);
@@ -149,7 +134,7 @@ public class BlobRepositoryImpl
 		if(tempFile.renameTo(destinationFile))
 		{
 			if(logger.isDebugEnabled()) logger.debug("Created blob file '{}'", destinationFile.getAbsolutePath());
-			if(logger.isInfoEnabled()) logger.info("Created blob {} containing {} bytes.", hashString, size);
+			if(logger.isInfoEnabled()) logger.info("Created blob {} containing {} bytes.", hashString, tempLength);
 			return hashString;
 		}
 
@@ -335,6 +320,56 @@ public class BlobRepositoryImpl
 		else
 		{
 			if(logger.isWarnEnabled()) logger.warn("Couldn't delete temporary file '{}'!", tempFile.getAbsolutePath());
+		}
+	}
+
+	private File prepareFile(String id)
+	{
+		if(logger.isDebugEnabled()) logger.debug("Hash: {}", id);
+		String hashStart = id.substring(0, HASH_DIRECTORY_NAME_LENGTH);
+		String hashRest = id.substring(HASH_DIRECTORY_NAME_LENGTH);
+		if(logger.isDebugEnabled()) logger.debug("HashStart='{}', hashRest='{}'", hashStart, hashRest);
+
+		File parentFile = new File(baseDirectory, hashStart);
+		if(parentFile.mkdirs())
+		{
+			if(logger.isDebugEnabled()) logger.debug("Created directory {}.", parentFile.getAbsolutePath());
+		}
+		return new File(parentFile, hashRest);
+	}
+
+	private String copyAndHash(InputStream input, File into) throws IOException
+	{
+		MessageDigest digest;
+		try
+		{
+			digest = MessageDigest.getInstance(ALGORITHM);
+		}
+		catch(NoSuchAlgorithmException ex)
+		{
+			String message="Can't generate hash! Algorithm "+ALGORITHM+" does not exist!";
+			if(logger.isErrorEnabled()) logger.error(message, ex);
+			throw new IOException(message, ex);
+		}
+		DigestInputStream dis = new DigestInputStream(input, digest);
+
+		FileOutputStream fos=null;
+		try
+		{
+			fos=new FileOutputStream(into);
+			IOUtils.copyLarge(dis, fos);
+			byte[] hash = digest.digest();
+			Formatter formatter = new Formatter();
+			for (byte b : hash)
+			{
+				formatter.format("%02x", b);
+			}
+			return formatter.toString();
+		}
+		finally
+		{
+			IOUtils.closeQuietly(input);
+			IOUtils.closeQuietly(fos);
 		}
 	}
 
