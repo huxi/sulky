@@ -344,4 +344,15 @@ public class BlobRepositoryImplTest
 		instance.setBaseDirectory(baseDirectory);
 		assertEquals(baseDirectory, instance.getBaseDirectory());
 	}
+
+	@SuppressWarnings({"ResultOfMethodCallIgnored"})
+	@Test
+	public void missingBaseDirectory()
+	{
+		BlobRepositoryImpl instance=new BlobRepositoryImpl();
+		File baseDirectory=folder.newFolder("foo");
+		baseDirectory.delete();
+		instance.setBaseDirectory(baseDirectory);
+		assertEquals(baseDirectory, instance.getBaseDirectory());
+	}
 }
