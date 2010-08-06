@@ -254,14 +254,17 @@ public class BlobRepositoryImplTest
 	public void putDeleteContains() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		File baseDirectory = folder.newFolder("foo");
+		instance.setBaseDirectory(baseDirectory);
 
 		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
 		assertEquals(TEST_DATA_ID, id);
-
+		File parent = new File(baseDirectory, TEST_DATA_ID.substring(0, 2));
 		assertTrue(instance.contains(TEST_DATA_ID));
+		assertTrue(parent.isDirectory());
 		assertTrue(instance.delete(TEST_DATA_ID));
 		assertFalse(instance.contains(TEST_DATA_ID));
+		assertFalse(parent.isDirectory());
 		assertFalse(instance.delete(TEST_DATA_ID));
 	}
 
@@ -392,5 +395,22 @@ public class BlobRepositoryImplTest
 		Set<String> idSet = instance.idSet();
 		assertEquals(1, idSet.size());
 		assertTrue(idSet.contains(TEST_DATA_ID));
+	}
+
+	@Test
+	public void keepDir() throws IOException, AmbiguousIdException
+	{
+		BlobRepositoryImpl instance=new BlobRepositoryImpl();
+		File baseDirectory=folder.newFolder("foo");
+		instance.setBaseDirectory(baseDirectory);
+		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		assertEquals(TEST_DATA_ID, id);
+
+		File parent = new File(baseDirectory, TEST_DATA_ID.substring(0, 2));
+		File foo=new File(parent, "bar1");
+		foo.createNewFile();
+		assertTrue(instance.delete(TEST_DATA_ID));
+		assertTrue(parent.isDirectory());
+		assertTrue(foo.isFile());
 	}
 }
