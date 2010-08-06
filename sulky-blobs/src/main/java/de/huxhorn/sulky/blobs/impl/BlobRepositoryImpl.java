@@ -77,6 +77,7 @@ public class BlobRepositoryImpl
 	private File baseDirectory;
 	private static final String ALGORITHM = "SHA1";
 	private static final int HASH_DIRECTORY_NAME_LENGTH = 2;
+	private static final int HASH_REMAINDER_NAME_LENGTH = 38;
 
 	public File getBaseDirectory()
 	{
@@ -213,22 +214,12 @@ public class BlobRepositoryImpl
 		prepare();
 		Set<String> result=new HashSet<String>();
 		File[] subdirs = baseDirectory.listFiles(new MatchingDirectoriesFileFilter());
-		if(subdirs != null)
+		for(File current:subdirs)
 		{
-			for(File current:subdirs)
+			File[] contained=current.listFiles(new MatchingFilesFileFilter());
+			for(File curBlob:contained)
 			{
-				File[] contained=current.listFiles(); // TODO: should probably be more restrictive...
-				if(contained == null)
-				{
-					continue;
-				}
-				for(File curBlob:contained)
-				{
-					if(curBlob.isFile())
-					{
-						result.add(current.getName()+curBlob.getName());
-					}
-				}
+				result.add(current.getName()+curBlob.getName());
 			}
 		}
 
@@ -421,7 +412,17 @@ public class BlobRepositoryImpl
 		@Override
 		public boolean accept(File file)
 		{
-			return file.isDirectory() && file.getName().length()== HASH_DIRECTORY_NAME_LENGTH;
+			return file.isDirectory() && file.getName().length() == HASH_DIRECTORY_NAME_LENGTH;
+		}
+	}
+
+	private static class MatchingFilesFileFilter
+		implements FileFilter
+	{
+		@Override
+		public boolean accept(File file)
+		{
+			return file.isFile() && file.getName().length() == HASH_REMAINDER_NAME_LENGTH;
 		}
 	}
 }
