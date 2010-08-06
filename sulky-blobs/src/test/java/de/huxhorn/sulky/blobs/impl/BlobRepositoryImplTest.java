@@ -355,4 +355,42 @@ public class BlobRepositoryImplTest
 		instance.setBaseDirectory(baseDirectory);
 		assertEquals(baseDirectory, instance.getBaseDirectory());
 	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void nullId() throws IOException, AmbiguousIdException
+	{
+		BlobRepositoryImpl instance=new BlobRepositoryImpl();
+		File baseDirectory=folder.newFolder("foo");
+		instance.setBaseDirectory(baseDirectory);
+		instance.get(null);
+	}
+
+	@Test (expected = IllegalArgumentException.class)
+	public void shortId() throws IOException, AmbiguousIdException
+	{
+		BlobRepositoryImpl instance=new BlobRepositoryImpl();
+		File baseDirectory=folder.newFolder("foo");
+		instance.setBaseDirectory(baseDirectory);
+		instance.get("a");
+	}
+
+	@SuppressWarnings({"ResultOfMethodCallIgnored"})
+	@Test
+	public void junkFiles() throws IOException, AmbiguousIdException
+	{
+		BlobRepositoryImpl instance=new BlobRepositoryImpl();
+		File baseDirectory=folder.newFolder("foo");
+		instance.setBaseDirectory(baseDirectory);
+		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		assertEquals(TEST_DATA_ID, id);
+
+		new File(baseDirectory, "bar1").createNewFile();
+		new File(baseDirectory, "bar2").mkdirs();
+		File parent = new File(baseDirectory, TEST_DATA_ID.substring(0, 2));
+		new File(parent, "bar1").createNewFile();
+		new File(parent, "bar2").mkdirs();
+		Set<String> idSet = instance.idSet();
+		assertEquals(1, idSet.size());
+		assertTrue(idSet.contains(TEST_DATA_ID));
+	}
 }
