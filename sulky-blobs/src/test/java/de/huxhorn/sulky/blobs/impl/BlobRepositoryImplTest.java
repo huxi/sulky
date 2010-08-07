@@ -40,6 +40,8 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,10 +54,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeThat;
+import static org.junit.Assume.assumeTrue;
 
 public class BlobRepositoryImplTest
 	extends LoggingTestBase
 {
+	private final Logger logger = LoggerFactory.getLogger(BlobRepositoryImplTest.class);
+
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 	private static final String TEST_DATA = "Foo\nBar";
@@ -413,4 +419,18 @@ public class BlobRepositoryImplTest
 		assertTrue(parent.isDirectory());
 		assertTrue(foo.isFile());
 	}
+
+     @SuppressWarnings({"ResultOfMethodCallIgnored"})
+	 @Test(expected = IllegalStateException.class)
+    public void brokenBaseDirectory()
+    {
+        BlobRepositoryImpl instance=new BlobRepositoryImpl();
+        File readonlyBaseDirectory = folder.newFolder("foo");
+        readonlyBaseDirectory.setWritable(false, false);
+        File baseDirectory=new File(readonlyBaseDirectory, "bar");
+		// lets check if creating baseDirectory actually fails...
+		assumeTrue(!baseDirectory.mkdirs());
+		if(logger.isInfoEnabled()) logger.info("Actually executing brokenBaseDirectory test...");
+        instance.setBaseDirectory(baseDirectory);
+    }
 }

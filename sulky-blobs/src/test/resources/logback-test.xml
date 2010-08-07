@@ -22,7 +22,8 @@
 		-->
 	</root>
 	
-	<logger name="de.huxhorn.sulky.blobs" level="OFF"/>
-	
+	<logger name="de.huxhorn.sulky.blobs.impl.BlobRepositoryImpl" level="OFF"/>
+	<logger name="de.huxhorn.sulky.blobs.impl.BlobRepositoryImplTest" level="OFF"/>
+
 </configuration>
 
