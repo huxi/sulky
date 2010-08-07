@@ -421,7 +421,9 @@ public class BlobRepositoryImplTest
 	}
 
      @SuppressWarnings({"ResultOfMethodCallIgnored"})
-	 @Test(expected = IllegalStateException.class)
+	 // Using fail because of http://github.com/KentBeck/junit/issues/issue/132
+	 //@Test(expected = IllegalStateException.class)
+	 @Test
     public void brokenBaseDirectory()
     {
         BlobRepositoryImpl instance=new BlobRepositoryImpl();
@@ -431,6 +433,15 @@ public class BlobRepositoryImplTest
 		// lets check if creating baseDirectory actually fails...
 		assumeTrue(!baseDirectory.mkdirs());
 		if(logger.isInfoEnabled()) logger.info("Actually executing brokenBaseDirectory test...");
-        instance.setBaseDirectory(baseDirectory);
+		assumeTrue(false);
+		try
+		{
+        	instance.setBaseDirectory(baseDirectory);
+			fail("Expected exception was not thrown!");
+		}
+		catch(IllegalArgumentException ex)
+		{
+			// expected
+		}
     }
 }
