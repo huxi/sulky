@@ -44,6 +44,11 @@ subprojects {
     
     compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-g']
 
+	task sourceJar(type: Jar) { from sourceSets.main.allSource; classifier = 'source' }
+	task javadocJar(type: Jar) { from javadoc.outputs.files; classifier = 'javadoc' }
+	
+	artifacts { archives sourceJar, javadocJar }
+
     defaultProject= {
     	url 'http://sulky.huxhorn.de'
     	
