@@ -255,7 +255,7 @@ public final class SafeString
 				String msg = t.getMessage();
 				String className = t.getClass().getName();
 				str.append(className);
-				if(!className.equals(msg))
+				if(msg != null && !className.equals(msg))
 				{
 					str.append(ERROR_MSG_SEPARATOR);
 					str.append(msg);

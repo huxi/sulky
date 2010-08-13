@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class SafeStringTest
@@ -110,19 +111,41 @@ public class SafeStringTest
 	@Test(expected = FooThrowable.class)
 	public void showExceptionInToStringProblem()
 	{
-		ProblematicToString problem=new ProblematicToString();
+		ProblematicToString problem=new ProblematicToString(null);
 		// the following line will throw a FooThrowable
 		String.valueOf(problem);
 	}
 
 	@Test
-	public void verifyExceptionInToStringWorks()
+	public void verifyExceptionWithNullMessageInToStringWorks()
 	{
-		ProblematicToString o = new ProblematicToString();
+		ProblematicToString o = new ProblematicToString(null);
+		String expected = SafeString.ERROR_PREFIX + SafeString.identityToString(o)
+			+ SafeString.ERROR_SEPARATOR + FooThrowable.class.getName()
+			+ SafeString.ERROR_SUFFIX;
+
+		evaluate(expected, o);
+	}
+
+	@Test
+	public void verifyExceptionWithClassNameMessageInToStringWorks()
+	{
+		ProblematicToString o = new ProblematicToString(FooThrowable.class.getName());
+		String expected = SafeString.ERROR_PREFIX + SafeString.identityToString(o)
+			+ SafeString.ERROR_SEPARATOR + FooThrowable.class.getName()
+			+ SafeString.ERROR_SUFFIX;
+
+		evaluate(expected, o);
+	}
+
+	@Test
+	public void verifyExceptionWithMessageInToStringWorks()
+	{
+		ProblematicToString o = new ProblematicToString("BarMessage");
 		String expected = SafeString.ERROR_PREFIX + SafeString.identityToString(o)
 			+ SafeString.ERROR_SEPARATOR + FooThrowable.class.getName()
 			+ SafeString.ERROR_MSG_SEPARATOR
-			+ "FooThrowable"
+			+ "BarMessage"
 			+ SafeString.ERROR_SUFFIX;
 
 		evaluate(expected, o);
@@ -195,9 +218,72 @@ public class SafeStringTest
 
 	@SuppressWarnings({"unchecked"})
 	@Test
-	public void verifyNull()
+	public void verifyNullString()
 	{
 		evaluate(null, null);
+	}
+
+	@Test
+	public void shortArray()
+	{
+		short[] foo = new short[]{1, 2, 3, Short.MAX_VALUE, Short.MIN_VALUE};
+		evaluate("[1, 2, 3, 32767, -32768]", foo);
+	}
+
+	@Test
+	public void intArray()
+	{
+		int[] foo = new int[]{1, 2, 3, Integer.MAX_VALUE, Integer.MIN_VALUE};
+		evaluate("[1, 2, 3, 2147483647, -2147483648]", foo);
+	}
+
+	@Test
+	public void longArray()
+	{
+		long[] foo = new long[]{1, 2, 3, Long.MAX_VALUE, Long.MIN_VALUE};
+		evaluate("[1, 2, 3, 9223372036854775807, -9223372036854775808]", foo);
+	}
+
+	@Test
+	public void floatArray()
+	{
+		float[] foo = new float[]{3.14159265f, 42.0f, -3.14159265f, Float.NaN};
+		evaluate("[3.1415927, 42.0, -3.1415927, NaN]", foo);
+	}
+
+	@Test
+	public void doubleArray()
+	{
+		double[] foo = new double[]{3.14159265d, 42.0d, -3.14159265d, Double.NaN};
+		evaluate("[3.14159265, 42.0, -3.14159265, NaN]", foo);
+	}
+
+	@Test
+	public void booleanArray()
+	{
+		boolean[] foo = new boolean[]{true, false};
+		evaluate("[true, false]", foo);
+	}
+
+	@Test
+	public void charArray()
+	{
+		char[] foo = new char[]{'b', 'a', 'r', '!'};
+		evaluate("[b, a, r, !]", foo);
+	}
+
+	@Test
+	public void nullInList()
+	{
+		List<String> list = new ArrayList<String>();
+		list.add(null);
+		evaluate("[null]", list);
+	}
+
+	@Test
+	public void identityToStringNull()
+	{
+		assertNull(SafeString.identityToString(null));
 	}
 
 	private void evaluate(String expected, Object o)
@@ -211,9 +297,16 @@ public class SafeStringTest
 
 	private static class ProblematicToString
 	{
+		private String message;
+
+		public ProblematicToString(String message)
+		{
+			this.message=message;
+		}
+
 		public String toString()
 		{
-			throw new FooThrowable("FooThrowable");
+			throw new FooThrowable(message);
 		}
 	}
 
