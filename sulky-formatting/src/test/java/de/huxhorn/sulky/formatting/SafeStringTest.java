@@ -234,6 +234,13 @@ public class SafeStringTest
 	}
 
 	@Test
+	public void byteArray()
+	{
+		byte[] foo = new byte[]{1, 2, 3, Byte.MAX_VALUE, Byte.MIN_VALUE};
+		evaluate("[1, 2, 3, 127, -128]", foo);
+	}
+
+	@Test
 	public void shortArray()
 	{
 		short[] foo = new short[]{1, 2, 3, Short.MAX_VALUE, Short.MIN_VALUE};
