@@ -286,6 +286,17 @@ public class SafeStringTest
 		assertNull(SafeString.identityToString(null));
 	}
 
+	@Test
+	public void dejaVuList()
+	{
+		List<List> list = new ArrayList<List>();
+		list.add(null);
+		list.add(list);
+		evaluate("[null, "+SafeString.RECURSION_PREFIX
+			+ SafeString.identityToString(list)
+			+SafeString.RECURSION_SUFFIX + "]", list);
+	}
+
 	private void evaluate(String expected, Object o)
 	{
 		String result;
