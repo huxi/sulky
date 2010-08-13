@@ -152,6 +152,16 @@ public class SafeStringTest
 	}
 
 	@Test
+	public void verifyRecursiveObjectArray()
+	{
+		Object[] array= new Object[2];
+		array[1]=array;
+		evaluate("[null, "+SafeString.RECURSION_PREFIX
+			+ SafeString.identityToString(array)
+			+SafeString.RECURSION_SUFFIX + "]", array);
+	}
+
+	@Test
 	public void deepMapList()
 	{
 		List<String> list = new ArrayList<String>();
@@ -284,17 +294,6 @@ public class SafeStringTest
 	public void identityToStringNull()
 	{
 		assertNull(SafeString.identityToString(null));
-	}
-
-	@Test
-	public void dejaVuList()
-	{
-		List<List> list = new ArrayList<List>();
-		list.add(null);
-		list.add(list);
-		evaluate("[null, "+SafeString.RECURSION_PREFIX
-			+ SafeString.identityToString(list)
-			+SafeString.RECURSION_SUFFIX + "]", list);
 	}
 
 	private void evaluate(String expected, Object o)
