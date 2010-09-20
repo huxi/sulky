@@ -29,6 +29,10 @@ allprojects {
 	defaultTasks 'clean', 'build', 'uploadArchives'
 	group = 'de.huxhorn.sulky'
 	version = '0.9.12'
+	if(!System.properties.'release')
+	{
+		version = version + '-SNAPSHOT'
+	}
 }
 
 def localReleaseRepo = new File("${System.properties.'user.home'}/local-gradle-repository/release").toURL().toString()
@@ -136,6 +140,10 @@ subprojects {
         manifest.attributes provider: 'gradle'
     }
 
+/*
+	Does not work.
+	processResources is evaluated before this is executed.
+	
 	task release(dependsOn: [build.taskDependencies]) << {
 		println 'Finished release.'
 	}
@@ -145,6 +153,7 @@ subprojects {
 			version = version+'-SNAPSHOT'
 		}
 	}
+*/
 
 	def deployer = null
 
