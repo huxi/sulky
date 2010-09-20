@@ -121,6 +121,10 @@ subprojects {
        mavenRepo urls: localSnapshotRepo
     }
 
+	configurations {
+		all*.exclude group: 'commons-logging', module: 'commons-logging'
+	}
+	
     dependencies {
         testCompile libraries.junit
         testCompile libraries.'slf4j-api'
