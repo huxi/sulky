@@ -28,7 +28,7 @@ allprojects {
 	
 	defaultTasks 'clean', 'build', 'uploadArchives'
 	group = 'de.huxhorn.sulky'
-	version = '0.9.12'
+	version = '0.9.13'
 	if(!System.properties.'release')
 	{
 		version = version + '-SNAPSHOT'
