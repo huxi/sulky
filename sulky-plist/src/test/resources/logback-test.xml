@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%-5level - %d{HH:mm:ss.SSS} [%thread] - %file:%line - %msg%n%ex{full}</pattern>
+		</encoder>
+	</appender>
+
+	<!--
+	<appender name="Localhorst" class="ch.qos.logback.classic.net.SocketAppender">
+		<RemoteHost>localhost</RemoteHost>
+		<Port>4445</Port>
+		<ReconnectionDelay>1</ReconnectionDelay>
+		<IncludeCallerData>true</IncludeCallerData>
+	</appender>
+	-->
+	
+	<root level="ERROR">
+		<appender-ref ref="CONSOLE"/>
+		<!--
+		<appender-ref ref="Localhorst"/>
+		-->
+	</root>
+
+</configuration>
+

@@ -16,7 +16,8 @@ artifactMapping = [
 'sulky-sounds-impl-jlayer': 'de.huxhorn.sulky.sounds-impl-jlayer',
 'sulky-stax':               'de.huxhorn.sulky.stax',
 'sulky-swing':              'de.huxhorn.sulky.swing',
-'sulky-tasks':              'de.huxhorn.sulky.tasks'
+'sulky-tasks':              'de.huxhorn.sulky.tasks',
+'sulky-plist':              'de.huxhorn.sulky.plist'
 ]
 
 dependsOnChildren()

@@ -5,6 +5,7 @@ versions = [
 ]
 
 libraries = [
+'commons-codec':          'commons-codec:commons-codec:1.4',
 'commons-lang':           'commons-lang:commons-lang:2.3',
 'commons-io':             'commons-io:commons-io:1.4',
 'easymock':               "org.easymock:easymock:${versions.easymock}",

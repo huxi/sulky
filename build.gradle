@@ -95,3 +95,11 @@ project(':sulky-blobs').dependencies {
 	testCompile project(':sulky-junit')
 }
 
+project(':sulky-plist').dependencies {
+	compile libraries.'slf4j-api'
+	compile libraries.'commons-codec'
+	compile project(':sulky-codec')
+	compile project(':sulky-stax')
+	testCompile project(':sulky-junit')
+}
+
