@@ -359,6 +359,16 @@ public class PropertyListIOTest
 		check(list, true);
 	}
 
+	@Test
+	public void toStringRoot()
+		throws Throwable
+	{
+		PropertyList list=new PropertyList();
+		list.setRoot(new ToStringExample());
+		PropertyList read = check(list, false);
+		assertEquals("ToString", read.getRoot());
+	}
+
 	private PropertyList check(PropertyList list, boolean equal)
 		throws Throwable
 	{
@@ -396,5 +406,13 @@ public class PropertyListIOTest
 		ByteArrayOutputStream bos=new ByteArrayOutputStream();
 		encoder.encode(list, bos);
 		return bos.toByteArray();
+	}
+
+	private static class ToStringExample
+	{
+		public String toString()
+		{
+			return "ToString";
+		}
 	}
 }
