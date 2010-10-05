@@ -237,7 +237,7 @@ public class PropertyListWriter
 			return;
 		}
 
-		if(logger.isWarnEnabled()) logger.warn("No suitable conversion found for {}! Will save it as string.", valueClass.getName());
+		if(logger.isDebugEnabled()) logger.debug("No suitable conversion found for {}. Will save it as string.", valueClass.getName());
 		StaxUtilities.writeSimpleTextNode(writer, null, null, STRING_NODE, value.toString());
 	}
 
