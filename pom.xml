@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 	<name>Sulky</name>
 	<description>This file is part of the sulky modules. It's the master pom file that is used to build all other modules.</description>
-	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
+	<url>http://sulky.huxhorn.de/projects/${project.artifactId}/</url>
 	
 	<scm>
 		<connection>scm:git:git://github.com/huxi/sulky.git</connection>

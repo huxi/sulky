@@ -4,10 +4,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.resources</artifactId>
-	<version>${parent.version}</version>
+	<version><!-- SV -->0.9.13-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Sulky resources</name>
-	<url>http://sulky.huxhorn.de/projects/${pom.artifactId}/</url>
+	<url>http://sulky.huxhorn.de/projects/${project.artifactId}/</url>
 
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
