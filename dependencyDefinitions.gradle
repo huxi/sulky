@@ -1,6 +1,6 @@
 versions = [
 'easymock': '2.4',
-'logback':  '0.9.24',
+'logback':  '0.9.25',
 'slf4j':    '1.6.1'
 ]
 

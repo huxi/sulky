@@ -22,33 +22,10 @@ artifactMapping = [
 
 dependsOnChildren()
 
-allprojects {
-	apply plugin: 'project-reports'
-	apply plugin: 'eclipse'
-	apply plugin: 'idea'
-	
-	defaultTasks 'clean', 'build', 'uploadArchives'
-	group = 'de.huxhorn.sulky'
-	version = '0.9.13'
-	if(!System.properties.'release')
-	{
-		version = version + '-SNAPSHOT'
-	}
-}
-
 def localReleaseRepo = new File("${System.properties.'user.home'}/local-gradle-repository/release").toURL().toString()
 def localSnapshotRepo = new File("${System.properties.'user.home'}/local-gradle-repository/snapshot").toURL().toString()
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    //apply plugin: 'code-quality'
-
-    sourceCompatibility = 1.5
-    targetCompatibility = 1.5
-    
-    compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-g']
-
 	task sourceJar(type: Jar) { from sourceSets.main.allSource; classifier = 'source' }
 	task javadocJar(type: Jar) { from javadoc.outputs.files; classifier = 'javadoc' }
 	
@@ -136,25 +113,9 @@ subprojects {
         testRuntime libraries.'logback-classic'
     }
 
-
     jar {
         manifest.attributes provider: 'gradle'
     }
-
-/*
-	Does not work.
-	processResources is evaluated before this is executed.
-	
-	task release(dependsOn: [build.taskDependencies]) << {
-		println 'Finished release.'
-	}
-
-    gradle.taskGraph.whenReady {taskGraph ->
-		if (!taskGraph.hasTask(release)) {
-			version = version+'-SNAPSHOT'
-		}
-	}
-*/
 
 	def deployer = null
 
@@ -182,6 +143,5 @@ subprojects {
 	installer.pom.project defaultProject
 	
 	deployer.pom.project defaultProject
-
 }
 
