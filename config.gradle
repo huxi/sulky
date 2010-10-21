@@ -22,6 +22,24 @@ artifactMapping = [
 
 dependsOnChildren()
 
+apply plugin: 'base'
+
+task javadoc(type: Javadoc) {
+	destinationDir = file("$buildDir/javadoc")
+	source = files { subprojects.collect { it.sourceSets.main.java } }
+	classpath = files { subprojects.collect { it.sourceSets.main.compileClasspath } }
+}
+
+task sourceZip(type: Zip) {
+	classifier = 'source'
+	from { subprojects.collect { it.sourceSets.main.allSource } }
+}
+
+task javadocZip(type: Zip) {
+	classifier = 'javadoc'
+	from javadoc.outputs.files
+}
+
 def localReleaseRepo = new File("${System.properties.'user.home'}/local-gradle-repository/release").toURL().toString()
 def localSnapshotRepo = new File("${System.properties.'user.home'}/local-gradle-repository/snapshot").toURL().toString()
 
