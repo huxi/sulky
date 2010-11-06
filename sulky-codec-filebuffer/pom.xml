@@ -7,7 +7,7 @@
 	<version><!-- SV -->0.9.13-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Sulky Codec Filebuffer</name>
-	<description>This file is part of the sulky modules. It contains a Codec-aware filebuffer..</description>
+	<description>This file is part of the sulky modules. It contains a Codec-aware filebuffer.</description>
 	<url>http://sulky.huxhorn.de/projects/${project.artifactId}/</url>
 
 	<parent>
