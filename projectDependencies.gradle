@@ -1,65 +1,68 @@
-allprojects {
-	apply plugin: 'project-reports'
-	apply plugin: 'eclipse'
-	apply plugin: 'idea'
-	
-	defaultTasks 'clean', 'build', 'uploadArchives'
-	group = 'de.huxhorn.sulky'
-	version = '0.9.13'
-	if(!System.properties.'release')
-	{
-		version = version + '-SNAPSHOT'
-	}
-}
+apply from: 'dependencyDefinitions.gradle'
 
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
-    //apply plugin: 'code-quality'
-
-    sourceCompatibility = 1.5
-    targetCompatibility = 1.5
-    
-    compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-g']
 }
 
-project(':sulky-io').dependencies {
-	testCompile libraries.easymock
-	testCompile libraries.easymockclassextension
+project(':sulky-io') {
+	description = 'This file is part of the sulky modules. It\'s supposed to contain classes I\'d like to see in commons-io. At the moment it only contains a TimeoutOutputStream that throws an IOException if a certain timeout is exceeded.'
+	dependencies {
+		testCompile libraries.easymock
+		testCompile libraries.easymockclassextension
+	}
 }
 
-project(':sulky-generics').dependencies {
-	compile project(':sulky-io')
+project(':sulky-generics') {
+	description = 'This file is part of the sulky modules. It contains several interfaces that use generics. There\'s a general definition of Serializer/Deserializer and a simple implementation using object serialization.'
+	dependencies {
+		compile project(':sulky-io')
+	}
 }
 
-project(':sulky-junit').dependencies {
-	compile libraries.junit
-	compile libraries.'slf4j-api'
-	compile libraries.'logback-core'
-	compile libraries.'logback-classic'
+project(':sulky-junit') {
+	description = 'This file is part of the sulky modules. It contains JUnit utilities.'
+	dependencies {
+		compile libraries.junit
+		compile libraries.'slf4j-api'
+		compile libraries.'logback-core'
+		compile libraries.'logback-classic'
+	}
 }
 
-project(':sulky-codec').dependencies {
-	compile libraries.'slf4j-api'
-	compile project(':sulky-io')
+project(':sulky-codec') {
+	description = 'This file is part of the sulky modules.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile project(':sulky-io')
+	}
 }
 
-project(':sulky-buffers').dependencies {
-	compile libraries.'slf4j-api'
-	compile project(':sulky-io')
+project(':sulky-buffers') {
+	description = 'This file is part of the sulky modules. It contains the definition of buffers, operations on buffers and certain buffer implementations.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile project(':sulky-io')
+	}
 }
 
-project(':sulky-codec-filebuffer').dependencies {
-	compile libraries.'slf4j-api'
-	compile libraries.'protobuf'
-	compile project(':sulky-io')
-	compile project(':sulky-codec')
-	compile project(':sulky-buffers')
+project(':sulky-codec-filebuffer') {
+	description = 'This file is part of the sulky modules. It contains a Codec-aware filebuffer.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile libraries.'protobuf'
+		compile project(':sulky-io')
+		compile project(':sulky-codec')
+		compile project(':sulky-buffers')
+	}
 }
 
-project(':sulky-stax').dependencies {
-	compile libraries.'slf4j-api'
-	compile libraries.'stax-api'
+project(':sulky-stax') {
+	description = 'This file is part of the sulky modules. It contains helper methods to simplify usage of StAX.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile libraries.'stax-api'
+	}
 }
 
 //project(':sulky-conditions').dependencies {
@@ -68,60 +71,89 @@ project(':sulky-stax').dependencies {
 //project(':sulky-sounds-api').dependencies {
 //}
 
-project(':sulky-sounds-impl-jlayer').dependencies {
-	compile libraries.'slf4j-api'
-	compile project(':sulky-sounds-api')
-	compile libraries.'jlayer'
+project(':sulky-sounds-impl-jlayer') {
+	description = 'This file is part of the sulky modules. It contains an implementation of the simple sound interface using JLayer.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile project(':sulky-sounds-api')
+		compile libraries.'jlayer'
+	}
 }
 
-project(':sulky-logging').dependencies {
-	compile libraries.'slf4j-api'
+project(':sulky-logging') {
+	description = 'This file is part of the sulky modules. It contains a LoggingPropertyChangeListener and some Swing logging.'
+	dependencies {
+		compile libraries.'slf4j-api'
+	}
 }
 
-project(':sulky-formatting').dependencies {
-	compile libraries.'slf4j-api'
+project(':sulky-formatting') {
+	description = 'This file is part of the sulky modules. It contains a class for human-readable output of large numbers and some handy xml helper methods.'
+	dependencies {
+		compile libraries.'slf4j-api'
+	}
 }
 
-project(':sulky-swing').dependencies {
-	compile libraries.'slf4j-api'
-	compile project(':sulky-formatting')
-	compile project(':sulky-generics')
+project(':sulky-swing') {
+	description = 'This file is part of the sulky modules. It contains several Swing tools.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile project(':sulky-formatting')
+		compile project(':sulky-generics')
+	}
 }
 
-project(':sulky-buffers-table').dependencies {
-	compile libraries.'slf4j-api'
-	compile project(':sulky-buffers')
-	compile project(':sulky-swing')
+project(':sulky-buffers-table') {
+	description = 'This file is part of the sulky modules. It contains a TableModel using Buffer as backend.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile project(':sulky-buffers')
+		compile project(':sulky-swing')
+	}
 }
 
-project(':sulky-tasks').dependencies {
-	compile libraries.'slf4j-api'
-	compile project(':sulky-io')
+project(':sulky-tasks') {
+	description = 'This file is part of the sulky modules. It contains a TaskManager and support classes.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile project(':sulky-io')
+	}
 }
 
-project(':sulky-buffers-filtering').dependencies {
-	compile libraries.'slf4j-api'
-	compile project(':sulky-io')
-	compile project(':sulky-buffers')
-	compile project(':sulky-conditions')
-	compile project(':sulky-tasks')
+project(':sulky-buffers-filtering') {
+	description = 'This file is part of the sulky modules. It contains the definition of buffers, operations on buffers and certain buffer implementations.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile project(':sulky-io')
+		compile project(':sulky-buffers')
+		compile project(':sulky-conditions')
+		compile project(':sulky-tasks')
+	}
 }
 
-project(':sulky-resources').dependencies {
-	compile libraries.'slf4j-api'
+project(':sulky-resources') {
+	description = 'This file is part of the sulky modules. It contains support for inheritance-safe resource resolution.'
+	dependencies {
+		compile libraries.'slf4j-api'
+	}
 }
 
-project(':sulky-blobs').dependencies {
-	compile libraries.'slf4j-api'
-	compile libraries.'commons-io'
-	testCompile project(':sulky-junit')
+project(':sulky-blobs') {
+	description = 'This file is part of the sulky modules. It contains a BLOB repository comparable to the way git is storing the files.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile libraries.'commons-io'
+		testCompile project(':sulky-junit')
+	}
 }
 
-project(':sulky-plist').dependencies {
-	compile libraries.'slf4j-api'
-	compile libraries.'commons-codec'
-	compile project(':sulky-codec')
-	compile project(':sulky-stax')
-	testCompile project(':sulky-junit')
+project(':sulky-plist') {
+	description = 'This file is part of the sulky modules. It contains classes to read and write Apple Propertylist/Plist data.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile libraries.'commons-codec'
+		compile project(':sulky-codec')
+		compile project(':sulky-stax')
+		testCompile project(':sulky-junit')
+	}
 }
-
