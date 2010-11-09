@@ -33,7 +33,7 @@ buildscript {
 	if(System.properties.'release')
 	{
 		dependencies {
-			classpath 'de.huxhorn.gradle:de.huxhorn.gradle.pgp-plugin:0.0.2',
+			classpath 'de.huxhorn.gradle:de.huxhorn.gradle.pgp-plugin:0.0.3',
 			'org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6'
 		}
 	}
