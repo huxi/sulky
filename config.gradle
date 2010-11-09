@@ -65,10 +65,30 @@ task javadocZip(type: Zip) {
 	from javadoc.outputs.files
 }
 
-task syncRepos << {
+task syncStaging << {
+	if (project.hasProperty('remoteUsername') && project.hasProperty('remoteUsername')) {
+		def stagingRepos = new org.apache.maven.wagon.repository.Repository('staging', 'https://oss.sonatype.org/service/local/staging/deploy/maven2')
+		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
+		auth.userName = remoteUsername
+		auth.password = remotePassword
+		def wagon = new org.apache.maven.wagon.providers.webdav.WebDavWagon()
+
+		wagon.connect(stagingRepos, auth)
+		localReleaseRepoFile.eachFile {
+			if (it.directory) {
+				wagon.putDirectory(it, it.name)
+			} else {
+				wagon.put(it, it.name)
+			}
+		}
+	} else {
+		println "Can't upload site as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
+	}
+}
+
+task syncSnapshot << {
 	if (project.hasProperty('remoteUsername') && project.hasProperty('remoteUsername')) {
 		def snapshotRepos = new org.apache.maven.wagon.repository.Repository('snapshot', 'https://oss.sonatype.org/content/repositories/snapshots')
-		def stagingRepos = new org.apache.maven.wagon.repository.Repository('staging', 'https://oss.sonatype.org/service/local/staging/deploy/maven2')
 		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
 		auth.userName = remoteUsername
 		auth.password = remotePassword
@@ -76,15 +96,6 @@ task syncRepos << {
 
 		wagon.connect(snapshotRepos, auth)
 		localSnapshotRepoFile.eachFile {
-			if (it.directory) {
-				wagon.putDirectory(it, it.name)
-			} else {
-				wagon.put(it, it.name)
-			}
-		}
-
-		wagon.connect(stagingRepos, auth)
-		localReleaseRepoFile.eachFile {
 			if (it.directory) {
 				wagon.putDirectory(it, it.name)
 			} else {
@@ -184,7 +195,7 @@ subprojects {
 				id 'huxhorn'
 				email 'huxhorn@users.sourceforge.net'
 				name 'Joern Huxhorn'
-				organization 'Joern Huxhorn'
+				organization = 'Joern Huxhorn'
 				organizationUrl 'http://sulky.huxhorn.de'
 				roles {
 					role 'Developer'
