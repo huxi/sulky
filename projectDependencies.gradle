@@ -65,11 +65,17 @@ project(':sulky-stax') {
 	}
 }
 
-//project(':sulky-conditions').dependencies {
-//}
+project(':sulky-conditions') {
+	description = 'This file is part of the sulky modules. It contains the definition of conditions and the implementation of some purpose conditions.'
+	//dependencies {
+	//}
+}
 
-//project(':sulky-sounds-api').dependencies {
-//}
+project(':sulky-sounds-api') {
+	description = 'This file is part of the sulky modules. It contains a simple sound interface definition.'
+	//dependencies {
+	//}
+}
 
 project(':sulky-sounds-impl-jlayer') {
 	description = 'This file is part of the sulky modules. It contains an implementation of the simple sound interface using JLayer.'
@@ -157,3 +163,4 @@ project(':sulky-plist') {
 		testCompile project(':sulky-junit')
 	}
 }
+
