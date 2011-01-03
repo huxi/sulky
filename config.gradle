@@ -112,7 +112,7 @@ allprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 
-	defaultTasks 'clean', 'build', 'uploadArchives'
+	defaultTasks 'build', 'uploadArchives'
 	group = 'de.huxhorn.sulky'
 	version = '0.9.14'
 	if(!System.properties.'release')
