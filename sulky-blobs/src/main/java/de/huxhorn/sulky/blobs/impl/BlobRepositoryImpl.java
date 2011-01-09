@@ -404,7 +404,6 @@ public class BlobRepositoryImpl
 			this.filenamePart = filenamePart;
 		}
 
-		@Override
 		public boolean accept(File file)
 		{
 			return file.isFile() && file.getName().startsWith(filenamePart);
@@ -414,7 +413,6 @@ public class BlobRepositoryImpl
 	private static class MatchingDirectoriesFileFilter
 		implements FileFilter
 	{
-		@Override
 		public boolean accept(File file)
 		{
 			return file.isDirectory() && file.getName().length() == HASH_DIRECTORY_NAME_LENGTH;
@@ -424,7 +422,6 @@ public class BlobRepositoryImpl
 	private static class MatchingFilesFileFilter
 		implements FileFilter
 	{
-		@Override
 		public boolean accept(File file)
 		{
 			return file.isFile() && file.getName().length() == HASH_REMAINDER_NAME_LENGTH;
