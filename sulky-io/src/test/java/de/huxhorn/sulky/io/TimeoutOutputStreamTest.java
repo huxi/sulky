@@ -37,7 +37,7 @@ package de.huxhorn.sulky.io;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import org.easymock.IAnswer;
-import static org.easymock.classextension.EasyMock.*;
+import static org.easymock.EasyMock.*;
 import org.junit.Test;
 
 import java.io.IOException;

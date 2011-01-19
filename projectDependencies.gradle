@@ -9,7 +9,6 @@ project(':sulky-io') {
 	description = 'This file is part of the sulky modules. It\'s supposed to contain classes I\'d like to see in commons-io. At the moment it only contains a TimeoutOutputStream that throws an IOException if a certain timeout is exceeded.'
 	dependencies {
 		testCompile libraries.easymock
-		testCompile libraries.easymockclassextension
 	}
 }
 

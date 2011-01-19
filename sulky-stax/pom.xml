@@ -18,14 +18,6 @@
 	</parent>
 
 	<dependencies>
-		<!--
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<scope>compile</scope>
-		</dependency>
-		-->
-		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -35,7 +27,6 @@
 		<dependency>
 			<groupId>stax</groupId>
 			<artifactId>stax-api</artifactId>
-			<version>1.0.1</version>
 			<scope>compile</scope>
 		</dependency>
 
