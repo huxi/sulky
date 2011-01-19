@@ -129,7 +129,9 @@ subprojects {
     sourceCompatibility = 1.5
     targetCompatibility = 1.5
 
-    compileJava.options.compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-g']
+    def compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-g']
+    compileJava.options.compilerArgs = compilerArgs
+    compileTestJava.options.compilerArgs = compilerArgs
 
 	if(System.properties.'release')
 	{
