@@ -79,9 +79,29 @@ public class BlobRepositoryImpl
 
 	private File baseDirectory;
 	private boolean validating = false;
+	private boolean caseSensitive = true;
 	private static final String ALGORITHM = "SHA1";
 	private static final int HASH_DIRECTORY_NAME_LENGTH = 2;
 	private static final int HASH_REMAINDER_NAME_LENGTH = 38;
+
+	/**
+	 *
+	 * @return whether IDs are handled case-sensitive. Default is true.
+	 */
+	public boolean isCaseSensitive()
+	{
+		return caseSensitive;
+	}
+
+	/**
+	 * Enables or disables case-sensitive handling of IDs.
+	 *
+	 * @param caseSensitive enables or disables case-sensitive handling of IDs.
+	 */
+	public void setCaseSensitive(boolean caseSensitive)
+	{
+		this.caseSensitive = caseSensitive;
+	}
 
 	/**
 	 *
@@ -378,6 +398,10 @@ public class BlobRepositoryImpl
 		if(id == null)
 		{
 			throw new IllegalArgumentException("id must not be null!");
+		}
+		if(caseSensitive)
+		{
+			return id;
 		}
 		return id.toLowerCase();
 	}

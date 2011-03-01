@@ -181,12 +181,16 @@ public class BlobRepositoryImplTest
 	}
 
 	@Test
-	public void putGetUpperCase() throws IOException, AmbiguousIdException
+	public void putGetCaseSensitive() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 		String id = instance.put(TEST_DATA.getBytes("UTF-8"));
 		id = id.toUpperCase();
+		assertNull(instance.get(id));
+		assertFalse(instance.contains(id));
+		instance.setCaseSensitive(false);
+		assertTrue(instance.contains(id));
 		InputStream is = instance.get(id);
 		try
 		{
