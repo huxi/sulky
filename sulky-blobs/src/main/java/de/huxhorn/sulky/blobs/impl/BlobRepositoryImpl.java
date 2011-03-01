@@ -67,6 +67,9 @@ import java.util.Set;
  *
  * This implementation is NOT thread-safe.
  *
+ * If validation is enabled and tampered data is detected during a get operation then null is returned.
+ * The invalid data file is automatically deleted in that case.
+ *
  * @see AmbiguousIdException the exception thrown if more than one blob would match a given partial id.
  */
 public class BlobRepositoryImpl
@@ -75,9 +78,29 @@ public class BlobRepositoryImpl
 	private final Logger logger = LoggerFactory.getLogger(BlobRepositoryImpl.class);
 
 	private File baseDirectory;
+	private boolean validating = false;
 	private static final String ALGORITHM = "SHA1";
 	private static final int HASH_DIRECTORY_NAME_LENGTH = 2;
 	private static final int HASH_REMAINDER_NAME_LENGTH = 38;
+
+	/**
+	 *
+	 * @return whether validation on get is active or not. Default is false.
+	 */
+	public boolean isValidating()
+	{
+		return validating;
+	}
+
+	/**
+	 * Enables or disables validation on get.
+	 *
+	 * @param validating enables or disables validation
+	 */
+	public void setValidating(boolean validating)
+	{
+		this.validating = validating;
+	}
 
 	public File getBaseDirectory()
 	{
@@ -96,6 +119,10 @@ public class BlobRepositoryImpl
 	public String put(InputStream input)
 		throws IOException
 	{
+		if(input == null)
+		{
+			throw new IllegalArgumentException("input must not be null!");
+		}
 		prepare();
 		File tempFile = File.createTempFile("Blob", ".tmp", baseDirectory);
 		if(logger.isDebugEnabled()) logger.debug("Created temporary file '{}'.", tempFile);
@@ -103,6 +130,18 @@ public class BlobRepositoryImpl
 		String hashString = copyAndHash(input, tempFile);
 
 		long tempLength = tempFile.length();
+		if(tempLength == 0)
+		{
+			if(tempFile.delete())
+			{
+				if(logger.isDebugEnabled()) logger.debug("Deleted empty file '{}'.");
+			}
+			else
+			{
+				if(logger.isErrorEnabled()) logger.error("Failed to delete temporary file '{}'!", tempFile.getAbsolutePath());
+			}
+			throw new IllegalArgumentException("input must not be empty!");
+		}
 		File destinationFile=prepareFile(hashString);
 
 		if(destinationFile.isFile())
@@ -141,6 +180,14 @@ public class BlobRepositoryImpl
 	public String put(byte[] bytes)
 		throws IOException
 	{
+		if(bytes == null)
+		{
+			throw new IllegalArgumentException("bytes must not be null!");
+		}
+		if(bytes.length == 0)
+		{
+			throw new IllegalArgumentException("bytes must not be empty!");
+		}
 		return put(new ByteArrayInputStream(bytes));
 	}
 
@@ -151,12 +198,25 @@ public class BlobRepositoryImpl
 		throws AmbiguousIdException, IOException
 	{
 		prepare();
-		File file=getFileFor(id);
+		id = prepareId(id);
+		File file = getFileFor(id);
 		if(file == null)
 		{
 			return null;
 		}
-		return new FileInputStream(file);
+		if(valid(id, file))
+		{
+			return new FileInputStream(file);
+		}
+		if(file.delete())
+		{
+			if(logger.isInfoEnabled()) logger.info("Deleted invalid entry for id {}.", id);
+		}
+		else
+		{
+			if(logger.isErrorEnabled()) logger.error("Failed to delete invalid entry for id {}! ({})", id, file.getAbsolutePath());
+		}
+		return null;
 	}
 
 	/**
@@ -166,7 +226,8 @@ public class BlobRepositoryImpl
 		throws AmbiguousIdException
 	{
 		prepare();
-		File file=getFileFor(id);
+		id = prepareId(id);
+		File file = getFileFor(id);
 		if(file == null)
 		{
 			return false;
@@ -190,6 +251,7 @@ public class BlobRepositoryImpl
 		throws AmbiguousIdException
 	{
 		prepare();
+		id = prepareId(id);
 		return getFileFor(id) != null;
 	}
 
@@ -199,7 +261,8 @@ public class BlobRepositoryImpl
 	public long sizeOf(String id) throws AmbiguousIdException
 	{
 		prepare();
-		File file=getFileFor(id);
+		id = prepareId(id);
+		File file = getFileFor(id);
 		if(file == null)
 		{
 			return -1;
@@ -214,8 +277,8 @@ public class BlobRepositoryImpl
 	{
 		prepare();
 		Set<String> result=new HashSet<String>();
-		File[] subdirs = baseDirectory.listFiles(new MatchingDirectoriesFileFilter());
-		for(File current:subdirs)
+		File[] subDirs = baseDirectory.listFiles(new MatchingDirectoriesFileFilter());
+		for(File current : subDirs)
 		{
 			File[] contained=current.listFiles(new MatchingFilesFileFilter());
 			for(File curBlob:contained)
@@ -310,6 +373,15 @@ public class BlobRepositoryImpl
 		}
 	}
 
+	private String prepareId(String id)
+	{
+		if(id == null)
+		{
+			throw new IllegalArgumentException("id must not be null!");
+		}
+		return id.toLowerCase();
+	}
+
 	private File prepareFile(String id)
 	{
 		if(logger.isDebugEnabled()) logger.debug("Hash: {}", id);
@@ -325,8 +397,7 @@ public class BlobRepositoryImpl
 		return new File(parentFile, hashRest);
 	}
 
-	private String copyAndHash(InputStream input, File into)
-		throws IOException
+	private MessageDigest createMessageDigest()
 	{
 		MessageDigest digest;
 		try
@@ -337,8 +408,54 @@ public class BlobRepositoryImpl
 		{
 			String message="Can't generate hash! Algorithm "+ALGORITHM+" does not exist!";
 			if(logger.isErrorEnabled()) logger.error(message, ex);
-			throw new IOException(message, ex);
+			throw new IllegalStateException(message, ex);
 		}
+		return digest;
+	}
+
+	private boolean valid(String id, File file)
+	{
+		if(!validating)
+		{
+			return true;
+		}
+		MessageDigest digest = createMessageDigest();
+
+		FileInputStream input=null;
+		try
+		{
+			input=new FileInputStream(file);
+			DigestInputStream dis = new DigestInputStream(input, digest);
+			for(;;)
+			{
+				if(dis.read() < 0)
+				{
+					break;
+				}
+			}
+			byte[] hash = digest.digest();
+			Formatter formatter = new Formatter();
+			for (byte b : hash)
+			{
+				formatter.format("%02x", b);
+			}
+			return formatter.toString().equals(id);
+		}
+		catch(IOException e)
+		{
+			// ignore...
+		}
+		finally
+		{
+			IOUtils.closeQuietly(input);
+		}
+		return false;
+	}
+
+	private String copyAndHash(InputStream input, File into)
+		throws IOException
+	{
+		MessageDigest digest = createMessageDigest();
 
 		DigestInputStream dis = new DigestInputStream(input, digest);
 		IOException ex;
