@@ -193,6 +193,12 @@
 			</dependency>
 			<!-- End of 3rd party jars -->
 			<dependency>
+				<groupId>org.codehaus.groovy</groupId>
+				<artifactId>groovy</artifactId>
+                <version>1.8.0-rc-3</version>
+			</dependency>
+
+			<dependency>
 				<groupId>commons-codec</groupId>
 				<artifactId>commons-codec</artifactId>
 				<version>1.4</version>

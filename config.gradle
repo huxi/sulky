@@ -17,7 +17,8 @@ artifactMapping = [
 'sulky-stax':               'de.huxhorn.sulky.stax',
 'sulky-swing':              'de.huxhorn.sulky.swing',
 'sulky-tasks':              'de.huxhorn.sulky.tasks',
-'sulky-plist':              'de.huxhorn.sulky.plist'
+'sulky-plist':              'de.huxhorn.sulky.plist',
+'sulky-groovy':             'de.huxhorn.sulky.groovy'
 ]
 
 buildscript {

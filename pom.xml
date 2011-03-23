@@ -65,6 +65,7 @@
 		<module>sulky-resources</module>
 		<module>sulky-blobs</module>
 		<module>sulky-plist</module>
+		<module>sulky-groovy</module>
 	</modules>
 
 	<reporting>

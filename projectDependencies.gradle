@@ -163,3 +163,11 @@ project(':sulky-plist') {
 	}
 }
 
+project(':sulky-groovy') {
+	description = 'This file is part of the sulky modules. It contains Groovy helpers.'
+	dependencies {
+		compile libraries.'slf4j-api'
+		compile libraries.'groovy'
+	}
+}
+
