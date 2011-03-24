@@ -168,6 +168,8 @@ project(':sulky-groovy') {
 	dependencies {
 		compile libraries.'slf4j-api'
 		compile libraries.'groovy'
+		testCompile libraries.'commons-io'
+		testCompile project(':sulky-junit')
 	}
 }
 

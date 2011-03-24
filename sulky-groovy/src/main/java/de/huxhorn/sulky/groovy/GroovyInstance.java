@@ -52,10 +52,11 @@ public class GroovyInstance
 
 	private final Logger logger = LoggerFactory.getLogger(GroovyInstance.class);
 
-	private static final int REFRESH_INTERVAL = 2000;
+	private static final int DEFAULT_REFRESH_INTERVAL = 2000;
 
 	private String groovyFileName;
-	private int refreshInterval = REFRESH_INTERVAL;
+	private int refreshInterval = DEFAULT_REFRESH_INTERVAL;
+	private transient Class instanceClass;
 	private transient Object instance;
 	private transient long lastRefresh;
 	private transient long previousFileTimestamp;
@@ -87,6 +88,7 @@ public class GroovyInstance
 		{
 			this.groovyFileName = groovyFileName;
 			// force reinitialization
+			instanceClass = null;
 			instance = null;
 		}
 	}
@@ -101,10 +103,10 @@ public class GroovyInstance
 		return errorCause;
 	}
 
-	private void initInstance()
+	private void initInstanceClass()
 	{
 		long current = System.currentTimeMillis();
-		if(instance != null && current - lastRefresh < REFRESH_INTERVAL)
+		if(instanceClass != null && current - lastRefresh < refreshInterval)
 		{
 			return;
 		}
@@ -114,7 +116,11 @@ public class GroovyInstance
 			handleError("groovyFileName must not be null!", null);
 			return;
 		}
+
 		lastRefresh = current;
+		instance = null;
+		instanceClass = null;
+
 		File groovyFile = new File(groovyFileName);
 		if(!groovyFile.isFile())
 		{
@@ -128,22 +134,51 @@ public class GroovyInstance
 		}
 
 		long fileTimestamp = groovyFile.lastModified();
-		if(instance == null || previousFileTimestamp != fileTimestamp)
+		if(instanceClass == null || previousFileTimestamp != fileTimestamp)
 		{
 			GroovyClassLoader gcl = new GroovyClassLoader();
 			gcl.setShouldRecompile(true);
 			try
 			{
-				Class clazz = gcl.parseClass(groovyFile);
-				instance = clazz.newInstance();
+				instanceClass = gcl.parseClass(groovyFile);
+				instance = null;
 				previousFileTimestamp = fileTimestamp;
-				if(logger.isInfoEnabled()) logger.info("Created new instance from '{}'.", groovyFile.getAbsolutePath());
+				if(logger.isInfoEnabled()) logger.info("Parsed class {} from '{}'.", instanceClass.getName(), groovyFile.getAbsolutePath());
 			}
 			catch(Throwable e)
 			{
-				handleError("Exception while instanciating groovy condition '" + groovyFile.getAbsolutePath() + "'!", e);
+				handleError("Exception while parsing class from '" + groovyFile.getAbsolutePath() + "'!", e);
 			}
 		}
+	}
+
+	private void initInstance()
+	{
+		long current = System.currentTimeMillis();
+		if(instance != null && current - lastRefresh < refreshInterval)
+		{
+			return;
+		}
+
+		initInstanceClass();
+		instance = null;
+		if(instanceClass != null)
+		{
+			try
+			{
+				instance = instanceClass.newInstance();
+			}
+			catch(Throwable e)
+			{
+				handleError("Exception while creating instance of '"+instanceClass.getName()+"'!", e);
+			}
+		}
+	}
+
+	public Class getInstanceClass()
+	{
+		initInstanceClass();
+		return instanceClass;
 	}
 
 	public Object getInstance()
@@ -156,6 +191,7 @@ public class GroovyInstance
 	{
 		errorMessage = message;
 		errorCause = throwable;
+		instanceClass = null;
 		instance = null;
 		if(logger.isWarnEnabled())
 		{
