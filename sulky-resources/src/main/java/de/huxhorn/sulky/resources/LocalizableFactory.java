@@ -72,7 +72,7 @@ public final class LocalizableFactory
 	{
 		final Logger logger = LoggerFactory.getLogger(MapLoader.class);
 
-		Class clazz = object.getClass();
+		Class<?> clazz = object.getClass();
 		Localizable loc;
 		if(object instanceof Localizable)
 		{
@@ -84,7 +84,7 @@ public final class LocalizableFactory
 			// Important! Use the objects classloader so proxy's may be unloaded as well...
 			loc = (Localizable)
 				Proxy.newProxyInstance(clazz.getClassLoader(),
-					new Class[]{Localizable.class}, new LocalizableInvocationHandler(object));
+					new Class<?>[]{Localizable.class}, new LocalizableInvocationHandler(object));
 			if(logger.isDebugEnabled()) logger.debug("Created Localizable proxy.");
 		}
 		return loc;
@@ -105,7 +105,7 @@ public final class LocalizableFactory
 		public LocalizableInvocationHandler(Object obj)
 		{
 			this.object = obj;
-			Class clazz = obj.getClass();
+			Class<?> clazz = obj.getClass();
 
 			Method m = null;
 
@@ -122,7 +122,7 @@ public final class LocalizableFactory
 			m = null;
 			try
 			{
-				m = clazz.getMethod(SETTER_NAME, new Class[]{Locale.class});
+				m = clazz.getMethod(SETTER_NAME, Locale.class);
 			}
 			catch(NoSuchMethodException ex)
 			{

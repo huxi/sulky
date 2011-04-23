@@ -72,11 +72,7 @@ public class GenericWrapper<T>
 		{
 			return true;
 		}
-		if(Wrapper.class.isInstance(wrapped))
-		{
-			return Wrapper.class.cast(wrapped).isWrapperFor(iface);
-		}
-		return false;
+		return Wrapper.class.isInstance(wrapped) && Wrapper.class.cast(wrapped).isWrapperFor(iface);
 	}
 
 	public boolean equals(Object o)

@@ -36,8 +36,6 @@ package de.huxhorn.sulky.generics;
 
 /**
  * This interface is similar to java.sql.Wrapper. It should be in java.util since it's really handy...
- *
- * @see java.sql.Wrapper
  */
 public interface Wrapper
 {

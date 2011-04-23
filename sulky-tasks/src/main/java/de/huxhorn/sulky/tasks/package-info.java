@@ -13,7 +13,5 @@
  * <p>A Task contains, in addition to a Callable and the related Future, additional information
  * like a TaskManager-related unique Task ID, a name, a description and a map of Strings that can
  * be used for arbitrary additional meta data.</p>  
- * @see java.util.concurrent
- * @see javax.swing.SwingWorker
  */
 package de.huxhorn.sulky.tasks;

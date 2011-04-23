@@ -371,6 +371,7 @@ public class OverwritingCircularBuffer<E>
 	transient private E[] array;
 */
 		
+		@SuppressWarnings({"unchecked"})
 		OverwritingCircularBuffer<E> v = (OverwritingCircularBuffer<E>) super.clone();
 		v.array = array.clone();
 		return v;
