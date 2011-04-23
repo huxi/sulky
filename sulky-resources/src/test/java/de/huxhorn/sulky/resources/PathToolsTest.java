@@ -39,7 +39,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Stack;
+import java.util.List;
 
 
 public class PathToolsTest
@@ -79,12 +79,12 @@ public class PathToolsTest
 
 	private void internalGetPathStack(String path, boolean reduce, String expectedPathElements[])
 	{
-		Stack stack = PathTools.getPathStack(path, reduce);
+		List<String> stack = PathTools.getPathStack(path, reduce);
 		String methodCall = "getPathStack(\"" + path + "\", " + reduce + ");";
 		assertEquals(methodCall + " - Number of Stack-Elements", expectedPathElements.length, stack.size());
 		for(int i = 0; i < expectedPathElements.length; i++)
 		{
-			assertEquals(methodCall + " - Mismatch at Index #" + i, expectedPathElements[i], stack.elementAt(i));
+			assertEquals(methodCall + " - Mismatch at Index #" + i, expectedPathElements[i], stack.get(i));
 		}
 	}
 

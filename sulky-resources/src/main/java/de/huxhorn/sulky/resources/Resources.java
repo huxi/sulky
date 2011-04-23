@@ -47,7 +47,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Stack;
 
 /**
  * <p><code>Resources</code> provides "object-oriented" resource resolution
@@ -773,12 +772,12 @@ public final class Resources
 
 	private static URL resolveLink(final Class clazz, final String resourcePath)
 	{
-		Stack<String> stack = new Stack<String>();
+		List<String> stack = new ArrayList<String>();
 
 		return recursiveResolve(stack, clazz, resourcePath);
 	}
 
-	private static URL recursiveResolve(Stack<String> stack, Class clazz, String resourcePath)
+	private static URL recursiveResolve(List<String> stack, Class clazz, String resourcePath)
 	{
 		final Logger logger = LoggerFactory.getLogger(Resources.class);
 
@@ -808,7 +807,7 @@ public final class Resources
 				}
 				return null;
 			}
-			stack.push(lowLinkPath);
+			stack.add(lowLinkPath);
 
 			List<String> linkContent;
 			try
@@ -839,7 +838,7 @@ public final class Resources
 						{
 							logger.debug("Checking for link-target '" + currentLinkTarget + "'.");
 						}
-						result = recursiveResolve((Stack<String>) stack.clone(), clazz, currentLinkTarget);
+						result = recursiveResolve(new ArrayList<String>(stack), clazz, currentLinkTarget);
 						if(result != null)
 						{
 							if(logger.isDebugEnabled()) logger.debug("Found link-target '" + currentLinkTarget + "'.");

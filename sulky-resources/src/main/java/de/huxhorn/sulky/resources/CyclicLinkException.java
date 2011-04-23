@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.resources;
 
-import java.util.Stack;
+import java.util.List;
 
 /**
  * DOCUMENT: <code>CyclicLinkException</code>
@@ -44,10 +44,10 @@ public class CyclicLinkException
 {
 	private static final long serialVersionUID = 5197383554254357523L;
 
-	private Stack<String> linkStack;
+	private List<String> linkStack;
 	private String cycleCause;
 
-	public CyclicLinkException(Stack<String> linkStack, String cycleCause)
+	public CyclicLinkException(List<String> linkStack, String cycleCause)
 	{
 		this.linkStack = linkStack;
 		this.cycleCause = cycleCause;
@@ -68,7 +68,7 @@ public class CyclicLinkException
 				result.append(" => ");
 			}
 			result.append("\"");
-			result.append(linkStack.elementAt(i));
+			result.append(linkStack.get(i));
 			result.append("\"");
 		}
 

@@ -37,7 +37,8 @@ package de.huxhorn.sulky.resources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -126,7 +127,7 @@ public final class PathTools
 	 */
 	public static String evaluatePath(String path)
 	{
-		Stack pathStack = getPathStack(path, true);
+		List<String> pathStack = getPathStack(path, true);
 
 		return getPathStackString(pathStack);
 	}
@@ -181,8 +182,8 @@ public final class PathTools
 
 	public static String getCompatiblePath(String path)
 	{
-		Stack<String> pathStack = getPathStack(path, true);
-		if(pathStack.empty())
+		List<String> pathStack = getPathStack(path, true);
+		if(pathStack.isEmpty())
 		{
 			return "";
 		}
@@ -230,9 +231,9 @@ public final class PathTools
 	 * @param evaluateDots if <code>true</code>, dots will be evaluated.
 	 * @return a Stack containing all the path elements of path.
 	 */
-	public static Stack<String> getPathStack(String path, boolean evaluateDots)
+	public static List<String> getPathStack(String path, boolean evaluateDots)
 	{
-		Stack<String> pathStack = new Stack<String>();
+		List<String> pathStack = new ArrayList<String>();
 		boolean wasAbsolute = false;
 		if(path.startsWith("/"))
 		{
@@ -256,24 +257,24 @@ public final class PathTools
 						// we found a dot-element
 						for(int i = 1; i < pathElement.length(); i++)
 						{
-							if(pathStack.empty())
+							if(pathStack.isEmpty())
 							{
 								underflowCounter++;
 							}
 							else
 							{
-								pathStack.pop();
+								pathStack.remove(pathStack.size()-1);
 							}
 						}
 					}
 					else
 					{
-						pathStack.push(pathElement);
+						pathStack.add(pathElement);
 					}
 				}
 				else
 				{
-					pathStack.push(pathElement);
+					pathStack.add(pathElement);
 				}
 			}
 		}
@@ -300,14 +301,14 @@ public final class PathTools
 	 * @param pathStack the path stack.
 	 * @return the string representation of the given path stack.
 	 */
-	public static String getPathStackString(Stack pathStack)
+	public static String getPathStackString(List<String> pathStack)
 	{
 		StringBuilder result = new StringBuilder();
 		boolean rootFound = false;
-		if(!pathStack.empty())
+		if(!pathStack.isEmpty())
 		{
 			rootFound = true;
-			String currentEntry = (String) pathStack.remove(0);
+			String currentEntry = pathStack.remove(0);
 			if(!currentEntry.equals("/"))
 			{
 
@@ -315,7 +316,7 @@ public final class PathTools
 				result.append(currentEntry);
 			}
 
-			while(!pathStack.empty())
+			while(!pathStack.isEmpty())
 			{
 				result.append("/");
 				result.append(pathStack.remove(0));
