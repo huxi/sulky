@@ -6,4 +6,3 @@ buildNumber.properties
 *.iml
 *.iws
 *.ipr
-/gradle/
