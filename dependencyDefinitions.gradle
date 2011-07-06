@@ -15,7 +15,7 @@ libraries = [
 'logback-access':         "ch.qos.logback:logback-access:${versions.logback}",
 'logback-classic':        "ch.qos.logback:logback-classic:${versions.logback}",
 'logback-core':           "ch.qos.logback:logback-core:${versions.logback}",
-'protobuf':               'com.google.protobuf:protobuf-java:2.4.0a',
+'protobuf':               'com.google.protobuf:protobuf-java:2.4.1',
 'slf4j-api':              "org.slf4j:slf4j-api:${versions.slf4j}",
 'stax-api':               'stax:stax-api:1.0.1'
 ]
