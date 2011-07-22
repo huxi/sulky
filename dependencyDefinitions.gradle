@@ -6,7 +6,6 @@ versions = [
 libraries = [
 'commons-codec':          'commons-codec:commons-codec:1.4',
 'commons-io':             'commons-io:commons-io:2.0.1',
-'commons-lang':           'commons-lang:commons-lang:2.6',
 'easymock':               "org.easymock:easymock:3.0",
 'groovy':                 'org.codehaus.groovy:groovy:1.8.1',
 'jcl-over-slf4j':         "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
