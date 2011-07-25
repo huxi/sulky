@@ -60,8 +60,10 @@ public class GroovyInstance
 	private transient Object instance;
 	private transient long lastRefresh;
 	private transient long previousFileTimestamp;
+	private transient long previousFileSize;
 	private transient String errorMessage;
 	private transient Throwable errorCause;
+	private transient Class actualInstanceClass;
 
 	public String getGroovyFileName()
 	{
@@ -88,6 +90,9 @@ public class GroovyInstance
 		{
 			this.groovyFileName = groovyFileName;
 			// force reinitialization
+			lastRefresh = -1;
+			previousFileTimestamp = -1;
+			previousFileSize = -1;
 			instanceClass = null;
 			instance = null;
 		}
@@ -118,8 +123,6 @@ public class GroovyInstance
 		}
 
 		lastRefresh = current;
-		instance = null;
-		instanceClass = null;
 
 		File groovyFile = new File(groovyFileName);
 		if(!groovyFile.isFile())
@@ -134,15 +137,19 @@ public class GroovyInstance
 		}
 
 		long fileTimestamp = groovyFile.lastModified();
-		if(instanceClass == null || previousFileTimestamp != fileTimestamp)
+		long fileSize = groovyFile.length();
+		if(previousFileTimestamp != fileTimestamp || previousFileSize != fileSize)
 		{
 			GroovyClassLoader gcl = new GroovyClassLoader();
 			gcl.setShouldRecompile(true);
 			try
 			{
+				previousFileTimestamp = fileTimestamp;
+				previousFileSize = fileSize;
 				instanceClass = gcl.parseClass(groovyFile);
 				instance = null;
-				previousFileTimestamp = fileTimestamp;
+				errorMessage = null;
+				errorCause = null;
 				if(logger.isInfoEnabled()) logger.info("Parsed class {} from '{}'.", instanceClass.getName(), groovyFile.getAbsolutePath());
 			}
 			catch(Throwable e)
@@ -159,14 +166,20 @@ public class GroovyInstance
 		{
 			return;
 		}
-
 		initInstanceClass();
+		if(actualInstanceClass == instanceClass)
+		{
+			return;
+		}
 		instance = null;
 		if(instanceClass != null)
 		{
+			actualInstanceClass = instanceClass;
 			try
 			{
 				instance = instanceClass.newInstance();
+				errorMessage = null;
+				errorCause = null;
 			}
 			catch(Throwable e)
 			{
@@ -181,10 +194,69 @@ public class GroovyInstance
 		return instanceClass;
 	}
 
+	/**
+	 *
+	 * @return a singleton instance of the class contained in the Groovy file or null if an instance could not be created.
+	 */
 	public Object getInstance()
 	{
 		initInstance();
+
 		return instance;
+	}
+
+	/**
+	 *
+	 * @param iface the interface/class of the expected result.
+	 * @param <T> the interface/class of the expected result.
+	 * @return a singleton instance of the class contained in the Groovy file or null if an instance could not be created or had the wrong type.
+	 */
+	public <T> T getInstanceAs(Class<T> iface)
+	{
+		Object theInstance = getInstance();
+		if(iface.isInstance(theInstance))
+		{
+			return iface.cast(theInstance);
+		}
+		return null;
+	}
+
+	/**
+	 *
+	 * @return a new instance of the class contained in the Groovy file or null if an instance could not be created.
+	 */
+	public Object getNewInstance()
+	{
+		initInstanceClass();
+		if(instanceClass != null)
+		{
+			try
+			{
+				return instanceClass.newInstance();
+			}
+			catch(Throwable e)
+			{
+				handleError("Exception while creating instance of '"+instanceClass.getName()+"'!", e);
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 *
+	 * @param iface the interface/class of the expected result.
+	 * @param <T> the interface/class of the expected result.
+	 * @return a new instance of the class contained in the Groovy file or null if an instance could not be created or had the wrong type.
+	 */
+	public <T> T getNewInstanceAs(Class<T> iface)
+	{
+		Object theInstance = getNewInstance();
+		if(iface.isInstance(theInstance))
+		{
+			return iface.cast(theInstance);
+		}
+		return null;
 	}
 
 	private void handleError(String message, Throwable throwable)

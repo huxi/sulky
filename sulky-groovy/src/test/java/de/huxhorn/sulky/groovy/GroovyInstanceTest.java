@@ -50,7 +50,9 @@ import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 public class GroovyInstanceTest
@@ -109,6 +111,26 @@ public class GroovyInstanceTest
 
 		assertNull(instance.getErrorCause());
 		assertNull(instance.getErrorMessage());
+
+
+		Object newObject = instance.getNewInstance();
+		assertNotNull(object);
+		assertTrue(newObject instanceof Script);
+		Script newScript=(Script)newObject;
+		String newResult = (String)newScript.run();
+		assertEquals("Foo", newResult);
+		assertNotSame(newScript, script);
+		assertNotSame(instance.getNewInstance(), newScript);
+		assertSame(instance.getInstance(), script);
+
+		assertSame(script, instance.getInstanceAs(Script.class));
+		assertNotSame(script, instance.getNewInstanceAs(Script.class));
+		newScript = instance.getNewInstanceAs(Script.class);
+		newResult = (String)newScript.run();
+		assertEquals("Foo", newResult);
+
+		assertNull(instance.getInstanceAs(Comparable.class));
+		assertNull(instance.getNewInstanceAs(Comparable.class));
 	}
 
 	@Test
@@ -127,15 +149,61 @@ public class GroovyInstanceTest
 		Script script=(Script)object;
 		String result = (String)script.run();
 		assertEquals("Foo", result);
+		Thread.sleep(1000); // workaround for filesystem lastModified accuracy
 		copyIntoFile("/Bar.groovy", fooFile);
-
-		Thread.sleep(200);
 
 		object = instance.getInstance();
 		assertTrue(object instanceof Script);
 		script = (Script)object;
 		result = (String)script.run();
 		assertEquals("Bar", result);
+	}
+
+	@SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
+	@Test
+	public void broken()
+		throws IOException, InterruptedException
+	{
+		GroovyInstance instance = new GroovyInstance();
+		instance.setGroovyFileName(fooFile.getAbsolutePath());
+		instance.setRefreshInterval(200);
+		Class instanceClass = instance.getInstanceClass();
+		assertNotNull(instanceClass);
+		assertEquals("Foo", instanceClass.getName());
+		Object object = instance.getInstance();
+		assertNotNull(object);
+		assertTrue(object instanceof Script);
+		Script script=(Script)object;
+		String result = (String)script.run();
+		assertEquals("Foo", result);
+		Thread.sleep(1000); // workaround for filesystem lastModified accuracy
+		copyIntoFile("/Broken.b0rken", fooFile);
+		Thread.sleep(1000); // workaround for filesystem lastModified accuracy
+
+
+		assertNull(""+instance.getInstanceClass(), instance.getInstanceClass());
+		assertNull(""+instance.getInstance(), instance.getInstance());
+		// error should be logged only once...
+		Thread.sleep(500);
+		assertNull(""+instance.getInstanceClass(), instance.getInstanceClass());
+		assertNull(""+instance.getInstance(), instance.getInstance());
+		Thread.sleep(500);
+		assertNull(""+instance.getInstanceClass(), instance.getInstanceClass());
+		assertNull(""+instance.getInstance(), instance.getInstance());
+		Thread.sleep(500);
+		assertNotNull(instance.getErrorCause());
+		assertNotNull(instance.getErrorMessage());
+
+		copyIntoFile("/Bar.groovy", fooFile);
+
+		object = instance.getInstance();
+		assertTrue(object instanceof Script);
+		script = (Script)object;
+		result = (String)script.run();
+		assertEquals("Bar", result);
+
+		assertNull(instance.getErrorCause());
+		assertNull(instance.getErrorMessage());
 	}
 
 	@SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
