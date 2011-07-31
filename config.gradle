@@ -67,7 +67,7 @@ task javadocZip(type: Zip) {
 }
 
 task syncStaging << {
-	if (project.hasProperty('remoteUsername') && project.hasProperty('remoteUsername')) {
+	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
 		def stagingRepos = new org.apache.maven.wagon.repository.Repository('staging', 'https://oss.sonatype.org/service/local/staging/deploy/maven2')
 		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
 		auth.userName = remoteUsername
@@ -83,12 +83,12 @@ task syncStaging << {
 			}
 		}
 	} else {
-		println "Can't upload site as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
+		println "Can't sync staging as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
 	}
 }
 
 task syncSnapshot << {
-	if (project.hasProperty('remoteUsername') && project.hasProperty('remoteUsername')) {
+	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
 		def snapshotRepos = new org.apache.maven.wagon.repository.Repository('snapshot', 'https://oss.sonatype.org/content/repositories/snapshots')
 		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
 		auth.userName = remoteUsername
@@ -104,7 +104,7 @@ task syncSnapshot << {
 			}
 		}
 	} else {
-		println "Can't upload site as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
+		println "Can't sync snapshots as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
 	}
 }
 
