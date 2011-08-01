@@ -1,3 +1,5 @@
+import org.gradle.plugins.signing.Sign
+
 artifactMapping = [
 'sulky-blobs':              'de.huxhorn.sulky.blobs',
 'sulky-buffers':            'de.huxhorn.sulky.buffers',
@@ -31,24 +33,16 @@ buildscript {
 		mavenRepo urls: localReleaseRepo
 		mavenRepo urls: localSnapshotRepo
 	}
-	if(System.properties.'release')
-	{
-		dependencies {
-			classpath 'de.huxhorn.gradle:de.huxhorn.gradle.pgp-plugin:0.0.3',
-			'org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6'
-		}
-	}
-	else
-	{
-		dependencies {
-			classpath 'org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6'
-		}
+	dependencies {
+		// needed for syncSnapshot and syncStaging
+		classpath 'org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6'
 	}
 }
 
 dependsOnChildren()
 
 apply plugin: 'base'
+apply plugin: 'signing'
 
 task javadoc(type: Javadoc) {
 	destinationDir = file("$buildDir/javadoc")
@@ -66,46 +60,30 @@ task javadocZip(type: Zip) {
 	from javadoc.outputs.files
 }
 
-task syncStaging << {
-	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
-		def stagingRepos = new org.apache.maven.wagon.repository.Repository('staging', 'https://oss.sonatype.org/service/local/staging/deploy/maven2')
-		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
-		auth.userName = remoteUsername
-		auth.password = remotePassword
-		def wagon = new org.apache.maven.wagon.providers.webdav.WebDavWagon()
-
-		wagon.connect(stagingRepos, auth)
-		localReleaseRepoFile.eachFile {
-			if (it.directory) {
-				wagon.putDirectory(it, it.name)
-			} else {
-				wagon.put(it, it.name)
-			}
-		}
-	} else {
-		println "Can't sync staging as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
+signing {
+	if (System.properties.'release') {
+		sign javadocZip
+		sign sourceZip
 	}
 }
 
-task syncSnapshot << {
-	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
-		def snapshotRepos = new org.apache.maven.wagon.repository.Repository('snapshot', 'https://oss.sonatype.org/content/repositories/snapshots')
-		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
-		auth.userName = remoteUsername
-		auth.password = remotePassword
-		def wagon = new org.apache.maven.wagon.providers.webdav.WebDavWagon()
-
-		wagon.connect(snapshotRepos, auth)
-		localSnapshotRepoFile.eachFile {
-			if (it.directory) {
-				wagon.putDirectory(it, it.name)
-			} else {
-				wagon.put(it, it.name)
-			}
+gradle.taskGraph.whenReady { taskGraph ->
+	if (taskGraph.allTasks.any { it instanceof Sign }) {
+		String pgpPassword = System.properties.'pgpPassword'
+		if(!pgpPassword) {
+			Console console = System.console()
+			pgpPassword = new String(console.readPassword("\nPGP Private Key Password: "))
 		}
-	} else {
-		println "Can't sync snapshots as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
+		allprojects*.setProperty('signing.password', pgpPassword)
+		allprojects*.setProperty('signing.keyId','740A1840')
+		allprojects*.setProperty('signing.secretKeyRingFile', new File("${System.properties['user.home']}/.gnupg/secring.gpg").absolutePath)
 	}
+}
+
+if(!System.properties.'release') {
+	defaultTasks 'build', 'uploadPublished'	
+} else {
+	defaultTasks 'build', 'uploadPublished', 'signJavadocZip', 'signSourceZip'	
 }
 
 allprojects {
@@ -113,7 +91,6 @@ allprojects {
 	apply plugin: 'eclipse'
 	apply plugin: 'idea'
 
-	defaultTasks 'build', 'uploadArchives'
 	group = 'de.huxhorn.sulky'
 	version = '0.9.15'
 	if(!System.properties.'release')
@@ -125,7 +102,9 @@ allprojects {
 subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
-    //apply plugin: 'code-quality'
+    apply plugin: 'signing'
+
+	defaultTasks 'build', 'uploadPublished'
 
     sourceCompatibility = 1.5
     targetCompatibility = 1.5
@@ -134,14 +113,9 @@ subprojects {
     compileJava.options.compilerArgs = compilerArgs
     compileTestJava.options.compilerArgs = compilerArgs
 
-	if(System.properties.'release')
-	{
-		//apply plugin: 'sign'
-		apply plugin: de.huxhorn.gradle.pgp.PgpPlugin
-
-		pgp {
-			secretKeyRingFile = new File("${System.properties['user.home']}/.gnupg/secring.gpg")
-			keyId = '740A1840'
+	signing {
+		if (System.properties.'release') {
+			sign configurations.archives
 		}
 	}
 
@@ -227,6 +201,7 @@ subprojects {
 
 	configurations {
 		all*.exclude group: 'commons-logging', module: 'commons-logging'
+		published.extendsFrom archives, signatures
 	}
 	
     dependencies {
@@ -242,7 +217,7 @@ subprojects {
 	def deployer = null
 
 	// the following is a workaround for http://jira.codehaus.org/browse/GRADLE-443
-	uploadArchives {
+	uploadPublished {
 		deployer = repositories.mavenDeployer {
 			repository(url: localReleaseRepo)
 			snapshotRepository(url: localSnapshotRepo)
@@ -252,9 +227,14 @@ subprojects {
 					//println(dep.artifactId)
 					mapping=artifactMapping[dep.artifactId];
 					if(mapping) {
-						println("Mapping ${dep.artifactId} to ${mapping}...")
+						//println("Mapping ${dep.artifactId} to ${mapping}...")
 						dep.artifactId=mapping
 					}
+				}
+			}
+			beforeDeployment { MavenDeployment deployment ->
+				if(System.properties.'release') {
+					signPom(deployment)
 				}
 			}
 		}
@@ -294,6 +274,65 @@ subprojects {
 		printer.print(pomXml)
 		xml.setLength(0)
 		xml.append(newXml.toString())
+	}
+}
+
+def deleteClosure
+deleteClosure = {
+	// delete content of it recursively
+	it.eachDir( deleteClosure );
+	it.eachFile {
+		it.delete()
+	}
+}
+
+task cleanStaging << {	
+	deleteClosure(localReleaseRepoFile)
+}
+
+task cleanSnapshot << {	
+	deleteClosure(localSnapshotRepoFile)
+}
+
+task syncStaging << {
+	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
+		def stagingRepos = new org.apache.maven.wagon.repository.Repository('staging', 'https://oss.sonatype.org/service/local/staging/deploy/maven2')
+		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
+		auth.userName = remoteUsername
+		auth.password = remotePassword
+		def wagon = new org.apache.maven.wagon.providers.webdav.WebDavWagon()
+
+		wagon.connect(stagingRepos, auth)
+		localReleaseRepoFile.eachFile {
+			if (it.directory) {
+				wagon.putDirectory(it, it.name)
+			} else {
+				wagon.put(it, it.name)
+			}
+		}
+	} else {
+		println "Can't sync staging as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
+	}
+}
+
+task syncSnapshot << {
+	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
+		def snapshotRepos = new org.apache.maven.wagon.repository.Repository('snapshot', 'https://oss.sonatype.org/content/repositories/snapshots')
+		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
+		auth.userName = remoteUsername
+		auth.password = remotePassword
+		def wagon = new org.apache.maven.wagon.providers.webdav.WebDavWagon()
+
+		wagon.connect(snapshotRepos, auth)
+		localSnapshotRepoFile.eachFile {
+			if (it.directory) {
+				wagon.putDirectory(it, it.name)
+			} else {
+				wagon.put(it, it.name)
+			}
+		}
+	} else {
+		println "Can't sync snapshots as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
 	}
 }
 
