@@ -4,7 +4,7 @@ versions = [
 ]
 
 libraries = [
-'commons-codec':          'commons-codec:commons-codec:1.4',
+'commons-codec':          'commons-codec:commons-codec:1.5',
 'commons-io':             'commons-io:commons-io:2.0.1',
 'easymock':               "org.easymock:easymock:3.0",
 'groovy':                 'org.codehaus.groovy:groovy:1.8.1',
