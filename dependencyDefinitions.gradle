@@ -1,6 +1,6 @@
 versions = [
 'logback':  '0.9.29',
-'slf4j':    '1.6.1'
+'slf4j':    '1.6.2'
 ]
 
 libraries = [
