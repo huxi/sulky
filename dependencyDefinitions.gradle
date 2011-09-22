@@ -1,5 +1,5 @@
 versions = [
-'logback':  '0.9.29',
+'logback':  '0.9.30',
 'slf4j':    '1.6.2'
 ]
 
