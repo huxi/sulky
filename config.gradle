@@ -30,8 +30,12 @@ buildscript {
 	localSnapshotRepo = localSnapshotRepoFile.toURL().toString()
 	repositories {
 		mavenCentral()
-		mavenRepo urls: localReleaseRepo
-		mavenRepo urls: localSnapshotRepo
+		maven {
+			url localReleaseRepo
+		}
+		maven {
+			url localSnapshotRepo
+		}
 	}
 	dependencies {
 		// needed for syncSnapshot and syncStaging
@@ -194,10 +198,14 @@ subprojects {
     archivesBaseName=mapped
     
     repositories {
-       mavenCentral()
-       mavenRepo urls: localReleaseRepo
-       mavenRepo urls: localSnapshotRepo
-    }
+		mavenCentral()
+		maven {
+			url localReleaseRepo
+		}
+		maven {
+			url localSnapshotRepo
+		}
+	}
 
 	configurations {
 		all*.exclude group: 'commons-logging', module: 'commons-logging'
