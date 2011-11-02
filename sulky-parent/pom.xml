@@ -20,8 +20,8 @@
 	
 	<properties>
 		<sulkyVersion>${project.version}</sulkyVersion>
-		<logbackVersion>0.9.30</logbackVersion>
-		<slf4jVersion>1.6.3</slf4jVersion>
+		<logbackVersion>1.0.0</logbackVersion>
+		<slf4jVersion>1.6.4</slf4jVersion>
 
 		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
