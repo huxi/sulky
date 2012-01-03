@@ -67,11 +67,11 @@ public final class StaxUtilities
 	/**
 	 * Shortcut for readSimpleTextNodeIfAvailable(reader, namespaceURI, nodeName, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE).
 	 *
-	 * @param reader
-	 * @param namespaceURI
-	 * @param nodeName
+	 * @param reader the reader used to read the text node.
+	 * @param namespaceURI does not check against namespace if null.
+	 * @param nodeName the name of the node to be read.
 	 * @return the read text.
-	 * @throws XMLStreamException
+	 * @throws XMLStreamException if the reader throws an exception.
 	 */
 	public static String readSimpleTextNodeIfAvailable(XMLStreamReader reader, String namespaceURI, String nodeName)
 		throws XMLStreamException
@@ -79,6 +79,16 @@ public final class StaxUtilities
 		return readSimpleTextNodeIfAvailable(reader, namespaceURI, nodeName, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE);
 	}
 
+	/**
+	 * Reads the content of the given text node if available. Otherwise returns null.
+	 *
+	 * @param reader the reader used to read the text node.
+	 * @param namespaceURI does not check against namespace if null.
+	 * @param nodeName the name of the node to be read.
+	 * @param whiteSpace the way whitespace is being handled.
+	 * @return the read text.
+	 * @throws XMLStreamException if the reader throws an exception.
+	 */
 	public static String readSimpleTextNodeIfAvailable(XMLStreamReader reader, String namespaceURI, String nodeName, WhiteSpaceHandling whiteSpace)
 		throws XMLStreamException
 	{
@@ -86,8 +96,7 @@ public final class StaxUtilities
 		String result = null;
 		if(XMLStreamConstants.START_ELEMENT == type && nodeName.equals(reader.getLocalName()))
 		{
-			if((namespaceURI == null && reader.getNamespaceURI() == null)
-				|| (namespaceURI != null && namespaceURI.equals(reader.getNamespaceURI())))
+			if(namespaceURI == null || namespaceURI.equals(reader.getNamespaceURI()))
 			{
 				result = readText(reader, whiteSpace);
 				reader.nextTag();
