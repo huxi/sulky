@@ -65,14 +65,13 @@ task javadocZip(type: Zip) {
 }
 
 signing {
-	if (System.properties.'release') {
-		sign javadocZip
-		sign sourceZip
-	}
+	required = { !version.endsWith("SNAPSHOT") }
+	sign javadocZip
+	sign sourceZip
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
-	if (taskGraph.allTasks.any { it instanceof Sign }) {
+	if(taskGraph.allTasks.any { it instanceof Sign } && !version.endsWith("SNAPSHOT")) {
 		String pgpPassword = System.properties.'pgpPassword'
 		if(!pgpPassword) {
 			Console console = System.console()
@@ -97,8 +96,7 @@ allprojects {
 
 	group = 'de.huxhorn.sulky'
 	version = '0.9.15'
-	if(!System.properties.'release')
-	{
+	if(!System.properties.'release') {
 		version = version + '-SNAPSHOT'
 	}
 }
@@ -118,9 +116,8 @@ subprojects {
     compileTestJava.options.compilerArgs = compilerArgs
 
 	signing {
-		if (System.properties.'release') {
-			sign configurations.archives
-		}
+		required = { !version.endsWith("SNAPSHOT") }
+		sign configurations.archives
 	}
 
 	task sourceJar(type: Jar) { from sourceSets.main.allSource; classifier = 'sources' }
@@ -241,9 +238,7 @@ subprojects {
 				}
 			}
 			beforeDeployment { MavenDeployment deployment ->
-				if(System.properties.'release') {
-					signPom(deployment)
-				}
+				signing.signPom(deployment)
 			}
 		}
 	}
