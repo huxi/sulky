@@ -71,7 +71,7 @@ signing {
 }
 
 gradle.taskGraph.whenReady { taskGraph ->
-	if(taskGraph.allTasks.any { it instanceof Sign } && !version.endsWith("SNAPSHOT")) {
+	if(taskGraph.allTasks.any { it instanceof Sign && it.required }) {
 		String pgpPassword = System.properties.'pgpPassword'
 		if(!pgpPassword) {
 			Console console = System.console()
