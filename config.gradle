@@ -285,19 +285,23 @@ deleteClosure = {
 	// delete content of it recursively
 	it.eachDir( deleteClosure );
 	it.eachFile {
-		it.delete()
+		if(it.delete()) {
+			logger.debug("Deleted ${it.absolutePath}.")
+		}
 	}
 }
 
-task cleanStaging << {	
+task (group: 'Repository', description: "Cleans the local staging-repository, i.e. '${localReleaseRepoFile.absolutePath}'.", 'cleanStaging') << {
 	deleteClosure(localReleaseRepoFile)
+	logger.info("Deleted content of ${localReleaseRepoFile.absolutePath}.")
 }
 
-task cleanSnapshot << {	
+task (group: 'Repository', description: "Cleans the local SNAPSHOT-repository, i.e. '${localSnapshotRepoFile.absolutePath}'.", 'cleanSnapshot') << {
 	deleteClosure(localSnapshotRepoFile)
+	logger.info("Deleted content of ${localReleaseRepoFile.absolutePath}.")
 }
 
-task syncStaging << {
+task (group: 'Repository', description: 'Sync local staging-repository to oss.sonatype.org.', 'syncStaging') << {
 	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
 		def stagingRepos = new org.apache.maven.wagon.repository.Repository('staging', 'https://oss.sonatype.org/service/local/staging/deploy/maven2')
 		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
@@ -318,7 +322,7 @@ task syncStaging << {
 	}
 }
 
-task syncSnapshot << {
+task (group: 'Repository', description: 'Sync local SNAPSHOT-repository to oss.sonatype.org.', 'syncSnapshot') << {
 	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
 		def snapshotRepos = new org.apache.maven.wagon.repository.Repository('snapshot', 'https://oss.sonatype.org/content/repositories/snapshots')
 		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
