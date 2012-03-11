@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.io</artifactId>
-	<version><!-- SV -->0.9.15-SNAPSHOT</version>
+	<version><!-- SV -->0.9.15</version>
 	<packaging>jar</packaging>
 	<name>Sulky I/O</name>
 	<description>This file is part of the sulky modules. It's supposed to contain classes I'd like to see in commons-io. At the moment it only contains a TimeoutOutputStream that throws an IOException if a certain timeout is exceeded.</description>
@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>
-		<version><!-- SV -->0.9.15-SNAPSHOT</version>
+		<version><!-- SV -->0.9.15</version>
 		<relativePath>../sulky-parent/pom.xml</relativePath>
 	</parent>
 

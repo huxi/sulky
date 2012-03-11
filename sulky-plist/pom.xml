@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.huxhorn.sulky</groupId>
 	<artifactId>de.huxhorn.sulky.plist</artifactId>
-	<version><!-- SV -->0.9.15-SNAPSHOT</version>
+	<version><!-- SV -->0.9.15</version>
 	<packaging>jar</packaging>
 	<name>Sulky Propertylist I/O</name>
 	<description>This file is part of the sulky modules. It contains classes to read and write Apple Propertylist/Plist data.</description>
@@ -13,7 +13,7 @@
 	<parent>
 		<groupId>de.huxhorn.sulky</groupId>
 		<artifactId>de.huxhorn.sulky.parent</artifactId>
-		<version><!-- SV -->0.9.15-SNAPSHOT</version>
+		<version><!-- SV -->0.9.15</version>
 		<relativePath>../sulky-parent/pom.xml</relativePath>
 	</parent>
 
