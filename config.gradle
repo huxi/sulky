@@ -230,10 +230,12 @@ subprojects {
 				// dep is a native Maven dependency object (With properties artifactId, groupId, ...)
 				for(dep in pom.dependencies) {
 					//println(dep.artifactId)
-					mapping=artifactMapping[dep.artifactId];
-					if(mapping) {
-						//println("Mapping ${dep.artifactId} to ${mapping}...")
-						dep.artifactId=mapping
+					if('de.huxhorn.sulky' == dep.groupId) {
+						mapping=artifactMapping[dep.artifactId];
+						if(mapping) {
+							//println("Mapping ${dep.artifactId} to ${mapping}...")
+							dep.artifactId=mapping
+						}
 					}
 				}
 			}
