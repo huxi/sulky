@@ -95,7 +95,7 @@ allprojects {
 	apply plugin: 'idea'
 
 	group = 'de.huxhorn.sulky'
-	version = '0.9.15'
+	version = '0.9.16'
 	if(!System.properties.'release') {
 		version = version + '-SNAPSHOT'
 	}
