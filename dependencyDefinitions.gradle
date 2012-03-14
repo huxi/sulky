@@ -1,9 +1,9 @@
-versions = [
+project.ext.versions = [
 'logback':  '1.0.1',
 'slf4j':    '1.6.4'
 ]
 
-libraries = [
+project.ext.libraries = [
 'commons-codec':          'commons-codec:commons-codec:1.5',
 'commons-io':             'commons-io:commons-io:2.0.1',
 'easymock':               "org.easymock:easymock:3.0",
