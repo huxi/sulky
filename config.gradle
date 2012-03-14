@@ -281,8 +281,7 @@ subprojects {
 	}
 }
 
-def deleteClosure
-deleteClosure = {
+project.ext.deleteClosure = {
 	// delete content of it recursively
 	it.eachDir( deleteClosure );
 	it.eachFile {
