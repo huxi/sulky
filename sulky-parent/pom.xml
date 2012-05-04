@@ -20,7 +20,7 @@
 	
 	<properties>
 		<sulkyVersion>${project.version}</sulkyVersion>
-		<logbackVersion>1.0.2</logbackVersion>
+		<logbackVersion>1.0.3</logbackVersion>
 		<slf4jVersion>1.6.4</slf4jVersion>
 
 		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
