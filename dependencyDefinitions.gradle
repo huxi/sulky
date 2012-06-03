@@ -6,7 +6,7 @@ project.ext.versions = [
 project.ext.libraries = [
 'commons-codec':          'commons-codec:commons-codec:1.6',
 'commons-io':             'commons-io:commons-io:2.3',
-'easymock':               "org.easymock:easymock:3.0",
+'easymock':               'org.easymock:easymock:3.1',
 'groovy':                 'org.codehaus.groovy:groovy:1.8.6',
 'jcl-over-slf4j':         "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
 'jlayer':                 'de.huxhorn.sulky:de.huxhorn.sulky.3rdparty.jlayer:1.0',
