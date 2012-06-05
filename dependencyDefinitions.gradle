@@ -1,6 +1,6 @@
 project.ext.versions = [
 'logback':  '1.0.4',
-'slf4j':    '1.6.4'
+'slf4j':    '1.6.5'
 ]
 
 project.ext.libraries = [
