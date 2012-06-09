@@ -1,5 +1,5 @@
 project.ext.versions = [
-'logback':  '1.0.5',
+'logback':  '1.0.6',
 'slf4j':    '1.6.5'
 ]
 
