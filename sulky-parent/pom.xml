@@ -19,6 +19,7 @@
 	</scm>
 	
 	<properties>
+		<groovyVersion>2.0.0</groovyVersion>
 		<sulkyVersion>${project.version}</sulkyVersion>
 		<logbackVersion>1.0.6</logbackVersion>
 		<slf4jVersion>1.6.6</slf4jVersion>
@@ -195,7 +196,7 @@
 			<dependency>
 				<groupId>org.codehaus.groovy</groupId>
 				<artifactId>groovy</artifactId>
-                <version>1.8.6</version>
+                <version>${groovyVersion}</version>
 			</dependency>
 
 			<dependency>
