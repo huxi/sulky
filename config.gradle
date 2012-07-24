@@ -1,28 +1,5 @@
 import org.gradle.plugins.signing.Sign
 
-project.ext.artifactMapping = [
-'sulky-blobs':              'de.huxhorn.sulky.blobs',
-'sulky-buffers':            'de.huxhorn.sulky.buffers',
-'sulky-buffers-filtering':  'de.huxhorn.sulky.buffers.filtering',
-'sulky-buffers-table':      'de.huxhorn.sulky.buffers.table',
-'sulky-codec':              'de.huxhorn.sulky.codec',
-'sulky-codec-filebuffer':   'de.huxhorn.sulky.codec.filebuffer',
-'sulky-conditions':         'de.huxhorn.sulky.conditions',
-'sulky-formatting':         'de.huxhorn.sulky.formatting',
-'sulky-generics':           'de.huxhorn.sulky.generics',
-'sulky-io':                 'de.huxhorn.sulky.io',
-'sulky-junit':              'de.huxhorn.sulky.junit',
-'sulky-logging':            'de.huxhorn.sulky.logging',
-'sulky-resources':          'de.huxhorn.sulky.resources',
-'sulky-sounds-api':         'de.huxhorn.sulky.sounds-api',
-'sulky-sounds-impl-jlayer': 'de.huxhorn.sulky.sounds-impl-jlayer',
-'sulky-stax':               'de.huxhorn.sulky.stax',
-'sulky-swing':              'de.huxhorn.sulky.swing',
-'sulky-tasks':              'de.huxhorn.sulky.tasks',
-'sulky-plist':              'de.huxhorn.sulky.plist',
-'sulky-groovy':             'de.huxhorn.sulky.groovy'
-]
-
 buildscript {
 	project.ext.localReleaseRepoFile = new File("${System.properties.'user.home'}/local-gradle-repository/release")
 	project.ext.localSnapshotRepoFile = new File("${System.properties.'user.home'}/local-gradle-repository/snapshot")
@@ -186,13 +163,6 @@ subprojects {
 		}
 	}
 
-    def mapped=artifactMapping[project.name];
-    if(!mapped)
-    {
-    	throw new IllegalStateException("${project.name} does not have an entry in artifactMapping!");
-    }
-    archivesBaseName=mapped
-    
     repositories {
 		maven {
 			url localReleaseRepo
@@ -220,24 +190,10 @@ subprojects {
 
 	def deployer = null
 
-	// the following is a workaround for http://jira.codehaus.org/browse/GRADLE-443
 	uploadPublished {
 		deployer = repositories.mavenDeployer {
 			repository(url: localReleaseRepo)
 			snapshotRepository(url: localSnapshotRepo)
-			pom.whenConfigured { pom ->
-				// dep is a native Maven dependency object (With properties artifactId, groupId, ...)
-				for(dep in pom.dependencies) {
-					//println(dep.artifactId)
-					if('de.huxhorn.sulky' == dep.groupId) {
-						def mapping=artifactMapping[dep.artifactId];
-						if(mapping) {
-							//println("Mapping ${dep.artifactId} to ${mapping}...")
-							dep.artifactId=mapping
-						}
-					}
-				}
-			}
 			beforeDeployment { MavenDeployment deployment ->
 				signing.signPom(deployment)
 			}
