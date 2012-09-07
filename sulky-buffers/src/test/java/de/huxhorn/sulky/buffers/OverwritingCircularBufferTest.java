@@ -266,7 +266,7 @@ public class OverwritingCircularBufferTest
 		{
 			values[i] = (long) i;
 		}
-		if(logger.isInfoEnabled()) logger.info("Adding values: {}", values);
+		if(logger.isInfoEnabled()) logger.info("Adding values: {}", (Object)values);
 		instance.addAll(values);
 		if(logger.isInfoEnabled()) logger.info("Buffer after adding: {}", instance);
 
