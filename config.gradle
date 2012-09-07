@@ -87,7 +87,10 @@ subprojects {
     sourceCompatibility = 1.5
     targetCompatibility = 1.5
 
-    def compilerArgs = ['-Xlint:unchecked', '-Xlint:deprecation', '-g']
+    // -Xlint:-options disables the
+    // "warning: [options] bootstrap class path not set in conjunction with -source 1.x"
+    // for now
+    def compilerArgs = ['-Xlint:unchecked', '-Xlint:-options', '-Xlint:deprecation', '-g']
     compileJava.options.compilerArgs = compilerArgs
     compileTestJava.options.compilerArgs = compilerArgs
 
