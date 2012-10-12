@@ -22,7 +22,7 @@
 		<groovyVersion>2.0.5</groovyVersion>
 		<sulkyVersion>${project.version}</sulkyVersion>
 		<logbackVersion>1.0.7</logbackVersion>
-		<slf4jVersion>1.7.1</slf4jVersion>
+		<slf4jVersion>1.7.2</slf4jVersion>
 
 		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
