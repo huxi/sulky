@@ -3,5 +3,5 @@ apply from: 'projectDependencies.gradle'
 apply from: 'config.gradle'
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.2'
+	gradleVersion = '1.3-rc-2'
 }
