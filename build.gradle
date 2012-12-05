@@ -1,7 +1,317 @@
 apply from: 'dependencyDefinitions.gradle'
 apply from: 'projectDependencies.gradle'
-apply from: 'config.gradle'
+
+apply plugin: 'versions'
+apply plugin: 'base'
+apply plugin: 'signing'
+
+import org.gradle.plugins.signing.Sign
+
+buildscript {
+	project.ext.localReleaseRepoFile = new File("${System.properties.'user.home'}/local-gradle-repository/release")
+	project.ext.localSnapshotRepoFile = new File("${System.properties.'user.home'}/local-gradle-repository/snapshot")
+	project.ext.localReleaseRepo = localReleaseRepoFile.toURL().toString()
+	project.ext.localSnapshotRepo = localSnapshotRepoFile.toURL().toString()
+	repositories {
+		maven {
+			url localReleaseRepo
+		}
+		maven {
+			url localSnapshotRepo
+		}
+		mavenCentral()
+	}
+	dependencies {
+		// needed for syncSnapshot and syncStaging
+		classpath 'org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.2'
+	}
+}
+
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.3'
 }
+
+task javadoc(type: Javadoc) {
+	destinationDir = file("$buildDir/javadoc")
+	source = files { subprojects.collect { it.sourceSets.main.java } }
+	classpath = files { subprojects.collect { it.sourceSets.main.compileClasspath } }
+}
+
+task sourceZip(type: Zip) {
+	classifier = 'sources'
+	from { subprojects.collect { it.sourceSets.main.allSource } }
+}
+
+task javadocZip(type: Zip) {
+	classifier = 'javadoc'
+	from javadoc.outputs.files
+}
+
+signing {
+	required = { !version.endsWith("SNAPSHOT") }
+	sign javadocZip
+	sign sourceZip
+}
+
+gradle.taskGraph.whenReady { taskGraph ->
+	if(taskGraph.allTasks.any { it instanceof Sign && it.required }) {
+		String pgpPassword = System.properties.'pgpPassword'
+		if(!pgpPassword) {
+			Console console = System.console()
+			pgpPassword = new String(console.readPassword("\nPGP Private Key Password: "))
+		}
+
+		allprojects { ext.'signing.keyId' = '740A1840' }
+		allprojects { ext.'signing.secretKeyRingFile' = new File("${System.properties['user.home']}/.gnupg/secring.gpg").absolutePath }
+		allprojects { ext."signing.password" = pgpPassword }
+	}
+}
+
+if(!System.properties.'release') {
+	defaultTasks 'build', 'uploadPublished'	
+} else {
+	defaultTasks 'build', 'uploadPublished', 'signJavadocZip', 'signSourceZip'	
+}
+
+allprojects {
+	apply plugin: 'project-reports'
+	apply plugin: 'eclipse'
+	apply plugin: 'idea'
+
+	group = 'de.huxhorn.sulky'
+	version = '0.9.16'
+	if(!System.properties.'release') {
+		version = version + '-SNAPSHOT'
+	}
+
+    repositories {
+		maven {
+			url localReleaseRepo
+		}
+		maven {
+			url localSnapshotRepo
+		}
+		mavenCentral()
+	}
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+
+	defaultTasks 'build', 'uploadPublished'
+
+    sourceCompatibility = 1.5
+    targetCompatibility = 1.5
+
+    // -Xlint:-options disables the
+    // "warning: [options] bootstrap class path not set in conjunction with -source 1.x"
+    // for now
+    def compilerArgs = ['-Xlint:unchecked', '-Xlint:-options', '-Xlint:deprecation', '-g']
+    compileJava.options.compilerArgs = compilerArgs
+    compileTestJava.options.compilerArgs = compilerArgs
+
+	signing {
+		required = { !version.endsWith("SNAPSHOT") }
+		sign configurations.archives
+	}
+
+	task sourceJar(type: Jar) { from sourceSets.main.allSource; classifier = 'sources' }
+	task javadocJar(type: Jar) { from javadoc.outputs.files; classifier = 'javadoc' }
+	
+	artifacts { archives sourceJar, javadocJar }
+
+    project.ext.defaultProject= {
+    	url 'http://sulky.huxhorn.de'
+    	name project.name
+    	description project.description
+    	inceptionYear '2007'
+    	//packaging 'jar' // does not work, fixed below
+    	// See http://jira.codehaus.org/browse/GRADLE-1200
+    	
+    	scm {
+    		connection 'scm:git:git://github.com/huxi/sulky.git'
+    		developerConnection 'scm:git:ssh://git@github.com:huxi/sulky.git'
+    		url 'http://github.com/huxi/sulky/'
+    	}
+    	
+		licenses {
+			license {
+				name 'GNU Lesser General Public License v3 (LGPL)'
+				url 'http://www.gnu.org/copyleft/lesser.html'
+				distribution 'repo'
+			}
+			
+			license {
+				name 'The Apache Software License, Version 2.0'
+				url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+				distribution 'repo'
+			}
+		}
+		
+		issueManagement {
+			system 'trac'
+			url 'http://apps.sourceforge.net/trac/sulky/'
+		}
+		
+		mailingLists {
+			mailingList {
+				name 'Developer List'
+				subscribe 'sulky-devel-join@lists.sourceforge.net'
+				unsubscribe 'sulky-devel-leave@lists.sourceforge.net'
+				post 'sulky-devel@lists.sourceforge.net'
+				archive 'http://sourceforge.net/mailarchive/forum.php?forum_name=sulky-devel'
+			}
+		}
+		
+		developers {
+			developer {
+				id 'huxhorn'
+				email 'huxhorn@users.sourceforge.net'
+				name 'Joern Huxhorn'
+				organization = 'Joern Huxhorn'
+				organizationUrl 'http://sulky.huxhorn.de'
+				roles {
+					role 'Developer'
+				}
+			}
+		}
+		
+		properties {
+			'project.build.sourceEncoding' 'UTF-8'
+			'project.reporting.outputEncoding' 'UTF-8'
+		}
+	}
+
+
+	configurations {
+		all*.exclude group: 'commons-logging', module: 'commons-logging'
+		published.extendsFrom archives, signatures
+	}
+	
+    dependencies {
+        testCompile libraries.junit
+        testCompile libraries.'slf4j-api'
+        testRuntime libraries.'logback-classic'
+    }
+
+    jar {
+        manifest.attributes provider: 'gradle'
+    }
+
+	def deployer = null
+
+	uploadPublished {
+		deployer = repositories.mavenDeployer {
+			repository(url: localReleaseRepo)
+			snapshotRepository(url: localSnapshotRepo)
+			beforeDeployment { MavenDeployment deployment ->
+				signing.signPom(deployment)
+			}
+		}
+	}
+	
+	project.ext.installer = install.repositories.mavenInstaller
+	
+	installer.pom.project defaultProject
+	
+	deployer.pom.project defaultProject
+
+	// The following fixes the broken packaging
+	// See http://jira.codehaus.org/browse/GRADLE-1200
+	// Thanks xlson
+	/*
+	installer.pom.withXml { XmlProvider xmlProvider ->
+		def xml = xmlProvider.asString()
+		def pomXml = new XmlParser().parseText(xml.toString())
+
+		pomXml.version[0] + { packaging('jar') }
+
+		def newXml = new StringWriter()
+		def printer = new XmlNodePrinter(new PrintWriter(newXml))
+		printer.preserveWhitespace = true
+		printer.print(pomXml)
+		xml.setLength(0)
+		xml.append(newXml.toString())
+	}
+	deployer.pom.withXml { XmlProvider xmlProvider ->
+		def xml = xmlProvider.asString()
+		def pomXml = new XmlParser().parseText(xml.toString())
+
+		pomXml.version[0] + { packaging('jar') }
+
+		def newXml = new StringWriter()
+		def printer = new XmlNodePrinter(new PrintWriter(newXml))
+		printer.preserveWhitespace = true
+		printer.print(pomXml)
+		xml.setLength(0)
+		xml.append(newXml.toString())
+	}
+	*/
+}
+
+project.ext.deleteClosure = {
+	// delete content of it recursively
+	it.eachDir( deleteClosure );
+	it.eachFile {
+		if(it.delete()) {
+			logger.debug("Deleted ${it.absolutePath}.")
+		}
+	}
+}
+
+task (group: 'Repository', description: "Cleans the local staging-repository, i.e. '${localReleaseRepoFile.absolutePath}'.", 'cleanStaging') << {
+	deleteClosure(localReleaseRepoFile)
+	logger.info("Deleted content of ${localReleaseRepoFile.absolutePath}.")
+}
+
+task (group: 'Repository', description: "Cleans the local SNAPSHOT-repository, i.e. '${localSnapshotRepoFile.absolutePath}'.", 'cleanSnapshot') << {
+	deleteClosure(localSnapshotRepoFile)
+	logger.info("Deleted content of ${localReleaseRepoFile.absolutePath}.")
+}
+
+task (group: 'Repository', description: 'Sync local staging-repository to oss.sonatype.org.', 'syncStaging') << {
+	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
+		def stagingRepos = new org.apache.maven.wagon.repository.Repository('staging', 'https://oss.sonatype.org/service/local/staging/deploy/maven2')
+		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
+		auth.userName = remoteUsername
+		auth.password = remotePassword
+		def wagon = new org.apache.maven.wagon.providers.webdav.WebDavWagon()
+
+		wagon.connect(stagingRepos, auth)
+		localReleaseRepoFile.eachFile {
+			if (it.directory) {
+				wagon.putDirectory(it, it.name)
+			} else {
+				wagon.put(it, it.name)
+			}
+		}
+	} else {
+		println "Can't sync staging as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
+	}
+}
+
+task (group: 'Repository', description: 'Sync local SNAPSHOT-repository to oss.sonatype.org.', 'syncSnapshot') << {
+	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
+		def snapshotRepos = new org.apache.maven.wagon.repository.Repository('snapshot', 'https://oss.sonatype.org/content/repositories/snapshots')
+		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
+		auth.userName = remoteUsername
+		auth.password = remotePassword
+		def wagon = new org.apache.maven.wagon.providers.webdav.WebDavWagon()
+
+		wagon.connect(snapshotRepos, auth)
+		localSnapshotRepoFile.eachFile {
+			if (it.directory) {
+				wagon.putDirectory(it, it.name)
+			} else {
+				wagon.put(it, it.name)
+			}
+		}
+	} else {
+		println "Can't sync snapshots as credentials aren't set. Set with -PremoteUsername=user -PremotePassword=password."
+	}
+}
+
