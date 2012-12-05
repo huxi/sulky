@@ -281,6 +281,7 @@ public class BlobRepositoryImplTest
 
 	@Test
 	public void emptyIdSet()
+		throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
@@ -471,6 +472,7 @@ public class BlobRepositoryImplTest
 
 	@Test
 	public void baseDirectory()
+		throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		File baseDirectory=folder.newFolder("foo");
@@ -481,6 +483,7 @@ public class BlobRepositoryImplTest
 	@SuppressWarnings({"ResultOfMethodCallIgnored"})
 	@Test
 	public void missingBaseDirectory()
+		throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		File baseDirectory=folder.newFolder("foo");
@@ -552,6 +555,7 @@ public class BlobRepositoryImplTest
 	 //@Test(expected = IllegalStateException.class)
 	 @Test
     public void brokenBaseDirectory()
+		throws IOException
     {
         BlobRepositoryImpl instance=new BlobRepositoryImpl();
         File readonlyBaseDirectory = folder.newFolder("foo");

@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.codec.filebuffer;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
