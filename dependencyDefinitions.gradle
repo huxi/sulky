@@ -1,5 +1,5 @@
 project.ext.versions = [
-'groovy':   '2.0.5',
+'groovy':   '2.0.6',
 'logback':  '1.0.9',
 'slf4j':    '1.7.2'
 ]
