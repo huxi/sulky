@@ -124,8 +124,6 @@ public final class ResourceMaps
 			resourceUrls = Resources.getResources(clazz, resourceMapBaseName, MAP_SUFFIXES, locale);
 		}
 
-//        if(resourceUrls.length != 0)
-//        {
 		if(logger.isDebugEnabled())
 		{
 			StringBuilder debug = new StringBuilder();
@@ -147,42 +145,10 @@ public final class ResourceMaps
 			}
 			catch(IOException ex)
 			{
-				if(logger.isWarnEnabled())
-				{
-					logger.warn("IOException while loading resource map \"" + resourceUrl + "\"!", ex);
-				}
+				if(logger.isWarnEnabled()) logger.warn("IOException while loading resource map \"{}\"!", resourceUrl, ex);
 			}
 		}
-//                Properties bundle = null;
-//                try
-//                {
-//                    InputStream is = resourceUrls[i].openStream();
-//
-//                    bundle = new Properties();
-//                    bundle.load(is);
-//
-//                    Enumeration e = bundle.keys();
-//                    while(e.hasMoreElements())
-//                    {
-//                        String key = (String) e.nextElement();
-//                        if(result.containsKey(key) && result.get(key) != null)
-//                        {
-//                            if(logger.isDebugEnabled()) logger.debug("Ignoring value of " + key + " in resource map with URL " + resourceUrls[i] + " because it already exists in the map.");
-//                            continue;
-//                        }
-//                        Object value = bundle.get(key);
-//                        if(value != null)
-//                        {
-//                            result.put(key, value);
-//                        }
-//                    }
-//                }
-//                catch(IOException ex)
-//                {
-//                    if(logger.isWarnEnabled()) logger.warn("IOException while loading properties \""+resourceUrls[i]+"\"!", ex);
-//                }
-//            }
-//        }
+
 		if(logger.isDebugEnabled())
 		{
 			StringBuilder buffer = new StringBuilder();

@@ -463,15 +463,15 @@ public class CodecFileBuffer<E>
 			if(throwable instanceof ClassNotFoundException
 				|| throwable instanceof InvalidClassException)
 			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index " + index + "!\n" + throwable);
+				if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index {}!\n{}", index, throwable);
 			}
 			else if(throwable instanceof ClassCastException)
 			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index " + index + "!\n" + throwable);
+				if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index {}!\n{}", index, throwable);
 			}
 			else
 			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index " + index + "!", throwable);
+				if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index {}!", index, throwable);
 			}
 			IOUtilities.interruptIfNecessary(throwable);
 		}

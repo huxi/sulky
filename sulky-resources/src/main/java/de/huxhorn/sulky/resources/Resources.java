@@ -790,10 +790,7 @@ public final class Resources
 			// we found a link!
 			// check for cyclic link and add current resourceLinkPath
 			// to the linkStack
-			if(logger.isDebugEnabled())
-			{
-				logger.debug("Found a link '" + resourceLinkPath + "' for resource '" + resourcePath + "'.");
-			}
+			if(logger.isDebugEnabled()) logger.debug("Found a link '{}' for resource '{}'.", resourceLinkPath, resourcePath);
 
 			// this is necessary because Class.getResourceAsStream is case-insensitive
 			String lowLinkPath = resourceLinkPath.toLowerCase();
@@ -834,31 +831,22 @@ public final class Resources
 					}
 					else
 					{
-						if(logger.isDebugEnabled())
-						{
-							logger.debug("Checking for link-target '" + currentLinkTarget + "'.");
-						}
+						if(logger.isDebugEnabled()) logger.debug("Checking for link-target '{}'.", currentLinkTarget);
 						result = recursiveResolve(new ArrayList<String>(stack), clazz, currentLinkTarget);
 						if(result != null)
 						{
-							if(logger.isDebugEnabled()) logger.debug("Found link-target '" + currentLinkTarget + "'.");
+							if(logger.isDebugEnabled()) logger.debug("Found link-target '{}'.", currentLinkTarget);
 						}
 						else
 						{
-							if(logger.isDebugEnabled())
-							{
-								logger.debug("Found unsatisfied link '" + currentLinkTarget + '.');
-							}
+							if(logger.isDebugEnabled()) logger.debug("Found unsatisfied link '{}'.", currentLinkTarget);
 						}
 					}
 				}
 			}
 			catch(IOException ex)
 			{
-				if(logger.isWarnEnabled())
-				{
-					logger.warn("Exception while reading link-content of '" + resourceLinkPath + "'.", ex);
-				}
+				if(logger.isWarnEnabled()) logger.warn("Exception while reading link-content of '{}'.", resourceLinkPath, ex);
 			}
 			if(result != null)
 			{
@@ -896,7 +884,7 @@ public final class Resources
 				if(!urlList.contains(urls[i]))
 				{
 					urlList.add(urls[i]);
-					if(logger.isDebugEnabled()) logger.debug("added url[" + i + "]: " + urls[i]);
+					if(logger.isDebugEnabled()) logger.debug("added url[{}]: {}", i, urls[i]);
 					if(firstOnly)
 					{
 						return;
@@ -962,10 +950,7 @@ public final class Resources
 				}
 				else
 				{
-					if(logger.isDebugEnabled())
-					{
-						logger.debug("Trying to obtain URL for resource '" + currentPath + "'.");
-					}
+					if(logger.isDebugEnabled()) logger.debug("Trying to obtain URL for resource '{}'.", currentPath);
 					URL url = resolveLink(clazz, currentPath);
 					if(url != null && !urls.contains(url))
 					{
@@ -974,10 +959,7 @@ public final class Resources
 							return new URL[]{url};
 						}
 						urls.add(url);
-						if(logger.isDebugEnabled())
-						{
-							logger.debug("Obtained new URL \"" + url + "\" for resource '" + currentPath + "'.");
-						}
+						if(logger.isDebugEnabled()) logger.debug("Obtained new URL \"{}\" for resource '{}'.", url, currentPath);
 					}
 				}
 			}
@@ -997,10 +979,7 @@ public final class Resources
 			}
 			else
 			{
-				if(logger.isDebugEnabled())
-				{
-					logger.debug("Trying to obtain URL for resource '" + absResourcePath + "'.");
-				}
+				if(logger.isDebugEnabled()) logger.debug("Trying to obtain URL for resource '{}'.", absResourcePath);
 				URL url = resolveLink(clazz, absResourcePath);
 				if(url != null && !urls.contains(url))
 				{
@@ -1009,10 +988,7 @@ public final class Resources
 						return new URL[]{url};
 					}
 					urls.add(url);
-					if(logger.isDebugEnabled())
-					{
-						logger.debug("Obtained new URL \"" + url + "\" for resource '" + absResourcePath + "'.");
-					}
+					if(logger.isDebugEnabled()) logger.debug("Obtained new URL \"{}\" for resource '{}'.", url, absResourcePath);
 				}
 			}
 		}
@@ -1111,10 +1087,7 @@ public final class Resources
 			catch(IOException ex)
 			{
 				final Logger logger = LoggerFactory.getLogger(Resources.class);
-				if(logger.isWarnEnabled())
-				{
-					logger.warn("IOException while opening URL-Connection for URL '" + resource + "'!", ex);
-				}
+				if(logger.isWarnEnabled()) logger.warn("IOException while opening URL-Connection for URL '{}'!", resource, ex);
 			}
 		}
 		return result;

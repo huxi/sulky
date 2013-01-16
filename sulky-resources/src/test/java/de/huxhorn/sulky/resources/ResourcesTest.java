@@ -83,7 +83,7 @@ public class ResourcesTest
 		}
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
-		if(logger.isInfoEnabled()) logger.info("Testing " + methodCall + ".");
+		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		URL[] result;
 		result = Resources.getLocalResources(clazz, resourceBaseName, suffixes, locale);
@@ -134,7 +134,7 @@ public class ResourcesTest
 			}
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getLocalResources(clazz, resourceBaseName, suffixes);
 			if(logger.isInfoEnabled())
 			{
@@ -164,7 +164,7 @@ public class ResourcesTest
 				methCallBuff.append("getLocalResources(").append(clazz.getName()).append(", \"")
 					.append(resourceBaseName).append("\");");
 				methodCall = methCallBuff.toString();
-				if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = Resources.getLocalResources(clazz, resourceBaseName);
 				if(logger.isInfoEnabled())
 				{
@@ -197,7 +197,7 @@ public class ResourcesTest
 				.append("\", ");
 			methCallBuff.append(locale).append(")");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getLocalResources(clazz, resourceBaseName, locale);
 			if(logger.isInfoEnabled())
 			{
@@ -247,7 +247,7 @@ public class ResourcesTest
 		}
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
-		if(logger.isInfoEnabled()) logger.info("Testing " + methodCall + ".");
+		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		URL result;
 		result = Resources.getLocalResource(clazz, resourceBaseName, suffixes, locale);
@@ -300,7 +300,7 @@ public class ResourcesTest
 			}
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getLocalResource(clazz, resourceBaseName, suffixes);
 			if(logger.isInfoEnabled())
 			{
@@ -333,7 +333,7 @@ public class ResourcesTest
 				methCallBuff.append("getLocalResource(").append(clazz.getName()).append(", \"").append(resourceBaseName)
 					.append("\");");
 				methodCall = methCallBuff.toString();
-				if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = Resources.getLocalResource(clazz, resourceBaseName);
 				if(logger.isInfoEnabled())
 				{
@@ -368,7 +368,7 @@ public class ResourcesTest
 				.append("\", ");
 			methCallBuff.append(locale).append(")");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getLocalResource(clazz, resourceBaseName, locale);
 			if(logger.isInfoEnabled())
 			{
@@ -420,7 +420,7 @@ public class ResourcesTest
 		}
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
-		if(logger.isInfoEnabled()) logger.info("Testing " + methodCall + ".");
+		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		InputStream result;
 		result = Resources.getLocalResourceAsStream(clazz, resourceBaseName, suffixes, locale);
@@ -468,7 +468,7 @@ public class ResourcesTest
 			}
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getLocalResourceAsStream(clazz, resourceBaseName, suffixes);
 			if(logger.isInfoEnabled())
 			{
@@ -496,7 +496,7 @@ public class ResourcesTest
 				methCallBuff.append("getLocalResourceAsStream(").append(clazz.getName()).append(", \"")
 					.append(resourceBaseName).append("\");");
 				methodCall = methCallBuff.toString();
-				if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = Resources.getLocalResourceAsStream(clazz, resourceBaseName);
 				if(logger.isInfoEnabled())
 				{
@@ -526,7 +526,7 @@ public class ResourcesTest
 				.append(resourceBaseName).append("\", ");
 			methCallBuff.append(locale).append(")");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getLocalResourceAsStream(clazz, resourceBaseName, locale);
 			if(logger.isInfoEnabled())
 			{
@@ -573,7 +573,7 @@ public class ResourcesTest
 		}
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
-		if(logger.isInfoEnabled()) logger.info("Testing " + methodCall + ".");
+		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		URL[] result;
 		result = Resources.getResources(clazz, resourceBaseName, suffixes, locale);
@@ -624,7 +624,7 @@ public class ResourcesTest
 			}
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getResources(clazz, resourceBaseName, suffixes);
 			if(logger.isInfoEnabled())
 			{
@@ -654,7 +654,7 @@ public class ResourcesTest
 				methCallBuff.append("getResources(").append(clazz.getName()).append(", \"").append(resourceBaseName)
 					.append("\");");
 				methodCall = methCallBuff.toString();
-				if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = Resources.getResources(clazz, resourceBaseName);
 				if(logger.isInfoEnabled())
 				{
@@ -687,7 +687,7 @@ public class ResourcesTest
 				.append("\", ");
 			methCallBuff.append(locale).append(")");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getResources(clazz, resourceBaseName, locale);
 			if(logger.isInfoEnabled())
 			{
@@ -737,7 +737,7 @@ public class ResourcesTest
 		}
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
-		if(logger.isInfoEnabled()) logger.info("Testing " + methodCall + ".");
+		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		URL result;
 		result = Resources.getResource(clazz, resourceBaseName, suffixes, locale);
@@ -790,7 +790,7 @@ public class ResourcesTest
 			}
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getResource(clazz, resourceBaseName, suffixes);
 			if(logger.isInfoEnabled())
 			{
@@ -823,7 +823,7 @@ public class ResourcesTest
 				methCallBuff.append("getResource(").append(clazz.getName()).append(", \"").append(resourceBaseName)
 					.append("\");");
 				methodCall = methCallBuff.toString();
-				if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = Resources.getResource(clazz, resourceBaseName);
 				if(logger.isInfoEnabled())
 				{
@@ -858,7 +858,7 @@ public class ResourcesTest
 				.append("\", ");
 			methCallBuff.append(locale).append(")");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getResource(clazz, resourceBaseName, locale);
 			if(logger.isInfoEnabled())
 			{
@@ -910,7 +910,7 @@ public class ResourcesTest
 		}
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
-		if(logger.isInfoEnabled()) logger.info("Testing " + methodCall + ".");
+		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		InputStream result;
 		result = Resources.getResourceAsStream(clazz, resourceBaseName, suffixes, locale);
@@ -958,7 +958,7 @@ public class ResourcesTest
 			}
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getResourceAsStream(clazz, resourceBaseName, suffixes);
 			if(logger.isInfoEnabled())
 			{
@@ -986,7 +986,7 @@ public class ResourcesTest
 				methCallBuff.append("getResourceAsStream(").append(clazz.getName()).append(", \"")
 					.append(resourceBaseName).append("\");");
 				methodCall = methCallBuff.toString();
-				if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = Resources.getResourceAsStream(clazz, resourceBaseName);
 				if(logger.isInfoEnabled())
 				{
@@ -1016,7 +1016,7 @@ public class ResourcesTest
 				.append("\", ");
 			methCallBuff.append(locale).append(")");
 			methodCall = methCallBuff.toString();
-			if(logger.isInfoEnabled()) logger.info("Testing shortcut " + methodCall + ".");
+			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = Resources.getResourceAsStream(clazz, resourceBaseName, locale);
 			if(logger.isInfoEnabled())
 			{

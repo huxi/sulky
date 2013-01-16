@@ -178,24 +178,21 @@ public class SerializingFileBuffer<E>
 			if(throwable instanceof ClassNotFoundException
 				|| throwable instanceof InvalidClassException)
 			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index " + index + "!\n" + throwable);
+				if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index {}!\n{}" ,index, throwable);
 			}
 			else if(throwable instanceof ClassCastException)
 			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index " + index + "!\n" + throwable);
+				if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index {}!\n{}", index, throwable);
 			}
 			else
 			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index " + index + "!", throwable);
+				if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index {}!", index, throwable);
 			}
 			IOUtilities.interruptIfNecessary(throwable);
 		}
 		else if(index < 0 || index >= elementsCount)
 		{
-			if(logger.isInfoEnabled())
-			{
-				logger.info("index (" + index + ") must be in the range [0..<" + elementsCount + "]. Returning null.");
-			}
+			if(logger.isInfoEnabled()) logger.info("index ({}) must be in the range [0..<{}]. Returning null.", index, elementsCount);
 			return null;
 		}
 
@@ -285,7 +282,6 @@ public class SerializingFileBuffer<E>
 						internalWriteOffset(randomSerializeIndexFile, elementsCount + index, curOffset);
 						index++;
 					}
-					//if(logger.isInfoEnabled()) logger.info("Elements after batch-write: {}", index+elementsCount);
 				}
 				catch(Throwable e)
 				{
@@ -451,14 +447,12 @@ public class SerializingFileBuffer<E>
 	private void setDataFile(File dataFile)
 	{
 		prepareFile(dataFile);
-//		if(logger.isDebugEnabled()) logger.debug("dataFile="+dataFile.getAbsolutePath());
 		this.dataFile = dataFile;
 	}
 
 	private void setIndexFile(File indexFile)
 	{
 		prepareFile(indexFile);
-		//if(logger.isDebugEnabled()) logger.debug("indexFile="+indexFile.getAbsolutePath());
 		this.indexFile = indexFile;
 	}
 

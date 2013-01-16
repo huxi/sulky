@@ -76,7 +76,7 @@ public abstract class MapLoader
 			String cur = suffixes[i];
 			if(cur == null)
 			{
-				if(logger.isWarnEnabled()) logger.warn("suffixes[" + i + "] is null!");
+				if(logger.isWarnEnabled()) logger.warn("suffixes[{}] is null!", i);
 			}
 			else
 			{
@@ -85,10 +85,7 @@ public abstract class MapLoader
 				{
 					if(suff.contains(cur))
 					{
-						if(logger.isWarnEnabled())
-						{
-							logger.warn("Duplicate suffix entry at suffixes[" + i + "]: " + cur);
-						}
+						if(logger.isWarnEnabled()) logger.warn("Duplicate suffix entry at suffixes[{}]: {}", i, cur);
 					}
 					else
 					{

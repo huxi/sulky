@@ -145,7 +145,7 @@ public final class LocalizableFactory
 				if(getter != null && GETTER_NAME.equals(method.getName()))
 				{
 					Object result = getter.invoke(object, args);
-					if(logger.isDebugEnabled()) logger.debug("Call-Result: " + result);
+					if(logger.isDebugEnabled()) logger.debug("Call-Result: {}", result);
 					return result;
 				}
 				else if(setter != null && SETTER_NAME.equals(method.getName()))

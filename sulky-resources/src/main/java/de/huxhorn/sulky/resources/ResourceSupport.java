@@ -84,17 +84,14 @@ public class ResourceSupport
 			this.clazz = (Class) object;
 			this.object = null;
 			this.localizable = null;
-			if(logger.isDebugEnabled()) logger.debug("Parameter of ResourceSupport constructor was class " + clazz);
+			if(logger.isDebugEnabled()) logger.debug("Parameter of ResourceSupport constructor was class {}.", clazz);
 		}
 		else
 		{
 			this.clazz = c;
 			this.object = object;
 			localizable = LocalizableFactory.getLocalizable(object);
-			if(logger.isDebugEnabled())
-			{
-				logger.debug("Parameter of ResourceSupport constructor was an instance of class " + clazz);
-			}
+			if(logger.isDebugEnabled()) logger.debug("Parameter of ResourceSupport constructor was an instance of class {}.", clazz);
 		}
 	}
 

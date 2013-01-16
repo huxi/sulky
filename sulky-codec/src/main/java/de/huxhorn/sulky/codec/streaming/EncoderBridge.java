@@ -63,7 +63,7 @@ public class EncoderBridge<E>
 		}
 		catch (IOException e)
 		{
-			if(logger.isWarnEnabled()) logger.warn("Exception while encoding "+object+"!", e);
+			if(logger.isWarnEnabled()) logger.warn("Exception while encoding {}!", object, e);
 		}
 		return null;
 	}

@@ -172,10 +172,7 @@ public class JLayerSounds
 			}
 			catch(JavaLayerException ex)
 			{
-				if(logger.isWarnEnabled())
-				{
-					logger.warn("Exception while creating player for sound '" + soundName + "'!", ex);
-				}
+				if(logger.isWarnEnabled()) logger.warn("Exception while creating player for sound '{}'!", soundName, ex);
 			}
 		}
 		return null;
@@ -225,10 +222,7 @@ public class JLayerSounds
 						}
 						catch(JavaLayerException ex)
 						{
-							if(logger.isWarnEnabled())
-							{
-								logger.warn("Exception while playing sound " + nextSound + "'!", ex);
-							}
+							if(logger.isWarnEnabled()) logger.warn("Exception while playing sound '{}'!", nextSound, ex);
 						}
 					}
 					else

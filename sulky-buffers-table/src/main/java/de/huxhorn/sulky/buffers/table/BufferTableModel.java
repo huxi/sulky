@@ -163,10 +163,7 @@ public abstract class BufferTableModel<T>
 		long rows = buffer.getSize();
 		if(rows > Integer.MAX_VALUE)
 		{
-			if(logger.isWarnEnabled())
-			{
-				logger.warn("Swing can only handle " + Integer.MAX_VALUE + " rows instead of " + rows + "!");
-			}
+			if(logger.isWarnEnabled()) logger.warn("Swing can only handle {} rows instead of {}!", Integer.MAX_VALUE, rows);
 			rows = Integer.MAX_VALUE;
 		}
 		return (int) rows;

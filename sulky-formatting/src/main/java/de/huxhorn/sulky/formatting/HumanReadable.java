@@ -158,7 +158,7 @@ public final class HumanReadable
 			fraction = size / unit.getFactor();
 			if(fraction > 0)
 			{
-				if(logger.isDebugEnabled()) logger.debug("Correct unit: " + unit);
+				if(logger.isDebugEnabled()) logger.debug("Correct unit: {}", unit);
 				correctUnit = unit;
 				break;
 			}

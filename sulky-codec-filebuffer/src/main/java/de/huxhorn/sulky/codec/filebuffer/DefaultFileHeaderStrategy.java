@@ -57,7 +57,7 @@ public class DefaultFileHeaderStrategy
 			{
 				if(logger.isWarnEnabled())
 				{
-					logger.warn("Couldn't read magic value because file size is " + fileLength + "!");
+					logger.warn("Couldn't read magic value because file size is {}!", fileLength);
 				}
 			}
 		}
