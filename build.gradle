@@ -28,9 +28,21 @@ buildscript {
 	}
 }
 
+apply plugin: 'compare-gradle-builds'
+
+compareGradleBuilds {
+	sourceBuild {
+		gradleVersion "1.3"
+		// tasks = ['clean', 'install']
+	}
+	targetBuild {
+		gradleVersion "1.4-rc-1"
+		// tasks = ['clean', 'install']
+	}
+}
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.3'
+	gradleVersion = '1.4-rc-1'
 }
 
 task javadoc(type: Javadoc) {
