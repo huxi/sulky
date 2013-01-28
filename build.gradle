@@ -36,13 +36,13 @@ compareGradleBuilds {
 		// tasks = ['clean', 'install']
 	}
 	targetBuild {
-		gradleVersion "1.4-rc-3"
+		gradleVersion "1.4"
 		// tasks = ['clean', 'install']
 	}
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.4-rc-3'
+	gradleVersion = '1.4'
 }
 
 task javadoc(type: Javadoc) {
