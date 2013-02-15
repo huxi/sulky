@@ -56,7 +56,7 @@ public class LocalizableFactoryTest
 		{
 			Class c = result.getClass();
 			String name = c.getName();
-			assertTrue("Expected proxy but got " + name + " instead.", name.startsWith("$Proxy"));
+			assertTrue("Expected proxy but got " + name + " instead.", name.contains("$Proxy"));
 		}
 		else
 		{

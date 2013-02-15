@@ -1097,7 +1097,7 @@ public class ResourceSupportTest
 
 			Class c = o.getClass();
 			String name = c.getName();
-			assertTrue("Expected proxy but got " + name + " instead.", name.startsWith("$Proxy"));
+			assertTrue("Expected proxy but got " + name + " instead.", name.contains("$Proxy"));
 		}
 		else
 		{
