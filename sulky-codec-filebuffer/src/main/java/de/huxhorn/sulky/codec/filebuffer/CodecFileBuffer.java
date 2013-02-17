@@ -86,8 +86,6 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class CodecFileBuffer<E>
 	implements FileBuffer<E>, SetOperation<E>, DisposeOperation
 {
-
-
 	private final Logger logger = LoggerFactory.getLogger(CodecFileBuffer.class);
 
 	private final ReadWriteLock readWriteLock;
@@ -107,84 +105,12 @@ public class CodecFileBuffer<E>
 
 	private Codec<E> codec;
 	private List<ElementProcessor<E>> elementProcessors;
-	//private CodecFileHeader codecFileHeader;
 	private FileHeaderStrategy fileHeaderStrategy;
 	private int magicValue;
 	private FileHeader fileHeader;
 	private boolean preferredSparse;
 	private DataStrategy<E> dataStrategy;
 	private IndexStrategy indexStrategy;
-
-	/**
-	 * Shortcut for CodecFileBuffer(magicValue, preferredSparse, preferredMetaData, null, null, serializeFile, null).
-	 *
-	 * @param magicValue        the magic value of the buffer.
-	 * @param preferredSparse   if the file is supposed to be sparse.
-	 * @param preferredMetaData the meta data of the buffer. Might be null.
-	 * @param dataFile          the data file.
-	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
-	 */
-//	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, File dataFile)
-//	{
-//		this(magicValue, preferredSparse, preferredMetaData, null, dataFile, null);
-//	}
-
-	/**
-	 * Shortcut for CodecFileBuffer(magicValue, false, preferredMetaData, null, null, serializeFile, null).
-	 *
-	 * @param magicValue        the magic value of the buffer.
-	 * @param preferredMetaData the meta data of the buffer. Might be null.
-	 * @param dataFile          the data file.
-	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
-	 */
-//	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, File dataFile)
-//	{
-//		this(magicValue, false, preferredMetaData, null, dataFile, null);
-//	}
-
-	/**
-	 * Shortcut for CodecFileBuffer(magicValue, preferredSparse, preferredMetaData, null, null, serializeFile, null).
-	 *
-	 * @param magicValue        the magic value of the buffer.
-	 * @param preferredSparse   if the file is supposed to be sparse.
-	 * @param preferredMetaData the meta data of the buffer. Might be null.
-	 * @param codec             the codec used by this buffer. Might be null.
-	 * @param dataFile          the data file.
-	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
-	 */
-//	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
-//	{
-//		this(magicValue, preferredSparse, preferredMetaData, codec, dataFile, null);
-//	}
-
-	/**
-	 * Shortcut for CodecFileBuffer(magicValue, false, preferredMetaData, null, null, serializeFile, null).
-	 *
-	 * @param magicValue        the magic value of the buffer.
-	 * @param preferredMetaData the meta data of the buffer. Might be null.
-	 * @param codec             the codec used by this buffer. Might be null.
-	 * @param dataFile          the data file.
-	 * @see CodecFileBuffer#CodecFileBuffer(int, boolean, java.util.Map, de.huxhorn.sulky.codec.Codec, java.io.File, java.io.File) for description.
-	 */
-//	public CodecFileBuffer(int magicValue, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile)
-//	{
-//		this(magicValue, false, preferredMetaData, codec, dataFile, null);
-//	}
-
-	/**
-	 * TODO: add description :p
-	 *
-	 * @param magicValue        the magic value of the buffer.
-	 * @param preferredSparse   if the file is supposed to be sparse.
-	 * @param preferredMetaData the meta data of the buffer. Might be null.
-	 * @param codec             the codec used by this buffer. Might be null.
-	 * @param dataFile          the data file.
-	 * @param indexFile         the index file of the buffer.
-	 */
-//	public CodecFileBuffer(int magicValue, boolean preferredSparse, Map<String, String> preferredMetaData, Codec<E> codec, File dataFile, File indexFile)
-//	{
-//		this(magicValue, preferredSparse, preferredMetaData, codec, dataFile, indexFile, new DefaultFileHeaderStrategy());
-//	}
 
 	/**
 	 * TODO: add description :p
@@ -252,20 +178,17 @@ public class CodecFileBuffer<E>
 			FileHeader header = fileHeaderStrategy.readFileHeader(dataFile);
 			if(header == null)
 			{
-				throw new IllegalArgumentException("Could not read file header from file '" + dataFile
-					.getAbsolutePath() + "'. File isn't compatible.");
+				throw new IllegalArgumentException("Could not read file header from file '" + dataFile.getAbsolutePath() + "'. File isn't compatible.");
 			}
 			if(header.getMagicValue() != magicValue)
 			{
-				throw new IllegalArgumentException("Wrong magic value. Expected 0x" + Integer
-					.toHexString(magicValue) + " but was " + Integer.toHexString(header.getMagicValue()) + "!");
+				throw new IllegalArgumentException("Wrong magic value. Expected 0x" + Integer.toHexString(magicValue) + " but was " + Integer.toHexString(header.getMagicValue()) + "!");
 			}
 			if(dataFile.length() > header.getDataOffset())
 			{
 				if(!indexFile.exists()) // || indexFile.length() < DATA_OFFSET_SIZE)
 				{
-					throw new IllegalArgumentException("dataFile contains data but indexFile " + indexFile
-						.getAbsolutePath() + " is not valid!");
+					throw new IllegalArgumentException("dataFile contains data but indexFile " + indexFile.getAbsolutePath() + " is not valid!");
 				}
 			}
 			setFileHeader(header);
@@ -273,8 +196,7 @@ public class CodecFileBuffer<E>
 		catch(IOException ex)
 		{
 			IOUtilities.interruptIfNecessary(ex);
-			throw new IllegalArgumentException("Could not read magic value from file '" + dataFile
-				.getAbsolutePath() + "'!", ex);
+			throw new IllegalArgumentException("Could not read magic value from file '" + dataFile.getAbsolutePath() + "'!", ex);
 		}
 		finally
 		{
