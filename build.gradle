@@ -98,7 +98,7 @@ allprojects {
 		version = version + '-SNAPSHOT'
 	}
 
-    repositories {
+	repositories {
 		maven {
 			url localReleaseRepo
 		}
@@ -116,15 +116,15 @@ subprojects {
 
 	defaultTasks 'build', 'uploadPublished'
 
-    sourceCompatibility = 1.5
-    targetCompatibility = 1.5
+	sourceCompatibility = 1.5
+	targetCompatibility = 1.5
 
-    // -Xlint:-options disables the
-    // "warning: [options] bootstrap class path not set in conjunction with -source 1.x"
-    // for now
-    def compilerArgs = ['-Xlint:unchecked', '-Xlint:-options', '-Xlint:deprecation', '-g']
-    compileJava.options.compilerArgs = compilerArgs
-    compileTestJava.options.compilerArgs = compilerArgs
+	// -Xlint:-options disables the
+	// "warning: [options] bootstrap class path not set in conjunction with -source 1.x"
+	// for now
+	def compilerArgs = ['-Xlint:unchecked', '-Xlint:-options', '-Xlint:deprecation', '-g']
+	compileJava.options.compilerArgs = compilerArgs
+	compileTestJava.options.compilerArgs = compilerArgs
 
 	signing {
 		required = { !version.endsWith("SNAPSHOT") }
@@ -136,20 +136,20 @@ subprojects {
 	
 	artifacts { archives sourceJar, javadocJar }
 
-    project.ext.defaultProject= {
-    	url 'http://sulky.huxhorn.de'
-    	name project.name
-    	description project.description
-    	inceptionYear '2007'
-    	//packaging 'jar' // does not work, fixed below
-    	// See http://jira.codehaus.org/browse/GRADLE-1200
-    	
-    	scm {
-    		connection 'scm:git:git://github.com/huxi/sulky.git'
-    		developerConnection 'scm:git:ssh://git@github.com:huxi/sulky.git'
-    		url 'http://github.com/huxi/sulky/'
-    	}
-    	
+	project.ext.defaultProject= {
+		url 'http://sulky.huxhorn.de'
+		name project.name
+		description project.description
+		inceptionYear '2007'
+		//packaging 'jar' // does not work, fixed below
+		// See http://jira.codehaus.org/browse/GRADLE-1200
+		
+		scm {
+			connection 'scm:git:git://github.com/huxi/sulky.git'
+			developerConnection 'scm:git:ssh://git@github.com:huxi/sulky.git'
+			url 'http://github.com/huxi/sulky/'
+		}
+		
 		licenses {
 			license {
 				name 'GNU Lesser General Public License v3 (LGPL)'
@@ -206,19 +206,19 @@ subprojects {
 		published.extendsFrom archives, signatures
 	}
 	
-    dependencies {
+	dependencies {
 		groovy libraries.'groovy'
 		
 		testCompile libraries.'groovy'
 		testCompile libraries.'spock-core'
-        testCompile libraries.junit
-        testCompile libraries.'slf4j-api'
-        testRuntime libraries.'logback-classic'
-    }
+		testCompile libraries.junit
+		testCompile libraries.'slf4j-api'
+		testRuntime libraries.'logback-classic'
+	}
 
-    jar {
-        manifest.attributes provider: 'gradle'
-    }
+	jar {
+		manifest.attributes provider: 'gradle'
+	}
 
 	def deployer = null
 
