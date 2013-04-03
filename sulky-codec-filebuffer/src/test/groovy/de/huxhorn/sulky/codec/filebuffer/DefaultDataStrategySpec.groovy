@@ -32,37 +32,26 @@
  * limitations under the License.
  */
 
-package de.huxhorn.sulky.codec.filebuffer;
+package de.huxhorn.sulky.codec.filebuffer
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import org.junit.Test;
+class DefaultDataStrategySpec
+  extends DataStrategySpecBase {
 
-public class MetaDataTest
-{
-	@Test
-	public void emptyNonSparse()
-	{
-		boolean sparse = false;
-		MetaData instance = new MetaData(sparse);
-		MetaData other = new MetaData(sparse);
-		assertEquals(other, instance);
-		assertEquals(0, instance.getData().size());
+  @Override
+  void initInstance() {
+    instance = new DefaultDataStrategy<String>();
+  }
 
-		other = new MetaData(!sparse);
-		assertFalse(other.equals(instance));
-	}
+  def "set"() {
+    when:
+    instance.set(0, null, null, null, null, null)
 
-	@Test
-	public void emptySparse()
-	{
-		boolean sparse = true;
-		MetaData instance = new MetaData(sparse);
-		MetaData other = new MetaData(sparse);
-		assertEquals(other, instance);
-		assertEquals(0, instance.getData().size());
+    then:
+    UnsupportedOperationException e = thrown()
+  }
 
-		other = new MetaData(!sparse);
-		assertFalse(other.equals(instance));
-	}
+  def "isSetSupported"() {
+    expect:
+    !instance.isSetSupported()
+  }
 }

@@ -110,9 +110,9 @@ allprojects {
 }
 
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-    apply plugin: 'signing'
+	apply plugin: 'groovy'
+	apply plugin: 'maven'
+	apply plugin: 'signing'
 
 	defaultTasks 'build', 'uploadPublished'
 
@@ -201,10 +201,16 @@ subprojects {
 
 	configurations {
 		all*.exclude group: 'commons-logging', module: 'commons-logging'
+		all*.exclude group: 'org.codehaus.groovy', module: 'groovy-all'
+
 		published.extendsFrom archives, signatures
 	}
 	
     dependencies {
+		groovy libraries.'groovy'
+		
+		testCompile libraries.'groovy'
+		testCompile libraries.'spock-core'
         testCompile libraries.junit
         testCompile libraries.'slf4j-api'
         testRuntime libraries.'logback-classic'
