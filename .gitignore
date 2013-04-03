@@ -6,3 +6,4 @@ buildNumber.properties
 *.iml
 *.iws
 *.ipr
+/out/
