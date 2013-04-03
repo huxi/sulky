@@ -27,7 +27,6 @@ public class DefaultFileHeaderStrategy
 	public Integer readMagicValue(File dataFile)
 		throws IOException
 	{
-
 		RandomAccessFile raf = null;
 		Integer result = null;
 		try
@@ -44,21 +43,13 @@ public class DefaultFileHeaderStrategy
 				}
 				else
 				{
-					if(logger.isWarnEnabled())
-					{
-						logger
-							.warn("Couldn't read magic value because codecMagic was 0x" + Integer
-								.toHexString(codecMagic) + " in staid of 0x" + Integer
-								.toHexString(CODEC_FILE_HEADER_MAGIC_VALUE) + "!");
-					}
+					if(logger.isWarnEnabled()) logger.warn("Couldn't read magic value because codecMagic was 0x{} instead of 0x{}!"
+							, Integer.toHexString(codecMagic), Integer.toHexString(CODEC_FILE_HEADER_MAGIC_VALUE));
 				}
 			}
 			else
 			{
-				if(logger.isWarnEnabled())
-				{
-					logger.warn("Couldn't read magic value because file size is {}!", fileLength);
-				}
+				if(logger.isWarnEnabled()) logger.warn("Couldn't read magic value because file size is {}!", fileLength);
 			}
 		}
 		finally
@@ -75,8 +66,7 @@ public class DefaultFileHeaderStrategy
 		FileHeader result = null;
 		if(dataFile.isFile() && dataFile.length() > 0)
 		{
-			throw new IllegalArgumentException("File '" + dataFile
-				.getAbsolutePath() + "' already exists and has a size of " + dataFile.length() + ".");
+			throw new IllegalArgumentException("File '" + dataFile.getAbsolutePath() + "' already exists and has a size of " + dataFile.length() + ".");
 		}
 		try
 		{
