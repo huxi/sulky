@@ -6,7 +6,7 @@ import de.huxhorn.sulky.codec.SerializableCodec
 import spock.lang.Unroll
 import de.huxhorn.sulky.buffers.ElementProcessor
 
-class CodecFileBufferSpecBase
+class CodecFileBufferSpec
   extends Specification {
 
   File tempOutputPath;
