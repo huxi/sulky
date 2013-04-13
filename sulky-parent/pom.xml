@@ -19,7 +19,7 @@
 	</scm>
 	
 	<properties>
-		<groovyVersion>2.1.2</groovyVersion>
+		<groovyVersion>2.1.3</groovyVersion>
 		<sulkyVersion>${project.version}</sulkyVersion>
 		<logbackVersion>1.0.11</logbackVersion>
 		<slf4jVersion>1.7.5</slf4jVersion>
