@@ -123,9 +123,20 @@ subprojects {
 	// "warning: [options] bootstrap class path not set in conjunction with -source 1.x"
 	// for now
 	def compilerArgs = ['-Xlint:unchecked', '-Xlint:-options', '-Xlint:deprecation', '-g']
+	
 	compileJava.options.compilerArgs = compilerArgs
 	compileTestJava.options.compilerArgs = compilerArgs
+	compileGroovy.options.compilerArgs = compilerArgs
+	compileTestGroovy.options.compilerArgs = compilerArgs
 
+	def sourceEncoding = 'UTF-8'
+	
+	compileJava.options.encoding = sourceEncoding
+	compileTestJava.options.encoding = sourceEncoding
+	compileGroovy.options.encoding = sourceEncoding
+	compileTestGroovy.options.encoding = sourceEncoding
+	javadoc.options.encoding = sourceEncoding
+	
 	signing {
 		required = { !version.endsWith("SNAPSHOT") }
 		sign configurations.archives
