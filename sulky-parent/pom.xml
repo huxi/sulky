@@ -21,7 +21,7 @@
 	<properties>
 		<groovyVersion>2.1.3</groovyVersion>
 		<sulkyVersion>${project.version}</sulkyVersion>
-		<logbackVersion>1.0.11</logbackVersion>
+		<logbackVersion>1.0.12</logbackVersion>
 		<slf4jVersion>1.7.5</slf4jVersion>
 
 		<!-- The following lines prevent "[WARNING] Using platform encoding[..]" messages -->
