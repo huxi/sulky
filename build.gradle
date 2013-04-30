@@ -72,6 +72,9 @@ gradle.taskGraph.whenReady { taskGraph ->
 		String pgpPassword = System.properties.'pgpPassword'
 		if(!pgpPassword) {
 			Console console = System.console()
+			if(!console) {
+				throw new IllegalStateException('System.console() returned null. Restart with --no-daemon.')
+			}
 			pgpPassword = new String(console.readPassword("\nPGP Private Key Password: "))
 		}
 
