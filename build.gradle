@@ -221,8 +221,6 @@ subprojects {
 	}
 	
 	dependencies {
-		groovy libraries.'groovy'
-		
 		testCompile libraries.'groovy'
 		testCompile libraries.'spock-core'
 		testCompile libraries.junit
