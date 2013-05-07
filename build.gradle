@@ -42,7 +42,7 @@ compareGradleBuilds {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.6-rc-1'
+	gradleVersion = '1.6'
 }
 
 task javadoc(type: Javadoc) {
