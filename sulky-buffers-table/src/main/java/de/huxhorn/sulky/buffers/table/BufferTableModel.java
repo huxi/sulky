@@ -72,7 +72,7 @@ public abstract class BufferTableModel<T>
 		disposed.set(false);
 		setBuffer(buffer);
 
-		Thread t = new Thread(new BufferTableModel.TableChangeDetectionRunnable(), "TableChangeDetection");
+		Thread t = new Thread(new TableChangeDetectionRunnable(), "TableChangeDetection");
 		t.setDaemon(true);
 		t.setPriority(Thread.NORM_PRIORITY - 1);
 		t.start();
@@ -112,6 +112,7 @@ public abstract class BufferTableModel<T>
 		}
 		setLastRowCount(0);
 		this.pauseRowCount = 0;
+		fireTableChange();
 	}
 
 	public boolean clear()
