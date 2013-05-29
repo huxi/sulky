@@ -7,3 +7,4 @@ buildNumber.properties
 *.iws
 *.ipr
 /out/
+/.gradletasknamecache
