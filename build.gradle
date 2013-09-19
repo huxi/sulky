@@ -24,7 +24,7 @@ buildscript {
 	dependencies {
 		// needed for syncSnapshot and syncStaging
 		classpath 'org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6'
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.3'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.4'
 	}
 }
 
@@ -42,7 +42,7 @@ compareGradleBuilds {
 }
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '1.8-rc-1'
+	gradleVersion = '1.8-rc-2'
 }
 
 task javadoc(type: Javadoc) {
