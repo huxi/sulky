@@ -73,7 +73,6 @@ public class PersistentTableColumnModel
 	 * Sets the visibility of the specified TableColumn.
 	 * The call is ignored if the TableColumn is not found in this column model
 	 * or its visibility status did not change.
-	 * <p/>
 	 *
 	 * @param column  the column to show/hide
 	 * @param visible its new visibility status

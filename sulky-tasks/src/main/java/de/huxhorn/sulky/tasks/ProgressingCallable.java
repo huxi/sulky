@@ -53,9 +53,9 @@ public interface ProgressingCallable<T>
 
 	/**
 	 * Should return values between 0 and 100, or a negative value indicating an unknown progress.
-	 * <p/>
+	 *
 	 * Implementations must fire a PropertyChangeEvent using PROGRESS_PROPERTY_NAME as the property name.
-	 * <p/>
+	 *
 	 * This event does not have to be fired on the event dispatch thread because TaskManager will take care about that
 	 * if required/requested.
 	 *
@@ -65,7 +65,7 @@ public interface ProgressingCallable<T>
 
 	/**
 	 * User-code should not use this method but use add/removeTaskListener instead.
-	 * <p/>
+	 *
 	 * Adds the given PropertyChangeListener.
 	 *
 	 * @param listener the PropertyChangeListener
@@ -76,7 +76,7 @@ public interface ProgressingCallable<T>
 
 	/**
 	 * User-code should not use this method but use add/removeTaskListener instead.
-	 * <p/>
+	 *
 	 * Removes the given PropertyChangeListener.
 	 *
 	 * @param listener the PropertyChangeListener

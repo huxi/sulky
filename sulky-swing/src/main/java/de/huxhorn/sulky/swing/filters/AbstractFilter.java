@@ -46,7 +46,7 @@ import java.awt.image.ColorModel;
  * interface. This class can be used to created new image filters based
  * on <code>BufferedImageOp</code>.</p>
  *
- * @author Romain Guy <romain.guy@mac.com>
+ * @author Romain Guy &lt;romain.guy@mac.com&gt;
  */
 
 public abstract class AbstractFilter

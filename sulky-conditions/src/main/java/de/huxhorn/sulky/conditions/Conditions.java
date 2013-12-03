@@ -43,7 +43,7 @@ public final class Conditions
 
 	/**
 	 * Returns true if condition contains otherCondition.
-	 * <p/>
+	 *
 	 * Conditions "contain" themselves so this method returns true if condition equals otherCondition.
 	 *
 	 * @param condition the condition to be checked for containment

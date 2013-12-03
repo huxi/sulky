@@ -40,7 +40,7 @@ public interface Sounds
 {
 	/**
 	 * Plays the sound with the given name.
-	 * <p/>
+	 *
 	 * If ignoreDuplicates is true, another instance
 	 * of the same sound will not be
 	 * added to the playlist while it is still played or waiting to be played .

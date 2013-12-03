@@ -430,7 +430,7 @@ public final class StaxUtilities
 
 	/**
 	 * Normalizes the newlines of the string.
-	 * <p/>
+	 *
 	 * Replaces "\r\n", "\n\r" and "\r" with a single "\n".
 	 *
 	 * @param input
@@ -512,7 +512,7 @@ public final class StaxUtilities
 
 	/**
 	 * Writes a &lt;nodeName&gt; node containing the given text.
-	 * <p/>
+	 *
 	 * If tryUsingCData is true and the text does not contain the CData end token,
 	 * the text will be written using writeCData. Otherwise writeCharacters is used.
 	 *
@@ -535,7 +535,7 @@ public final class StaxUtilities
 
 	/**
 	 * Shortcut for writeSimpleTextNode(writer, prefix, namespaceURI, nodeName, text, false).
-	 * <p/>
+	 *
 	 * It won't try to use CDATA.
 	 *
 	 * @param writer
@@ -554,7 +554,7 @@ public final class StaxUtilities
 
 	/**
 	 * Shortcut for writeSimpleTextNode(writer, prefix, namespaceURI, nodeName, text, false).
-	 * <p/>
+	 *
 	 * It won't try to use CDATA and uses WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE.
 	 *
 	 * @param writer
@@ -573,7 +573,7 @@ public final class StaxUtilities
 
 	/**
 	 * Writes a &lt;nodeName&gt; node containing the given text if text is not null.
-	 * <p/>
+	 *
 	 * If tryUsingCData is true and the text does not contain the CData end token,
 	 * the text will be written using writeCData. Otherwise writeCharacters is used.
 	 *
@@ -597,7 +597,7 @@ public final class StaxUtilities
 
 	/**
 	 * Writes a &lt;nodeName&gt; node containing the given text if text is not null.
-	 * <p/>
+	 *
 	 * It won't try to use CDATA.
 	 *
 	 * @param writer
@@ -619,7 +619,7 @@ public final class StaxUtilities
 
 	/**
 	 * Writes a &lt;nodeName&gt; node containing the given text if text is not null.
-	 * <p/>
+	 *
 	 * It won't try to use CDATA and uses WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE.
 	 *
 	 * @param writer
@@ -641,7 +641,7 @@ public final class StaxUtilities
 
 	/**
 	 * Writes either characters or CDATA.
-	 * <p/>
+	 *
 	 * CDATA is only used if tryUsingCData is true and text does not contain the CDATA end token.
 	 *
 	 * @param writer

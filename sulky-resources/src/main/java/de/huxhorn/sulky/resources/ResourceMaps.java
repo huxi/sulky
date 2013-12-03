@@ -46,7 +46,7 @@ import java.util.Map;
 
 /**
  * Provides functionality for inheritance-safe resolution of resource maps.
- * <p/>
+ *
  * They are a replacement for ResourceBundle and provide similar functionality.
  */
 public final class ResourceMaps

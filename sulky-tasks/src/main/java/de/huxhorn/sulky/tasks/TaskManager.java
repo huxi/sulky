@@ -103,7 +103,7 @@ public class TaskManager<T>
 
 	/**
 	 * Creates a new task manager with a cached thread pool.
-	 * <p/>
+	 *
 	 * By default, it is not using the event dispatch thread to fire task events.
 	 */
 	public TaskManager()
@@ -114,7 +114,7 @@ public class TaskManager<T>
 
 	/**
 	 * Creates a new task manager with the given executor service.
-	 * <p/>
+	 *
 	 * By default, it is not using the event dispatch thread to fire task events.
 	 *
 	 * @param executorService the executor service to be used by this task manager. Must not be null.

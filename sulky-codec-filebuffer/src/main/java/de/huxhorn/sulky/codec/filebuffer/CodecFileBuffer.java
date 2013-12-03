@@ -64,10 +64,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * In contrast to SerializingFileBuffer, this implementation supports the following:
- * <p/>
+ *
  * <ul>
- * <li>An optional magic value to identify the type of a buffer file.<br/>
- * If present (and it should be), it is contained in the first four bytes of the data-file and can be evaluated by external classes, e.g. FileFilters.
+ * <li>An optional magic value to identify the type of a buffer file.
+ * If present (and it should be), it is contained in the first four bytes of the data-file
+ * and can be evaluated by external classes, e.g. FileFilters.
  * An application would use one (or more) specific magic value to identify it's own files.
  * </li>
  * <li>Configurable Codec so the way the elements are actually written and read can be changed as needed.
@@ -78,7 +79,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * </li>
  * <li>Optional ElementProcessors that are executed after elements are added to the buffer.</li>
  * </ul>
- * <p/>
+ *
  * TODO: more documentation :p
  *
  * @param <E> the type of objects that are stored in this buffer.

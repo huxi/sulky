@@ -50,26 +50,26 @@ import java.io.InputStream;
 /**
  * This class creates a PropertyList from either an InputStream or byte[].
  *
- * <ul>
- * <li>array<br/>
- * Results in a List&lt;?&gt; containing any of the values below.</li>
- * <li>dict<br/>
- * Results in a Map&lt;String, ?&gt; containing any of the values below.</li>
- * <li>data<br/>
- * Results in a byte[].</li>
- * <li>date<br/>
- * Results in a java.util.Date.</li>
- * <li>real<br/>
- * Results in a java.lang.Double.</li>
- * <li>integer<br/>
- * Results in a java.lang.Long.</li>
- * <li>string<br/>
- * Results in a java.lang.String.</li>
- * <li>true<br/>
- * Results in java.lang.Boolean.TRUE.</li>
- * <li>false<br/>
- * Results in java.lang.Boolean.FALSE.</li>
- * </ul>
+ * <dl>
+ * <dt>array</dt>
+ * <dd>Results in a List&lt;?&gt; containing any of the values below.</dd>
+ * <dt>dict</dt>
+ * <dd>Results in a Map&lt;String, ?&gt; containing any of the values below.</dd>
+ * <dt>data</dt>
+ * <dd>Results in a byte[].</dd>
+ * <dt>date</dt>
+ * <dd>Results in a java.util.Date.</dd>
+ * <dt>real</dt>
+ * <dd>Results in a java.lang.Double.</dd>
+ * <dt>integer</dt>
+ * <dd>Results in a java.lang.Long.</dd>
+ * <dt>string</dt>
+ * <dd>Results in a java.lang.String.</dd>
+ * <dt>true</dt>
+ * <dd>Results in java.lang.Boolean.TRUE.</dd>
+ * <dt>false</dt>
+ * <dd>Results in java.lang.Boolean.FALSE.</dd>
+ * </dl>
  */
 public class PropertyListDecoder
 	implements StreamingDecoder<PropertyList>, Decoder<PropertyList>

@@ -43,24 +43,24 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * <p>This class is an abstract implementation of the ProgressingCallable interface.</p>
- * <p/>
+ *
  * <p>Extending classes only call setNumberOfSteps and setCurrentStep whenever
  * necessary. The progress is automatically calculated.</p>
- * <p/>
+ *
  * <p>The registered PropertyChangeListeners are called from the calculating thread
  * not from the event dispatch thread. This is perfectly ok since TaskManager
  * transforms those changes into ResultListener calls that are guaranteed
  * to be executed on the event dispatch thread if usingEventQueue is set to true.</p>
- * <p/>
+ *
  * <p>The constructors with initialSleepSteps and laterSleepSteps arguments are recommended for longer
  * operations. setCurrentStep will sleep for 1ms every time initialSleepSteps number of steps have been
  * processed. If laterSleepSteps is defined this value is used if more than 5*initialSleepSteps steps have
  * been processed.</p>
- * <p/>
+ *
  * <p>It can be useful to use a smaller value for initialSleepSteps to support faster cancellation at the start of an
  * operation, e.g. in case of an accidental start by the user, while using a larger value for laterSleepSteps
  * after an initial warm-up-period for performance reason (switching threads is expensive).</p>
- * <p/>
+ *
  * <p>The sleep itself is necessary to allow cancellation from the executor. The InterruptedException should not
  * be caught by the caller. If it is caught, e.g. to perform some cleanup, care should be taken to leave
  * the call-method at the earliest possible time.</p>
@@ -107,7 +107,7 @@ public abstract class AbstractProgressingCallable<T>
 	}
 
 	/**
-	 * Sets the number of steps required to complete the task. A number <= 0 means that the number of steps are not
+	 * Sets the number of steps required to complete the task. A number &lt;= 0 means that the number of steps are not
 	 * (yet) known and will result in a progress of -1.
 	 *
 	 * @param numberOfSteps the number of steps to complete the task.

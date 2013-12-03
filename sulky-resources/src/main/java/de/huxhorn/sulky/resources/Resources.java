@@ -52,23 +52,23 @@ import java.util.Locale;
  * <p><code>Resources</code> provides "object-oriented" resource resolution
  * and is supposed to be a replacement for <code>getResource(String)</code>
  * and <code>getResourceAsStream(String)</code> of <code>java.lang.Class</code>.</p>
- * <p/>
+ *
  * DOCUMENT: moep
  * Describe ordinary resource-location
  * - Using Class.getResource() or Class.getResourceAsStream()
- * <p/>
+ *
  * Document reasons for static class
  * - because the correct location for methods of this class would be in java.lang.Class
- * <p/>
+ *
  * Overall use of this class
  * Example/how-to-use-properly
- * <p/>
- * <p><strong>Question Of The Week:</strong> What is the plural of suffix?<br />
- * <strong>Answer:</strong> There is no answer in any available dictionary. But since
+ *
+ * <p><strong>Question Of The Week:</strong> What is the plural of suffix?</p>
+ * <p><strong>Answer:</strong> There is no answer in any available dictionary. But since
  * the latin root of "suffix"
  * is the adjective "suffixus" (derived from "subfigere") it is believed that the
- * correct plural is "suffixes" and not "suffices" as in "index/indices".<br />
- * Therefore "suffixes" is used in this document.</p>
+ * correct plural is "suffixes" and not "suffices" as in "index/indices".</p>
+ * <p>Therefore "suffixes" is used in this document.</p>
  *
  * @see ResourceSupport ResourceSupport is a helper class that provides shortcuts for given objects.
  * @see Class#getResource(java.lang.String)
@@ -279,26 +279,26 @@ public final class Resources
 	 * <p>
 	 * Note that the dot of a suffix needs to be included in the suffixes entries!
 	 * </p>
-	 * <p>
-	 * Example:<br />
-	 * <code><pre>
+	 *
+	 * Example:
+	 * <pre><tt>
 	 * package foobar;
-	 * <p/>
+	 *
 	 * public class Foo
 	 * {
 	 *      public static class Bar
 	 *      {
 	 *      }
 	 * }
-	 * <p/>
+	 * </tt></pre>
+	 * <pre><tt>
 	 * // in some method...
 	 * Class c=foobar.Foo.Bar.class;
 	 * String resourceBaseName="resource";
 	 * String[] suffixes=new String[]{".txt", ".html"};
 	 * Locale.setDefault(new Locale("en_US"));
 	 * Locale locale=new Locale("de_DE");
-	 * </pre></code>
-	 * </p>
+	 * </tt></pre>
 	 * <p>
 	 * Result of the call getResources(c, resourceBaseName, suffixes, locale) if ALL files really exist:
 	 * </p>
@@ -530,13 +530,18 @@ public final class Resources
 	 * Returns a <code>String</code> array that contains all <code>Locale</code>
 	 * suffixes for both the given <code>locale</code> and the default <code>Locale</code> in this order.
 	 * The resulting array will not contain duplicate entries.
-	 * <p/>
-	 * <h4>Examples:</h4>
-	 * <p><code>Locale("de_DE")</code> and default <code>Locale("en_US")</code> returns <code>{"de_DE", "de", "en_US", "en"}</code><br />
-	 * <code>Locale("de")</code> and default <code>Locale("en_US")</code> returns <code>{"de", "en_US", "en"}</code><br />
-	 * <code>Locale("en_US")</code> and default <code>Locale("en_US")</code> returns <code>{"en_US", "en"}</code><br />
-	 * <code>null</code> and default <code>null</code> returns <code>{}</code></p>
 	 *
+	 * Examples:
+	 * <dl>
+	 * <dt><code>Locale("de_DE")</code> and default <code>Locale("en_US")</code></dt>
+	 * <dd>returns <code>{"de_DE", "de", "en_US", "en"}</code></dd>
+	 * <dt><code>Locale("de")</code> and default <code>Locale("en_US")</code></dt>
+	 * <dd>returns <code>{"de", "en_US", "en"}</code></dd>
+	 * <dt><code>Locale("en_US")</code> and default <code>Locale("en_US")</code></dt>
+	 * <dd>returns <code>{"en_US", "en"}</code></dd>
+	 * <dt><code>null</code> and default <code>null</code></dt>
+	 * <dd>returns <code>{}</code></dd>
+	 * </dl>
 	 * @param locale the <code>Locale</code> for which a suffix array will be created (beside <code>Locale.getDefault()</code>).
 	 * @return a <code>String</code> array containing all representations
 	 *         of the given <code>locale</code> and the default <code>Locale</code> with the most specific first.
@@ -574,14 +579,22 @@ public final class Resources
 	 * Returns a <code>String</code> array that contains at most
 	 * [language + "_" + country + "_" + variant, language + "_" + country, language] for the given <code>locale</code>.
 	 * Returns an empty array if <code>locale</code> is <code>null</code> or empty.
-	 * <p/>
-	 * <h4>Examples:</h4>
-	 * <p><code>Locale("de")</code> returns <code>{"de"}</code><br />
-	 * <code>Locale("de","DE")</code> returns <code>{"de_DE", "de"}</code><br />
-	 * <code>Locale("de","DE","hessisch")</code> returns <code>{"de_DE_hessisch", "de_DE", "de"}</code><br />
-	 * <code>Locale("","","foo")</code> returns <code>{"__foo"}</code><br />
-	 * <code>Locale("foo","","bar")</code> returns <code>{"foo__bar", "foo"}</code><br />
-	 * <code>Locale("","","")</code> and <code>null</code> return <code>{}</code></p>
+	 *
+	 * Examples:
+	 * <dl>
+	 * <dt><code>Locale("de")</code></dt>
+	 * <dd>returns <code>{"de"}</code></dd>
+	 * <dt><code>Locale("de","DE")</code></dt>
+	 * <dd>returns <code>{"de_DE", "de"}</code></dd>
+	 * <dt><code>Locale("de","DE","hessisch")</code></dt>
+	 * <dd>returns <code>{"de_DE_hessisch", "de_DE", "de"}</code></dd>
+	 * <dt><code>Locale("","","foo")</code></dt>
+	 * <dd>returns <code>{"__foo"}</code></dd>
+	 * <dt><code>Locale("foo","","bar")</code></dt>
+	 * <dd>returns <code>{"foo__bar", "foo"}</code></dd>
+	 * <dt><code>Locale("","","")</code> and <code>null</code></dt>
+	 * <dd>return <code>{}</code></dd>
+	 * </dl>
 	 *
 	 * @param locale the <code>Locale</code> for which a suffix array will be created.
 	 * @return a <code>String</code> array containing all representations of the given locale with the most specific first.

@@ -59,7 +59,7 @@ public final class PathTools
 	 * and returned. Otherwise it is returned unchanged.
 	 * An empty string is considered a relative path.
 	 * Possibly contained dots are NOT evaluated/reduced!
-	 * <p/>
+	 *
 	 * Examples:
 	 * resolvePath("foo","/bar") returns "/bar"
 	 * resolvePath("/foo","bar") returns "/foo/bar"
@@ -135,7 +135,7 @@ public final class PathTools
 	/**
 	 * Returns either the absolute path for the given basePath and path or null if
 	 * the resulting path would not be absolute.
-	 * <p/>
+	 *
 	 * Examples:
 	 * getAbsolutePath("/foo/bar", "../foobar") returns "/foo/foobar"
 	 * getAbsolutePath("/foo/bar", "..../foobar") returns null (path-underflow)

@@ -82,7 +82,7 @@ public final class JUnitTools
 	/**
 	 * Serializes the original and returns the deserialized instance.
 	 * Serialization is using XMLEncoder/XMLDecoder.
-	 * <p/>
+	 *
 	 * See http://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html
 	 * for a description of an enum problem.
 	 *

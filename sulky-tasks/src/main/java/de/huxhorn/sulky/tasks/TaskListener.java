@@ -38,7 +38,7 @@ import java.util.concurrent.ExecutionException;
 
 /**
  * Registered TaskListeners are called by a TaskManager whenever the state of one of its Tasks changes.
- * <p/>
+ *
  * The calls are guaranteed to be executed on the event dispatch thread if usingEventQueue of the TaskManager is true.
  * Otherwise, they are executed on an internal thread of the TaskManager.
  *

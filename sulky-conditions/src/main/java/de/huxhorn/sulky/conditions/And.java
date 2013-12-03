@@ -69,10 +69,10 @@ public class And
 
 	/**
 	 * Returns false if any of the contained conditions is false.
-	 * <p/>
+	 *
 	 * This implies that it returns true if the contained conditions are either null or empty.
 	 *
-	 * @param element
+	 * @param element the object to be evaluated.
 	 * @return false if any of the contained conditions is false.
 	 */
 	public boolean isTrue(Object element)

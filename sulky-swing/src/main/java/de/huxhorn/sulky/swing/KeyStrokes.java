@@ -48,7 +48,7 @@ public final class KeyStrokes
 
 	/**
 	 * The string representation of the system-dependant command modifier.
-	 * <p/>
+	 *
 	 * It is obtained by calling getModifiersString(Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()).
 	 */
 	public static final String COMMAND_MODIFIERS;
@@ -75,7 +75,7 @@ public final class KeyStrokes
 	 * would return the string "shift control". Calling this method
 	 * without any modifiers set in the modifiers will return an empty string.
 	 * Calling it with all modifiers set will return "shift control meta alt altGraph".
-	 * <p/>
+	 *
 	 * This method is only used to initialize the system-dependant COMMAND_MODIFIERS
 	 * attribute but was left public because it can be quite handy for debugging.
 	 *

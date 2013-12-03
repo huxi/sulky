@@ -45,14 +45,12 @@ import java.util.Map;
 /**
  * DOCUMENT: <code>ResourceSupport</code>
  * There are two distinct usages of this class:
- * <ul>
- * <li>In a static context.<br />
- * <code>private static final ResourceSupport RESOURCES=new ResourceSupport(Foo.class);</code>
- * </li>
- * <li>In a non-static context.<br />
- * <code>private final ResourceSupport resources=new ResourceSupport(this);</code>
- * </li>
- * </ul>
+ * <dl>
+ * <dt>In a static context.</dt>
+ * <dd><code>private static final ResourceSupport RESOURCES=new ResourceSupport(Foo.class);</code></dd>
+ * <dt>In a non-static context.</dt>
+ * <dd><code>private final ResourceSupport resources=new ResourceSupport(this);</code></dd>
+ * </dl>
  * The usage of this class is identical in both cases.
  * The non-static version can be used for classes that implement the
  * <code>Localizable</code> interface (either directly or indirectly).

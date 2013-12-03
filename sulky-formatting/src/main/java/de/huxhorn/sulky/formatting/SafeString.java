@@ -268,16 +268,16 @@ public final class SafeString
 	/**
 	 * This method returns the same as if Object.toString() would not have been
 	 * overridden in obj.
-	 * <p/>
+	 *
 	 * Note that this isn't 100% secure as collisions can always happen with hash codes.
-	 * <p/>
+	 *
 	 * Copied from Object.hashCode():
 	 * As much as is reasonably practical, the hashCode method defined by
 	 * class <tt>Object</tt> does return distinct integers for distinct
 	 * objects. (This is typically implemented by converting the internal
 	 * address of the object into an integer, but this implementation
 	 * technique is not required by the
-	 * Java<font size="-2"><sup>TM</sup></font> programming language.)
+	 * Java&#x2122; programming language.)
 	 *
 	 * @param obj the Object that is to be converted into an identity string.
 	 * @return the identity string as also defined in Object.toString()

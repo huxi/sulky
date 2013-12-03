@@ -69,10 +69,10 @@ public class Or
 
 	/**
 	 * Returns true if any of the contained conditions is true.
-	 * <p/>
+	 *
 	 * This implies that it returns false if the contained conditions are either null or empty.
 	 *
-	 * @param element
+	 * @param element the object to be evaluated.
 	 * @return true if any of the contained conditions is true.
 	 */
 	public boolean isTrue(Object element)

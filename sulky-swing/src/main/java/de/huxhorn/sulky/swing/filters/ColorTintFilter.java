@@ -57,7 +57,7 @@ import java.awt.image.BufferedImage;
  * <li><code>mixValue</code>: strength of the mix, a value between 0.0 and 1.0</li>
  * </ul>
  *
- * @author Romain Guy <romain.guy@mac.com>
+ * @author Romain Guy &lt;romain.guy@mac.com&gt;
  */
 
 public class ColorTintFilter

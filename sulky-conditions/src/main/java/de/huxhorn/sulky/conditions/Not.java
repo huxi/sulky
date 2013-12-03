@@ -66,10 +66,10 @@ public class Not
 
 	/**
 	 * Returns true if the contained condition returns false.
-	 * <p/>
+	 *
 	 * This implies that it returns false if the contained condition is null.
 	 *
-	 * @param element
+	 * @param element the object to be evaluated.
 	 * @return true if the contained condition returns false.
 	 */
 	public boolean isTrue(Object element)

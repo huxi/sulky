@@ -61,7 +61,7 @@ package de.huxhorn.sulky.plist;
  * <ul>
  * <li><a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">The PropertyList DTD hosted at Apple.</a></li>
  * <li><a href="http://developer.apple.com/library/ios/#documentation/General/Reference/InfoPlistKeyReference/Introduction/Introduction.html">Information Property List Key Reference</a></li>
- * <li><a href=" http://developer.apple.com/library/mac/#documentation/Java/Reference/Java_InfoplistRef/Articles/JavaDictionaryInfo.plistKeys.html">Java Dictionary Info.plist Keys</a></li>
+ * <li><a href="http://developer.apple.com/library/mac/#documentation/Java/Reference/Java_InfoplistRef/Articles/JavaDictionaryInfo.plistKeys.html">Java Dictionary Info.plist Keys</a></li>
  * </ul>
  *
  * @see PropertyListEncoder
