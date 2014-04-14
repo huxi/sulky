@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,6 +81,9 @@ public class PropertyListDecoder
 	{
 		PropertyListReader propertyListReader = new PropertyListReader();
 		XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+		inputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
+		inputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+		inputFactory.setProperty(XMLInputFactory.IS_VALIDATING, false);
 
 		try
 		{
