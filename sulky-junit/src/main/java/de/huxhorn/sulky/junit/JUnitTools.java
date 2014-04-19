@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,7 @@ public final class JUnitTools
 	 * Serializes the original and returns the deserialized instance.
 	 * Serialization is using ObjectOutputStream/ObjectInputStream.
 	 *
+	 * @param <T> The type to be serialized.
 	 * @param original the original Serializable,
 	 * @return the deserialized instance.
 	 * @throws java.io.IOException    In case of error during (de)serialization.
@@ -86,6 +87,7 @@ public final class JUnitTools
 	 * See http://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html
 	 * for a description of an enum problem.
 	 *
+	 * @param <T> The type to be serialized.
 	 * @param original the original Serializable,
 	 * @param enums    a list of enums that can be contained in original. Only needed in J2SE 1.5.
 	 * @return the deserialized instance.

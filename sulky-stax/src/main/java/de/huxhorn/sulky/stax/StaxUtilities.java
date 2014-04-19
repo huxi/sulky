@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,9 +108,9 @@ public final class StaxUtilities
 	/**
 	 * Shortcut for readText(reader, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE).
 	 *
-	 * @param reader
+	 * @param reader the reader.
 	 * @return the read text.
-	 * @throws XMLStreamException
+	 * @throws XMLStreamException as thrown by reader.
 	 */
 	public static String readText(XMLStreamReader reader)
 		throws XMLStreamException
@@ -150,7 +150,7 @@ public final class StaxUtilities
 	 * After the processing implied by replace, contiguous sequences of #x20's are collapsed to a single #x20,
 	 * and leading and trailing #x20's are removed.
 	 *
-	 * @param string
+	 * @param string the string to be collapsed.
 	 * @return the string with collapsed whitespace, null if string is null.
 	 * @see #replaceWhiteSpace(String)
 	 */
@@ -190,7 +190,7 @@ public final class StaxUtilities
 	/**
 	 * All occurrences of #x9 (tab), #xA (line feed) and #xD (carriage return) are replaced with #x20 (space)
 	 *
-	 * @param string
+	 * @param string th input.
 	 * @return the string with replaced whitespace, null if string is null.
 	 */
 	public static String replaceWhiteSpace(String string)
@@ -213,6 +213,11 @@ public final class StaxUtilities
 
 	/**
 	 * Shortcut for readAttributeValue(reader, namespaceURI, name, WhiteSpaceHandling.COLLAPSE);
+	 *
+	 * @param reader the reader
+	 * @param namespaceURI the namespaceURI
+	 * @param name the name
+	 * @return the result of readAttributeValue(reader, namespaceURI, name, WhiteSpaceHandling.COLLAPSE);
 	 */
 	public static String readAttributeValue(XMLStreamReader reader, String namespaceURI, String name)
 	{
@@ -321,10 +326,11 @@ public final class StaxUtilities
 	 * If namespaceURI is null, this method calls writer.writeStartElement without namespaceURI argument.
 	 * Otherwise the one including it is being used.
 	 *
-	 * @param writer
-	 * @param namespaceURI
-	 * @param nodeName
-	 * @throws XMLStreamException
+	 * @param writer the writer.
+	 * @param prefix the prefix.
+	 * @param namespaceURI the namespaceURI.
+	 * @param nodeName the node name.
+	 * @throws XMLStreamException exceptions as thrown by the writer.
 	 */
 	public static void writeStartElement(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName)
 		throws XMLStreamException
@@ -369,12 +375,13 @@ public final class StaxUtilities
 	/**
 	 * Shortcut for writeAttribute(writer, prefix, namespaceURI, name, value, WhiteSpaceHandling.COLLAPSE).
 	 *
-	 * @param writer
-	 * @param prefix
-	 * @param namespaceURI
-	 * @param name
-	 * @param value
-	 * @throws XMLStreamException
+	 * @param writer the writer.
+	 * @param qualified whether or not attribute should be prefixed.
+	 * @param prefix the prefix.
+	 * @param namespaceURI the namespaceURI.
+	 * @param name the name.
+	 * @param value the value.
+	 * @throws XMLStreamException as thrown by writer.
 	 */
 	public static void writeAttribute(XMLStreamWriter writer, boolean qualified, String prefix, String namespaceURI, String name, String value)
 		throws XMLStreamException
@@ -406,12 +413,13 @@ public final class StaxUtilities
 	/**
 	 * Shortcut for writeAttributeIfNotNull(writer, prefix, namespaceURI, name, value, WhiteSpaceHandling.COLLAPSE).
 	 *
-	 * @param writer
-	 * @param prefix
-	 * @param namespaceURI
-	 * @param name
-	 * @param value
-	 * @throws XMLStreamException
+	 * @param writer the writer.
+	 * @param qualified whether or not attribute should be prefixed.
+	 * @param prefix the prefix.
+	 * @param namespaceURI the namespaceURI.
+	 * @param name the name.
+	 * @param value the value.
+	 * @throws XMLStreamException as thrown by writer.
 	 */
 	public static void writeAttributeIfNotNull(XMLStreamWriter writer, boolean qualified, String prefix, String namespaceURI, String name, String value)
 		throws XMLStreamException
@@ -433,7 +441,7 @@ public final class StaxUtilities
 	 *
 	 * Replaces "\r\n", "\n\r" and "\r" with a single "\n".
 	 *
-	 * @param input
+	 * @param input the input.
 	 * @return a string with cleaned up newlines, i.e. only \n, no \r.
 	 */
 	public static String normalizeNewlines(String input)
@@ -516,13 +524,14 @@ public final class StaxUtilities
 	 * If tryUsingCData is true and the text does not contain the CData end token,
 	 * the text will be written using writeCData. Otherwise writeCharacters is used.
 	 *
-	 * @param writer
+	 * @param writer        the writer.
 	 * @param prefix        the prefix of the node. May be null.
 	 * @param namespaceURI  the namespaceURI of the node. May be null.
 	 * @param nodeName      the nodeName of the node.
 	 * @param text          the text that is written into to node. Must not be null.
+	 * @param whiteSpace    the desired WhiteSpaceHandling.
 	 * @param tryUsingCData is trying to is CData instead of encoded characters if possible.
-	 * @throws XMLStreamException
+	 * @throws XMLStreamException as thrown by writer.
 	 * @see #writeText(javax.xml.stream.XMLStreamWriter, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNode(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text, WhiteSpaceHandling whiteSpace, boolean tryUsingCData)
@@ -538,12 +547,13 @@ public final class StaxUtilities
 	 *
 	 * It won't try to use CDATA.
 	 *
-	 * @param writer
+	 * @param writer       the writer.
 	 * @param prefix       the prefix of the node. May be null.
 	 * @param namespaceURI the namespaceURI of the node. May be null.
 	 * @param nodeName     the nodeName of the node.
 	 * @param text         the text that is written into to node. Must not be null.
-	 * @throws XMLStreamException
+	 * @param whiteSpace   the desired WhiteSpaceHandling.
+	 * @throws XMLStreamException as thrown by writer.
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNode(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text, WhiteSpaceHandling whiteSpace)
@@ -557,12 +567,12 @@ public final class StaxUtilities
 	 *
 	 * It won't try to use CDATA and uses WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE.
 	 *
-	 * @param writer
+	 * @param writer       the writer.
 	 * @param prefix       the prefix of the node. May be null.
 	 * @param namespaceURI the namespaceURI of the node. May be null.
 	 * @param nodeName     the nodeName of the node.
 	 * @param text         the text that is written into to node. Must not be null.
-	 * @throws XMLStreamException
+	 * @throws XMLStreamException as thrown by writer.
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNode(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text)
@@ -577,13 +587,14 @@ public final class StaxUtilities
 	 * If tryUsingCData is true and the text does not contain the CData end token,
 	 * the text will be written using writeCData. Otherwise writeCharacters is used.
 	 *
-	 * @param writer
+	 * @param writer        the writer.
 	 * @param prefix        the prefix of the node. May be null.
 	 * @param namespaceURI  the namespaceURI of the node. May be null.
 	 * @param nodeName      the nodeName of the node.
 	 * @param text          the text that is written into to node. May be null.
+	 * @param whiteSpace    the desired WhiteSpaceHandling.
 	 * @param tryUsingCData is trying to is CData instead of encoded characters if possible.
-	 * @throws XMLStreamException
+	 * @throws XMLStreamException as thrown by writer.
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNodeIfNotNull(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text, WhiteSpaceHandling whiteSpace, boolean tryUsingCData)
@@ -600,12 +611,13 @@ public final class StaxUtilities
 	 *
 	 * It won't try to use CDATA.
 	 *
-	 * @param writer
+	 * @param writer       the writer.
 	 * @param prefix       the prefix of the node. May be null.
 	 * @param namespaceURI the namespaceURI of the node. May be null.
 	 * @param nodeName     the nodeName of the node.
 	 * @param text         the text that is written into to node. May be null.
-	 * @throws XMLStreamException
+	 * @param whiteSpace   the desired WhiteSpaceHandling.
+	 * @throws XMLStreamException as thrown by writer.
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNodeIfNotNull(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text, WhiteSpaceHandling whiteSpace)
@@ -622,12 +634,12 @@ public final class StaxUtilities
 	 *
 	 * It won't try to use CDATA and uses WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE.
 	 *
-	 * @param writer
+	 * @param writer       the writer.
 	 * @param prefix       the prefix of the node. May be null.
 	 * @param namespaceURI the namespaceURI of the node. May be null.
 	 * @param nodeName     the nodeName of the node.
 	 * @param text         the text that is written into to node. May be null.
-	 * @throws XMLStreamException
+	 * @throws XMLStreamException as thrown by writer.
 	 * @see #writeSimpleTextNode(javax.xml.stream.XMLStreamWriter, String, String, String, String, WhiteSpaceHandling, boolean)
 	 */
 	public static void writeSimpleTextNodeIfNotNull(XMLStreamWriter writer, String prefix, String namespaceURI, String nodeName, String text)
@@ -644,10 +656,11 @@ public final class StaxUtilities
 	 *
 	 * CDATA is only used if tryUsingCData is true and text does not contain the CDATA end token.
 	 *
-	 * @param writer
+	 * @param writer        the writer.
 	 * @param text          the text to be written. Must not be null.
-	 * @param tryUsingCData
-	 * @throws XMLStreamException
+	 * @param whiteSpace    the desired WhiteSpaceHandling.
+	 * @param tryUsingCData try using CDATA, if possible.
+	 * @throws XMLStreamException as thrown by writer.
 	 */
 	public static void writeText(XMLStreamWriter writer, String text, WhiteSpaceHandling whiteSpace, boolean tryUsingCData)
 		throws XMLStreamException
@@ -666,9 +679,9 @@ public final class StaxUtilities
 	/**
 	 * Shortcut for writeText(writer, text, WhiteSpaceHandling.PRESERVE_NORMALIZE_NEWLINE, false).
 	 *
-	 * @param writer
-	 * @param text
-	 * @throws XMLStreamException
+	 * @param writer the writer.
+	 * @param text the text.
+	 * @throws XMLStreamException as thrown by writer.
 	 */
 	public static void writeText(XMLStreamWriter writer, String text)
 		throws XMLStreamException
