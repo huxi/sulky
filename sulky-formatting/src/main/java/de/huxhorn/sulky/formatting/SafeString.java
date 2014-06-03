@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,9 @@
 
 package de.huxhorn.sulky.formatting;
 
-import java.text.SimpleDateFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -51,6 +53,8 @@ public final class SafeString
 
 	public static final String RECURSION_PREFIX = "[...";
 	public static final String RECURSION_SUFFIX = "...]";
+
+	private static DateTimeFormatter isoDateTimeFormat = ISODateTimeFormat.dateTime().withZoneUTC();
 
 	private SafeString()
 	{}
@@ -236,9 +240,7 @@ public final class SafeString
 		else if(o instanceof Date)
 		{
 			Date date = (Date) o;
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-			// I'll leave it like this for the moment... this could probably be optimized using ThreadLocal...
-			str.append(format.format(date));
+			str.append(isoDateTimeFormat.print(date.getTime()));
 		}
 		else
 		{
