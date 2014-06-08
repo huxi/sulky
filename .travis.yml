@@ -5,3 +5,11 @@ jdk:
   - oraclejdk7
   - openjdk7
   - openjdk6
+
+script:
+  - gradlew
+  - git clone https://github.com/huxi/lilith.git ~/builds/lilith 
+  - pushd ~/builds/lilith
+  - ./gradlew install 
+  - popd 
+
