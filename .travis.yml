@@ -6,6 +6,10 @@ jdk:
   - openjdk7
   - openjdk6
 
+cache:
+  directories:
+  - $HOME/.gradle
+
 script:
   - ./gradlew
   - git clone https://github.com/huxi/lilith.git ~/builds/lilith 
