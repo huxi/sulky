@@ -5,6 +5,10 @@ apply plugin: 'versions'
 apply plugin: 'base'
 apply plugin: 'signing'
 
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.0-rc-1'
+}
+
 import org.gradle.plugins.signing.Sign
 
 buildscript {
@@ -39,10 +43,6 @@ compareGradleBuilds {
 		gradleVersion "1.4"
 		// tasks = ['clean', 'install']
 	}
-}
-
-task wrapper(type: Wrapper) {
-	gradleVersion = '1.12'
 }
 
 task javadoc(type: Javadoc) {
