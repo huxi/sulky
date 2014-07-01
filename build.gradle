@@ -6,7 +6,7 @@ apply plugin: 'base'
 apply plugin: 'signing'
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.0-rc-2'
+	gradleVersion = '2.0'
 }
 
 import org.gradle.plugins.signing.Sign
