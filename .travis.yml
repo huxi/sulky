@@ -17,3 +17,8 @@ script:
   - ./gradlew install 
   - popd 
 
+env:
+- TERM=dumb
+
+after_success:
+- ./gradlew jacocoRootReport coveralls
