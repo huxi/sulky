@@ -313,6 +313,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 
 coveralls {
 	jacocoReportPath = 'build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml'
+	sourceDirs += jacocoRootReport.sourceDirectories
 }
 
 project.ext.deleteClosure = {
