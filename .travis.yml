@@ -23,4 +23,4 @@ env:
 after_success:
 - ./gradlew cleanTest
 - ./gradlew jacocoRootReport
-- ./gradlew --info coveralls
+- ./gradlew coveralls
