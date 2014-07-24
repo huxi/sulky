@@ -21,4 +21,6 @@ env:
 - TERM=dumb
 
 after_success:
-- ./gradlew --debug jacocoRootReport coveralls
+- ./gradlew cleanTest
+- ./gradlew jacocoRootReport
+- ./gradlew --debug coveralls
