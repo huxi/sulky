@@ -61,6 +61,7 @@ public class SafeStringTest
 		b.put("bar", a);
 		a.put("foo", b);
 		// the following line will throw an java.lang.StackOverflowError!
+		//noinspection ResultOfMethodCallIgnored
 		a.toString();
 	}
 
@@ -88,6 +89,7 @@ public class SafeStringTest
 		b.add(a);
 		a.add(b);
 		// the following line will throw an java.lang.StackOverflowError!
+		//noinspection ResultOfMethodCallIgnored
 		a.toString();
 	}
 
@@ -148,6 +150,12 @@ public class SafeStringTest
 			+ SafeString.ERROR_SUFFIX;
 
 		evaluate(expected, o);
+	}
+
+	@Test
+	public void foo()
+	{
+		evaluate("UnproblematicToString", new UnproblematicToString());
 	}
 
 	@Test
@@ -309,6 +317,14 @@ public class SafeStringTest
 		result = SafeString.toString(o);
 		if(logger.isInfoEnabled()) logger.info("Result of {} is {}.", o, result);
 		assertEquals(expected, result);
+	}
+
+	private static class UnproblematicToString
+	{
+		public String toString()
+		{
+			return "UnproblematicToString";
+		}
 	}
 
 	private static class ProblematicToString

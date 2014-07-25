@@ -100,6 +100,7 @@ project(':sulky-logging') {
 	description = 'This file is part of the sulky modules. It contains a LoggingPropertyChangeListener and some Swing logging.'
 	dependencies {
 		compile libraries.'slf4j-api'
+		testCompile libraries.'logback-classic'
 	}
 }
 

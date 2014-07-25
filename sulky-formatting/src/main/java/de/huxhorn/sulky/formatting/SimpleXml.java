@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,10 +60,15 @@ public final class SimpleXml
      */
     public static boolean isValidXMLCharacter(char character)
     {
-        return character == '\t' || character == '\r' || character == '\n' ||
-			(character >= XML_CHAR_RANGE_A_START && character <= XML_CHAR_RANGE_A_END) ||
-			(character >= XML_CHAR_RANGE_B_START && character <= XML_CHAR_RANGE_B_END) ||
-			(character >= XML_CHAR_RANGE_C_START && character <= XML_CHAR_RANGE_C_END);
+	    return isValidXMLCharacter(0xFFFF & character);
+    }
+
+    public static boolean isValidXMLCharacter(int codePoint)
+    {
+        return codePoint == '\t' || codePoint == '\r' || codePoint == '\n' ||
+			(codePoint >= XML_CHAR_RANGE_A_START && codePoint <= XML_CHAR_RANGE_A_END) ||
+			(codePoint >= XML_CHAR_RANGE_B_START && codePoint <= XML_CHAR_RANGE_B_END) ||
+			(codePoint >= XML_CHAR_RANGE_C_START && codePoint <= XML_CHAR_RANGE_C_END);
     }
 
 	/**
@@ -135,12 +140,12 @@ public final class SimpleXml
 		if(!isValidXMLCharacter(replacementChar))
 		{
 			throw new IllegalArgumentException("Replacement character 0x"
-				+ Integer.toString(replacementChar, 16) + " is invalid itself!");
+				+ Integer.toString(replacementChar, 16).toUpperCase() + " is invalid itself!");
 		}
 
 		for(int i = 0; i < in.length(); i++)
 		{
-			char current = in.charAt(i);
+			int current = in.codePointAt(i);
 
 			if(isValidXMLCharacter(current))
 			{

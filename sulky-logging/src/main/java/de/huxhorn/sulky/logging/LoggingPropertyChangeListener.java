@@ -43,7 +43,21 @@ import java.beans.PropertyChangeListener;
 public class LoggingPropertyChangeListener
 	implements PropertyChangeListener
 {
-	final Logger logger = LoggerFactory.getLogger(LoggingPropertyChangeListener.class);
+	private final Logger logger;
+
+	public LoggingPropertyChangeListener()
+	{
+		this(LoggerFactory.getLogger(LoggingPropertyChangeListener.class));
+	}
+
+	public LoggingPropertyChangeListener(Logger logger)
+	{
+		this.logger = logger;
+		if(logger == null)
+		{
+			throw new IllegalArgumentException("logger must not be null!");
+		}
+	}
 
 	public void propertyChange(PropertyChangeEvent event)
 	{
