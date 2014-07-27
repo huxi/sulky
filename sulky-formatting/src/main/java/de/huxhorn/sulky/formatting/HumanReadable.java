@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,19 +34,16 @@
 
 package de.huxhorn.sulky.formatting;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public final class HumanReadable
 {
 	private HumanReadable()
 	{}
 	
-	static class Unit
+	private static class Unit
 	{
-		private String name;
-		private long factor;
-		private String symbol;
+		private final long factor;
+		private final String name;
+		private final String symbol;
 
 		public Unit(long factor, String name, String symbol)
 		{
@@ -60,40 +57,14 @@ public final class HumanReadable
 			return symbol;
 		}
 
-		public void setSymbol(String symbol)
-		{
-			this.symbol = symbol;
-		}
-
 		public long getFactor()
 		{
 			return factor;
 		}
 
-		public void setFactor(long factor)
-		{
-			this.factor = factor;
-		}
-
 		public String getName()
 		{
 			return name;
-		}
-
-		public void setName(String name)
-		{
-			this.name = name;
-		}
-
-		public String toString()
-		{
-			StringBuilder result = new StringBuilder();
-			result.append("Unit[");
-			result.append("name=").append(name);
-			result.append(", symbol=").append(symbol);
-			result.append(", factor=").append(factor);
-			result.append("]");
-			return result.toString();
 		}
 	}
 
@@ -117,27 +88,6 @@ public final class HumanReadable
 			new Unit(1000L, "kilo", "k"),
 		};
 
-	static
-	{
-		final Logger logger = LoggerFactory.getLogger(HumanReadable.class);
-
-		if(logger.isDebugEnabled())
-		{
-			StringBuilder msg = new StringBuilder("Binary units:\n");
-			for(Unit unit : BINARY_UNITS)
-			{
-				msg.append("\t").append(unit).append("\n");
-			}
-
-			msg.append("\nDecimal units:\n");
-			for(Unit unit : DECIMAL_UNITS)
-			{
-				msg.append("\t").append(unit).append("\n");
-			}
-			logger.debug(msg.toString());
-		}
-	}
-
 	public static String getHumanReadableSize(long size, boolean useBinaryUnits, boolean useSymbol)
 	{
 		if(useBinaryUnits)
@@ -149,38 +99,56 @@ public final class HumanReadable
 
 	private static String internalGetHumanReadableSize(long size, Unit[] units, boolean useSymbol)
 	{
-		final Logger logger = LoggerFactory.getLogger(HumanReadable.class);
-
+		boolean negative = false;
+		if(size < 0)
+		{
+			negative = true;
+			if(size == Long.MIN_VALUE)
+			{
+				// rounding won't care
+				size = Long.MAX_VALUE;
+			}
+			else
+			{
+				size = size * -1;
+			}
+		}
 		Unit correctUnit = null;
 		long fraction = 0;
-		for(Unit unit : units)
+		for (Unit unit : units)
 		{
 			fraction = size / unit.getFactor();
-			if(fraction > 0)
+			if (fraction > 0)
 			{
-				if(logger.isDebugEnabled()) logger.debug("Correct unit: {}", unit);
 				correctUnit = unit;
 				break;
 			}
 		}
 		StringBuilder result = new StringBuilder();
+		if(negative)
+		{
+			result.append("-");
+		}
 		if(correctUnit == null)
 		{
 			return result.append(size).append(" ").toString();
 		}
-		result.append(fraction);
 		long remainder = size % correctUnit.getFactor();
-		//if(remainder!=0)
+		remainder = Math.round( ((((double)remainder) * 100L) / correctUnit.getFactor()) );
+		if(remainder > 99)
 		{
-			result.append(".");
-			remainder = remainder * 100;
-			remainder = remainder / correctUnit.getFactor();
-			if(remainder < 10)
-			{
-				result.append("0");
-			}
-			result.append(remainder);
+			fraction++;
+			remainder = 0;
 		}
+		result.append(fraction);
+
+		result.append(".");
+		if(remainder < 10)
+		{
+			result.append("0");
+		}
+		result.append(remainder);
+
 		result.append(" ");
 		if(useSymbol)
 		{
