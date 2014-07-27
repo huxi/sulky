@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,8 +41,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class AndTest
 	extends ConditionTestBase
@@ -100,5 +103,77 @@ public class AndTest
 		conditions.add(BooleanValues.TRUE);
 		assertEquals(false, condition.isTrue(null));
 		internalTestCondition(condition);
+	}
+
+	@Test
+	public void testHash()
+	{
+		And condition1 = new And();
+		And condition2 = new And();
+		assertEquals(condition1.hashCode(), condition2.hashCode());
+
+		List<Condition> conditions1=new ArrayList<Condition>();
+		conditions1.add(BooleanValues.FALSE);
+		List<Condition> conditions2=new ArrayList<Condition>();
+		conditions2.add(BooleanValues.FALSE);
+
+		condition1.setConditions(conditions1);
+		condition2.setConditions(conditions2);
+		assertEquals(condition1.hashCode(), condition2.hashCode());
+
+		conditions2.add(BooleanValues.FALSE);
+		assertNotEquals(condition1.hashCode(), condition2.hashCode());
+	}
+
+	@Test
+	public void testEquals()
+	{
+		And condition1 = new And();
+		And condition2 = new And();
+		assertEquals(condition1, condition2);
+
+		List<Condition> conditions1=new ArrayList<Condition>();
+		List<Condition> conditions2=new ArrayList<Condition>();
+
+		condition1.setConditions(conditions1);
+		assertNotEquals(condition1, condition2);
+		assertNotEquals(condition2, condition1);
+
+		condition2.setConditions(conditions2);
+		assertEquals(condition1, condition2);
+
+		conditions1.add(BooleanValues.FALSE);
+		conditions2.add(BooleanValues.FALSE);
+		assertEquals(condition1, condition2);
+
+		conditions2.add(BooleanValues.FALSE);
+		assertNotEquals(condition1, condition2);
+	}
+
+	@Test
+	public void testBasicEquals()
+	{
+		Condition condition = new And();
+		//noinspection ObjectEqualsNull
+		assertFalse(condition.equals(null));
+		assertFalse(condition.equals(new Object()));
+		assertTrue(condition.equals(condition));
+	}
+
+	@Test
+	public void testString()
+	{
+		And condition = new And();
+		assertEquals("true", condition.toString());
+
+		List<Condition> conditions=new ArrayList<Condition>();
+		condition.setConditions(conditions);
+		assertEquals("true", condition.toString());
+
+		conditions.add(BooleanValues.FALSE);
+		assertEquals("(false)", condition.toString());
+
+		conditions.add(BooleanValues.FALSE);
+		assertEquals("(false && false)", condition.toString());
 	}
 }

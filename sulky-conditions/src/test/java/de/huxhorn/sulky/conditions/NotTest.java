@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,10 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class NotTest
 	extends ConditionTestBase
@@ -72,5 +75,69 @@ public class NotTest
 		condition.setCondition(BooleanValues.TRUE);
 		assertEquals(false, condition.isTrue(null));
 		internalTestCondition(condition);
+	}
+
+	@Test
+	public void testHash()
+	{
+		Not condition1 = new Not();
+		Not condition2 = new Not();
+		assertEquals(condition1.hashCode(), condition2.hashCode());
+
+		condition1.setCondition(BooleanValues.TRUE);
+		condition2.setCondition(BooleanValues.TRUE);
+		assertEquals(condition1.hashCode(), condition2.hashCode());
+
+		condition1.setCondition(BooleanValues.FALSE);
+		condition2.setCondition(BooleanValues.FALSE);
+		assertEquals(condition1.hashCode(), condition2.hashCode());
+
+		condition1.setCondition(BooleanValues.TRUE);
+		assertNotEquals(condition1.hashCode(), condition2.hashCode());
+	}
+
+	@Test
+	public void testEquals()
+	{
+		Not condition1 = new Not();
+		Not condition2 = new Not();
+		assertEquals(condition1, condition2);
+
+		condition1.setCondition(BooleanValues.TRUE);
+		assertNotEquals(condition1, condition2);
+		assertNotEquals(condition2, condition1);
+
+		condition2.setCondition(BooleanValues.TRUE);
+		assertEquals(condition1, condition2);
+
+		condition1.setCondition(BooleanValues.FALSE);
+		condition2.setCondition(BooleanValues.FALSE);
+		assertEquals(condition1, condition2);
+
+		condition1.setCondition(BooleanValues.TRUE);
+		assertNotEquals(condition1, condition2);
+	}
+
+	@Test
+	public void testBasicEquals()
+	{
+		Condition condition = new Not();
+		//noinspection ObjectEqualsNull
+		assertFalse(condition.equals(null));
+		assertFalse(condition.equals(new Object()));
+		assertTrue(condition.equals(condition));
+	}
+
+	@Test
+	public void testString()
+	{
+		Not condition = new Not();
+		assertEquals("false", condition.toString());
+
+		condition.setCondition(BooleanValues.TRUE);
+		assertEquals("!(true)", condition.toString());
+
+		condition.setCondition(BooleanValues.FALSE);
+		assertEquals("!(false)", condition.toString());
 	}
 }

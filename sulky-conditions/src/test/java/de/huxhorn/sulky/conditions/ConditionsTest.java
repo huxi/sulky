@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,33 +43,48 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class ConditionsTest
-	extends ConditionTestBase
 {
 	@Test
-	public void conditionsContains()
+	public void containsBasic()
 	{
 		assertFalse(Conditions.contains(null, null));
 		assertFalse(Conditions.contains(null, BooleanValues.TRUE));
 		assertTrue(Conditions.contains(BooleanValues.TRUE, BooleanValues.TRUE));
 		assertTrue(Conditions.contains(BooleanValues.FALSE, BooleanValues.FALSE));
+	}
 
+	@Test
+	public void containsWrapper()
+	{
+		ConditionWrapper conditionWrapper = new Not();
+		assertTrue(Conditions.contains(conditionWrapper, null));
+		assertTrue(Conditions.contains(conditionWrapper, conditionWrapper));
+		ConditionWrapper otherWrapper=new Not();
+		assertTrue(Conditions.contains(conditionWrapper, otherWrapper));
+		otherWrapper.setCondition(BooleanValues.TRUE);
+		assertFalse(Conditions.contains(conditionWrapper, otherWrapper));
+		conditionWrapper.setCondition(BooleanValues.TRUE);
+		assertFalse(Conditions.contains(conditionWrapper, null));
+		assertTrue(Conditions.contains(conditionWrapper, conditionWrapper));
+		assertTrue(Conditions.contains(conditionWrapper, BooleanValues.TRUE));
+		assertFalse(Conditions.contains(conditionWrapper, BooleanValues.FALSE));
+	}
+
+	@Test
+	public void containsGroup()
+	{
 		ConditionGroup conditionGroup = new And();
 		assertTrue(Conditions.contains(conditionGroup, conditionGroup));
+		assertFalse(Conditions.contains(conditionGroup, null));
 		List<Condition> conditions = new ArrayList<Condition>();
 		conditionGroup.setConditions(conditions);
 		assertTrue(Conditions.contains(conditionGroup, conditionGroup));
+		assertFalse(Conditions.contains(conditionGroup, new And()));
 		conditions.add(BooleanValues.TRUE);
 		assertTrue(Conditions.contains(conditionGroup, conditionGroup));
 		assertTrue(Conditions.contains(conditionGroup, BooleanValues.TRUE));
 		assertFalse(Conditions.contains(conditionGroup, BooleanValues.FALSE));
 		conditions.add(BooleanValues.FALSE);
 		assertTrue(Conditions.contains(conditionGroup, BooleanValues.FALSE));
-
-		ConditionWrapper conditionWrapper = new Not();
-		assertTrue(Conditions.contains(conditionWrapper, conditionWrapper));
-		conditionWrapper.setCondition(BooleanValues.TRUE);
-		assertTrue(Conditions.contains(conditionWrapper, conditionWrapper));
-		assertTrue(Conditions.contains(conditionWrapper, BooleanValues.TRUE));
-		assertFalse(Conditions.contains(conditionWrapper, BooleanValues.FALSE));
 	}
 }

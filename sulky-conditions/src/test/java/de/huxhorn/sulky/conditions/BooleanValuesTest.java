@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2014 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2014 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,9 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 public class BooleanValuesTest
 	extends ConditionTestBase
@@ -59,5 +62,37 @@ public class BooleanValuesTest
 		BooleanValues condition = BooleanValues.FALSE;
 		assertEquals(false, condition.isTrue(null));
 		internalTestCondition(condition);
+	}
+
+	@Test
+	public void testHashCode()
+			throws CloneNotSupportedException, IOException, ClassNotFoundException
+	{
+		assertNotEquals(BooleanValues.FALSE.hashCode(), BooleanValues.TRUE.hashCode());
+	}
+
+	@Test
+	public void testEquals()
+			throws CloneNotSupportedException, IOException, ClassNotFoundException
+	{
+		assertNotEquals(BooleanValues.FALSE, BooleanValues.TRUE);
+	}
+
+	@Test
+	public void testBasicEquals()
+	{
+		Condition condition = BooleanValues.TRUE;
+		//noinspection ObjectEqualsNull
+		assertFalse(condition.equals(null));
+		assertFalse(condition.equals(new Object()));
+		assertTrue(condition.equals(condition));
+	}
+
+	@Test
+	public void testString()
+			throws CloneNotSupportedException, IOException, ClassNotFoundException
+	{
+		assertEquals("false", BooleanValues.FALSE.toString());
+		assertEquals("true", BooleanValues.TRUE.toString());
 	}
 }
