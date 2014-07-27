@@ -74,6 +74,27 @@ public class BlobRepositoryImplTest
 	}
 
 	@Test
+	public void caseSensitiveHandling()
+	{
+		BlobRepositoryImpl instance=new BlobRepositoryImpl();
+		assertEquals(true, instance.isCaseSensitive());
+
+		instance.setCaseSensitive(false);
+		assertEquals(false, instance.isCaseSensitive());
+	}
+
+	@Test
+	public void validatingHandling()
+	{
+		BlobRepositoryImpl instance=new BlobRepositoryImpl();
+		assertEquals(false, instance.isValidating());
+
+		instance.setValidating(true);
+		assertEquals(true, instance.isValidating());
+
+	}
+
+	@Test
 	public void put() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
