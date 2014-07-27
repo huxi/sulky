@@ -56,6 +56,12 @@ public final class SafeString
 
 	private static DateTimeFormatter isoDateTimeFormat = ISODateTimeFormat.dateTime().withZoneUTC();
 
+	static
+	{
+		// for the sake of coverage
+		new SafeString();
+	}
+
 	private SafeString()
 	{}
 

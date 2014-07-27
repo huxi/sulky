@@ -38,6 +38,12 @@ import java.util.List;
 
 public final class Conditions
 {
+	static
+	{
+		// for the sake of coverage
+		new Conditions();
+	}
+
 	private Conditions()
 	{}
 
