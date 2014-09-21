@@ -8,10 +8,10 @@ public final class MetaDataProto {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface MetaDataOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
+  public interface MetaDataOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:de.huxhorn.sulky.codec.filebuffer.MetaData)
+      com.google.protobuf.MessageOrBuilder {
 
-    // repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
      */
@@ -36,7 +36,6 @@ public final class MetaDataProto {
     de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder getEntryOrBuilder(
         int index);
 
-    // optional bool sparse = 2 [default = false];
     /**
      * <code>optional bool sparse = 2 [default = false];</code>
      */
@@ -50,8 +49,9 @@ public final class MetaDataProto {
    * Protobuf type {@code de.huxhorn.sulky.codec.filebuffer.MetaData}
    */
   public static final class MetaData extends
-      com.google.protobuf.GeneratedMessage
-      implements MetaDataOrBuilder {
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:de.huxhorn.sulky.codec.filebuffer.MetaData)
+      MetaDataOrBuilder {
     // Use MetaData.newBuilder() to construct.
     private MetaData(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
@@ -153,7 +153,6 @@ public final class MetaDataProto {
     }
 
     private int bitField0_;
-    // repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;
     public static final int ENTRY_FIELD_NUMBER = 1;
     private java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry> entry_;
     /**
@@ -189,7 +188,6 @@ public final class MetaDataProto {
       return entry_.get(index);
     }
 
-    // optional bool sparse = 2 [default = false];
     public static final int SPARSE_FIELD_NUMBER = 2;
     private boolean sparse_;
     /**
@@ -212,7 +210,8 @@ public final class MetaDataProto {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       for (int i = 0; i < getEntryCount(); i++) {
         if (!getEntry(i).isInitialized()) {
@@ -332,8 +331,9 @@ public final class MetaDataProto {
      * Protobuf type {@code de.huxhorn.sulky.codec.filebuffer.MetaData}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaDataOrBuilder {
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:de.huxhorn.sulky.codec.filebuffer.MetaData)
+        de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaDataOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
         return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_descriptor;
@@ -494,7 +494,6 @@ public final class MetaDataProto {
       }
       private int bitField0_;
 
-      // repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;
       private java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry> entry_ =
         java.util.Collections.emptyList();
       private void ensureEntryIsMutable() {
@@ -636,7 +635,8 @@ public final class MetaDataProto {
           java.lang.Iterable<? extends de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry> values) {
         if (entryBuilder_ == null) {
           ensureEntryIsMutable();
-          super.addAll(values, entry_);
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, entry_);
           onChanged();
         } else {
           entryBuilder_.addAllMessages(values);
@@ -734,7 +734,6 @@ public final class MetaDataProto {
         return entryBuilder_;
       }
 
-      // optional bool sparse = 2 [default = false];
       private boolean sparse_ ;
       /**
        * <code>optional bool sparse = 2 [default = false];</code>
@@ -778,10 +777,10 @@ public final class MetaDataProto {
     // @@protoc_insertion_point(class_scope:de.huxhorn.sulky.codec.filebuffer.MetaData)
   }
 
-  public interface MapEntryOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
+  public interface MapEntryOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:de.huxhorn.sulky.codec.filebuffer.MapEntry)
+      com.google.protobuf.MessageOrBuilder {
 
-    // required string key = 1;
     /**
      * <code>required string key = 1;</code>
      */
@@ -796,7 +795,6 @@ public final class MetaDataProto {
     com.google.protobuf.ByteString
         getKeyBytes();
 
-    // optional string value = 2;
     /**
      * <code>optional string value = 2;</code>
      */
@@ -815,8 +813,9 @@ public final class MetaDataProto {
    * Protobuf type {@code de.huxhorn.sulky.codec.filebuffer.MapEntry}
    */
   public static final class MapEntry extends
-      com.google.protobuf.GeneratedMessage
-      implements MapEntryOrBuilder {
+      com.google.protobuf.GeneratedMessage implements
+      // @@protoc_insertion_point(message_implements:de.huxhorn.sulky.codec.filebuffer.MapEntry)
+      MapEntryOrBuilder {
     // Use MapEntry.newBuilder() to construct.
     private MapEntry(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
       super(builder);
@@ -863,13 +862,15 @@ public final class MetaDataProto {
               break;
             }
             case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000001;
-              key_ = input.readBytes();
+              key_ = bs;
               break;
             }
             case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000002;
-              value_ = input.readBytes();
+              value_ = bs;
               break;
             }
           }
@@ -912,7 +913,6 @@ public final class MetaDataProto {
     }
 
     private int bitField0_;
-    // required string key = 1;
     public static final int KEY_FIELD_NUMBER = 1;
     private java.lang.Object key_;
     /**
@@ -955,7 +955,6 @@ public final class MetaDataProto {
       }
     }
 
-    // optional string value = 2;
     public static final int VALUE_FIELD_NUMBER = 2;
     private java.lang.Object value_;
     /**
@@ -1005,7 +1004,8 @@ public final class MetaDataProto {
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
 
       if (!hasKey()) {
         memoizedIsInitialized = 0;
@@ -1123,8 +1123,9 @@ public final class MetaDataProto {
      * Protobuf type {@code de.huxhorn.sulky.codec.filebuffer.MapEntry}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder {
+        com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:de.huxhorn.sulky.codec.filebuffer.MapEntry)
+        de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
         return de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_descriptor;
@@ -1254,7 +1255,6 @@ public final class MetaDataProto {
       }
       private int bitField0_;
 
-      // required string key = 1;
       private java.lang.Object key_ = "";
       /**
        * <code>required string key = 1;</code>
@@ -1268,9 +1268,12 @@ public final class MetaDataProto {
       public java.lang.String getKey() {
         java.lang.Object ref = key_;
         if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          key_ = s;
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            key_ = s;
+          }
           return s;
         } else {
           return (java.lang.String) ref;
@@ -1328,7 +1331,6 @@ public final class MetaDataProto {
         return this;
       }
 
-      // optional string value = 2;
       private java.lang.Object value_ = "";
       /**
        * <code>optional string value = 2;</code>
@@ -1342,9 +1344,12 @@ public final class MetaDataProto {
       public java.lang.String getValue() {
         java.lang.Object ref = value_;
         if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          value_ = s;
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            value_ = s;
+          }
           return s;
         } else {
           return (java.lang.String) ref;
@@ -1413,12 +1418,12 @@ public final class MetaDataProto {
     // @@protoc_insertion_point(class_scope:de.huxhorn.sulky.codec.filebuffer.MapEntry)
   }
 
-  private static com.google.protobuf.Descriptors.Descriptor
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -1441,29 +1446,29 @@ public final class MetaDataProto {
       "buffer.generatedH\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
-      new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
-        public com.google.protobuf.ExtensionRegistry assignDescriptors(
-            com.google.protobuf.Descriptors.FileDescriptor root) {
-          descriptor = root;
-          internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-          internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_descriptor,
-              new java.lang.String[] { "Entry", "Sparse", });
-          internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_descriptor =
-            getDescriptor().getMessageTypes().get(1);
-          internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_descriptor,
-              new java.lang.String[] { "Key", "Value", });
-          return null;
-        }
-      };
+        new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
+          public com.google.protobuf.ExtensionRegistry assignDescriptors(
+              com.google.protobuf.Descriptors.FileDescriptor root) {
+            descriptor = root;
+            return null;
+          }
+        };
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
         }, assigner);
+    internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_descriptor =
+      getDescriptor().getMessageTypes().get(0);
+    internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_de_huxhorn_sulky_codec_filebuffer_MetaData_descriptor,
+        new java.lang.String[] { "Entry", "Sparse", });
+    internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_de_huxhorn_sulky_codec_filebuffer_MapEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

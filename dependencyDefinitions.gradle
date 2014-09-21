@@ -17,7 +17,7 @@ project.ext.libraries = [
 'logback-access':         "ch.qos.logback:logback-access:${versions.logback}",
 'logback-classic':        "ch.qos.logback:logback-classic:${versions.logback}",
 'logback-core':           "ch.qos.logback:logback-core:${versions.logback}",
-'protobuf':               'com.google.protobuf:protobuf-java:2.5.0',
+'protobuf':               'com.google.protobuf:protobuf-java:2.6.0',
 'slf4j-api':              "org.slf4j:slf4j-api:${versions.slf4j}",
 'spock-core':             "org.spockframework:spock-core:${versions.spock}",
 'stax-api':               'stax:stax-api:1.0.1'
