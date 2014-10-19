@@ -131,6 +131,13 @@ public class JavaVersion
 		return MIN_VALUE;
 	}
 
+	/**
+	 * Parses a Java version and returns the corresponding JavaVersion instance.
+	 *
+	 * @param versionString the String to be parsed
+	 * @return the JavaVersion corresponding to the given versionString
+	 * @throws java.lang.IllegalArgumentException if versionString is null or invalid.
+	 */
 	public static JavaVersion parse(String versionString)
 	{
 		if(versionString == null)
@@ -176,21 +183,55 @@ public class JavaVersion
 	private final int patch;
 	private final String identifier;
 
+	/**
+	 * Creates a JavaVersion.
+	 *
+	 * @param huge the "huge" part of the version.
+	 * @param major the "major" part of the version.
+	 * @throws IllegalArgumentException if huge or major are negative.
+	 */
 	public JavaVersion(int huge, int major)
 	{
 		this(huge, major, 0, 0, null);
 	}
 
+	/**
+	 * Creates a JavaVersion.
+	 *
+	 * @param huge the "huge" part of the version.
+	 * @param major the "major" part of the version.
+	 * @param minor the "minor" part of the version.
+	 * @throws IllegalArgumentException if huge, major or minor are negative.
+	 */
 	public JavaVersion(int huge, int major, int minor)
 	{
 		this(huge, major, minor, 0, null);
 	}
 
+	/**
+	 * Creates a JavaVersion.
+	 *
+	 * @param huge the "huge" part of the version.
+	 * @param major the "major" part of the version.
+	 * @param minor the "minor" part of the version.
+	 * @param patch the "patch" part of the version.
+	 * @throws IllegalArgumentException if huge, major, minor or patch are negative.
+	 */
 	public JavaVersion(int huge, int major, int minor, int patch)
 	{
 		this(huge, major, minor, patch, null);
 	}
 
+	/**
+	 * Creates a JavaVersion.
+	 *
+	 * @param huge the "huge" part of the version.
+	 * @param major the "major" part of the version.
+	 * @param minor the "minor" part of the version.
+	 * @param patch the "patch" part of the version.
+	 * @param identifier the "identifier" part of the version.
+	 * @throws IllegalArgumentException if huge, major, minor or patch are negative or if identifier is invalid.
+	 */
 	public JavaVersion(int huge, int major, int minor, int patch, String identifier)
 	{
 		if(huge < 0)
@@ -233,31 +274,61 @@ public class JavaVersion
 		this.identifier = identifier;
 	}
 
+	/**
+	 * Returns the "huge" part of this version, e.g. 1 in case of 1.8.0_25.
+	 *
+	 * @return the "huge" part of this version.
+	 */
 	public int getHuge()
 	{
 		return huge;
 	}
 
+	/**
+	 * Returns the "major" part of this version, e.g. 8 in case of 1.8.0_25.
+	 *
+	 * @return the "major" part of this version.
+	 */
 	public int getMajor()
 	{
 		return major;
 	}
 
+	/**
+	 * Returns the "minor" part of this version, e.g. 0 in case of 1.8.0_25.
+	 *
+	 * @return the "minor" part of this version.
+	 */
 	public int getMinor()
 	{
 		return minor;
 	}
 
+	/**
+	 * Returns the "patch" (or update) part of this version, e.g. 25 in case of 1.8.0_25.
+	 *
+	 * @return the "patch" (or update) part of this version.
+	 */
 	public int getPatch()
 	{
 		return patch;
 	}
 
+	/**
+	 * Returns the "identifier" part of this version, e.g. "ea" in case of 1.8.0_25-ea.
+	 *
+	 * @return the "identifier" part of this version.
+	 */
 	public String getIdentifier()
 	{
 		return identifier;
 	}
 
+	/**
+	 * Returns the version string of this version, e.g. "1.8.0_25-ea" in case of JavaVersion(1,8,0,25,"ea").
+	 *
+	 * @return the version string of this version.
+	 */
 	public String toVersionString()
 	{
 		StringBuilder result = new StringBuilder();
