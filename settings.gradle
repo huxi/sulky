@@ -1,3 +1,4 @@
+include 'sulky-version'
 include 'sulky-blobs'
 include 'sulky-buffers'
 include 'sulky-buffers-filtering'
