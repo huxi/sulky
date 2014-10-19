@@ -44,47 +44,112 @@ import spock.lang.Subject
 @Subject(JavaVersion)
 class JavaVersionInitSpec extends Specification {
 
+    private static final String JAVA_VERSION = 'java.version'
+    private static final String JAVA_SPEC_VERSION = 'java.specification.version'
+
     @Shared
     TestSecurityManager manager = new TestSecurityManager()
 
     @Shared
     JavaVersion version
 
+    @Shared
+    String javaVersion
+
+    @Shared
+    String javaSpecificationVersion
+
     def setupSpec() {
         version = JavaVersion.JVM // ensures that this test doesn't influence init of JVM
+        javaVersion = System.getProperty(JAVA_VERSION)
+        javaSpecificationVersion = System.getProperty(JAVA_SPEC_VERSION)
         System.setSecurityManager(manager);
     }
 
     def cleanupSpec() {
         System.setSecurityManager(null);
+        System.setProperty(JAVA_VERSION, javaVersion)
+        System.setProperty(JAVA_SPEC_VERSION, javaSpecificationVersion)
     }
 
     def 'no property access'() {
         when:
-        manager.unreadableProperties = ['java.version', 'java.specification.version']
+        manager.unreadableProperties = [JAVA_VERSION, JAVA_SPEC_VERSION]
+        System.setProperty(JAVA_VERSION, '1.6.1_25')
+        System.setProperty(JAVA_SPEC_VERSION, '1.6')
         def version = JavaVersion.systemJavaVersion
 
         then:
-        version == null
+        version == JavaVersion.MIN_VALUE
     }
 
     def 'some property access'() {
         when:
-        manager.unreadableProperties = ['java.version']
+        manager.unreadableProperties = [JAVA_VERSION]
+        System.setProperty(JAVA_VERSION, '1.6.1_25')
+        System.setProperty(JAVA_SPEC_VERSION, '1.6')
         def version = JavaVersion.systemJavaVersion
 
         then:
         version != null
-        version == JavaVersion.parse(System.getProperty('java.specification.version'))
+        version == new JavaVersion(1,6)
     }
 
     def 'full property access'() {
         when:
         manager.unreadableProperties = null
+        System.setProperty(JAVA_VERSION, '1.6.1_25')
+        System.setProperty(JAVA_SPEC_VERSION, '1.6')
         def version = JavaVersion.systemJavaVersion
 
         then:
         version != null
-        version == JavaVersion.parse(System.getProperty('java.version'))
+        version == new JavaVersion(1,6,1,25)
+    }
+
+    def 'full property access with broken java version'() {
+        when:
+        manager.unreadableProperties = null
+        System.setProperty(JAVA_VERSION, '1.6.x_25')
+        System.setProperty(JAVA_SPEC_VERSION, '1.6')
+        def version = JavaVersion.systemJavaVersion
+
+        then:
+        version != null
+        version == new JavaVersion(1,6)
+    }
+
+    def 'full property access with broken java and spec version'() {
+        when:
+        manager.unreadableProperties = null
+        System.setProperty(JAVA_VERSION, '1.6.x_25')
+        System.setProperty(JAVA_SPEC_VERSION, '1.x')
+        def version = JavaVersion.systemJavaVersion
+
+        then:
+        version == JavaVersion.MIN_VALUE
+    }
+
+    def 'full property access with missing java version'() {
+        when:
+        manager.unreadableProperties = null
+        System.clearProperty(JAVA_VERSION)
+        System.setProperty(JAVA_SPEC_VERSION, '1.6')
+        def version = JavaVersion.systemJavaVersion
+
+        then:
+        version != null
+        version == new JavaVersion(1,6)
+    }
+
+    def 'full property access with missing java and spec version'() {
+        when:
+        manager.unreadableProperties = null
+        System.clearProperty(JAVA_VERSION)
+        System.clearProperty(JAVA_SPEC_VERSION)
+        def version = JavaVersion.systemJavaVersion
+
+        then:
+        version == JavaVersion.MIN_VALUE
     }
 }

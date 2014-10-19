@@ -38,8 +38,13 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 /**
+ * This class handles parsing and comparison of
+ * <a href="http://www.oracle.com/technetwork/java/javase/versioning-naming-139433.html">Java version numbers</a>.
  *
- * http://www.oracle.com/technetwork/java/javase/versioning-naming-139433.html
+ * The static JVM attribute contains the version retrieved from the "java.version" system property.
+ * If parsing that property fails (because security prevents access or the content is invalid) then
+ * "java.specification.version" is used as a fallback. If parsing that property also fails (for similar reasons)
+ * then the JVM attribute is initialized with MIN_VALUE, i.e. new JavaVersion(0,0,0,0,"!").
  */
 public class JavaVersion
 	implements Comparable<JavaVersion>
@@ -63,9 +68,9 @@ public class JavaVersion
 	private static final String JAVA_SPECIFICATION_VERSION_PROPERTY_NAME = "java.specification.version";
 
 	/**
-	 * Smallest possible version is JavaVersion(0,0,0,0).
+	 * Smallest possible version is JavaVersion(0,0,0,0,"!").
 	 */
-	public static final JavaVersion MIN_VALUE = new JavaVersion(0,0,0,0);
+	public static final JavaVersion MIN_VALUE = new JavaVersion(0,0,0,0,"!");
 
 	/**
 	 * The best possible approximation to the JVM JavaVersion.
@@ -76,15 +81,7 @@ public class JavaVersion
 
 	static
 	{
-		JavaVersion version = getSystemJavaVersion();
-
-		if(version == null)
-		{
-			// couldn't obtain any version info
-			version = MIN_VALUE;
-		}
-
-		JVM=version;
+		JVM=getSystemJavaVersion();
 	}
 
 	static JavaVersion getSystemJavaVersion() {
@@ -127,7 +124,11 @@ public class JavaVersion
 				// didn't parse.
 			}
 		}
-		return version;
+		if(version != null)
+		{
+			return version;
+		}
+		return MIN_VALUE;
 	}
 
 	public static JavaVersion parse(String versionString)
@@ -208,9 +209,21 @@ public class JavaVersion
 		{
 			throw new IllegalArgumentException("patch must not be negative!");
 		}
-		if(identifier != null && identifier.length() == 0)
+		if(identifier != null)
 		{
-			throw new IllegalArgumentException("identifier must not be empty string!");
+			identifier = identifier.trim();
+			if(identifier.length() == 0)
+			{
+				throw new IllegalArgumentException("identifier must not be empty string!");
+			}
+			if(identifier.indexOf('*') != -1)
+			{
+				throw new IllegalArgumentException("identifier must not contains the '*' character!");
+			}
+			if(identifier.indexOf('+') != -1)
+			{
+				throw new IllegalArgumentException("identifier must not contains the '+' character!");
+			}
 		}
 
 		this.huge = huge;

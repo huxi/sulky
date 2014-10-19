@@ -95,6 +95,24 @@ public class JavaVersionSpec extends Specification {
         ex.message == 'identifier must not be empty string!'
     }
 
+    def 'constructor throws an exceptions in case of * character'() {
+        when:
+        new JavaVersion(1, 2, 3, 4, 'f*o')
+
+        then:
+        IllegalArgumentException ex = thrown()
+        ex.message == 'identifier must not contains the \'*\' character!'
+    }
+
+    def 'constructor throws an exceptions in case of + character'() {
+        when:
+        new JavaVersion(1, 2, 3, 4, 'f+o')
+
+        then:
+        IllegalArgumentException ex = thrown()
+        ex.message == 'identifier must not contains the \'+\' character!'
+    }
+
     @Unroll('new JavaVersion(#huge, #major, #minor, #patch, #identifier) throws an exception since #failingPart is negative')
     def 'constructor throws an exceptions in case of negative values'(int huge, int major, int minor, int patch, String identifier, String failingPart) {
         when:
@@ -282,6 +300,9 @@ public class JavaVersionSpec extends Specification {
         // @formatter:off
         object                       | other                        | expectedResult
         JavaVersion.MIN_VALUE        | JavaVersion.MIN_VALUE        |              0
+        JavaVersion.MIN_VALUE        | new JavaVersion(0,0,0,0,"!") |              0
+        new JavaVersion(0,0,0,0)     | JavaVersion.MIN_VALUE        |              1
+        JavaVersion.MIN_VALUE        | new JavaVersion(0,0,0,0)     |             -1
         new JavaVersion(0,0,0,1)     | JavaVersion.MIN_VALUE        |              1
         JavaVersion.MIN_VALUE        | new JavaVersion(0,0,0,1)     |             -1
 
@@ -330,6 +351,51 @@ public class JavaVersionSpec extends Specification {
         compareString = compareString(expectedResult)
         objectString = object.toVersionString()
         otherString = other.toVersionString()
+    }
+
+    @Unroll('toVersionString() returns #expectedResult for #object')
+    def 'toVersionString() works'() {
+        when:
+        String result = object.toVersionString()
+
+        then:
+        result == expectedResult
+
+        where:
+        // @formatter:off
+        object                         | expectedResult
+        new JavaVersion(0,0,0,0)       | '0.0.0'
+        new JavaVersion(0,0,0,0,'x')   | '0.0.0-x'
+        new JavaVersion(1,2,3,4,'x')   | '1.2.3_04-x'
+        new JavaVersion(1,2,3,14,'x')  | '1.2.3_14-x'
+        new JavaVersion(1,2,3,114,'x') | '1.2.3_114-x'
+        // @formatter:on
+    }
+
+    def 'compareTo(null) throws exception'() {
+        when:
+        JavaVersion object = new JavaVersion(1,6)
+        object.compareTo(null)
+
+        then:
+        NullPointerException ex = thrown()
+        ex.getMessage() == 'other must not be null!'
+    }
+
+    def 'equals(null) returns false'() {
+        when:
+        JavaVersion object = new JavaVersion(1,6)
+
+        then:
+        !object.equals(null)
+    }
+
+    def 'equals(someOtherClass) returns false'() {
+        when:
+        JavaVersion object = new JavaVersion(1,6)
+
+        then:
+        !object.equals(1)
     }
 
     private static String compareString(int value)
