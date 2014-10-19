@@ -353,6 +353,48 @@ public class JavaVersionSpec extends Specification {
         otherString = other.toVersionString()
     }
 
+    @Unroll('JVM #jvmString is#compareString at least #versionString')
+    def 'isAtLeast works'() {
+        when:
+        boolean result = JavaVersion.isAtLeast(versionString)
+
+        then:
+        result == expectedResult
+
+        where:
+        // @formatter:off
+        versionString                       | expectedResult
+        "1.0.0"                             | true
+        JavaVersion.JVM.toVersionString()   | true
+        "17.0"                              | false
+        // @formatter:on
+
+        compareString = expectedResult? '' : 'n\'t'
+        jvmString = JavaVersion.JVM.toVersionString()
+    }
+
+    @Unroll
+    def 'isAtLeast("#versionString") throws an exception'(String versionString) {
+        when:
+        JavaVersion.isAtLeast(versionString)
+
+        then:
+        IllegalArgumentException ex = thrown()
+        ex.message == "versionString '${versionString}' is invalid."
+
+        where:
+        versionString << ['1', '1x', '1.2x', '1.2.3x', '1.2.3.4', '1.2.3_4x', '1.2.3_4-', '-1.6']
+    }
+
+    def 'isAtLeast(null) throws an exception'() {
+        when:
+        JavaVersion.isAtLeast(null)
+
+        then:
+        IllegalArgumentException ex = thrown()
+        ex.message == 'versionString must not be null!'
+    }
+
     @Unroll('toVersionString() returns #expectedResult for #object')
     def 'toVersionString() works'() {
         when:

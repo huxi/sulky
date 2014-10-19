@@ -177,6 +177,21 @@ public class JavaVersion
 		return new JavaVersion(huge, major, minor, patch, identifier);
 	}
 
+	/**
+	 * Returns true, if the JVM version is bigger or equals to the given versionString.
+	 *
+	 * This is a convenience method that is simply a shortcut for
+	 * (JVM.compareTo(parse(versionString)) &gt;= 0).
+	 *
+	 * @param versionString the version to compare with the JVM version.
+	 * @return true, if the JVM version is bigger or equals to the given versionString.
+	 * @throws java.lang.IllegalArgumentException if versionString is null or invalid.
+	 */
+	public static boolean isAtLeast(String versionString)
+	{
+		return JVM.compareTo(parse(versionString)) >= 0;
+	}
+
 	private final int huge;
 	private final int major;
 	private final int minor;
