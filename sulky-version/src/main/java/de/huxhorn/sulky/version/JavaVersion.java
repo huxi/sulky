@@ -218,11 +218,11 @@ public class JavaVersion
 			}
 			if(identifier.indexOf('*') != -1)
 			{
-				throw new IllegalArgumentException("identifier must not contains the '*' character!");
+				throw new IllegalArgumentException("identifier must not contain the '*' character!");
 			}
 			if(identifier.indexOf('+') != -1)
 			{
-				throw new IllegalArgumentException("identifier must not contains the '+' character!");
+				throw new IllegalArgumentException("identifier must not contain the '+' character!");
 			}
 		}
 

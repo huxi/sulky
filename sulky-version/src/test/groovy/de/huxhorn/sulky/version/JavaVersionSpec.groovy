@@ -101,7 +101,7 @@ public class JavaVersionSpec extends Specification {
 
         then:
         IllegalArgumentException ex = thrown()
-        ex.message == 'identifier must not contains the \'*\' character!'
+        ex.message == 'identifier must not contain the \'*\' character!'
     }
 
     def 'constructor throws an exceptions in case of + character'() {
@@ -110,7 +110,7 @@ public class JavaVersionSpec extends Specification {
 
         then:
         IllegalArgumentException ex = thrown()
-        ex.message == 'identifier must not contains the \'+\' character!'
+        ex.message == 'identifier must not contain the \'+\' character!'
     }
 
     @Unroll('new JavaVersion(#huge, #major, #minor, #patch, #identifier) throws an exception since #failingPart is negative')
