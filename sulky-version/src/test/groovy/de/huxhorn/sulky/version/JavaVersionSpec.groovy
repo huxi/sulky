@@ -414,6 +414,27 @@ public class JavaVersionSpec extends Specification {
         // @formatter:on
     }
 
+    @Unroll('toString() returns #expectedResult for #objectString')
+    def 'toString() works'() {
+        when:
+        String result = object.toString()
+
+        then:
+        result == expectedResult
+
+        where:
+        // @formatter:off
+        object                         | expectedResult
+        new JavaVersion(0,0,0,0)       | 'JavaVersion{huge=0, major=0, minor=0, patch=0, identifier=null}'
+        new JavaVersion(0,0,0,0,'x')   | 'JavaVersion{huge=0, major=0, minor=0, patch=0, identifier="x"}'
+        new JavaVersion(1,2,3,4,'x')   | 'JavaVersion{huge=1, major=2, minor=3, patch=4, identifier="x"}'
+        new JavaVersion(1,2,3,14,'x')  | 'JavaVersion{huge=1, major=2, minor=3, patch=14, identifier="x"}'
+        new JavaVersion(1,2,3,114,'x') | 'JavaVersion{huge=1, major=2, minor=3, patch=114, identifier="x"}'
+        // @formatter:on
+
+        objectString = object.toVersionString()
+    }
+
     def 'compareTo(null) throws exception'() {
         when:
         JavaVersion object = new JavaVersion(1,6)

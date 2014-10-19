@@ -396,13 +396,24 @@ public class JavaVersion
 	@Override
 	public String toString()
 	{
-		return "JavaVersion{" +
-				"huge=" + huge +
-				", major=" + major +
-				", minor=" + minor +
-				", patch=" + patch +
-				", identifier='" + identifier + '\'' +
-				'}';
+		StringBuilder result = new StringBuilder();
+
+		result.append("JavaVersion{huge=").append(huge).append(", major=").append(major);
+		result.append(", minor=").append(minor).append(", patch=").append(patch);
+
+		result.append(", identifier=");
+		if(identifier == null)
+		{
+			result.append("null");
+		}
+		else
+		{
+			result.append('"').append(identifier).append('"');
+		}
+
+		result.append('}');
+
+		return result.toString();
 	}
 
 	@SuppressWarnings("NullableProblems")
