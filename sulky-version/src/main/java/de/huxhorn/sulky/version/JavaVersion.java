@@ -34,6 +34,7 @@
 
 package de.huxhorn.sulky.version;
 
+import java.io.Serializable;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
@@ -46,9 +47,11 @@ import java.util.regex.Matcher;
  * "java.specification.version" is used as a fallback. If parsing that property also fails (for similar reasons)
  * then the JVM attribute is initialized with MIN_VALUE, i.e. new JavaVersion(0,0,0,0,"!").
  */
-public class JavaVersion
-	implements Comparable<JavaVersion>
+public final class JavaVersion
+	implements Comparable<JavaVersion>, Serializable
 {
+	private static final long serialVersionUID = 7704440212288750937L;
+
 	private static final Pattern VERSION_PATTERN = Pattern.compile("(\\d+)\\.(\\d+)(\\.(\\d+)([_](\\d+))?)?(-(.+))?");
 
 	private static final int HUGE_GROUP_INDEX  = 1;

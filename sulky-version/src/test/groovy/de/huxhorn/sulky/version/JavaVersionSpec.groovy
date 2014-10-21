@@ -37,6 +37,7 @@ package de.huxhorn.sulky.version
 import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Unroll;
+import de.huxhorn.sulky.junit.JUnitTools;
 
 @Subject(JavaVersion)
 public class JavaVersionSpec extends Specification {
@@ -482,4 +483,22 @@ public class JavaVersionSpec extends Specification {
         JavaVersion.JVM.compareTo(JavaVersion.MIN_VALUE) > 0
     }
 
+    def 'serializable'() {
+        expect:
+        JUnitTools.testSerialization(object)
+
+        where:
+        object << [new JavaVersion(0,0,0,0,'foo'), new JavaVersion(1,2,3,4,'bar'), new JavaVersion(1,2,3,4)]
+    }
+
+    /*
+    Adding XML serialization would require default constructor and setters. So: nope.
+    def 'serializable as XML'() {
+        expect:
+        JUnitTools.testXmlSerialization(object)
+
+        where:
+        object << [new JavaVersion(0,0,0,0,'foo'), new JavaVersion(1,2,3,4,'bar'), new JavaVersion(1,2,3,4)]
+    }
+    */
 }

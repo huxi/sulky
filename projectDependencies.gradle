@@ -5,13 +5,6 @@ subprojects {
 	apply plugin: 'maven'
 }
 
-project(':sulky-version') {
-	archivesBaseName = 'de.huxhorn.sulky.version'
-	description = 'This file is part of the sulky modules. It contains java version handling stuff.'
-	dependencies {
-	}
-}
-
 project(':sulky-io') {
 	archivesBaseName = 'de.huxhorn.sulky.io'
 	description = 'This file is part of the sulky modules. It\'s supposed to contain classes I\'d like to see in commons-io. At the moment it only contains a TimeoutOutputStream that throws an IOException if a certain timeout is exceeded.'
@@ -36,6 +29,14 @@ project(':sulky-junit') {
 		compile libraries.'slf4j-api'
 		compile libraries.'logback-core'
 		compile libraries.'logback-classic'
+	}
+}
+
+project(':sulky-version') {
+	archivesBaseName = 'de.huxhorn.sulky.version'
+	description = 'This file is part of the sulky modules. It contains java version handling stuff.'
+	dependencies {
+		testCompile project(':sulky-junit')
 	}
 }
 
