@@ -84,7 +84,8 @@ public class JavaVersion
 		JVM=getSystemJavaVersion();
 	}
 
-	static JavaVersion getSystemJavaVersion() {
+	static JavaVersion getSystemJavaVersion()
+	{
 		JavaVersion version=null;
 		try
 		{
