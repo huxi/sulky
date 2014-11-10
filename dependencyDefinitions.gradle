@@ -6,7 +6,7 @@ project.ext.versions = [
 ]
 
 project.ext.libraries = [
-'commons-codec':          'commons-codec:commons-codec:1.9',
+'commons-codec':          'commons-codec:commons-codec:1.10',
 'commons-io':             'commons-io:commons-io:2.4',
 'easymock':               'org.easymock:easymock:3.2',
 'groovy':                 "org.codehaus.groovy:groovy:${versions.groovy}",
