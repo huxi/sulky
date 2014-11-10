@@ -46,6 +46,8 @@ import java.util.regex.Matcher;
  * If parsing that property fails (because security prevents access or the content is invalid) then
  * "java.specification.version" is used as a fallback. If parsing that property also fails (for similar reasons)
  * then the JVM attribute is initialized with MIN_VALUE, i.e. new JavaVersion(0,0,0,0,"!").
+ *
+ * This class does not handle the proposed version string suggested in http://openjdk.java.net/jeps/223
  */
 public final class JavaVersion
 	implements Comparable<JavaVersion>, Serializable
