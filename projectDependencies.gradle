@@ -63,6 +63,16 @@ project(':sulky-buffers') {
 project(':sulky-codec-filebuffer') {
 	archivesBaseName = 'de.huxhorn.sulky.codec.filebuffer'
 	description = 'This file is part of the sulky modules. It contains a Codec-aware filebuffer.'
+
+	javadoc {
+		// disable doclint for protobuf
+		// http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+		// https://github.com/google/protobuf/issues/304
+		if (JavaVersion.current().isJava8Compatible()) {
+			options.addStringOption('Xdoclint:none', '-quiet')
+		}
+	}
+
 	dependencies {
 		compile libraries.'slf4j-api'
 		compile libraries.'protobuf'

@@ -39,6 +39,12 @@ task javadocAll(type: Javadoc) {
 	destinationDir = file("$buildDir/javadocAll")
 	source = files { subprojects.collect { it.sourceSets.main.java } }
 	classpath = files { subprojects.collect { it.sourceSets.main.compileClasspath } }
+	// disable doclint for protobuf
+	// http://blog.joda.org/2014/02/turning-off-doclint-in-jdk-8-javadoc.html
+	// https://github.com/google/protobuf/issues/304
+	if (JavaVersion.current().isJava8Compatible()) {
+		options.addStringOption('Xdoclint:none', '-quiet')
+	}
 }
 
 task sourceZip(type: Zip) {
