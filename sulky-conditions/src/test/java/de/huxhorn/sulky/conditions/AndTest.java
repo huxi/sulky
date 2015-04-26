@@ -59,7 +59,7 @@ public class AndTest
 		assertEquals(true, condition.isTrue(null));
 		internalTestCondition(condition);
 
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		condition.setConditions(conditions);
 		assertNotNull(condition.getConditions());
 		assertEquals(conditions, condition.getConditions());
@@ -72,7 +72,7 @@ public class AndTest
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
 		And condition = new And();
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		condition.setConditions(conditions);
 
 		conditions.add(BooleanValues.TRUE);
@@ -91,7 +91,7 @@ public class AndTest
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
 		And condition = new And();
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		condition.setConditions(conditions);
 
 		conditions.add(BooleanValues.FALSE);
@@ -112,9 +112,9 @@ public class AndTest
 		And condition2 = new And();
 		assertEquals(condition1.hashCode(), condition2.hashCode());
 
-		List<Condition> conditions1=new ArrayList<Condition>();
+		List<Condition> conditions1=new ArrayList<>();
 		conditions1.add(BooleanValues.FALSE);
-		List<Condition> conditions2=new ArrayList<Condition>();
+		List<Condition> conditions2=new ArrayList<>();
 		conditions2.add(BooleanValues.FALSE);
 
 		condition1.setConditions(conditions1);
@@ -132,8 +132,8 @@ public class AndTest
 		And condition2 = new And();
 		assertEquals(condition1, condition2);
 
-		List<Condition> conditions1=new ArrayList<Condition>();
-		List<Condition> conditions2=new ArrayList<Condition>();
+		List<Condition> conditions1=new ArrayList<>();
+		List<Condition> conditions2=new ArrayList<>();
 
 		condition1.setConditions(conditions1);
 		assertNotEquals(condition1, condition2);
@@ -166,7 +166,7 @@ public class AndTest
 		And condition = new And();
 		assertEquals("true", condition.toString());
 
-		List<Condition> conditions=new ArrayList<Condition>();
+		List<Condition> conditions=new ArrayList<>();
 		condition.setConditions(conditions);
 		assertEquals("true", condition.toString());
 

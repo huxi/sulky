@@ -190,7 +190,7 @@ public class ReadOnlyExclusiveCodecFileBuffer<E>
 	@Override
 	public Iterator<E> iterator()
 	{
-		return new BasicBufferIterator<E>(this);
+		return new BasicBufferIterator<>(this);
 	}
 
 	public void close()
@@ -230,11 +230,11 @@ public class ReadOnlyExclusiveCodecFileBuffer<E>
 			MetaData metaData = fileHeader.getMetaData();
 			if(metaData.isSparse())
 			{
-				dataStrategy = new SparseDataStrategy<E>();
+				dataStrategy = new SparseDataStrategy<>();
 			}
 			else
 			{
-				dataStrategy = new DefaultDataStrategy<E>();
+				dataStrategy = new DefaultDataStrategy<>();
 			}
 			this.fileHeader = fileHeader;
 		}

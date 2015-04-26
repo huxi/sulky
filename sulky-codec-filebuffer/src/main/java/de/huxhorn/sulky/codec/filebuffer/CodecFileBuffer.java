@@ -137,11 +137,11 @@ public class CodecFileBuffer<E>
 		this.preferredSparse = preferredSparse;
 		if(preferredMetaData != null)
 		{
-			preferredMetaData = new HashMap<String, String>(preferredMetaData);
+			preferredMetaData = new HashMap<>(preferredMetaData);
 		}
 		if(preferredMetaData != null)
 		{
-			this.preferredMetaData = new HashMap<String, String>(preferredMetaData);
+			this.preferredMetaData = new HashMap<>(preferredMetaData);
 		}
 		this.codec = codec;
 
@@ -236,7 +236,7 @@ public class CodecFileBuffer<E>
 			}
 			else
 			{
-				elementProcessors = new ArrayList<ElementProcessor<E>>(elementProcessors);
+				elementProcessors = new ArrayList<>(elementProcessors);
 			}
 		}
 		this.elementProcessors = elementProcessors;
@@ -564,7 +564,7 @@ public class CodecFileBuffer<E>
 
 	public Iterator<E> iterator()
 	{
-		return new BasicBufferIterator<E>(this);
+		return new BasicBufferIterator<>(this);
 	}
 
 
@@ -663,11 +663,11 @@ public class CodecFileBuffer<E>
 		MetaData metaData = fileHeader.getMetaData();
 		if(metaData.isSparse())
 		{
-			dataStrategy = new SparseDataStrategy<E>();
+			dataStrategy = new SparseDataStrategy<>();
 		}
 		else
 		{
-			dataStrategy = new DefaultDataStrategy<E>();
+			dataStrategy = new DefaultDataStrategy<>();
 		}
 		this.fileHeader = fileHeader;
 	}

@@ -77,7 +77,7 @@ public class FilteringBuffer<E>
 		this.indicesLock = new ReentrantReadWriteLock(true);
 		this.sourceBuffer = sourceBuffer;
 		this.condition = condition;
-		this.filteredIndices = new ArrayList<Long>();
+		this.filteredIndices = new ArrayList<>();
 		this.disposed = false;
 	}
 
@@ -160,7 +160,7 @@ public class FilteringBuffer<E>
 
 	public Iterator<E> iterator()
 	{
-		return new BasicBufferIterator<E>(this);
+		return new BasicBufferIterator<>(this);
 	}
 
 	public Buffer<E> getSourceBuffer()

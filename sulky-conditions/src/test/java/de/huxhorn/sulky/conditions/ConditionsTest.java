@@ -76,7 +76,7 @@ public class ConditionsTest
 		ConditionGroup conditionGroup = new And();
 		assertTrue(Conditions.contains(conditionGroup, conditionGroup));
 		assertFalse(Conditions.contains(conditionGroup, null));
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		conditionGroup.setConditions(conditions);
 		assertTrue(Conditions.contains(conditionGroup, conditionGroup));
 		assertFalse(Conditions.contains(conditionGroup, new And()));

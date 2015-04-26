@@ -41,7 +41,7 @@ public class CompressingSerializableCodec<E extends Serializable>
 {
 	public CompressingSerializableCodec()
 	{
-		super(new SerializableEncoder<E>(true),
-			new SerializableDecoder<E>(true));
+		super(new SerializableEncoder<>(true),
+			new SerializableDecoder<>(true));
 	}
 }

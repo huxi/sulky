@@ -70,7 +70,7 @@ public abstract class MapLoader
 		}
 		Logger logger = LoggerFactory.getLogger(MapLoader.class);
 
-		List<String> suff = new ArrayList<String>(suffixes.length);
+		List<String> suff = new ArrayList<>(suffixes.length);
 		for(int i = 0; i < suffixes.length; i++)
 		{
 			String cur = suffixes[i];
@@ -137,7 +137,7 @@ public abstract class MapLoader
 	{
 		if(result == null)
 		{
-			result = new HashMap<String, Object>();
+			result = new HashMap<>();
 		}
 
 		Map<String, Object> map = loadMap(url);
@@ -181,7 +181,7 @@ class PropertiesMapLoader
 		{
 			return null;
 		}
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<>();
 		InputStream is = url.openStream();
 
 		Properties bundle = new Properties();

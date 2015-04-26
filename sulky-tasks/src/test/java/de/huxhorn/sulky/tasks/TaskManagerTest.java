@@ -36,7 +36,7 @@ public class TaskManagerTest
 	{
 		Toolkit tk = Toolkit.getDefaultToolkit();
 		if(logger.isDebugEnabled()) logger.debug("Toolkit: {}", tk);
-		instance = new TaskManager<Integer>();
+		instance = new TaskManager<>();
 		taskName = "TaskName";
 	}
 
@@ -149,7 +149,7 @@ public class TaskManagerTest
 		instance.startUp();
 		String name = "TaskName";
 		String description = "Task description";
-		Map<String, String> metaData = new HashMap<String, String>();
+		Map<String, String> metaData = new HashMap<>();
 		metaData.put("foo", "bar");
 		Task<Integer> task = instance.startTask(new Callable<Integer>()
 		{
@@ -411,7 +411,7 @@ public class TaskManagerTest
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
-		List<String> expectedMsgs = new ArrayList<String>();
+		List<String> expectedMsgs = new ArrayList<>();
 		expectedMsgs.add(TestTaskListener.CREATED + callable);
 		expectedMsgs.add(TestTaskListener.FINISHED + callable);
 		assertEquals(expectedMsgs, messages);
@@ -444,7 +444,7 @@ public class TaskManagerTest
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
-		List<String> expectedMsgs = new ArrayList<String>();
+		List<String> expectedMsgs = new ArrayList<>();
 		expectedMsgs.add(TestTaskListener.CREATED + callable);
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 0");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 10");
@@ -488,7 +488,7 @@ public class TaskManagerTest
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
-		List<String> expectedMsgs = new ArrayList<String>();
+		List<String> expectedMsgs = new ArrayList<>();
 		expectedMsgs.add(TestTaskListener.CREATED + callable);
 		expectedMsgs.add(TestTaskListener.FAILED + callable + " java.lang.RuntimeException");
 		assertEquals(expectedMsgs, messages);
@@ -521,7 +521,7 @@ public class TaskManagerTest
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
-		List<String> expectedMsgs = new ArrayList<String>();
+		List<String> expectedMsgs = new ArrayList<>();
 		expectedMsgs.add(TestTaskListener.CREATED + callable);
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 0");
 		expectedMsgs.add(TestTaskListener.PROGRESS + callable + " 10");
@@ -894,7 +894,7 @@ public class TaskManagerTest
 
 		public TestTaskListener()
 		{
-			messages = new ArrayList<String>();
+			messages = new ArrayList<>();
 		}
 
 		public void taskCreated(Task<Integer> task)

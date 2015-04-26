@@ -345,7 +345,7 @@ public class SerializingFileBuffer<E>
 
 	public Iterator<E> iterator()
 	{
-		return new BasicBufferIterator<E>(this);
+		return new BasicBufferIterator<>(this);
 	}
 
 	public File getDataFile()

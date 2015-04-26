@@ -112,7 +112,7 @@ public final class ResourceMaps
 	{
 		final Logger logger = LoggerFactory.getLogger(Resources.class);
 
-		Map<String, Object> result = new HashMap<String, Object>();
+		Map<String, Object> result = new HashMap<>();
 
 		URL[] resourceUrls;
 		if(local)

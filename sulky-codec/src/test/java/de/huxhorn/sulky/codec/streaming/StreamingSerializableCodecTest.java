@@ -48,7 +48,7 @@ public class StreamingSerializableCodecTest
 	public void test() throws IOException
 	{
 		String obj = "Foo";
-		StreamingSerializableCodec<String> instance = new StreamingSerializableCodec<String>();
+		StreamingSerializableCodec<String> instance = new StreamingSerializableCodec<>();
 		ByteArrayOutputStream bos=new ByteArrayOutputStream();
 		instance.encode(obj, bos);
 		ByteArrayInputStream bis=new ByteArrayInputStream(bos.toByteArray());

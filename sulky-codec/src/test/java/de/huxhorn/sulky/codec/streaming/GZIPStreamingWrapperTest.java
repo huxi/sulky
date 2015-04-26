@@ -48,8 +48,8 @@ public class GZIPStreamingWrapperTest
 	public void test() throws IOException
 	{
 		String obj = "Foo";
-		StreamingEncoder<String> encoder = new GZIPStreamingEncoderWrapper<String>(new StreamingSerializableCodec<String>());
-		StreamingDecoder<String> decoder = new GZIPStreamingDecoderWrapper<String>(new StreamingSerializableCodec<String>());
+		StreamingEncoder<String> encoder = new GZIPStreamingEncoderWrapper<>(new StreamingSerializableCodec<>());
+		StreamingDecoder<String> decoder = new GZIPStreamingDecoderWrapper<>(new StreamingSerializableCodec<>());
 		ByteArrayOutputStream bos=new ByteArrayOutputStream();
 		encoder.encode(obj, bos);
 		ByteArrayInputStream bis=new ByteArrayInputStream(bos.toByteArray());

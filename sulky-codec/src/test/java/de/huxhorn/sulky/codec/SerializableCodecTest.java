@@ -44,7 +44,7 @@ public class SerializableCodecTest
 	public void test()
 	{
 		String obj = "Foo";
-		SerializableCodec<String> instance = new SerializableCodec<String>();
+		SerializableCodec<String> instance = new SerializableCodec<>();
 		byte[] encoded = instance.encode(obj);
 		String decoded = instance.decode(encoded);
 		assertEquals(obj, decoded);

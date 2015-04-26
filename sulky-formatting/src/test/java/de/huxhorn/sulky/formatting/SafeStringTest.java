@@ -171,10 +171,10 @@ public class SafeStringTest
 	@Test
 	public void deepMapList()
 	{
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		list.add("One");
 		list.add("Two");
-		Map<String, List<String>> map = new TreeMap<String, List<String>>();
+		Map<String, List<String>> map = new TreeMap<>();
 		map.put("foo", list);
 		map.put("bar", list);
 
@@ -185,7 +185,7 @@ public class SafeStringTest
 	public void deepMapArray()
 	{
 		String[] array = new String[]{"One", "Two"};
-		Map<String, String[]> map = new TreeMap<String, String[]>();
+		Map<String, String[]> map = new TreeMap<>();
 		map.put("foo", array);
 		map.put("bar", array);
 
@@ -195,10 +195,10 @@ public class SafeStringTest
 	@Test
 	public void deepListList()
 	{
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		list.add("One");
 		list.add("Two");
-		List<List<String>> outer = new ArrayList<List<String>>();
+		List<List<String>> outer = new ArrayList<>();
 		outer.add(list);
 		outer.add(list);
 
@@ -209,7 +209,7 @@ public class SafeStringTest
 	public void deepListArray()
 	{
 		String[] array = new String[]{"One", "Two"};
-		List<String[]> list = new ArrayList<String[]>();
+		List<String[]> list = new ArrayList<>();
 		list.add(array);
 		list.add(array);
 
@@ -299,7 +299,7 @@ public class SafeStringTest
 	@Test
 	public void nullInList()
 	{
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		list.add(null);
 		evaluate("[null]", list);
 	}

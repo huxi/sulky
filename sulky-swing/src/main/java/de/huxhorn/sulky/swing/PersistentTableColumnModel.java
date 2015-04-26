@@ -50,14 +50,14 @@ public class PersistentTableColumnModel
 {
 	private static final long serialVersionUID = 367475030324866809L;
 
-	protected List<TableColumn> allTableColumns = new ArrayList<TableColumn>();
+	protected List<TableColumn> allTableColumns = new ArrayList<>();
 
 	/**
 	 * Creates an extended table column model.
 	 */
 	public PersistentTableColumnModel()
 	{
-		allTableColumns = new ArrayList<TableColumn>();
+		allTableColumns = new ArrayList<>();
 		initColumns();
 	}
 
@@ -279,7 +279,7 @@ public class PersistentTableColumnModel
 
 	public List<TableColumnLayoutInfo> getColumnLayoutInfos()
 	{
-		final List<TableColumnLayoutInfo> tableColumnLayoutInfos = new ArrayList<TableColumnLayoutInfo>(allTableColumns.size());
+		final List<TableColumnLayoutInfo> tableColumnLayoutInfos = new ArrayList<>(allTableColumns.size());
 
 		for(TableColumn current : allTableColumns)
 		{

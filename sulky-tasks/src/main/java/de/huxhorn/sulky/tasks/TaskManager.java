@@ -142,12 +142,12 @@ public class TaskManager<T>
 		this.taskListenersLock = new ReentrantReadWriteLock(true);
 		this.nextTaskId = 1;
 		this.usingEventQueue = usingEventQueue;
-		this.internalCreatedTasks = new ArrayList<Task<T>>();
-		this.tasks = new HashMap<Long, Task<T>>();
-		this.callableTasks = new HashMap<Integer, Task<T>>();
+		this.internalCreatedTasks = new ArrayList<>();
+		this.tasks = new HashMap<>();
+		this.callableTasks = new HashMap<>();
 		this.progressChangeListener = new ProgressChangeListener();
-		this.internalProgressChanges = new ArrayList<ProgressChange<T>>();
-		this.taskListeners = new LinkedList<TaskListener<T>>();
+		this.internalProgressChanges = new ArrayList<>();
+		this.taskListeners = new LinkedList<>();
 		this.executorService = executorService;
 		this.state = State.INITIALIZED;
 	}
@@ -271,7 +271,7 @@ public class TaskManager<T>
 				throw new IllegalArgumentException("Callable is already scheduled!");
 			}
 			long newId = nextTaskId++;
-			task = new TaskImpl<T>(newId, this, future, callable, name, description, metaData);
+			task = new TaskImpl<>(newId, this, future, callable, name, description, metaData);
 			internalCreatedTasks.add(task);
 			tasks.put(newId, task);
 			callableTasks.put(callableIdentity, task);
@@ -351,7 +351,7 @@ public class TaskManager<T>
 		lock.lock();
 		try
 		{
-			result = new HashMap<Long, Task<T>>(tasks);
+			result = new HashMap<>(tasks);
 		}
 		finally
 		{
@@ -425,12 +425,12 @@ public class TaskManager<T>
 					{
 						if(internalCreatedTasks.size() > 0)
 						{
-							createdTasks = new ArrayList<Task<T>>(internalCreatedTasks);
+							createdTasks = new ArrayList<>(internalCreatedTasks);
 							internalCreatedTasks.clear();
 						}
 						if(internalProgressChanges.size() > 0)
 						{
-							progressChanges = new ArrayList<ProgressChange<T>>(internalProgressChanges);
+							progressChanges = new ArrayList<>(internalProgressChanges);
 							internalProgressChanges.clear();
 						}
 						for(Map.Entry<Long, Task<T>> entry : tasks.entrySet())
@@ -440,7 +440,7 @@ public class TaskManager<T>
 							{
 								if(doneTasks == null)
 								{
-									doneTasks = new ArrayList<Task<T>>();
+									doneTasks = new ArrayList<>();
 								}
 								doneTasks.add(task);
 							}
@@ -544,7 +544,7 @@ public class TaskManager<T>
 			lock.lock();
 			try
 			{
-				this.clonedListeners = new ArrayList<TaskListener<T>>(taskListeners);
+				this.clonedListeners = new ArrayList<>(taskListeners);
 			}
 			finally
 			{
@@ -730,7 +730,7 @@ public class TaskManager<T>
 					Task<T> task = callableTasks.get(callableIdentity);
 					if(task != null)
 					{
-						internalProgressChanges.add(new ProgressChange<T>(task, progress));
+						internalProgressChanges.add(new ProgressChange<>(task, progress));
 					}
 				}
 				finally
@@ -763,7 +763,7 @@ public class TaskManager<T>
 			this.description = description;
 			if(metaData != null)
 			{
-				this.metaData = new HashMap<String, String>(metaData);
+				this.metaData = new HashMap<>(metaData);
 			}
 			else
 			{

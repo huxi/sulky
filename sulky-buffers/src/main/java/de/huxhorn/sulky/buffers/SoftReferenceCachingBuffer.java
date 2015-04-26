@@ -70,7 +70,7 @@ public class SoftReferenceCachingBuffer<E>
 	{
 		this.disposed = false;
 		this.buffer = buffer;
-		this.cache = new ConcurrentHashMap<Long, MySoftReference<E>>();
+		this.cache = new ConcurrentHashMap<>();
 	}
 
 	Buffer<E> getWrappedBuffer()
@@ -104,7 +104,7 @@ public class SoftReferenceCachingBuffer<E>
 		result = buffer.get(index);
 		if(result != null)
 		{
-			cache.put(index, new MySoftReference<E>(cache, index, result));
+			cache.put(index, new MySoftReference<>(cache, index, result));
 			if(logger.isDebugEnabled()) logger.debug("Added {} to cache.", index);
 		}
 		return result;

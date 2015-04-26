@@ -554,7 +554,7 @@ public final class Resources
 		String localeSuf[] = getSingleLocaleSuffixArray(locale);
 		String defaultSuf[] = getSingleLocaleSuffixArray(Locale.getDefault());
 
-		List<String> resultList = new ArrayList<String>(localeSuf.length + defaultSuf.length);
+		List<String> resultList = new ArrayList<>(localeSuf.length + defaultSuf.length);
 		for(String currentSuffix : localeSuf)
 		{
 			if(!resultList.contains(currentSuffix))
@@ -613,7 +613,7 @@ public final class Resources
 		final String variant = locale.getVariant();
 		final int variantLength = variant.length();
 
-		List<String> resultList = new ArrayList<String>(3);
+		List<String> resultList = new ArrayList<>(3);
 
 		if(languageLength + countryLength + variantLength != 0)
 		{
@@ -728,7 +728,7 @@ public final class Resources
 	{
 		final Logger logger = LoggerFactory.getLogger(Resources.class);
 
-		List<String> result = new ArrayList<String>();
+		List<String> result = new ArrayList<>();
 		BufferedReader br = null;
 		IOException exception = null;
 		try
@@ -785,7 +785,7 @@ public final class Resources
 
 	private static URL resolveLink(final Class clazz, final String resourcePath)
 	{
-		List<String> stack = new ArrayList<String>();
+		List<String> stack = new ArrayList<>();
 
 		return recursiveResolve(stack, clazz, resourcePath);
 	}
@@ -845,7 +845,7 @@ public final class Resources
 					else
 					{
 						if(logger.isDebugEnabled()) logger.debug("Checking for link-target '{}'.", currentLinkTarget);
-						result = recursiveResolve(new ArrayList<String>(stack), clazz, currentLinkTarget);
+						result = recursiveResolve(new ArrayList<>(stack), clazz, currentLinkTarget);
 						if(result != null)
 						{
 							if(logger.isDebugEnabled()) logger.debug("Found link-target '{}'.", currentLinkTarget);
@@ -936,7 +936,7 @@ public final class Resources
 			suff = suffixes;
 		}
 
-		List<URL> urls = new ArrayList<URL>();
+		List<URL> urls = new ArrayList<>();
 		// handle locale parameter localePaths
 		String localePaths[] = getLocaleSuffixArray(locale);
 		for(String currentLocPath : localePaths)
@@ -1019,7 +1019,7 @@ public final class Resources
 	{
 		final Logger logger = LoggerFactory.getLogger(Resources.class);
 
-		List<URL> urlList = new ArrayList<URL>();
+		List<URL> urlList = new ArrayList<>();
 		// collect resources from given class...
 		collectResources(urlList, clazz, resourceBaseName, suffixes, locale, firstOnly);
 		if(!firstOnly || urlList.size() == 0)

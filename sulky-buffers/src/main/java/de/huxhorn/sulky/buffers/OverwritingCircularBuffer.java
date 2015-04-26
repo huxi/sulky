@@ -173,7 +173,7 @@ public class OverwritingCircularBuffer<E>
 	public List<E> removeAll()
 	{
 		long availableElements = getAvailableElements();
-		List<E> result = new ArrayList<E>((int) availableElements);
+		List<E> result = new ArrayList<>((int) availableElements);
 
 		for(int i = 0; i < availableElements; i++)
 		{

@@ -233,7 +233,7 @@ public final class PathTools
 	 */
 	public static List<String> getPathStack(String path, boolean evaluateDots)
 	{
-		List<String> pathStack = new ArrayList<String>();
+		List<String> pathStack = new ArrayList<>();
 		boolean wasAbsolute = false;
 		if(path.startsWith("/"))
 		{

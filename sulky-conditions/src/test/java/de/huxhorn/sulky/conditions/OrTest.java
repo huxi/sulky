@@ -59,7 +59,7 @@ public class OrTest
 		assertEquals(false, condition.isTrue(null));
 		internalTestCondition(condition);
 
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		condition.setConditions(conditions);
 		assertNotNull(condition.getConditions());
 		assertEquals(conditions, condition.getConditions());
@@ -72,7 +72,7 @@ public class OrTest
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
 		Or condition = new Or();
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		condition.setConditions(conditions);
 
 		conditions.add(BooleanValues.TRUE);
@@ -91,7 +91,7 @@ public class OrTest
 		throws CloneNotSupportedException, IOException, ClassNotFoundException
 	{
 		Or condition = new Or();
-		List<Condition> conditions = new ArrayList<Condition>();
+		List<Condition> conditions = new ArrayList<>();
 		condition.setConditions(conditions);
 
 		conditions.add(BooleanValues.FALSE);
@@ -113,9 +113,9 @@ public class OrTest
 		Or condition2 = new Or();
 		assertEquals(condition1.hashCode(), condition2.hashCode());
 
-		List<Condition> conditions1=new ArrayList<Condition>();
+		List<Condition> conditions1=new ArrayList<>();
 		conditions1.add(BooleanValues.FALSE);
-		List<Condition> conditions2=new ArrayList<Condition>();
+		List<Condition> conditions2=new ArrayList<>();
 		conditions2.add(BooleanValues.FALSE);
 
 		condition1.setConditions(conditions1);
@@ -133,8 +133,8 @@ public class OrTest
 		Or condition2 = new Or();
 		assertEquals(condition1, condition2);
 
-		List<Condition> conditions1=new ArrayList<Condition>();
-		List<Condition> conditions2=new ArrayList<Condition>();
+		List<Condition> conditions1=new ArrayList<>();
+		List<Condition> conditions2=new ArrayList<>();
 
 		condition1.setConditions(conditions1);
 		assertNotEquals(condition1, condition2);
@@ -167,7 +167,7 @@ public class OrTest
 		Or condition = new Or();
 		assertEquals("false", condition.toString());
 
-		List<Condition> conditions=new ArrayList<Condition>();
+		List<Condition> conditions=new ArrayList<>();
 		condition.setConditions(conditions);
 		assertEquals("false", condition.toString());
 

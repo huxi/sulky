@@ -55,7 +55,7 @@ public class OverwritingCircularBufferTest
 	public void setUp()
 		throws Exception
 	{
-		instance = new OverwritingCircularBuffer<Long>(TEST_BUFFER_SIZE);
+		instance = new OverwritingCircularBuffer<>(TEST_BUFFER_SIZE);
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class OverwritingCircularBufferTest
 	@Test
 	public void addAllList()
 	{
-		List<Long> values = new ArrayList<Long>();
+		List<Long> values = new ArrayList<>();
 		for(int i = 0; i < 4 * TEST_BUFFER_SIZE; i++)
 		{
 			values.add((long) i);
@@ -302,11 +302,11 @@ public class OverwritingCircularBufferTest
 		internalTestRemove(instance, 7);
 		internalTestRemove(instance, 17);
 		internalTestRemove(instance, 4 * TEST_BUFFER_SIZE);
-		instance = new OverwritingCircularBuffer<Long>(17);
+		instance = new OverwritingCircularBuffer<>(17);
 		internalTestRemove(instance, 23);
 
 		// absurd...
-		instance = new OverwritingCircularBuffer<Long>(1);
+		instance = new OverwritingCircularBuffer<>(1);
 		internalTestRemove(instance, 17);
 	}
 
@@ -318,11 +318,11 @@ public class OverwritingCircularBufferTest
 		internalTestRemoveAll(instance, 7);
 		internalTestRemoveAll(instance, 17);
 		internalTestRemoveAll(instance, 4 * TEST_BUFFER_SIZE);
-		instance = new OverwritingCircularBuffer<Long>(17);
+		instance = new OverwritingCircularBuffer<>(17);
 		internalTestRemoveAll(instance, 23);
 
 		// absurd...
-		instance = new OverwritingCircularBuffer<Long>(1);
+		instance = new OverwritingCircularBuffer<>(1);
 		internalTestRemoveAll(instance, 17);
 	}
 
@@ -334,7 +334,7 @@ public class OverwritingCircularBufferTest
 			logger
 				.info("Executing add-remove-reset test with valueCount={} and buffer.getBufferSize={}.", valueCount, bufferSize);
 		}
-		List<Long> values = new ArrayList<Long>(valueCount);
+		List<Long> values = new ArrayList<>(valueCount);
 		for(int i = 0; i < valueCount; i++)
 		{
 			values.add((long) i);
@@ -412,7 +412,7 @@ public class OverwritingCircularBufferTest
 			logger
 				.info("Executing add-remove-reset test with valueCount={} and buffer.getBufferSize={}.", valueCount, bufferSize);
 		}
-		List<Long> values = new ArrayList<Long>(valueCount);
+		List<Long> values = new ArrayList<>(valueCount);
 		for(int i = 0; i < valueCount; i++)
 		{
 			values.add((long) i);

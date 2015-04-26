@@ -107,7 +107,7 @@ public class MetaDataDecoder
 			return null;
 		}
 		int entryCount = data.getEntryCount();
-		Map<String, String> dataMap = new HashMap<String, String>();
+		Map<String, String> dataMap = new HashMap<>();
 		for(int i = 0; i < entryCount; i++)
 		{
 			MetaDataProto.MapEntry entry = data.getEntry(i);

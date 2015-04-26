@@ -96,7 +96,7 @@ public class Or
 		Or result = (Or) super.clone();
 		if(result.conditions != null)
 		{
-			List<Condition> clonedConditions = new ArrayList<Condition>(conditions.size());
+			List<Condition> clonedConditions = new ArrayList<>(conditions.size());
 			for(Condition condition : result.conditions)
 			{
 				clonedConditions.add(condition.clone());

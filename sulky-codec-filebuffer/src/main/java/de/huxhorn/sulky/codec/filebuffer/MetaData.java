@@ -68,7 +68,7 @@ public final class MetaData
 		}
 		else
 		{
-			data = new HashMap<String, String>(data);
+			data = new HashMap<>(data);
 		}
 		this.data = data;
 		this.sparse = sparse;

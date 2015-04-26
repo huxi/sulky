@@ -62,7 +62,7 @@ public class SerializingFileBufferTest
 		tempOutputPath.mkdirs();
 		serializeFile = new File(tempOutputPath, "dump");
 		serializeIndexFile = new File(tempOutputPath, "dump.index");
-		instance = new SerializingFileBuffer<String>(serializeFile, serializeIndexFile);
+		instance = new SerializingFileBuffer<>(serializeFile, serializeIndexFile);
 		values = new String[]
 			{
 				"Null, sozusagen ganix",

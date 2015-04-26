@@ -164,7 +164,7 @@ public class PropertyListWriter
 			if(value instanceof short[])
 			{
 				short[] array = (short[]) value;
-				ArrayList<Short> arrayList = new ArrayList<Short>(array.length);
+				ArrayList<Short> arrayList = new ArrayList<>(array.length);
 				for(short v:array)
 				{
 					arrayList.add(v);
@@ -174,7 +174,7 @@ public class PropertyListWriter
 			else if(valueClass == int[].class)
 			{
 				int[] array = (int[]) value;
-				ArrayList<Integer> arrayList = new ArrayList<Integer>(array.length);
+				ArrayList<Integer> arrayList = new ArrayList<>(array.length);
 				for(int v:array)
 				{
 					arrayList.add(v);
@@ -184,7 +184,7 @@ public class PropertyListWriter
 			else if(valueClass == long[].class)
 			{
 				long[] array = (long[]) value;
-				ArrayList<Long> arrayList = new ArrayList<Long>(array.length);
+				ArrayList<Long> arrayList = new ArrayList<>(array.length);
 				for(long v:array)
 				{
 					arrayList.add(v);
@@ -194,7 +194,7 @@ public class PropertyListWriter
 			else if(valueClass == float[].class)
 			{
 				float[] array = (float[]) value;
-				ArrayList<Float> arrayList = new ArrayList<Float>(array.length);
+				ArrayList<Float> arrayList = new ArrayList<>(array.length);
 				for(float v:array)
 				{
 					arrayList.add(v);
@@ -204,7 +204,7 @@ public class PropertyListWriter
 			else if(valueClass == double[].class)
 			{
 				double[] array = (double[]) value;
-				ArrayList<Double> arrayList = new ArrayList<Double>(array.length);
+				ArrayList<Double> arrayList = new ArrayList<>(array.length);
 				for(double v:array)
 				{
 					arrayList.add(v);
@@ -214,7 +214,7 @@ public class PropertyListWriter
 			else if(valueClass == boolean[].class)
 			{
 				boolean[] array = (boolean[]) value;
-				ArrayList<Boolean> arrayList = new ArrayList<Boolean>(array.length);
+				ArrayList<Boolean> arrayList = new ArrayList<>(array.length);
 				for(boolean v:array)
 				{
 					arrayList.add(v);

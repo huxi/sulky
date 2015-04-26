@@ -178,7 +178,7 @@ public class PropertyListIOTest
 		PropertyList list=new PropertyList();
 		long[] value=new long[]{17, 18, 19};
 		list.setRoot(value);
-		List<Long> expected=new ArrayList<Long>();
+		List<Long> expected=new ArrayList<>();
 		expected.add(17L);
 		expected.add(18L);
 		expected.add(19L);
@@ -193,7 +193,7 @@ public class PropertyListIOTest
 		PropertyList list=new PropertyList();
 		int[] value=new int[]{17, 18, 19};
 		list.setRoot(value);
-		List<Long> expected=new ArrayList<Long>();
+		List<Long> expected=new ArrayList<>();
 		expected.add(17L);
 		expected.add(18L);
 		expected.add(19L);
@@ -208,7 +208,7 @@ public class PropertyListIOTest
 		PropertyList list=new PropertyList();
 		short[] value=new short[]{17, 18, 19};
 		list.setRoot(value);
-		List<Long> expected=new ArrayList<Long>();
+		List<Long> expected=new ArrayList<>();
 		expected.add(17L);
 		expected.add(18L);
 		expected.add(19L);
@@ -234,7 +234,7 @@ public class PropertyListIOTest
 		PropertyList list=new PropertyList();
 		boolean[] value=new boolean[]{true, false, true};
 		list.setRoot(value);
-		List<Boolean> expected=new ArrayList<Boolean>();
+		List<Boolean> expected=new ArrayList<>();
 		expected.add(true);
 		expected.add(false);
 		expected.add(true);
@@ -249,7 +249,7 @@ public class PropertyListIOTest
 		PropertyList list=new PropertyList();
 		double[] value=new double[]{1.0, 2.5, 13.37};
 		list.setRoot(value);
-		List<Double> expected=new ArrayList<Double>();
+		List<Double> expected=new ArrayList<>();
 		expected.add(1.0);
 		expected.add(2.5);
 		expected.add(13.37);
@@ -285,7 +285,7 @@ public class PropertyListIOTest
 		list.setRoot(value);
 
 		PropertyList read = check(list, false);
-		List<Object> expected=new ArrayList<Object>();
+		List<Object> expected=new ArrayList<>();
 		expected.add("Foo");
 		expected.add(17L);
 		expected.add(true);
@@ -319,7 +319,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		List<String> array=new ArrayList<String>();
+		List<String> array=new ArrayList<>();
 		list.setRoot(array);
 		check(list, true);
 	}
@@ -329,7 +329,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		List<String> array=new ArrayList<String>();
+		List<String> array=new ArrayList<>();
 		array.add("foo");
 		array.add("bar");
 		array.add("foobar");
@@ -342,7 +342,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		Map<String,String> map=new HashMap<String, String>();
+		Map<String,String> map=new HashMap<>();
 		list.setRoot(map);
 		check(list, true);
 	}
@@ -352,7 +352,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		Map<String,String> map=new HashMap<String, String>();
+		Map<String,String> map=new HashMap<>();
 		map.put("foo", "bar");
 		map.put("foobar", "snafu");
 		list.setRoot(map);

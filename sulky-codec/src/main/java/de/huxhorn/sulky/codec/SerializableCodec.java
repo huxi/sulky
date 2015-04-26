@@ -41,7 +41,7 @@ public class SerializableCodec<E extends Serializable>
 {
 	public SerializableCodec()
 	{
-		super(new SerializableEncoder<E>(false),
-			new SerializableDecoder<E>(false));
+		super(new SerializableEncoder<>(false),
+			new SerializableDecoder<>(false));
 	}
 }

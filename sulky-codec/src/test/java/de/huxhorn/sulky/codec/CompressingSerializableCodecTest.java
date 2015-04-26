@@ -44,7 +44,7 @@ public class CompressingSerializableCodecTest
 	public void test()
 	{
 		String obj = "Foo";
-		CompressingSerializableCodec<String> instance = new CompressingSerializableCodec<String>();
+		CompressingSerializableCodec<String> instance = new CompressingSerializableCodec<>();
 		byte[] encoded = instance.encode(obj);
 		String decoded = instance.decode(encoded);
 		assertEquals(obj, decoded);

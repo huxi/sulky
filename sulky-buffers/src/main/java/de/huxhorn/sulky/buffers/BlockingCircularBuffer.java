@@ -54,7 +54,7 @@ public class BlockingCircularBuffer<E>
 
 	public BlockingCircularBuffer(int bufferSize, int congestionDelay)
 	{
-		events = new OverwritingCircularBuffer<E>(bufferSize);
+		events = new OverwritingCircularBuffer<>(bufferSize);
 		lock = new ReentrantLock(true);
 		this.congestionDelay = congestionDelay;
 	}

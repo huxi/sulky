@@ -163,7 +163,7 @@ public class PropertyListReader
 	{
 		reader.require(XMLStreamConstants.START_ELEMENT, null, DICT_NODE);
 		reader.nextTag();
-		Map<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<>();
 		for(; ;)
 		{
 			int type = reader.getEventType();
@@ -186,7 +186,7 @@ public class PropertyListReader
 	{
 		reader.require(XMLStreamConstants.START_ELEMENT, null, ARRAY_NODE);
 		reader.nextTag();
-		List<Object> array = new ArrayList<Object>();
+		List<Object> array = new ArrayList<>();
 		for(; ;)
 		{
 			int type = reader.getEventType();

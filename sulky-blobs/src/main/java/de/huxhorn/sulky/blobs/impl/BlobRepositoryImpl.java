@@ -296,7 +296,7 @@ public class BlobRepositoryImpl
 	public Set<String> idSet()
 	{
 		prepare();
-		Set<String> result=new HashSet<String>();
+		Set<String> result=new HashSet<>();
 		File[] subDirs = baseDirectory.listFiles(new MatchingDirectoriesFileFilter());
 		for(File current : subDirs)
 		{

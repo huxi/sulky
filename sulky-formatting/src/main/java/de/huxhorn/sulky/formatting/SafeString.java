@@ -78,7 +78,7 @@ public final class SafeString
 
 	public static void append(Object obj, StringBuilder into)
 	{
-		Set<String> dejaVu = new HashSet<String>(); // that's actually a neat name ;)
+		Set<String> dejaVu = new HashSet<>(); // that's actually a neat name ;)
 		recursiveAppend(obj, into, dejaVu);
 	}
 
@@ -174,7 +174,7 @@ public final class SafeString
 						{
 							str.append(", ");
 						}
-						recursiveAppend(current, str, new HashSet<String>(dejaVu));
+						recursiveAppend(current, str, new HashSet<>(dejaVu));
 					}
 					str.append("]");
 				}
@@ -207,9 +207,9 @@ public final class SafeString
 					}
 					Object key = current.getKey();
 					Object value = current.getValue();
-					recursiveAppend(key, str, new HashSet<String>(dejaVu));
+					recursiveAppend(key, str, new HashSet<>(dejaVu));
 					str.append("=");
-					recursiveAppend(value, str, new HashSet<String>(dejaVu));
+					recursiveAppend(value, str, new HashSet<>(dejaVu));
 				}
 				str.append("}");
 			}
@@ -238,7 +238,7 @@ public final class SafeString
 					{
 						str.append(", ");
 					}
-					recursiveAppend(current, str, new HashSet<String>(dejaVu));
+					recursiveAppend(current, str, new HashSet<>(dejaVu));
 				}
 				str.append("]");
 			}

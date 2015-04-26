@@ -65,8 +65,8 @@ public class JLayerSounds
 
 	public JLayerSounds()
 	{
-		playList = new ArrayList<String>();
-		soundLocations = new HashMap<String, String>();
+		playList = new ArrayList<>();
+		soundLocations = new HashMap<>();
 		Thread t = new Thread(new PlayRunnable(), "SoundPlayRunnable");
 		t.setDaemon(true);
 		t.start();
