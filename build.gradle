@@ -87,7 +87,7 @@ allprojects {
 	apply plugin: 'jacoco'
 
 	group = 'de.huxhorn.sulky'
-	version = '0.9.18'
+	version = '8.0.0'
 	if(!System.properties.'release') {
 		version = version + '-SNAPSHOT'
 	}
@@ -124,8 +124,8 @@ subprojects {
 	}
 	defaultTasks 'build', 'uploadPublished'
 
-	sourceCompatibility = 1.5
-	targetCompatibility = 1.5
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
 
 	// -Xlint:-options disables the
 	// "warning: [options] bootstrap class path not set in conjunction with -source 1.x"
@@ -287,6 +287,13 @@ subprojects {
 	}
 	*/
 }
+
+project(':sulky-version') {
+	// override for sulky-version after subprojects
+	sourceCompatibility = 1.5
+	targetCompatibility = 1.5
+}
+
 
 // source: https://gist.github.com/aalmiray/e6f54aa4b3803be0bcac
 task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
