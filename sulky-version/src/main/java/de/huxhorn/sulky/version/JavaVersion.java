@@ -142,13 +142,14 @@ public final class JavaVersion
 	 *
 	 * @param versionString the String to be parsed
 	 * @return the JavaVersion corresponding to the given versionString
-	 * @throws java.lang.IllegalArgumentException if versionString is null or invalid.
+	 * @throws java.lang.NullPointerException if versionString is null.
+	 * @throws java.lang.IllegalArgumentException if versionString is invalid.
 	 */
 	public static JavaVersion parse(String versionString)
 	{
 		if(versionString == null)
 		{
-			throw new IllegalArgumentException("versionString must not be null!");
+			throw new NullPointerException("versionString must not be null!");
 		}
 		Matcher matcher = VERSION_PATTERN.matcher(versionString);
 		if(!matcher.matches())
@@ -191,11 +192,31 @@ public final class JavaVersion
 	 *
 	 * @param versionString the version to compare with the JVM version.
 	 * @return true, if the JVM version is bigger or equals to the given versionString.
-	 * @throws java.lang.IllegalArgumentException if versionString is null or invalid.
+	 * @throws java.lang.NullPointerException if versionString is null.
+	 * @throws java.lang.IllegalArgumentException if versionString is invalid.
 	 */
 	public static boolean isAtLeast(String versionString)
 	{
-		return JVM.compareTo(parse(versionString)) >= 0;
+		return isAtLeast(parse(versionString));
+	}
+
+	/**
+	 * Returns true, if the JVM version is bigger or equals to the given versionString.
+	 *
+	 * This is a convenience method that is simply a shortcut for
+	 * (JVM.compareTo(version) &gt;= 0).
+	 *
+	 * @param version the version to compare with the JVM version.
+	 * @return true, if the JVM version is bigger or equals to the given versionString.
+	 * @throws java.lang.NullPointerException if version is null.
+	 */
+	public static boolean isAtLeast(JavaVersion version)
+	{
+		if(version == null)
+		{
+			throw new NullPointerException("version must not be null!");
+		}
+		return JVM.compareTo(version) >= 0;
 	}
 
 	private final int huge;

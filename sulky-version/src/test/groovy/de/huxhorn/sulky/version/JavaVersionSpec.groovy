@@ -83,7 +83,7 @@ public class JavaVersionSpec extends Specification {
         JavaVersion.parse(null)
 
         then:
-        IllegalArgumentException ex = thrown()
+        NullPointerException ex = thrown()
         ex.message == 'versionString must not be null!'
     }
 
@@ -355,7 +355,7 @@ public class JavaVersionSpec extends Specification {
     }
 
     @Unroll('JVM #jvmString is#compareString at least #versionString')
-    def 'isAtLeast works'() {
+    def 'isAtLeast(String) works'() {
         when:
         boolean result = JavaVersion.isAtLeast(versionString)
 
@@ -368,6 +368,26 @@ public class JavaVersionSpec extends Specification {
         "1.0.0"                             | true
         JavaVersion.JVM.toVersionString()   | true
         "17.0"                              | false
+        // @formatter:on
+
+        compareString = expectedResult? '' : 'n\'t'
+        jvmString = JavaVersion.JVM.toVersionString()
+    }
+
+    @Unroll('JVM #jvmString is#compareString at least #version')
+    def 'isAtLeast(JavaVersion) works'() {
+        when:
+        boolean result = JavaVersion.isAtLeast(version)
+
+        then:
+        result == expectedResult
+
+        where:
+        // @formatter:off
+        version | expectedResult
+        new JavaVersion(1, 0, 0)                              | true
+        JavaVersion.parse(JavaVersion.JVM.toVersionString())  | true
+        new JavaVersion(17, 0)                                | false
         // @formatter:on
 
         compareString = expectedResult? '' : 'n\'t'
@@ -387,13 +407,22 @@ public class JavaVersionSpec extends Specification {
         versionString << ['1', '1x', '1.2x', '1.2.3x', '1.2.3.4', '1.2.3_4x', '1.2.3_4-', '-1.6']
     }
 
-    def 'isAtLeast(null) throws an exception'() {
+    def 'isAtLeast((String)null) throws an exception'() {
         when:
-        JavaVersion.isAtLeast(null)
+        JavaVersion.isAtLeast((String)null)
 
         then:
-        IllegalArgumentException ex = thrown()
+        NullPointerException ex = thrown()
         ex.message == 'versionString must not be null!'
+    }
+
+    def 'isAtLeast((JavaVersion)null) throws an exception'() {
+        when:
+        JavaVersion.isAtLeast((JavaVersion)null)
+
+        then:
+        NullPointerException ex = thrown()
+        ex.message == 'version must not be null!'
     }
 
     @Unroll('toVersionString() returns #expectedResult for #object')
