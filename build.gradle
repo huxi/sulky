@@ -11,6 +11,26 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '2.4-rc-1'
 }
 
+def globalSourceCompatibility = 1.8
+def globalTargetCompatibility = 1.8
+
+apply plugin: 'idea'
+
+idea {
+	project {
+		jdkName = globalSourceCompatibility
+		languageLevel = globalSourceCompatibility
+
+		ipr {
+			withXml {
+				def node = it.asNode()
+				def vcsConfig = node.component.find { it.'@name' == 'VcsDirectoryMappings' }
+				vcsConfig.mapping[0].'@vcs' = 'Git'
+			}
+		}
+	}
+}
+
 import org.gradle.plugins.signing.Sign
 
 buildscript {
@@ -130,8 +150,8 @@ subprojects {
 	}
 	defaultTasks 'build', 'uploadPublished'
 
-	sourceCompatibility = 1.8
-	targetCompatibility = 1.8
+	sourceCompatibility = globalSourceCompatibility
+	targetCompatibility = globalTargetCompatibility
 
 	// -Xlint:-options disables the
 	// "warning: [options] bootstrap class path not set in conjunction with -source 1.x"
