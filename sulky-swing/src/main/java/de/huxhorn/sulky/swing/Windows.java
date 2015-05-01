@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2015 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2015 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,45 +34,24 @@
 
 package de.huxhorn.sulky.swing;
 
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
 
 public final class Windows
 {
 	private Windows()
 	{}
 
+	//  Just call Window.setIconImage
+	@Deprecated
 	public static void setIconImage(Window window, Image image)
 	{
-		final Logger logger = LoggerFactory.getLogger(Windows.class);
-
-		Throwable error = null;
-		try
-		{
-			Method setIconMethod = Window.class.getMethod("setIconImage", Image.class);
-
-			setIconMethod.invoke(window, image);
-		}
-		catch(NoSuchMethodException e)
-		{
-			if(logger.isInfoEnabled()) logger.info("No setIconImage-method found...");
-		}
-		catch(IllegalAccessException e)
-		{
-			error = e;
-		}
-		catch(InvocationTargetException e)
-		{
-			error = e;
-		}
-		if(error != null)
-		{
-			if(logger.isWarnEnabled()) logger.warn("Exception while executing setIconImage-method!", error);
-		}
+		window.setIconImage(image);
 	}
 
 	public static void showWindow(Window window, Window centerParent, boolean pack)
@@ -148,6 +127,4 @@ public final class Windows
 		window.setBounds(windowBounds);
 		window.setVisible(true);
 	}
-
-
 }
