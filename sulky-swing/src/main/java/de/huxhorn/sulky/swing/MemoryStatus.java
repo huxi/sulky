@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2015 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2015 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,22 +36,38 @@ package de.huxhorn.sulky.swing;
 
 import de.huxhorn.sulky.formatting.HumanReadable;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.Transparency;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 
-import javax.swing.*;
 import javax.swing.border.Border;
 
 public class MemoryStatus
 	extends JComponent
 {
+	private static final long serialVersionUID = -7977658722158059284L;
+
 	private static final int GRADIENT_PIXELS = 3;
 	private final Logger logger = LoggerFactory.getLogger(MemoryStatus.class);
 
@@ -413,7 +429,7 @@ public class MemoryStatus
 						}
 					}
 				}
-				SwingUtilities.invokeLater(updateRunnable);
+				EventQueue.invokeLater(updateRunnable);
 				try
 				{
 					Thread.sleep(frequency);

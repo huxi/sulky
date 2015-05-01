@@ -34,13 +34,13 @@
 
 package de.huxhorn.sulky.version;
 
+import java.awt.EventQueue;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Properties;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
 public class Main
 {
@@ -229,7 +229,7 @@ public class Main
 			try
 			{
 				//noinspection Convert2Lambda
-				SwingUtilities.invokeAndWait(new Runnable()
+				EventQueue.invokeAndWait(new Runnable()
 				{
 					@Override
 					public void run()
