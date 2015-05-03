@@ -129,7 +129,6 @@ project(':sulky-formatting') {
 	description = 'This file is part of the sulky modules. It contains a class for human-readable output of large numbers and some handy xml helper methods.'
 	dependencies {
 		compile libraries.'slf4j-api'
-		compile libraries.'joda-time'
 	}
 }
 

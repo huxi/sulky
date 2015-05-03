@@ -231,6 +231,15 @@ public class SafeStringTest
 		result = SafeString.toString(o);
 		if(logger.isInfoEnabled()) logger.info("Result of {} is {}.", o, result);
 		assertEquals(expected, result);
+
+		{
+			o = new Date(1234567890017L);
+			expected = "2009-02-13T23:31:30.017Z";
+		}
+		if(logger.isInfoEnabled()) logger.info("Evaluating {}...", o);
+		result = SafeString.toString(o);
+		if(logger.isInfoEnabled()) logger.info("Result of {} is {}.", o, result);
+		assertEquals(expected, result);
 	}
 
 	@SuppressWarnings({"unchecked"})

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2014 Joern Huxhorn
+ * Copyright (C) 2007-2015 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2014 Joern Huxhorn
+ * Copyright 2007-2015 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,8 +34,11 @@
 
 package de.huxhorn.sulky.formatting;
 
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -54,7 +57,22 @@ public final class SafeString
 	public static final String RECURSION_PREFIX = "[...";
 	public static final String RECURSION_SUFFIX = "...]";
 
-	private static DateTimeFormatter isoDateTimeFormat = ISODateTimeFormat.dateTime().withZoneUTC();
+	private static final DateTimeFormatter ISO_DATE_TIME_FORMATTER =
+			new DateTimeFormatterBuilder()
+					.parseCaseInsensitive()
+					.append(DateTimeFormatter.ISO_LOCAL_DATE)
+					.appendLiteral('T')
+					.appendValue(ChronoField.HOUR_OF_DAY, 2)
+					.appendLiteral(':')
+					.appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+					.optionalStart()
+					.appendLiteral(':')
+					.appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+					.optionalStart()
+					.appendFraction(ChronoField.MILLI_OF_SECOND, 3, 3, true)
+					.appendZoneId()
+					.toFormatter()
+					.withZone(ZoneOffset.UTC);
 
 	static
 	{
@@ -246,7 +264,7 @@ public final class SafeString
 		else if(o instanceof Date)
 		{
 			Date date = (Date) o;
-			str.append(isoDateTimeFormat.print(date.getTime()));
+			str.append(ISO_DATE_TIME_FORMATTER.format(Instant.ofEpochMilli(date.getTime())));
 		}
 		else
 		{
