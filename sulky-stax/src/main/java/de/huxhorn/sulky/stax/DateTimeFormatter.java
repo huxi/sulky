@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2015 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2015 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,56 +35,140 @@
 package de.huxhorn.sulky.stax;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// TODO: Maybe use Joda instead
 public class DateTimeFormatter
 {
-	private static final String SIMPLE_DATE_FORMAT_DATETIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	private static final String TIMEZONE_DATE_FORMAT_PATTERN = ".*([+-]\\d{2})(\\d{2})$";
 	private static final int TIMEZONE_DATE_FORMAT_LENGTH = 5;
-	private static final String TIMEZONE_XML_FORMAT_PATTERN = ".*([+-]\\d{2}):(\\d{2})$";
-	private static final int TIMEZONE_XML_FORMAT_LENGTH = 6;
 
-	private SimpleDateFormat dateFormat;
-	private Pattern xmlTimezonePattern;
+	private static final java.time.format.DateTimeFormatter ISO_DATE_TIME_PARSER =
+			new DateTimeFormatterBuilder()
+					.parseCaseInsensitive()
+					.append(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE)
+					.appendLiteral('T')
+					.appendValue(ChronoField.HOUR_OF_DAY, 2)
+					.appendLiteral(':')
+					.appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+					.appendLiteral(':')
+					.appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+					.optionalStart()
+					.appendFraction(ChronoField.MILLI_OF_SECOND, 3, 3, true)
+					.optionalEnd()
+					.appendOffset("+HH:MM", "Z")
+					.toFormatter()
+					.withZone(ZoneOffset.UTC);
+
+	private static final java.time.format.DateTimeFormatter ISO_DATE_TIME_FORMATTER_WITH_MILLIS =
+			new DateTimeFormatterBuilder()
+					.parseCaseInsensitive()
+					.append(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE)
+					.appendLiteral('T')
+					.appendValue(ChronoField.HOUR_OF_DAY, 2)
+					.appendLiteral(':')
+					.appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+					.appendLiteral(':')
+					.appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+					.appendFraction(ChronoField.MILLI_OF_SECOND, 3, 3, true)
+					.appendOffset("+HH:MM", "+00:00")
+					.toFormatter()
+					.withZone(ZoneOffset.UTC);
+
+	private static final java.time.format.DateTimeFormatter ISO_DATE_TIME_FORMATTER_WITHOUT_MILLIS =
+			new DateTimeFormatterBuilder()
+					.parseCaseInsensitive()
+					.append(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE)
+					.appendLiteral('T')
+					.appendValue(ChronoField.HOUR_OF_DAY, 2)
+					.appendLiteral(':')
+					.appendValue(ChronoField.MINUTE_OF_HOUR, 2)
+					.appendLiteral(':')
+					.appendValue(ChronoField.SECOND_OF_MINUTE, 2)
+					.appendOffset("+HH:MM", "+00:00")
+					.toFormatter()
+					.withZone(ZoneOffset.UTC);
+
 	private Pattern javaTimezonePattern;
 
 	public DateTimeFormatter()
 	{
-		dateFormat = new SimpleDateFormat(SIMPLE_DATE_FORMAT_DATETIME_PATTERN);
-		xmlTimezonePattern = Pattern.compile(TIMEZONE_XML_FORMAT_PATTERN);
 		javaTimezonePattern = Pattern.compile(TIMEZONE_DATE_FORMAT_PATTERN);
 
 	}
 
+	/**
+	 * This method parses a given string containing a dateTime in ISO8601 notation into a date.
+	 *
+	 * It can handle an optional millisecond fraction as well as timezone with either explicit '+/-HH:MM' or 'Z' UTC designator.
+	 *
+	 * @param dateTime a string containing a dateTime in ISO8601 notation.
+	 * @return the parsed date
+	 * @throws ParseException If the dateTime string is invalid.
+	 */
 	public Date parse(String dateTime)
 		throws ParseException
 	{
-		Matcher matcher = xmlTimezonePattern.matcher(dateTime);
+		Matcher matcher = javaTimezonePattern.matcher(dateTime);
 		if(matcher.matches())
 		{
 			String hh = matcher.group(1);
 			String mm = matcher.group(2);
-			dateTime = dateTime.substring(0, dateTime.length() - TIMEZONE_XML_FORMAT_LENGTH) + hh + mm;
+			dateTime = dateTime.substring(0, dateTime.length() - TIMEZONE_DATE_FORMAT_LENGTH) + hh + ":" + mm;
 		}
-		return dateFormat.parse(dateTime);
+		TemporalAccessor temporal = ISO_DATE_TIME_PARSER.parse(dateTime);
+		long seconds = temporal.getLong(ChronoField.INSTANT_SECONDS) + temporal.getLong(ChronoField.OFFSET_SECONDS);
+		long millis = seconds * 1000 + temporal.getLong(ChronoField.MILLI_OF_SECOND);
+
+		return new Date(millis);
 	}
 
+	/**
+	 * Returns a simplified ISO8601 datetime string in UTC.
+	 *
+	 * It will always contain a three-number millisecond field regardless if it is "needed"
+	 * (i.e. MILLI_OF_SECOND != 0) or not. The timezone of the date is always UTC but isn't using
+	 * the UTC designator 'Z'. Instead, it's using an explicit '+00:00'.
+	 * That way a date formatted by this method will always have the same number of characters while creating output
+	 * that less intelligent date-parsing frameworks (incapable of the 'Z' notation) are still able to process.
+	 *
+	 * @param date the date to be formatted.
+	 * @return a simplified ISO8601 datetime string in UTC.
+	 */
 	public String format(Date date)
 	{
-		String result = dateFormat.format(date);
-		Matcher matcher = javaTimezonePattern.matcher(result);
-		if(matcher.matches())
+		return this.format(date, true);
+	}
+
+	/**
+	 * Returns a simplified ISO8601 datetime string in UTC.
+	 *
+	 * It will always contain a three-number millisecond field regardless if it is "needed"
+	 * (i.e. MILLI_OF_SECOND != 0) or not if withMillis is true. The timezone of the date is always UTC but isn't using
+	 * the UTC designator 'Z'. Instead, it's using an explicit '+00:00'.
+	 * That way a date formatted by this method will always have the same number of characters while creating output
+	 * that less intelligent date-parsing frameworks (incapable of the 'Z' notation) are still able to process.
+	 *
+	 * @param date the date to be formatted.
+	 * @param withMillis whether or not milliseconds should be printed.
+	 * @return a simplified ISO8601 datetime string in UTC.
+	 */
+	public String format(Date date, boolean withMillis)
+	{
+		Instant instant = Instant.ofEpochMilli(date.getTime());
+		ZonedDateTime zoned = ZonedDateTime.ofInstant(instant, ZoneOffset.UTC);
+		if(withMillis)
 		{
-			String hh = matcher.group(1);
-			String mm = matcher.group(2);
-			result = result.substring(0, result.length() - TIMEZONE_DATE_FORMAT_LENGTH) + hh + ":" + mm;
+			return ISO_DATE_TIME_FORMATTER_WITH_MILLIS.format(zoned);
 		}
-		return result;
+		return ISO_DATE_TIME_FORMATTER_WITHOUT_MILLIS.format(zoned);
 	}
 
 }

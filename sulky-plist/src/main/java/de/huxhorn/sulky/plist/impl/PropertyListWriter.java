@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2015 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2015 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@
 package de.huxhorn.sulky.plist.impl;
 
 import de.huxhorn.sulky.plist.PropertyList;
+import de.huxhorn.sulky.stax.DateTimeFormatter;
 import de.huxhorn.sulky.stax.GenericStreamWriter;
 import de.huxhorn.sulky.stax.StaxUtilities;
 import org.apache.commons.codec.binary.Base64;
@@ -43,7 +44,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -56,7 +56,7 @@ public class PropertyListWriter
 {
 	private final Logger logger = LoggerFactory.getLogger(PropertyListWriter.class);
 
-	private SimpleDateFormat format=new SimpleDateFormat(DATE_FORMAT);
+	private DateTimeFormatter staxDateTimeFormatter = new DateTimeFormatter();
 
 	public void write(XMLStreamWriter writer, PropertyList object, boolean isRoot) throws XMLStreamException
 	{
@@ -276,7 +276,8 @@ public class PropertyListWriter
 	private void writeDate(XMLStreamWriter writer, Date date)
 		throws XMLStreamException
 	{
-		StaxUtilities.writeSimpleTextNode(writer, null, null, DATE_NODE, format.format(date));
+		String formatted = staxDateTimeFormatter.format(date, false);
+		StaxUtilities.writeSimpleTextNode(writer, null, null, DATE_NODE, formatted);
 	}
 
 	private void writeData(XMLStreamWriter writer, byte[] data)
