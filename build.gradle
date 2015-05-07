@@ -1,12 +1,6 @@
 apply from: 'dependencyDefinitions.gradle'
 apply from: 'projectDependencies.gradle'
 
-apply plugin: 'versions'
-apply plugin: 'base'
-apply plugin: 'signing'
-apply plugin: 'com.github.kt3k.coveralls' // see https://github.com/kt3k/coveralls-gradle-plugin
-
-
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.4'
 }
@@ -39,6 +33,7 @@ buildscript {
 	project.ext.localReleaseRepo = localReleaseRepoFile.toURL().toString()
 	project.ext.localSnapshotRepo = localSnapshotRepoFile.toURL().toString()
 	repositories {
+		jcenter()
 		maven {
 			url localReleaseRepo
 		}
@@ -50,10 +45,15 @@ buildscript {
 	dependencies {
 		// needed for syncSnapshot and syncStaging
 		classpath 'org.apache.maven.wagon:wagon-webdav-jackrabbit:1.0-beta-6'
-		classpath 'com.github.ben-manes:gradle-versions-plugin:0.4'
+		classpath 'com.github.ben-manes:gradle-versions-plugin:0.9'
 		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.3.1'
 	}
 }
+
+apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'base'
+apply plugin: 'signing'
+apply plugin: 'com.github.kt3k.coveralls' // see https://github.com/kt3k/coveralls-gradle-plugin
 
 task javadocAll(type: Javadoc) {
 	destinationDir = file("$buildDir/javadocAll")
