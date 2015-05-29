@@ -39,6 +39,12 @@ import java.io.OutputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 
+/**
+ * Don't put a BufferedOutputStream into this class!
+ * Its its close() method (inherited from FilterOutputStream) calls flush() before actually closing
+ * the underlying stream. While this is fine in most cases, it can cause a livelock in this case and prevents
+ * the timeout of TimeoutOutputStream from working reliably.
+ */
 public class TimeoutOutputStream
 	extends OutputStream
 {
