@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2015 Joern Huxhorn
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2015 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,12 +88,7 @@ public class TimeoutOutputStream
 			stream.write(b);
 			operationStartTime.set(-1);
 		}
-		catch(IOException ex)
-		{
-			internalClose();
-			throw ex;
-		}
-		catch(RuntimeException ex)
+		catch(IOException | RuntimeException ex)
 		{
 			internalClose();
 			throw ex;
@@ -109,12 +104,7 @@ public class TimeoutOutputStream
 			stream.write(b, off, len);
 			operationStartTime.set(-1);
 		}
-		catch(IOException ex)
-		{
-			internalClose();
-			throw ex;
-		}
-		catch(RuntimeException ex)
+		catch(IOException | RuntimeException ex)
 		{
 			internalClose();
 			throw ex;
@@ -130,12 +120,7 @@ public class TimeoutOutputStream
 			stream.write(b);
 			operationStartTime.set(-1);
 		}
-		catch(IOException ex)
-		{
-			internalClose();
-			throw ex;
-		}
-		catch(RuntimeException ex)
+		catch(IOException | RuntimeException ex)
 		{
 			internalClose();
 			throw ex;
@@ -151,12 +136,7 @@ public class TimeoutOutputStream
 			stream.flush();
 			operationStartTime.set(-1);
 		}
-		catch(IOException ex)
-		{
-			internalClose();
-			throw ex;
-		}
-		catch(RuntimeException ex)
+		catch(IOException | RuntimeException ex)
 		{
 			internalClose();
 			throw ex;
@@ -212,7 +192,6 @@ public class TimeoutOutputStream
 				{
 					if(closed.get())
 					{
-						//if(logger.isInfoEnabled()) logger.info("Stream was closed. Exiting run()-loop.");
 						break;
 					}
 					long start = operationStartTime.get();
@@ -222,7 +201,6 @@ public class TimeoutOutputStream
 
 						if(since > timeout)
 						{
-							//if(logger.isInfoEnabled()) logger.info("Timeout detected! Exiting run()-loop.");
 							internalClose();
 							break;
 						}
@@ -237,20 +215,9 @@ public class TimeoutOutputStream
 					}
 				}
 			}
-			catch(IOException e)
+			catch(IOException | InterruptedException | RuntimeException e)
 			{
 				IOUtilities.interruptIfNecessary(e);
-				//if(logger.isWarnEnabled()) logger.warn("Exception while closing stream.", e);
-			}
-			catch(InterruptedException e)
-			{
-				IOUtilities.interruptIfNecessary(e);
-				//if(logger.isInfoEnabled()) logger.info("Interrupted....", e);
-			}
-			catch(RuntimeException e)
-			{
-				IOUtilities.interruptIfNecessary(e);
-				//if(logger.isInfoEnabled()) logger.info("RuntimeException....", e);
 			}
 			watchdogThreadRunning.set(false);
 		}
