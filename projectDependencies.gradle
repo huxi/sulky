@@ -87,7 +87,6 @@ project(':sulky-stax') {
 	description = 'This file is part of the sulky modules. It contains helper methods to simplify usage of StAX.'
 	dependencies {
 		compile libraries.'slf4j-api'
-		compile libraries.'stax-api'
 	}
 }
 
