@@ -187,7 +187,7 @@ subprojects {
 		description project.description
 		inceptionYear '2007'
 		//packaging 'jar' // does not work, fixed below
-		// See http://jira.codehaus.org/browse/GRADLE-1200
+		// See https://issues.gradle.org/browse/GRADLE-1200
 		
 		scm {
 			connection 'scm:git:git://github.com/huxi/sulky.git'
@@ -282,7 +282,7 @@ subprojects {
 	deployer.pom.project defaultProject
 
 	// The following fixes the broken packaging
-	// See http://jira.codehaus.org/browse/GRADLE-1200
+	// See https://issues.gradle.org/browse/GRADLE-1200
 	// Thanks xlson
 	/*
 	installer.pom.withXml { XmlProvider xmlProvider ->
