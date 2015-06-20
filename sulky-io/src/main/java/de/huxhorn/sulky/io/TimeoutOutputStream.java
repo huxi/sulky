@@ -81,7 +81,7 @@ public class TimeoutOutputStream
 		}
 		catch(InterruptedException e)
 		{
-			Thread.currentThread().interrupt();
+			IOUtilities.interruptIfNecessary(e);
 		}
 	}
 

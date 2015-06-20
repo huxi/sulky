@@ -326,6 +326,7 @@ public abstract class BufferTableModel<T>
 					catch(InterruptedException e)
 					{
 						if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
+						IOUtilities.interruptIfNecessary(e);
 						return;
 					}
                     continue;
@@ -345,6 +346,7 @@ public abstract class BufferTableModel<T>
                         catch(InterruptedException e)
                         {
                             if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
+	                        IOUtilities.interruptIfNecessary(e);
                             return;
                         }
                     }

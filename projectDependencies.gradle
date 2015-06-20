@@ -109,8 +109,9 @@ project(':sulky-sounds-impl-jlayer') {
 	description = 'This file is part of the sulky modules. It contains an implementation of the simple sound interface using JLayer.'
 	dependencies {
 		compile libraries.'slf4j-api'
-		compile project(':sulky-sounds-api')
 		compile libraries.'jlayer'
+		compile project(':sulky-sounds-api')
+		compile project(':sulky-io')
 	}
 }
 

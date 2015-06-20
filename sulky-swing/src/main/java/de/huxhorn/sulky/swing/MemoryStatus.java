@@ -36,6 +36,7 @@ package de.huxhorn.sulky.swing;
 
 import de.huxhorn.sulky.formatting.HumanReadable;
 
+import de.huxhorn.sulky.io.IOUtilities;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -71,7 +72,7 @@ public class MemoryStatus
 	private static final int GRADIENT_PIXELS = 3;
 	private final Logger logger = LoggerFactory.getLogger(MemoryStatus.class);
 
-	private Runtime runtime;
+	private final Runtime runtime;
 	private MemoryInfo memoryInfo;
 	private boolean paused;
 	private boolean usingTotal;
@@ -271,10 +272,7 @@ public class MemoryStatus
 				//g.drawString(text,textX,textBase);
 				g2.fill(s);
 			}
-
-
 		}
-
 	}
 
 	private void drawBar(Graphics2D g2, int startX, int endX, int height, Color c)
@@ -298,10 +296,8 @@ public class MemoryStatus
 			darker = new Color(darker.getRed(), darker.getGreen(), darker.getBlue(), colorAlpha);
 			if(logger.isDebugEnabled()) logger.debug("Corrected alpha-values.");
 		}
-		if(logger.isDebugEnabled())
-		{
-			logger.debug("original: {}\nbrighter: {}\ndarker: {}", new Object[]{c, brighter, darker});
-		}
+		if(logger.isDebugEnabled()) logger.debug("original: {}\nbrighter: {}\ndarker: {}", c, brighter, darker);
+
 		p = new GradientPaint(0, 0, brighter, 0, gradientHeight, c);
 		g2.setPaint(p);
 		g2.fillRect(startX, 0, endX, gradientHeight);
@@ -309,8 +305,6 @@ public class MemoryStatus
 		p = new GradientPaint(0, height - gradientHeight, c, 0, height, darker);
 		g2.setPaint(p);
 		g2.fillRect(startX, height - gradientHeight, endX, gradientHeight);
-
-
 	}
 
 
@@ -365,25 +359,13 @@ public class MemoryStatus
 		this.memoryInfo = new MemoryInfo(runtime);
 
 		// Tooltip
-		{
-			StringBuilder msg = new StringBuilder();
-			msg.append("<html>");
-			msg.append("Used memory: ");
-			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getUsed(), usingBinaryUnits, false))
-				.append("bytes");
-			msg.append("<br>");
-			msg.append("Total memory: ");
-			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getTotal(), usingBinaryUnits, false))
-				.append("bytes");
-			msg.append("<br>");
-			msg.append("Maximum memory: ");
-			msg.append(HumanReadable.getHumanReadableSize(memoryInfo.getMax(), usingBinaryUnits, false))
-				.append("bytes");
-			msg.append("<br><br>");
-			msg.append("Double-click to garbage-collect.");
-			msg.append("</html>");
-			setToolTipText(msg.toString());
-		}
+		setToolTipText("<html>Used memory: "
+				+ HumanReadable.getHumanReadableSize(memoryInfo.getUsed(), usingBinaryUnits, false)
+				+ "bytes<br>Total memory: "
+				+ HumanReadable.getHumanReadableSize(memoryInfo.getTotal(), usingBinaryUnits, false)
+				+ "bytes<br>Maximum memory: "
+				+ HumanReadable.getHumanReadableSize(memoryInfo.getMax(), usingBinaryUnits, false)
+				+ "bytes<br><br>Double-click to garbage-collect.</html>");
 		repaint();
 	}
 
@@ -425,6 +407,7 @@ public class MemoryStatus
 						catch(InterruptedException e)
 						{
 							if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
+							IOUtilities.interruptIfNecessary(e);
 							return;
 						}
 					}
@@ -437,6 +420,7 @@ public class MemoryStatus
 				catch(InterruptedException e)
 				{
 					if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
+					IOUtilities.interruptIfNecessary(e);
 					return;
 				}
 			}
