@@ -65,7 +65,7 @@ public enum ClassFileVersion
 		}
 	}
 
-	private ClassFileVersion(char major, String sourceName)
+	ClassFileVersion(char major, String sourceName)
 	{
 		this.majorVersionCharacter = major;
 		this.sourceName = sourceName;
