@@ -36,8 +36,10 @@ package de.huxhorn.sulky.version
 
 import de.huxhorn.sulky.junit.JUnitTools
 import spock.lang.Specification
+import spock.lang.Subject
 import spock.lang.Unroll
 
+@Subject(SemanticVersion)
 class SemanticVersionSpec
     extends Specification
 {
