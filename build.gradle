@@ -100,7 +100,7 @@ gradle.taskGraph.whenReady { taskGraph ->
 	}
 }
 
-if(!System.properties.'release') {
+if(!System.properties.'release' && !System.properties.'prerelease') {
 	defaultTasks 'build', 'uploadPublished'	
 } else {
 	defaultTasks 'build', 'uploadPublished', 'signJavadocZip', 'signSourceZip'	
@@ -114,7 +114,10 @@ allprojects {
 
 	group = 'de.huxhorn.sulky'
 	version = '8.0.0'
-	if(!System.properties.'release') {
+	def prereleaseIdentifier = System.properties.'prerelease'
+	if(prereleaseIdentifier) {
+		version = version + '-' + prereleaseIdentifier
+	} else if(!System.properties.'release') {
 		version = version + '-SNAPSHOT'
 	}
 
