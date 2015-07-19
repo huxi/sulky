@@ -189,8 +189,6 @@ subprojects {
 		name project.name
 		description project.description
 		inceptionYear '2007'
-		//packaging 'jar' // does not work, fixed below
-		// See https://issues.gradle.org/browse/GRADLE-1200
 		
 		scm {
 			connection 'scm:git:git://github.com/huxi/sulky.git'
@@ -213,18 +211,8 @@ subprojects {
 		}
 		
 		issueManagement {
-			system 'trac'
-			url 'http://apps.sourceforge.net/trac/sulky/'
-		}
-		
-		mailingLists {
-			mailingList {
-				name 'Developer List'
-				subscribe 'sulky-devel-join@lists.sourceforge.net'
-				unsubscribe 'sulky-devel-leave@lists.sourceforge.net'
-				post 'sulky-devel@lists.sourceforge.net'
-				archive 'http://sourceforge.net/mailarchive/forum.php?forum_name=sulky-devel'
-			}
+			system 'Github'
+			url 'https://github.com/huxi/sulky/issues'
 		}
 		
 		developers {
@@ -283,38 +271,6 @@ subprojects {
 	installer.pom.project defaultProject
 	
 	deployer.pom.project defaultProject
-
-	// The following fixes the broken packaging
-	// See https://issues.gradle.org/browse/GRADLE-1200
-	// Thanks xlson
-	/*
-	installer.pom.withXml { XmlProvider xmlProvider ->
-		def xml = xmlProvider.asString()
-		def pomXml = new XmlParser().parseText(xml.toString())
-
-		pomXml.version[0] + { packaging('jar') }
-
-		def newXml = new StringWriter()
-		def printer = new XmlNodePrinter(new PrintWriter(newXml))
-		printer.preserveWhitespace = true
-		printer.print(pomXml)
-		xml.setLength(0)
-		xml.append(newXml.toString())
-	}
-	deployer.pom.withXml { XmlProvider xmlProvider ->
-		def xml = xmlProvider.asString()
-		def pomXml = new XmlParser().parseText(xml.toString())
-
-		pomXml.version[0] + { packaging('jar') }
-
-		def newXml = new StringWriter()
-		def printer = new XmlNodePrinter(new PrintWriter(newXml))
-		printer.preserveWhitespace = true
-		printer.print(pomXml)
-		xml.setLength(0)
-		xml.append(newXml.toString())
-	}
-	*/
 }
 
 project(':sulky-version') {
