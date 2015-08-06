@@ -396,6 +396,7 @@ public class SemanticVersion
 		return 0;
 	}
 
+	@SuppressWarnings("SimplifiableIfStatement")
 	@Override
 	public boolean equals(Object o)
 	{
