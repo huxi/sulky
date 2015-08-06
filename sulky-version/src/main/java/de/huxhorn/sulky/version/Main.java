@@ -109,7 +109,7 @@ public class Main
 		showingDialog = Boolean.parseBoolean(properties.getProperty(SHOW_ERROR_DIALOG_KEY, "true"));
 
 		boolean unknownVersion = false;
-		if(JavaVersion.JVM.equals(JavaVersion.MIN_VALUE))
+		if(JavaVersion.getSystemJavaVersion().equals(JavaVersion.MIN_VALUE))
 		{
 			unknownVersion = true;
 			if(failingOnUnknownVersion)
@@ -221,7 +221,7 @@ public class Main
 		final String msg="This application requires Java "
 				+ requiredJavaVersion.toVersionString()
 				+ " but JVM is "
-				+ JavaVersion.JVM.toVersionString()
+				+ JavaVersion.getSystemJavaVersion().toVersionString()
 				+ "!\nPlease upgrade your Java version.";
 
 		if(showingDialog)

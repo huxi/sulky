@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2014 Joern Huxhorn
+ * Copyright (C) 2007-2015 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2014 Joern Huxhorn
+ * Copyright 2007-2015 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,6 @@ class JavaVersionInitSpec extends Specification {
     String javaSpecificationVersion
 
     def setupSpec() {
-        version = JavaVersion.JVM // ensures that this test doesn't influence init of JVM
         javaVersion = System.getProperty(JAVA_VERSION)
         javaSpecificationVersion = System.getProperty(JAVA_SPEC_VERSION)
         System.setSecurityManager(manager);
@@ -92,7 +91,7 @@ class JavaVersionInitSpec extends Specification {
 
         then:
         version != null
-        version == new JavaVersion(1,6)
+        version == new YeOldeJavaVersion(1,6)
     }
 
     def 'full property access'() {
@@ -104,7 +103,7 @@ class JavaVersionInitSpec extends Specification {
 
         then:
         version != null
-        version == new JavaVersion(1,6,1,25)
+        version == new YeOldeJavaVersion(1,6,1,25)
     }
 
     def 'full property access with broken java version'() {
@@ -116,7 +115,7 @@ class JavaVersionInitSpec extends Specification {
 
         then:
         version != null
-        version == new JavaVersion(1,6)
+        version == new YeOldeJavaVersion(1,6)
     }
 
     def 'full property access with broken java and spec version'() {
@@ -139,7 +138,7 @@ class JavaVersionInitSpec extends Specification {
 
         then:
         version != null
-        version == new JavaVersion(1,6)
+        version == new YeOldeJavaVersion(1,6)
     }
 
     def 'full property access with missing java and spec version'() {
@@ -152,4 +151,17 @@ class JavaVersionInitSpec extends Specification {
         then:
         version == JavaVersion.MIN_VALUE
     }
+
+    def 'minimal JEP 223 version'() {
+        when:
+        manager.unreadableProperties = null
+        System.setProperty(JAVA_VERSION, '9')
+        System.setProperty(JAVA_SPEC_VERSION, '9')
+        def version = JavaVersion.systemJavaVersion
+
+        then:
+        version != null
+        version == new Jep223JavaVersion([9] as int[], null, 0, null)
+    }
+
 }
