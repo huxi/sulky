@@ -66,8 +66,6 @@ public abstract class JavaVersion
 	 */
 	private static final String JAVA_SPECIFICATION_VERSION_PROPERTY_NAME = "java.specification.version";
 
-	public static final JavaVersion MIN_VALUE = YeOldeJavaVersion.MIN_VALUE;
-
 	/**
 	 * The best possible approximation to the JVM JavaVersion.
 	 *

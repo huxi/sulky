@@ -79,7 +79,7 @@ class JavaVersionInitSpec extends Specification {
         def version = JavaVersion.systemJavaVersion
 
         then:
-        version == JavaVersion.MIN_VALUE
+        version == YeOldeJavaVersion.MIN_VALUE
     }
 
     def 'some property access'() {
@@ -126,7 +126,7 @@ class JavaVersionInitSpec extends Specification {
         def version = JavaVersion.systemJavaVersion
 
         then:
-        version == JavaVersion.MIN_VALUE
+        version == YeOldeJavaVersion.MIN_VALUE
     }
 
     def 'full property access with missing java version'() {
@@ -149,7 +149,7 @@ class JavaVersionInitSpec extends Specification {
         def version = JavaVersion.systemJavaVersion
 
         then:
-        version == JavaVersion.MIN_VALUE
+        version == YeOldeJavaVersion.MIN_VALUE
     }
 
     def 'minimal JEP 223 version'() {
