@@ -354,31 +354,52 @@ public class BlobRepositoryImpl
 		}
 		String hashStart=id.substring(0, HASH_DIRECTORY_NAME_LENGTH);
 		String hashRest=id.substring(HASH_DIRECTORY_NAME_LENGTH);
-		if(logger.isDebugEnabled()) logger.debug("HashStart='{}', hashRest='{}'", hashStart, hashRest);
 		File parent = new File(baseDirectory, hashStart);
-		if(!parent.isDirectory())
+		if (!parent.isDirectory())
 		{
 			return null;
 		}
-		File[] files = parent.listFiles(new StartsWithFileFilter(hashRest));
-		int count = files.length;
-		if(count == 0)
+		if(hashRest.length() < HASH_REMAINDER_NAME_LENGTH)
 		{
-			return null;
+			if (logger.isDebugEnabled()) logger.debug("Searching for candidates - HashStart='{}', hashRest='{}'", hashStart, hashRest);
+			File[] files = parent.listFiles(new StartsWithFileFilter(hashRest));
+			int count = files.length;
+			if (count == 0)
+			{
+				return null;
+			}
+			if (count == 1)
+			{
+				return files[0];
+			}
+			String[] candidates = new String[count];
+			for (int i = 0; i < count; i++)
+			{
+				File current = files[i];
+				candidates[i] = current.getParentFile().getName() + current.getName();
+			}
+			Arrays.sort(candidates);
+			throw new AmbiguousIdException(id, candidates);
 		}
-		if(count == 1)
+		File result = new File(parent, hashRest);
+		if(result.isFile())
 		{
-			return files[0];
+			try
+			{
+				if(result.getCanonicalPath().endsWith(hashRest))
+				{
+					// this is necessary for case-sensitivity
+					if (logger.isDebugEnabled()) logger.debug("Found exact match: {}", result.getAbsolutePath());
+					return result;
+				}
+			}
+			catch (IOException ex)
+			{
+				if(logger.isDebugEnabled()) logger.debug("Failed to resolve canonical path for {}! Returning file anyway.",result.getAbsolutePath(), ex);
+				return result;
+			}
 		}
-		String[] candidates=new String[count];
-		for(int i=0;i<count;i++)
-		{
-			File current=files[i];
-			candidates[i]=current.getParentFile().getName()+current.getName();
-		}
-		Arrays.sort(candidates);
-		throw new AmbiguousIdException(id, candidates);
-
+		return null;
 	}
 
 	private void deleteTempFile(File tempFile)
