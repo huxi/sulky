@@ -484,6 +484,16 @@ public class Jep223JavaVersion
 	}
 
 	@Override
+	public Jep223JavaVersion withoutPreReleaseIdentifier()
+	{
+		if(preReleaseIdentifier == null)
+		{
+			return this;
+		}
+		return new Jep223JavaVersion(versionNumbers, null, buildNumber, additionalBuildInformation);
+	}
+
+	@Override
 	public int compareTo(Jep223JavaVersion other)
 	{
 		if(other == null)

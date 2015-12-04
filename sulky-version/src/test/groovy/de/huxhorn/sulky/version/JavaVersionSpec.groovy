@@ -94,11 +94,34 @@ public class JavaVersionSpec extends Specification {
 
         where:
         // @formatter:off
-        version                                                            | expectedResult
-        new YeOldeJavaVersion(1, 0, 0)                                     | true
-        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString()) | true
-        new YeOldeJavaVersion(17, 0)                                       | false
-        new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)          | false
+        version                                                                    | expectedResult
+        new YeOldeJavaVersion(1, 0, 0)                                             | true
+        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString())         | true
+        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
+        new YeOldeJavaVersion(17, 0)                                               | false
+        new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)                  | false
+        // @formatter:on
+
+        compareString = expectedResult? '' : 'n\'t'
+        jvmString = JavaVersion.systemJavaVersion.toVersionString()
+    }
+
+    @Unroll('JVM #jvmString is#compareString at least #version - ignoring pre-release identifier')
+    def 'isAtLeast(JavaVersion) works without pre-release'() {
+        when:
+        boolean result = JavaVersion.isAtLeast(version, true)
+
+        then:
+        result == expectedResult
+
+        where:
+        // @formatter:off
+        version                                                                    | expectedResult
+        new YeOldeJavaVersion(1, 0, 0)                                             | true
+        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString())         | true
+        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
+        new YeOldeJavaVersion(17, 0)                                               | false
+        new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)                  | false
         // @formatter:on
 
         compareString = expectedResult? '' : 'n\'t'
@@ -205,6 +228,11 @@ public class JavaVersionSpec extends Specification {
         @Override
         String toShortVersionString() {
             return null
+        }
+
+        @Override
+        JavaVersion withoutPreReleaseIdentifier() {
+            return this
         }
     }
 }

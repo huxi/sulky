@@ -299,6 +299,16 @@ public final class YeOldeJavaVersion
 		return ""+huge+"."+major;
 	}
 
+	@Override
+	public YeOldeJavaVersion withoutPreReleaseIdentifier()
+	{
+		if(preReleaseIdentifier == null)
+		{
+			return this;
+		}
+		return new YeOldeJavaVersion(huge, major, minor, patch);
+	}
+
 	@SuppressWarnings("RedundantIfStatement")
 	@Override
 	public boolean equals(Object o)

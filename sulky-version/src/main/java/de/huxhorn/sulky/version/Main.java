@@ -49,6 +49,7 @@ public class Main
 
 	public static final String MAIN_CLASS_KEY = "main.class";
 	public static final String REQUIRED_JAVA_VERSION_KEY = "java.version";
+	public static final String IGNORE_PRE_RELEASE_IDENTIFIER = "ignore.pre.release.identifier";
 	public static final String SYSTEM_EXIT_KEY = "system.exit";
 	public static final String SHOW_ERROR_DIALOG_KEY = "show.error.dialog";
 	public static final String UNKNOWN_VERSION_FAIL_KEY = "unknown.version.fail";
@@ -138,7 +139,8 @@ public class Main
 			return;
 		}
 
-		if(!unknownVersion && !JavaVersion.isAtLeast(requiredJavaVersion))
+		boolean ignorePreReleaseIdentifier = Boolean.parseBoolean(properties.getProperty(IGNORE_PRE_RELEASE_IDENTIFIER, "false"));
+		if(!unknownVersion && !JavaVersion.isAtLeast(requiredJavaVersion, ignorePreReleaseIdentifier))
 		{
 			showVersionWarning(requiredJavaVersion);
 			exit(VERSION_MISMATCH_STATUS_CODE);

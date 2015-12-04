@@ -164,4 +164,15 @@ class JavaVersionInitSpec extends Specification {
         version == new Jep223JavaVersion([9] as int[], null, 0, null)
     }
 
+
+    def 'ignoring pre-release identifier works'() {
+        when:
+        manager.unreadableProperties = null
+        System.setProperty(JAVA_VERSION, '1.8.0_66-internal')
+        System.setProperty(JAVA_SPEC_VERSION, '1.8')
+
+        then:
+        JavaVersion.isAtLeast('1.8.0_66', true)
+        !JavaVersion.isAtLeast('1.8.0_66', false)
+    }
 }

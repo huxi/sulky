@@ -144,7 +144,7 @@ public abstract class JavaVersion
 	 * Returns true, if the JVM version is bigger or equals to the given versionString.
 	 *
 	 * This is a convenience method that is simply a shortcut for
-	 * (JVM.compareTo(parse(versionString)) &gt;= 0).
+	 * (getSystemJavaVersion().compareTo(parse(versionString)) &gt;= 0).
 	 *
 	 * @param versionString the version to compare with the JVM version.
 	 * @return true, if the JVM version is bigger or equals to the given versionString.
@@ -153,14 +153,31 @@ public abstract class JavaVersion
 	 */
 	public static boolean isAtLeast(String versionString)
 	{
-		return isAtLeast(parse(versionString));
+		return isAtLeast(versionString, false);
 	}
 
 	/**
 	 * Returns true, if the JVM version is bigger or equals to the given versionString.
 	 *
 	 * This is a convenience method that is simply a shortcut for
-	 * (JVM.compareTo(version) &gt;= 0).
+	 * (getSystemJavaVersion().compareTo(parse(versionString)) &gt;= 0).
+	 *
+	 * @param versionString the version to compare with the JVM version.
+	 * @param ignoringPreReleaseIdentifier whether or not a potential pre-release identifier should be ignored.
+	 * @return true, if the JVM version is bigger or equals to the given versionString.
+	 * @throws java.lang.NullPointerException if versionString is null.
+	 * @throws java.lang.IllegalArgumentException if versionString is invalid.
+	 */
+	public static boolean isAtLeast(String versionString, boolean ignoringPreReleaseIdentifier)
+	{
+		return isAtLeast(parse(versionString), ignoringPreReleaseIdentifier);
+	}
+
+	/**
+	 * Returns true, if the JVM version is bigger or equals to the given versionString.
+	 *
+	 * This is a convenience method that is simply a shortcut for
+	 * (getSystemJavaVersion().compareTo(version) &gt;= 0).
 	 *
 	 * @param version the version to compare with the JVM version.
 	 * @return true, if the JVM version is bigger or equals to the given versionString.
@@ -168,11 +185,33 @@ public abstract class JavaVersion
 	 */
 	public static boolean isAtLeast(JavaVersion version)
 	{
+		return isAtLeast(version, false);
+	}
+
+	/**
+	 * Returns true, if the JVM version is bigger or equals to the given versionString.
+	 *
+	 * This is a convenience method that is simply a shortcut for
+	 * (getSystemJavaVersion().compareTo(version) &gt;= 0).
+	 *
+	 * @param version the version to compare with the JVM version.
+	 * @param ignoringPreReleaseIdentifier whether or not a potential pre-release identifier should be ignored.
+	 * @return true, if the JVM version is bigger or equals to the given versionString.
+	 * @throws java.lang.NullPointerException if version is null.
+	 */
+	public static boolean isAtLeast(JavaVersion version, boolean ignoringPreReleaseIdentifier)
+	{
 		if(version == null)
 		{
 			throw new NullPointerException("version must not be null!");
 		}
-		return COMPARATOR.compare(getSystemJavaVersion(), version) >= 0;
+		JavaVersion systemJavaVersion = getSystemJavaVersion();
+		if(ignoringPreReleaseIdentifier)
+		{
+			systemJavaVersion = systemJavaVersion.withoutPreReleaseIdentifier();
+			version = version.withoutPreReleaseIdentifier();
+		}
+		return COMPARATOR.compare(systemJavaVersion, version) >= 0;
 	}
 
 	/**
@@ -216,6 +255,13 @@ public abstract class JavaVersion
 	 * @return the short version string of this version.
 	 */
 	public abstract String toShortVersionString();
+
+	/**
+	 * Returns this JavaVersion without pre-release identifier.
+	 *
+	 * @return this JavaVersion without pre-release identifier.
+	 */
+	public abstract JavaVersion withoutPreReleaseIdentifier();
 
 	public static final Comparator<JavaVersion> COMPARATOR = new Comparator<JavaVersion>()
 	{

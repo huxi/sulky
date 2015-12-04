@@ -517,6 +517,24 @@ Security 2014/07    1.7.0_65-b20    7u65    7.6.15+20    7.6.15
         compareString = compareString(expectedCompareResult)
     }
 
+    @Unroll
+    def 'withoutPreReleaseIdentifier() works as expected for #input'(Jep223JavaVersion input, Jep223JavaVersion expectedResult) {
+        when:
+        Jep223JavaVersion result = input.withoutPreReleaseIdentifier()
+
+        then:
+        result == expectedResult
+        if(input.preReleaseIdentifier == null) {
+            assert result.is(input)
+        }
+
+        where:
+        input                                                              | expectedResult
+        new Jep223JavaVersion([0, 0, 0, 0] as Integer[], 'foo', 17, 'bar') | new Jep223JavaVersion([0, 0, 0, 0] as Integer[], null, 17, 'bar')
+        new Jep223JavaVersion([1, 2, 3, 4] as Integer[], 'foo', 17, 'bar') | new Jep223JavaVersion([1, 2, 3, 4] as Integer[], null, 17, 'bar')
+        new Jep223JavaVersion([1, 2, 3, 4] as Integer[], null, 17, 'bar')  | new Jep223JavaVersion([1, 2, 3, 4] as Integer[], null, 17, 'bar')
+    }
+
     private static String compareString(int value)
     {
         if(value < 0) {

@@ -464,6 +464,24 @@ public class YeOldeJavaVersionSpec extends Specification {
         object << [new YeOldeJavaVersion(0,0,0,0,'foo'), new YeOldeJavaVersion(1,2,3,4,'bar'), new YeOldeJavaVersion(1,2,3,4)]
     }
 
+    @Unroll
+    def 'withoutPreReleaseIdentifier() works as expected for #input'(YeOldeJavaVersion input, YeOldeJavaVersion expectedResult) {
+        when:
+        YeOldeJavaVersion result = input.withoutPreReleaseIdentifier()
+
+        then:
+        result == expectedResult
+        if(input.preReleaseIdentifier == null) {
+            assert result.is(input)
+        }
+
+        where:
+        input                                    | expectedResult
+        new YeOldeJavaVersion(0, 0, 0, 0, 'foo') | new YeOldeJavaVersion(0, 0, 0, 0)
+        new YeOldeJavaVersion(1, 2, 3, 4, 'foo') | new YeOldeJavaVersion(1, 2, 3, 4)
+        new YeOldeJavaVersion(1, 2, 3, 4)        | new YeOldeJavaVersion(1, 2, 3, 4)
+    }
+
     /*
     Adding XML serialization would require default constructor and setters. So: nope.
     def 'serializable as XML'() {
