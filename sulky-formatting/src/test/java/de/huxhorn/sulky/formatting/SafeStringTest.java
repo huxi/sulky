@@ -34,6 +34,7 @@
 
 package de.huxhorn.sulky.formatting;
 
+import java.time.Instant;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -234,6 +235,32 @@ public class SafeStringTest
 
 		{
 			o = new Date(1234567890017L);
+			expected = "2009-02-13T23:31:30.017Z";
+		}
+		if(logger.isInfoEnabled()) logger.info("Evaluating {}...", o);
+		result = SafeString.toString(o);
+		if(logger.isInfoEnabled()) logger.info("Result of {} is {}.", o, result);
+		assertEquals(expected, result);
+	}
+
+	@Test
+	public void temporalAccessor()
+	{
+		String result;
+		String expected;
+		Object o;
+
+		{
+			o = Instant.ofEpochMilli(1234567890000L);
+			expected = "2009-02-13T23:31:30.000Z";
+		}
+		if(logger.isInfoEnabled()) logger.info("Evaluating {}...", o);
+		result = SafeString.toString(o);
+		if(logger.isInfoEnabled()) logger.info("Result of {} is {}.", o, result);
+		assertEquals(expected, result);
+
+		{
+			o = Instant.ofEpochMilli(1234567890017L);
 			expected = "2009-02-13T23:31:30.017Z";
 		}
 		if(logger.isInfoEnabled()) logger.info("Evaluating {}...", o);

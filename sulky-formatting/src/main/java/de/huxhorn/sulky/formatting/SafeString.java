@@ -40,6 +40,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 
+import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -263,8 +264,11 @@ public final class SafeString
 		}
 		else if(o instanceof Date)
 		{
-			Date date = (Date) o;
-			str.append(ISO_DATE_TIME_FORMATTER.format(Instant.ofEpochMilli(date.getTime())));
+			ISO_DATE_TIME_FORMATTER.formatTo(Instant.ofEpochMilli(((Date)o).getTime()), str);
+		}
+		else if(o instanceof TemporalAccessor)
+		{
+			ISO_DATE_TIME_FORMATTER.formatTo((TemporalAccessor) o, str);
 		}
 		else
 		{
