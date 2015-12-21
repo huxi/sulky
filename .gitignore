@@ -2,6 +2,7 @@ build
 .gradle
 target
 .DS_Store
+.idea
 *.iml
 *.iws
 *.ipr
