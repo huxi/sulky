@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@
 
 package de.huxhorn.sulky.version
 
+import spock.lang.IgnoreIf
 import spock.lang.Specification
 import spock.lang.Subject
 import spock.lang.Unroll;
@@ -41,6 +42,8 @@ import spock.lang.Unroll;
 @Subject(JavaVersion)
 @SuppressWarnings("GrEqualsBetweenInconvertibleTypes")
 public class JavaVersionSpec extends Specification {
+
+    private static final String CURRENT_VERSION_STRING = JavaVersion.systemJavaVersion.toVersionString()
 
     @Unroll
     def 'parse("#versionString") throws an exception'(String versionString) {
@@ -97,7 +100,6 @@ public class JavaVersionSpec extends Specification {
         version                                                                    | expectedResult
         new YeOldeJavaVersion(1, 0, 0)                                             | true
         JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString())         | true
-        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
         new YeOldeJavaVersion(17, 0)                                               | false
         new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)                  | false
         // @formatter:on
@@ -119,9 +121,46 @@ public class JavaVersionSpec extends Specification {
         version                                                                    | expectedResult
         new YeOldeJavaVersion(1, 0, 0)                                             | true
         JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString())         | true
-        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
         new YeOldeJavaVersion(17, 0)                                               | false
         new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)                  | false
+        // @formatter:on
+
+        compareString = expectedResult? '' : 'n\'t'
+        jvmString = JavaVersion.systemJavaVersion.toVersionString()
+    }
+
+    @IgnoreIf({CURRENT_VERSION_STRING.contains('-')})
+    @Unroll('JVM #jvmString is#compareString at least #version')
+    def 'isAtLeast(JavaVersion) works - special'() {
+        when:
+        boolean result = JavaVersion.isAtLeast(version)
+
+        then:
+        result == expectedResult
+
+        where:
+        // @formatter:off
+        version                                                                    | expectedResult
+        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
+        // @formatter:on
+
+        compareString = expectedResult? '' : 'n\'t'
+        jvmString = JavaVersion.systemJavaVersion.toVersionString()
+    }
+
+    @IgnoreIf({CURRENT_VERSION_STRING.contains('-')})
+    @Unroll('JVM #jvmString is#compareString at least #version - ignoring pre-release identifier')
+    def 'isAtLeast(JavaVersion) works without pre-release - special'() {
+        when:
+        boolean result = JavaVersion.isAtLeast(version, true)
+
+        then:
+        result == expectedResult
+
+        where:
+        // @formatter:off
+        version                                                                    | expectedResult
+        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
         // @formatter:on
 
         compareString = expectedResult? '' : 'n\'t'
