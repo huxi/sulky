@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ public class Main
 	public static final String IGNORE_PRE_RELEASE_IDENTIFIER = "ignore.pre.release.identifier";
 	public static final String SYSTEM_EXIT_KEY = "system.exit";
 	public static final String SHOW_ERROR_DIALOG_KEY = "show.error.dialog";
+	public static final String SHOW_WARNING_DIALOG_KEY = "show.warning.dialog";
 	public static final String UNKNOWN_VERSION_FAIL_KEY = "unknown.version.fail";
 
 	public static final int NO_ERROR_STATUS_CODE = 0;
@@ -71,7 +72,8 @@ public class Main
 
 	private static boolean executingSystemExit;
 	private static int statusCode;
-	private static boolean showingDialog;
+	private static boolean showingErrorDialog;
+	private static boolean showingWarningDialog;
 
 	public static void main(String[] args)
 	{
@@ -107,7 +109,8 @@ public class Main
 
 		boolean failingOnUnknownVersion = Boolean.parseBoolean(properties.getProperty(UNKNOWN_VERSION_FAIL_KEY, "false"));
 		executingSystemExit = Boolean.parseBoolean(properties.getProperty(SYSTEM_EXIT_KEY, "true"));
-		showingDialog = Boolean.parseBoolean(properties.getProperty(SHOW_ERROR_DIALOG_KEY, "true"));
+		showingErrorDialog = Boolean.parseBoolean(properties.getProperty(SHOW_ERROR_DIALOG_KEY, "true"));
+		showingWarningDialog = Boolean.parseBoolean(properties.getProperty(SHOW_WARNING_DIALOG_KEY, "false"));
 
 		boolean unknownVersion = false;
 		if(JavaVersion.getSystemJavaVersion().equals(YeOldeJavaVersion.MIN_VALUE))
@@ -142,9 +145,11 @@ public class Main
 		boolean ignorePreReleaseIdentifier = Boolean.parseBoolean(properties.getProperty(IGNORE_PRE_RELEASE_IDENTIFIER, "false"));
 		if(!unknownVersion && !JavaVersion.isAtLeast(requiredJavaVersion, ignorePreReleaseIdentifier))
 		{
-			showVersionWarning(requiredJavaVersion);
-			exit(VERSION_MISMATCH_STATUS_CODE);
-			return;
+			if(!showVersionWarning(requiredJavaVersion))
+			{
+				exit(VERSION_MISMATCH_STATUS_CODE);
+				return;
+			}
 		}
 
 		String mainClassName = properties.getProperty(MAIN_CLASS_KEY);
@@ -218,34 +223,100 @@ public class Main
 		statusCode = status;
 	}
 
-	private static void showVersionWarning(JavaVersion requiredJavaVersion)
+	private static boolean showVersionWarning(JavaVersion requiredJavaVersion)
 	{
 		final String msg="This application requires Java "
 				+ requiredJavaVersion.toVersionString()
 				+ " but JVM is "
 				+ JavaVersion.getSystemJavaVersion().toVersionString()
-				+ "!\nPlease upgrade your Java version.";
+				+ "!";
 
-		if(showingDialog)
+		VersionRunnable versionRunnable=null;
+		if(showingErrorDialog)
+		{
+			versionRunnable = new ShowVersionErrorDialog(msg);
+		}
+		else if(showingWarningDialog)
+		{
+			versionRunnable = new ShowVersionWarningDialog(msg);
+		}
+		if(versionRunnable != null)
 		{
 			try
 			{
-				//noinspection Convert2Lambda
-				EventQueue.invokeAndWait(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						JOptionPane.showMessageDialog(null, msg, "Java Version Mismatch", JOptionPane.ERROR_MESSAGE);
-					}
-				});
-				return;
+				EventQueue.invokeAndWait(versionRunnable);
+				return versionRunnable.isStartingAnyway();
 			}
 			catch (Throwable t)
 			{
 				// ignore
 			}
 		}
+
 		System.err.println(msg);
+		return false;
+	}
+
+	private interface VersionRunnable
+		extends Runnable
+	{
+		String TITLE = "Java Version Mismatch";
+
+		boolean isStartingAnyway();
+	}
+
+	private static class ShowVersionErrorDialog
+		implements VersionRunnable
+	{
+		private final String msg;
+
+		public ShowVersionErrorDialog(String msg)
+		{
+			this.msg = msg;
+		}
+
+		@Override
+		public void run()
+		{
+			final String message = msg + "\n\nPlease upgrade your Java version.";
+			JOptionPane.showOptionDialog(null, message, TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
+		}
+
+		@Override
+		public boolean isStartingAnyway()
+		{
+			return false;
+		}
+	}
+
+	private static class ShowVersionWarningDialog
+			implements VersionRunnable
+	{
+		private static final String YES_OPTION = "Yes";
+		private static final String NO_OPTION = "No";
+		private static final Object[] OPTIONS =new Object[]{YES_OPTION, NO_OPTION};
+		private static final String DEFAULT_OPTION = NO_OPTION;
+		private final String msg;
+		private boolean startingAnyway;
+
+		public ShowVersionWarningDialog(String msg)
+		{
+			this.msg = msg;
+		}
+
+		@Override
+		public void run()
+		{
+			final String message = msg + "\n\nStart anyway?";
+			int result = JOptionPane.showOptionDialog(null, message, TITLE, JOptionPane.YES_NO_OPTION,
+					JOptionPane.WARNING_MESSAGE, null, OPTIONS, DEFAULT_OPTION);
+			startingAnyway = result == JOptionPane.YES_OPTION;
+		}
+
+		@Override
+		public boolean isStartingAnyway()
+		{
+			return startingAnyway;
+		}
 	}
 }
