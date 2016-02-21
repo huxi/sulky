@@ -65,12 +65,12 @@ import java.io.Writer;
  *
  * It was brought to my attention by the following post to the logback-user-mailinglist:
  * http://www.qos.ch/pipermail/logback-user/2010-July/001644.html
- * 
+ *
  * Thanks to Andreas Dejung for teaching me yet another piece of Java.
  *
  * @see InterruptedException
  * @see InterruptedIOException
- * @see Thread#interrupt() 
+ * @see Thread#interrupt()
  */
 public final class IOUtilities
 {

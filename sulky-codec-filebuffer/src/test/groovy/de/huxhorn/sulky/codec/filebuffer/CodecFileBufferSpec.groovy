@@ -12,7 +12,7 @@ class CodecFileBufferSpec
   File tempOutputPath;
   File dataFile;
   File indexFile;
-  
+
   String[] values = [
       'Null, sort of nothing',
       'One',

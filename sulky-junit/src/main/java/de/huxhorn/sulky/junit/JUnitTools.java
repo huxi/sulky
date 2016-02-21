@@ -55,7 +55,7 @@ public final class JUnitTools
 {
 	private JUnitTools()
 	{}
-	
+
 	/**
 	 * Serializes the original and returns the deserialized instance.
 	 * Serialization is using ObjectOutputStream/ObjectInputStream.

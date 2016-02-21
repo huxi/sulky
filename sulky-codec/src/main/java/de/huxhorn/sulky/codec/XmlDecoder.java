@@ -89,7 +89,7 @@ public class XmlDecoder<E>
 		catch(Throwable e)
 		{
 			IOUtilities.interruptIfNecessary(e);
-			// silently ignore any problems 
+			// silently ignore any problems
 			return null;
 		}
 		finally

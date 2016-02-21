@@ -101,9 +101,9 @@ gradle.taskGraph.whenReady { taskGraph ->
 }
 
 if(!System.properties.'release' && !System.properties.'prerelease') {
-	defaultTasks 'build', 'uploadPublished'	
+	defaultTasks 'build', 'uploadPublished'
 } else {
-	defaultTasks 'build', 'uploadPublished', 'signJavadocZip', 'signSourceZip'	
+	defaultTasks 'build', 'uploadPublished', 'signJavadocZip', 'signSourceZip'
 }
 
 allprojects {
@@ -133,7 +133,7 @@ allprojects {
 
 	jacoco {
 		toolVersion = '0.7.5.201505241946'
-	}	
+	}
 }
 
 subprojects {
@@ -160,20 +160,20 @@ subprojects {
 	// "warning: [options] bootstrap class path not set in conjunction with -source 1.x"
 	// for now
 	def compilerArgs = ['-Xlint:unchecked', '-Xlint:-options', '-Xlint:deprecation', '-g']
-	
+
 	compileJava.options.compilerArgs = compilerArgs
 	compileTestJava.options.compilerArgs = compilerArgs
 	compileGroovy.options.compilerArgs = compilerArgs
 	compileTestGroovy.options.compilerArgs = compilerArgs
 
 	def sourceEncoding = 'UTF-8'
-	
+
 	compileJava.options.encoding = sourceEncoding
 	compileTestJava.options.encoding = sourceEncoding
 	compileGroovy.options.encoding = sourceEncoding
 	compileTestGroovy.options.encoding = sourceEncoding
 	javadoc.options.encoding = sourceEncoding
-	
+
 	signing {
 		required = { !version.endsWith("SNAPSHOT") }
 		sign configurations.archives
@@ -181,7 +181,7 @@ subprojects {
 
 	task sourceJar(type: Jar) { from sourceSets.main.allSource; classifier = 'sources' }
 	task javadocJar(type: Jar) { from javadoc.outputs.files; classifier = 'javadoc' }
-	
+
 	artifacts { archives sourceJar, javadocJar }
 
 	project.ext.defaultProject= {
@@ -189,32 +189,32 @@ subprojects {
 		name project.name
 		description project.description
 		inceptionYear '2007'
-		
+
 		scm {
 			connection 'scm:git:git://github.com/huxi/sulky.git'
 			developerConnection 'scm:git:ssh://git@github.com:huxi/sulky.git'
 			url 'http://github.com/huxi/sulky/'
 		}
-		
+
 		licenses {
 			license {
 				name 'GNU Lesser General Public License v3 (LGPL)'
 				url 'http://www.gnu.org/copyleft/lesser.html'
 				distribution 'repo'
 			}
-			
+
 			license {
 				name 'The Apache Software License, Version 2.0'
 				url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
 				distribution 'repo'
 			}
 		}
-		
+
 		issueManagement {
 			system 'Github'
 			url 'https://github.com/huxi/sulky/issues'
 		}
-		
+
 		developers {
 			developer {
 				id 'huxhorn'
@@ -227,7 +227,7 @@ subprojects {
 				}
 			}
 		}
-		
+
 		properties {
 			'project.build.sourceEncoding' 'UTF-8'
 			'project.reporting.outputEncoding' 'UTF-8'
@@ -241,7 +241,7 @@ subprojects {
 
 		published.extendsFrom archives, signatures
 	}
-	
+
 	dependencies {
 		testCompile libraries.'groovy'
 		testCompile libraries.'spock-core'
@@ -265,11 +265,11 @@ subprojects {
 			}
 		}
 	}
-	
+
 	project.ext.installer = install.repositories.mavenInstaller
-	
+
 	installer.pom.project defaultProject
-	
+
 	deployer.pom.project defaultProject
 }
 

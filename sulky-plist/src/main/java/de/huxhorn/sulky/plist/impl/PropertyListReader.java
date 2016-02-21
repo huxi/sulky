@@ -53,7 +53,7 @@ public class PropertyListReader
 	implements GenericStreamReader<PropertyList>, PropertyListConstants
 {
 	private DateTimeFormatter staxDateTimeFormatter = new DateTimeFormatter();
-	
+
 	public PropertyList read(XMLStreamReader reader)
 		throws XMLStreamException
 	{

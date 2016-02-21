@@ -64,7 +64,7 @@ public final class ResourceMaps
 
 	private ResourceMaps()
 	{}
-	
+
 	/**
 	 * Returns a map containing the key-value-pairs of all bundles
 	 * retrieved by calling getResources(clazz, resourceMapBaseName, BUNDLE_SUFFIXES, locale).

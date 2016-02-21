@@ -38,7 +38,7 @@ public final class Flush
 {
 	private Flush()
 	{}
-	
+
 	/**
 	 * Executes flush() on the given object if it implements FlushOperation. Does nothing otherwise.
 	 *

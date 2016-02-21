@@ -421,7 +421,7 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 
-		instance.put(new ByteArrayInputStream(new byte[0]));		
+		instance.put(new ByteArrayInputStream(new byte[0]));
 	}
 
 	@Test(expected = IllegalArgumentException.class)

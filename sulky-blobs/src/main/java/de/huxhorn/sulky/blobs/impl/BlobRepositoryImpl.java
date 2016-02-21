@@ -181,7 +181,7 @@ public class BlobRepositoryImpl
 				return null;
 			}
 		}
-		
+
 		if(tempFile.renameTo(destinationFile))
 		{
 			if(logger.isDebugEnabled()) logger.debug("Created blob file '{}'", destinationFile.getAbsolutePath());

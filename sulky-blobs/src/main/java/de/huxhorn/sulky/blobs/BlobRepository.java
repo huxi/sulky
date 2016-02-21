@@ -45,7 +45,7 @@ import java.util.Set;
  */
 public interface BlobRepository
 {
-	
+
 	/**
 	 * Puts the data that's available from the InputStream into the repository and returns the id used to reference it.
 	 *

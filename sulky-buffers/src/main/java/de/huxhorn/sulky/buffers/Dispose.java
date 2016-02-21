@@ -38,7 +38,7 @@ public final class Dispose
 {
 	private Dispose()
 	{}
-	
+
 	/**
 	 * Executes dispose() on the given object if it implements DisposeOperation. Does nothing otherwise.
 	 *

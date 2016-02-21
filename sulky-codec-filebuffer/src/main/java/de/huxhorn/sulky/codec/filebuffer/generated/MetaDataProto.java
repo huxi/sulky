@@ -15,7 +15,7 @@ public final class MetaDataProto {
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
      */
-    java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry> 
+    java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry>
         getEntryList();
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
@@ -28,7 +28,7 @@ public final class MetaDataProto {
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
      */
-    java.util.List<? extends de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder> 
+    java.util.List<? extends de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder>
         getEntryOrBuilderList();
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
@@ -164,7 +164,7 @@ public final class MetaDataProto {
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
      */
-    public java.util.List<? extends de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder> 
+    public java.util.List<? extends de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder>
         getEntryOrBuilderList() {
       return entry_;
     }
@@ -450,7 +450,7 @@ public final class MetaDataProto {
               entryBuilder_ = null;
               entry_ = other.entry_;
               bitField0_ = (bitField0_ & ~0x00000001);
-              entryBuilder_ = 
+              entryBuilder_ =
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
                    getEntryFieldBuilder() : null;
             } else {
@@ -468,7 +468,7 @@ public final class MetaDataProto {
       public final boolean isInitialized() {
         for (int i = 0; i < getEntryCount(); i++) {
           if (!getEntry(i).isInitialized()) {
-            
+
             return false;
           }
         }
@@ -689,7 +689,7 @@ public final class MetaDataProto {
       /**
        * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
        */
-      public java.util.List<? extends de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder> 
+      public java.util.List<? extends de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder>
            getEntryOrBuilderList() {
         if (entryBuilder_ != null) {
           return entryBuilder_.getMessageOrBuilderList();
@@ -715,12 +715,12 @@ public final class MetaDataProto {
       /**
        * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
        */
-      public java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry.Builder> 
+      public java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry.Builder>
            getEntryBuilderList() {
         return getEntryFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
-          de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry, de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry.Builder, de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder> 
+          de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry, de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry.Builder, de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder>
           getEntryFieldBuilder() {
         if (entryBuilder_ == null) {
           entryBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
@@ -929,7 +929,7 @@ public final class MetaDataProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -945,7 +945,7 @@ public final class MetaDataProto {
         getKeyBytes() {
       java.lang.Object ref = key_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         key_ = b;
@@ -971,7 +971,7 @@ public final class MetaDataProto {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -987,7 +987,7 @@ public final class MetaDataProto {
         getValueBytes() {
       java.lang.Object ref = value_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         value_ = b;
@@ -1230,7 +1230,7 @@ public final class MetaDataProto {
 
       public final boolean isInitialized() {
         if (!hasKey()) {
-          
+
           return false;
         }
         return true;
@@ -1286,7 +1286,7 @@ public final class MetaDataProto {
           getKeyBytes() {
         java.lang.Object ref = key_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           key_ = b;
@@ -1362,7 +1362,7 @@ public final class MetaDataProto {
           getValueBytes() {
         java.lang.Object ref = value_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           value_ = b;
