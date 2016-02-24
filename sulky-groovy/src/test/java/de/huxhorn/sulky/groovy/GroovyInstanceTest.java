@@ -36,6 +36,9 @@ package de.huxhorn.sulky.groovy;
 
 import de.huxhorn.sulky.junit.LoggingTestBase;
 import groovy.lang.Script;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -58,6 +61,8 @@ import static org.junit.Assert.assertTrue;
 public class GroovyInstanceTest
 	extends LoggingTestBase
 {
+	private static final long ONE_MINUTE = 60_000;
+
 	@Rule
 	public TemporaryFolder folder = new TemporaryFolder();
 	private File fooFile;
@@ -72,10 +77,9 @@ public class GroovyInstanceTest
 		throws IOException
 	{
 		fooFile = folder.newFile("Foo.groovy");
-		copyIntoFile("/Foo.groovy", fooFile);
 	}
 
-	private void copyIntoFile(String resource, File output)
+	private static void copyIntoFile(String resource, File output, long lastModified)
 		throws IOException
 	{
 		FileOutputStream out = null;
@@ -91,12 +95,17 @@ public class GroovyInstanceTest
 			IOUtils.closeQuietly(out);
 			IOUtils.closeQuietly(in);
 		}
+		Path fooPath = output.toPath();
+		Files.setLastModifiedTime(fooPath, FileTime.fromMillis(lastModified));
 	}
 
 	@SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
 	@Test
 	public void normal()
+			throws IOException
 	{
+		copyIntoFile("/Foo.groovy", fooFile, System.currentTimeMillis() - ONE_MINUTE);
+
 		GroovyInstance instance = new GroovyInstance();
 		instance.setGroovyFileName(fooFile.getAbsolutePath());
 		Class instanceClass = instance.getInstanceClass();
@@ -137,9 +146,11 @@ public class GroovyInstanceTest
 	public void refresh()
 		throws IOException, InterruptedException
 	{
+		copyIntoFile("/Foo.groovy", fooFile, System.currentTimeMillis() - ONE_MINUTE);
+
 		GroovyInstance instance = new GroovyInstance();
 		instance.setGroovyFileName(fooFile.getAbsolutePath());
-		instance.setRefreshInterval(200);
+		instance.setRefreshInterval(1);
 		Class instanceClass = instance.getInstanceClass();
 		assertNotNull(instanceClass);
 		assertEquals("Foo", instanceClass.getName());
@@ -149,8 +160,10 @@ public class GroovyInstanceTest
 		Script script=(Script)object;
 		String result = (String)script.run();
 		assertEquals("Foo", result);
-		Thread.sleep(1000); // workaround for filesystem lastModified accuracy
-		copyIntoFile("/Bar.groovy", fooFile);
+
+		copyIntoFile("/Bar.groovy", fooFile, System.currentTimeMillis());
+
+		Thread.sleep(100);
 
 		object = instance.getInstance();
 		assertTrue(object instanceof Script);
@@ -164,9 +177,11 @@ public class GroovyInstanceTest
 	public void broken()
 		throws IOException, InterruptedException
 	{
+		copyIntoFile("/Foo.groovy", fooFile, System.currentTimeMillis() - 2 * ONE_MINUTE);
+
 		GroovyInstance instance = new GroovyInstance();
 		instance.setGroovyFileName(fooFile.getAbsolutePath());
-		instance.setRefreshInterval(200);
+		instance.setRefreshInterval(1);
 		Class instanceClass = instance.getInstanceClass();
 		assertNotNull(instanceClass);
 		assertEquals("Foo", instanceClass.getName());
@@ -176,25 +191,26 @@ public class GroovyInstanceTest
 		Script script=(Script)object;
 		String result = (String)script.run();
 		assertEquals("Foo", result);
-		Thread.sleep(1000); // workaround for filesystem lastModified accuracy
-		copyIntoFile("/Broken.b0rken", fooFile);
-		Thread.sleep(1000); // workaround for filesystem lastModified accuracy
+
+		copyIntoFile("/Broken.b0rken", fooFile, System.currentTimeMillis() - ONE_MINUTE);
+
+		Thread.sleep(100);
 
 
 		assertNull(""+instance.getInstanceClass(), instance.getInstanceClass());
 		assertNull(""+instance.getInstance(), instance.getInstance());
 		// error should be logged only once...
-		Thread.sleep(500);
+		Thread.sleep(10);
 		assertNull(""+instance.getInstanceClass(), instance.getInstanceClass());
 		assertNull(""+instance.getInstance(), instance.getInstance());
-		Thread.sleep(500);
+		Thread.sleep(10);
 		assertNull(""+instance.getInstanceClass(), instance.getInstanceClass());
 		assertNull(""+instance.getInstance(), instance.getInstance());
-		Thread.sleep(500);
+		Thread.sleep(10);
 		assertNotNull(instance.getErrorCause());
 		assertNotNull(instance.getErrorMessage());
 
-		copyIntoFile("/Bar.groovy", fooFile);
+		copyIntoFile("/Bar.groovy", fooFile, System.currentTimeMillis());
 
 		object = instance.getInstance();
 		assertTrue(object instanceof Script);
