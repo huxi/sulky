@@ -20,4 +20,3 @@ project.ext.libraries = [
 'slf4j-api':              "org.slf4j:slf4j-api:${versions.slf4j}",
 'spock-core':             "org.spockframework:spock-core:${versions.spock}"
 ]
-
