@@ -69,12 +69,12 @@ class SafeStringSpec extends Specification {
 	{
 		Map<String, Map> aMap = new HashMap()
 		Map<String, Map> bMap = new HashMap()
-		bMap.put("bar", aMap)
-		aMap.put("foo", bMap)
+		bMap.put('bar', aMap)
+		aMap.put('foo', bMap)
 
 		RECURSIVE_MAP = aMap
 		RECURSIVE_MAP_EXPECTED_RESULT =
-				"{foo={bar=" + SafeString.RECURSION_PREFIX + SafeString.identityToString(aMap) + SafeString.RECURSION_SUFFIX + "}}"
+				'{foo={bar=' + SafeString.RECURSION_PREFIX + SafeString.identityToString(aMap) + SafeString.RECURSION_SUFFIX + '}}'
 
 		List aList = new ArrayList()
 		List bList = new ArrayList()
@@ -83,13 +83,13 @@ class SafeStringSpec extends Specification {
 
 		RECURSIVE_LIST = aList
 		RECURSIVE_LIST_EXPECTED_RESULT =
-				"[[" + SafeString.RECURSION_PREFIX + SafeString.identityToString(aList) + SafeString.RECURSION_SUFFIX + "]]"
+				'[[' + SafeString.RECURSION_PREFIX + SafeString.identityToString(aList) + SafeString.RECURSION_SUFFIX + ']]'
 
 		Object[] array = new Object[2]
 		array[1] = array
 		RECURSIVE_OBJECT_ARRAY = array
 		RECURSIVE_OBJECT_ARRAY_EXPECTED_RESULT =
-				"[null, "+SafeString.RECURSION_PREFIX + SafeString.identityToString(array) + SafeString.RECURSION_SUFFIX + "]"
+				'[null, '+SafeString.RECURSION_PREFIX + SafeString.identityToString(array) + SafeString.RECURSION_SUFFIX + ']'
 
 		PROBLEMATIC_1=new ProblematicToString(null)
 		PROBLEMATIC_1_EXPECTED_RESULT =
@@ -105,23 +105,29 @@ class SafeStringSpec extends Specification {
 		PROBLEMATIC_3_EXPECTED_RESULT =
 				SafeString.ERROR_PREFIX + SafeString.identityToString(PROBLEMATIC_3) + SafeString.ERROR_SEPARATOR + FooThrowable.class.getName() + SafeString.ERROR_MSG_SEPARATOR + message + SafeString.ERROR_SUFFIX
 
-		def mapList = ["One", "Two"] as ArrayList
+		def mapList = ['One', 'Two'] as ArrayList
 		LIST_INSIDE_TREE_MAP = ['foo': mapList, 'bar': mapList] as TreeMap
 
-		def mapArray = ["One", "Two"] as String[]
+		def mapArray = ['One', 'Two'] as String[]
 		ARRAY_INSIDE_TREE_MAP = ['foo': mapArray, 'bar': mapArray] as TreeMap
 
-		def listList = ["One", "Two"] as ArrayList
+		def listList = ['One', 'Two'] as ArrayList
 		LIST_INSIDE_LIST = [listList, listList] as ArrayList
 
-		def listArray = ["One", "Two"] as String[]
+		def listArray = ['One', 'Two'] as String[]
 		ARRAY_INSIDE_LIST = [listArray, listArray] as ArrayList
 	}
 
 	static def validValues() {
+		HashMap nullKeyMap = new HashMap()
+		nullKeyMap.put(null, 'foo')
+
+		HashMap objectKeyMap = new HashMap()
+		objectKeyMap.put(new UnproblematicToString(), 'foo')
+
 		[
 				null,
-				"foo",
+				'foo',
 				new UnproblematicToString(),
 				new Date(1234567890000L),
 				new Date(1234567890017L),
@@ -150,8 +156,11 @@ class SafeStringSpec extends Specification {
 				LIST_INSIDE_LIST,
 				ARRAY_INSIDE_LIST,
 				[null] as ArrayList,
-				new HashMap(['foo': null]), // "as HashMap" would use LinkedHashMap...
-				new HashMap([null: 'bar']),
+				new HashMap(['foo': null]),
+				new HashMap(['bar': 'null']),
+				nullKeyMap,
+				new HashMap(['null': 'bar']),
+				objectKeyMap,
 		] as Object[]
 	}
 
@@ -189,45 +198,89 @@ class SafeStringSpec extends Specification {
 				ArrayList,
 				HashMap,
 				HashMap,
+				HashMap,
+				HashMap,
+				HashMap,
 		] as Class[]
 	}
 
 	static def validValuesExpectedResults() {
 		[
-				"null",
-				"foo",
-				"UnproblematicToString",
-				"2009-02-13T23:31:30.000Z",
-				"2009-02-13T23:31:30.017Z",
-				"2009-02-13T23:31:30.000Z",
-				"2009-02-13T23:31:30.017Z",
-				"SATURDAY",
-				"[1, 2, 3, 0, 127, -128]",
-				"[1, 2, 3, 0, 127, -128]",
-				"[1, 2, 3, 0, 32767, -32768]",
-				"[1, 2, 3, 0, 32767, -32768]",
-				"[1, 2, 3, 0, 2147483647, -2147483648]",
-				"[1, 2, 3, 0, 2147483647, -2147483648]",
-				"[1, 2, 3, 0, 9223372036854775807, -9223372036854775808]",
-				"[1, 2, 3, 0, 9223372036854775807, -9223372036854775808]",
-				"[3.1415927, 42.0, -3.1415927, 0.0, NaN, 3.4028235E38, 1.4E-45, Infinity, -Infinity]",
-				"[3.1415927, 42.0, -3.1415927, 0.0, NaN, 3.4028235E38, 1.4E-45, Infinity, -Infinity]",
-				"[3.14159265, 42.0, -3.14159265, 0.0, NaN, 1.7976931348623157E308, 4.9E-324, Infinity, -Infinity]",
-				"[3.14159265, 42.0, -3.14159265, 0.0, NaN, 1.7976931348623157E308, 4.9E-324, Infinity, -Infinity]",
-				"[true, false]",
-				"[true, false]",
-				"[b, a, r, \00, !]",
-				"[b, a, r, \00, !]",
-				"{bar=[One, Two], foo=[One, Two]}",
-				"{bar=[One, Two], foo=[One, Two]}",
-				"[[One, Two], [One, Two]]",
-				"[[One, Two], [One, Two]]",
-				"[null]",
-				"{foo=null}",
-				"{null=bar}",
+				'null',
+				'foo',
+				'UnproblematicToString',
+				'2009-02-13T23:31:30.000Z',
+				'2009-02-13T23:31:30.017Z',
+				'2009-02-13T23:31:30.000Z',
+				'2009-02-13T23:31:30.017Z',
+				'SATURDAY',
+				'[1, 2, 3, 0, 127, -128]',
+				'[1, 2, 3, 0, 127, -128]',
+				'[1, 2, 3, 0, 32767, -32768]',
+				'[1, 2, 3, 0, 32767, -32768]',
+				'[1, 2, 3, 0, 2147483647, -2147483648]',
+				'[1, 2, 3, 0, 2147483647, -2147483648]',
+				'[1, 2, 3, 0, 9223372036854775807, -9223372036854775808]',
+				'[1, 2, 3, 0, 9223372036854775807, -9223372036854775808]',
+				'[3.1415927, 42.0, -3.1415927, 0.0, NaN, 3.4028235E38, 1.4E-45, Infinity, -Infinity]',
+				'[3.1415927, 42.0, -3.1415927, 0.0, NaN, 3.4028235E38, 1.4E-45, Infinity, -Infinity]',
+				'[3.14159265, 42.0, -3.14159265, 0.0, NaN, 1.7976931348623157E308, 4.9E-324, Infinity, -Infinity]',
+				'[3.14159265, 42.0, -3.14159265, 0.0, NaN, 1.7976931348623157E308, 4.9E-324, Infinity, -Infinity]',
+				'[true, false]',
+				'[true, false]',
+				'[b, a, r, \00, !]',
+				'[b, a, r, \00, !]',
+				'{bar=[One, Two], foo=[One, Two]}',
+				'{bar=[One, Two], foo=[One, Two]}',
+				'[[One, Two], [One, Two]]',
+				'[[One, Two], [One, Two]]',
+				'[null]',
+				'{foo=null}',
+				'{bar=null}',
+				'{null=foo}',
+				'{null=bar}',
+				'{UnproblematicToString=foo}',
 		]
 	}
 
+	static def validValuesExpectedQuotedResults() {
+		[
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				'{"bar"=["One", "Two"], "foo"=["One", "Two"]}',
+				'{"bar"=["One", "Two"], "foo"=["One", "Two"]}',
+				'[["One", "Two"], ["One", "Two"]]',
+				'[["One", "Two"], ["One", "Two"]]',
+				null,
+				'{"foo"=null}',
+				'{"bar"="null"}',
+				'{null="foo"}',
+				'{"null"="bar"}',
+				'{UnproblematicToString="foo"}',
+		]
+	}
 
 	static def invalidValues() {
 		[
@@ -264,7 +317,7 @@ class SafeStringSpec extends Specification {
 
 	private static class UnproblematicToString {
 		public String toString() {
-			return "UnproblematicToString"
+			return 'UnproblematicToString'
 		}
 	}
 
@@ -306,7 +359,7 @@ class SafeStringSpec extends Specification {
 	}
 
 	@Unroll
-	def "explodingValue.toString() throws #expectedException"() {
+	def 'explodingValue.toString() throws #expectedException'() {
 		when:
 		value.toString()
 
@@ -319,7 +372,21 @@ class SafeStringSpec extends Specification {
 	}
 
 	@Unroll
-	def "SafeString.toString(explodingValue) returns #expectedResult"() {
+	def 'validValues sanity check'() {
+		expect:
+		if(value == null) {
+			assert valueClass == null
+		} else {
+			assert value.getClass() == valueClass
+		}
+
+		where:
+		value << validValues()
+		valueClass << validValuesClasses()
+	}
+
+	@Unroll
+	def 'SafeString.toString(explodingValue) returns #expectedResult'() {
 		expect:
 		// SafeString.toString(value) == expectedValue
 		result == expectedResult
@@ -332,28 +399,71 @@ class SafeStringSpec extends Specification {
 	}
 
 	@Unroll
-	def "SafeString.toString(validValue) for #clazz returns #expectedResult"() {
+	def 'SafeString.toString(validValue) for #valueClass returns #expectedResult#andQuoted'() {
 		when:
 		def result = SafeString.toString(value)
+		def quotedResult = SafeString.toString(value, true)
 
 		then:
 		result == expectedResult
 
 		and:
-		// value sanity check
-		if(value == null) {
-			assert clazz == null
-		} else {
-			assert value.getClass() == clazz
+		if(valueClass == String) {
+			assert value.is(result)
 		}
+
+		and:
+		if(expectedQuotedResult == null) {
+			assert quotedResult == expectedResult
+		} else {
+			assert quotedResult == expectedQuotedResult
+		}
+
 
 		where:
 		value << validValues()
-		clazz << validValuesClasses()
+		valueClass << validValuesClasses()
 		expectedResult << validValuesExpectedResults()
+		expectedQuotedResult << validValuesExpectedQuotedResults()
+
+		andQuoted = expectedQuotedResult ? " and quoted ${expectedQuotedResult}" : ''
 	}
 
-	def "SafeString.identityToString(null) returns null."() {
+	@Unroll
+	def 'SafeString.append(validValue) for #valueClass appends #expectedResult#andQuoted'() {
+		setup:
+		StringBuilder resultBuilder = new StringBuilder()
+		StringBuilder quotedResultBuilder = new StringBuilder()
+
+		when:
+		SafeString.append(value, resultBuilder)
+		SafeString.append(value, quotedResultBuilder, true)
+
+		and:
+		def result = resultBuilder.toString()
+		def quotedResult = quotedResultBuilder.toString()
+
+		then:
+		result == expectedResult
+
+		and:
+		if(expectedQuotedResult == null) {
+			assert quotedResult == expectedResult
+		} else {
+			assert quotedResult == expectedQuotedResult
+		}
+
+
+		where:
+		value << validValues()
+		valueClass << validValuesClasses()
+		expectedResult << validValuesExpectedResults()
+		expectedQuotedResult << validValuesExpectedQuotedResults()
+
+		andQuoted = expectedQuotedResult ? " and quoted ${expectedQuotedResult}" : ''
+	}
+
+	def 'SafeString.identityToString(null) returns null.'() {
 		expect:
 		SafeString.identityToString(null) == null
 	}

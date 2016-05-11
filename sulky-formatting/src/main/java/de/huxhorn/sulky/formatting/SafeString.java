@@ -68,6 +68,8 @@ public final class SafeString
 
 	private static final char   IDENTITY_SEPARATOR      = '@';
 
+	private static final char   STRING_QUOTE            = '"';
+
 	private static final String NULL_VALUE              = "null";
 
 	private static final DateTimeFormatter ISO_DATE_TIME_FORMATTER =
@@ -98,19 +100,47 @@ public final class SafeString
 
 	public static String toString(Object o)
 	{
+		return toString(o, false);
+	}
+
+	public static String toString(Object o, boolean quoteStringsInContainers)
+	{
 		if(o == null)
 		{
 			return NULL_VALUE;
 		}
+
+		if(o instanceof String)
+		{
+			return (String) o;
+		}
+
 		StringBuilder builder = new StringBuilder();
-		append(o, builder);
+		append(o, builder, quoteStringsInContainers);
 		return builder.toString();
 	}
 
-	public static void append(Object obj, StringBuilder into)
+	public static void append(Object o, StringBuilder into)
 	{
+		append(o, into, false);
+	}
+
+	public static void append(Object o, StringBuilder into, boolean quoteStringsInContainers)
+	{
+		if(o == null)
+		{
+			into.append(NULL_VALUE);
+			return;
+		}
+
+		if(o instanceof String)
+		{
+			into.append((String)o);
+			return;
+		}
+
 		IdentityHashMap<Object, Object> dejaVu = new IdentityHashMap<>(); // that's actually a neat name ;)
-		recursiveAppend(obj, into, dejaVu);
+		recursiveAppend(o, into, dejaVu, quoteStringsInContainers);
 	}
 
 	/**
@@ -132,20 +162,11 @@ public final class SafeString
 	 * @param o      the Object to convert into a String
 	 * @param str    the StringBuilder that o will be appended to
 	 * @param dejaVu used to detect recursions.
+	 * @param quoteStringsInContainers whether or not Strings in containers should be wrapped in quotes.
 	 */
-	private static void recursiveAppend(Object o, StringBuilder str, IdentityHashMap<Object, Object> dejaVu)
+	private static void recursiveAppend(Object o, StringBuilder str, IdentityHashMap<Object, Object> dejaVu, boolean quoteStringsInContainers)
 	{
-		if(o == null)
-		{
-			str.append(NULL_VALUE);
-			return;
-		}
-		if(o instanceof String)
-		{
-			str.append(o);
-			return;
-		}
-
+		// o will never be null or String at this point since those cases are already handled by shortcuts.
 		Class oClass = o.getClass();
 		if(oClass.isArray())
 		{
@@ -211,7 +232,11 @@ public final class SafeString
 				{
 					str.append(CONTAINER_SEPARATOR);
 				}
-				recursiveAppend(current, str, new IdentityHashMap<>(dejaVu));
+
+				if(!handleSimpleContainerValue(current, str, quoteStringsInContainers))
+				{
+					recursiveAppend(current, str, new IdentityHashMap<>(dejaVu), quoteStringsInContainers);
+				}
 			}
 			str.append(CONTAINER_SUFFIX);
 
@@ -241,11 +266,20 @@ public final class SafeString
 				{
 					str.append(CONTAINER_SEPARATOR);
 				}
+
 				Object key = current.getKey();
-				Object value = current.getValue();
-				recursiveAppend(key, str, new IdentityHashMap<>(dejaVu));
+				if(!handleSimpleContainerValue(key, str, quoteStringsInContainers))
+				{
+					recursiveAppend(key, str, new IdentityHashMap<>(dejaVu), quoteStringsInContainers);
+				}
+
 				str.append(MAP_KEY_VALUE_SEPARATOR);
-				recursiveAppend(value, str, new IdentityHashMap<>(dejaVu));
+
+				Object value = current.getValue();
+				if(!handleSimpleContainerValue(value, str, quoteStringsInContainers))
+				{
+					recursiveAppend(value, str, new IdentityHashMap<>(dejaVu), quoteStringsInContainers);
+				}
 			}
 			str.append(MAP_SUFFIX);
 			return;
@@ -274,7 +308,11 @@ public final class SafeString
 				{
 					str.append(CONTAINER_SEPARATOR);
 				}
-				recursiveAppend(current, str, new IdentityHashMap<>(dejaVu));
+
+				if(!handleSimpleContainerValue(current, str, quoteStringsInContainers))
+				{
+					recursiveAppend(current, str, new IdentityHashMap<>(dejaVu), quoteStringsInContainers);
+				}
 			}
 			str.append(CONTAINER_SUFFIX);
 			return;
@@ -319,6 +357,31 @@ public final class SafeString
 			}
 			str.append(ERROR_SUFFIX);
 		}
+	}
+
+	private static boolean handleSimpleContainerValue(Object current, StringBuilder str, boolean quoteStringsInContainers)
+	{
+		if(current == null)
+		{
+			str.append(NULL_VALUE);
+			return true;
+		}
+		if(current instanceof String)
+		{
+			String string = (String) current;
+			if(quoteStringsInContainers)
+			{
+				str.append(STRING_QUOTE).append(string).append(STRING_QUOTE);
+			}
+			else
+			{
+				str.append(string);
+			}
+			return true;
+		}
+
+		// not calling recursiveAppend here to preserve stack space.
+		return false;
 	}
 
 	/**
