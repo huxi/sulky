@@ -34,6 +34,7 @@
 
 package de.huxhorn.sulky.formatting;
 
+import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -50,13 +51,21 @@ import java.util.Set;
 
 public final class SafeString
 {
-	public static final String ERROR_PREFIX = "[!!!";
-	public static final String ERROR_SEPARATOR = "=>";
-	public static final String ERROR_MSG_SEPARATOR = ":";
-	public static final String ERROR_SUFFIX = "!!!]";
+	public static final String  ERROR_PREFIX = "[!!!";
+	public static final String  ERROR_SEPARATOR = "=>";
+	public static final char    ERROR_MSG_SEPARATOR = ':';
+	public static final String  ERROR_SUFFIX = "!!!]";
 
-	public static final String RECURSION_PREFIX = "[...";
-	public static final String RECURSION_SUFFIX = "...]";
+	public static final String  RECURSION_PREFIX = "[...";
+	public static final String  RECURSION_SUFFIX = "...]";
+
+	private static final char   CONTAINER_PREFIX = '[';
+	private static final String CONTAINER_SEPARATOR = ", ";
+	private static final char   CONTAINER_SUFFIX = ']';
+
+	private static final char   KEY_VALUE_SEPARATOR = '=';
+
+	private static final String NULL_VALUE = "null";
 
 	private static final DateTimeFormatter ISO_DATE_TIME_FORMATTER =
 			new DateTimeFormatterBuilder()
@@ -125,7 +134,7 @@ public final class SafeString
 	{
 		if(o == null)
 		{
-			str.append("null");
+			str.append(NULL_VALUE);
 			return;
 		}
 		if(o instanceof String)
@@ -140,158 +149,175 @@ public final class SafeString
 			if(oClass == byte[].class)
 			{
 				str.append(Arrays.toString((byte[]) o));
+				return;
 			}
-			else if(oClass == short[].class)
+			if(oClass == short[].class)
 			{
 				str.append(Arrays.toString((short[]) o));
+				return;
 			}
-			else if(oClass == int[].class)
+			if(oClass == int[].class)
 			{
 				str.append(Arrays.toString((int[]) o));
+				return;
 			}
-			else if(oClass == long[].class)
+			if(oClass == long[].class)
 			{
 				str.append(Arrays.toString((long[]) o));
+				return;
 			}
-			else if(oClass == float[].class)
+			if(oClass == float[].class)
 			{
 				str.append(Arrays.toString((float[]) o));
+				return;
 			}
-			else if(oClass == double[].class)
+			if(oClass == double[].class)
 			{
 				str.append(Arrays.toString((double[]) o));
+				return;
 			}
-			else if(oClass == boolean[].class)
+			if(oClass == boolean[].class)
 			{
 				str.append(Arrays.toString((boolean[]) o));
+				return;
 			}
-			else if(oClass == char[].class)
+			if(oClass == char[].class)
 			{
 				str.append(Arrays.toString((char[]) o));
+				return;
 			}
-			else
+
+			// special handling of container Object[]
+			String id = identityToString(o);
+			if(dejaVu.contains(id))
 			{
-				// special handling of container Object[]
-				String id = identityToString(o);
-				if(dejaVu.contains(id))
+				str.append(RECURSION_PREFIX).append(id).append(RECURSION_SUFFIX);
+				return;
+			}
+
+			dejaVu.add(id);
+			Object[] oArray = (Object[]) o;
+			str.append(CONTAINER_PREFIX);
+			boolean first = true;
+			for(Object current : oArray)
+			{
+				if(first)
 				{
-					str.append(RECURSION_PREFIX).append(id).append(RECURSION_SUFFIX);
+					first = false;
 				}
 				else
 				{
-					dejaVu.add(id);
-					Object[] oArray = (Object[]) o;
-					str.append("[");
-					boolean first = true;
-					for(Object current : oArray)
-					{
-						if(first)
-						{
-							first = false;
-						}
-						else
-						{
-							str.append(", ");
-						}
-						recursiveAppend(current, str, new HashSet<>(dejaVu));
-					}
-					str.append("]");
+					str.append(CONTAINER_SEPARATOR);
 				}
-				//str.append(Arrays.deepToString((Object[]) o));
+				recursiveAppend(current, str, new HashSet<>(dejaVu));
 			}
+			str.append(CONTAINER_SUFFIX);
+
+			return;
 		}
-		else if(o instanceof Map)
+
+		if(o instanceof Map)
 		{
 			// special handling of container Map
 			String id = identityToString(o);
 			if(dejaVu.contains(id))
 			{
 				str.append(RECURSION_PREFIX).append(id).append(RECURSION_SUFFIX);
+				return;
 			}
-			else
+
+			dejaVu.add(id);
+			Map<?, ?> oMap = (Map<?, ?>) o;
+			str.append("{");
+			boolean first = true;
+			for(Map.Entry<?, ?> current : oMap.entrySet())
 			{
-				dejaVu.add(id);
-				Map<?, ?> oMap = (Map<?, ?>) o;
-				str.append("{");
-				boolean isFirst = true;
-				for(Map.Entry<?, ?> current : oMap.entrySet())
+				if(first)
 				{
-					if(isFirst)
-					{
-						isFirst = false;
-					}
-					else
-					{
-						str.append(", ");
-					}
-					Object key = current.getKey();
-					Object value = current.getValue();
-					recursiveAppend(key, str, new HashSet<>(dejaVu));
-					str.append("=");
-					recursiveAppend(value, str, new HashSet<>(dejaVu));
+					first = false;
 				}
-				str.append("}");
+				else
+				{
+					str.append(CONTAINER_SEPARATOR);
+				}
+				Object key = current.getKey();
+				Object value = current.getValue();
+				recursiveAppend(key, str, new HashSet<>(dejaVu));
+				str.append(KEY_VALUE_SEPARATOR);
+				recursiveAppend(value, str, new HashSet<>(dejaVu));
 			}
+			str.append("}");
+			return;
 		}
-		else if(o instanceof Collection)
+
+		if(o instanceof Collection)
 		{
 			// special handling of container Collection
 			String id = identityToString(o);
 			if(dejaVu.contains(id))
 			{
 				str.append(RECURSION_PREFIX).append(id).append(RECURSION_SUFFIX);
+				return;
 			}
-			else
+
+			dejaVu.add(id);
+			Collection<?> oCol = (Collection<?>) o;
+			str.append(CONTAINER_PREFIX);
+			boolean first = true;
+			for(Object current : oCol)
 			{
-				dejaVu.add(id);
-				Collection<?> oCol = (Collection<?>) o;
-				str.append("[");
-				boolean isFirst = true;
-				for(Object current : oCol)
+				if(first)
 				{
-					if(isFirst)
-					{
-						isFirst = false;
-					}
-					else
-					{
-						str.append(", ");
-					}
-					recursiveAppend(current, str, new HashSet<>(dejaVu));
+					first = false;
 				}
-				str.append("]");
+				else
+				{
+					str.append(CONTAINER_SEPARATOR);
+				}
+				recursiveAppend(current, str, new HashSet<>(dejaVu));
 			}
+			str.append(CONTAINER_SUFFIX);
+			return;
 		}
-		else if(o instanceof Date)
+
+		if(o instanceof Date)
 		{
 			ISO_DATE_TIME_FORMATTER.formatTo(Instant.ofEpochMilli(((Date)o).getTime()), str);
+			return;
 		}
-		else if(o instanceof TemporalAccessor)
+
+		if(o instanceof TemporalAccessor)
 		{
-			ISO_DATE_TIME_FORMATTER.formatTo((TemporalAccessor) o, str);
-		}
-		else
-		{
-			// it's just some other Object, we can only use toString().
 			try
 			{
-				str.append(o.toString());
+				ISO_DATE_TIME_FORMATTER.formatTo((TemporalAccessor) o, str);
+				return;
 			}
-			catch(Throwable t)
+			catch(DateTimeException ignore)
 			{
-				str.append(ERROR_PREFIX);
-				str.append(identityToString(o));
-				str.append(ERROR_SEPARATOR);
-				String msg = t.getMessage();
-				String className = t.getClass().getName();
-				str.append(className);
-				if(msg != null && !className.equals(msg))
-				{
-					str.append(ERROR_MSG_SEPARATOR);
-					str.append(msg);
-				}
-				str.append(ERROR_SUFFIX);
+				// this is not a bug. fall through to simple Object handling.
 			}
+		}
+
+		// it's just some other Object, we can only use toString().
+		try
+		{
+			str.append(o.toString());
+		}
+		catch(Throwable t)
+		{
+			str.append(ERROR_PREFIX);
+			str.append(identityToString(o));
+			str.append(ERROR_SEPARATOR);
+			String msg = t.getMessage();
+			String className = t.getClass().getName();
+			str.append(className);
+			if(msg != null && !className.equals(msg))
+			{
+				str.append(ERROR_MSG_SEPARATOR);
+				str.append(msg);
+			}
+			str.append(ERROR_SUFFIX);
 		}
 	}
 

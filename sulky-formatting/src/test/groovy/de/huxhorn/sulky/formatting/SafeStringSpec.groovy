@@ -37,6 +37,7 @@ package de.huxhorn.sulky.formatting
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.time.DayOfWeek
 import java.time.Instant
 
 class SafeStringSpec extends Specification {
@@ -126,6 +127,7 @@ class SafeStringSpec extends Specification {
 				new Date(1234567890017L),
 				Instant.ofEpochMilli(1234567890000L),
 				Instant.ofEpochMilli(1234567890017L),
+				DayOfWeek.SATURDAY,
 				[1, 2, 3, 0, Byte.MAX_VALUE, Byte.MIN_VALUE] as byte[],
 				[1, 2, 3, 0, Byte.MAX_VALUE, Byte.MIN_VALUE] as Byte[],
 				[1, 2, 3, 0, Short.MAX_VALUE, Short.MIN_VALUE] as short[],
@@ -163,6 +165,7 @@ class SafeStringSpec extends Specification {
 				Date,
 				Instant,
 				Instant,
+				DayOfWeek,
 				byte[],
 				Byte[],
 				short[],
@@ -198,6 +201,7 @@ class SafeStringSpec extends Specification {
 				"2009-02-13T23:31:30.017Z",
 				"2009-02-13T23:31:30.000Z",
 				"2009-02-13T23:31:30.017Z",
+				"SATURDAY",
 				"[1, 2, 3, 0, 127, -128]",
 				"[1, 2, 3, 0, 127, -128]",
 				"[1, 2, 3, 0, 32767, -32768]",
