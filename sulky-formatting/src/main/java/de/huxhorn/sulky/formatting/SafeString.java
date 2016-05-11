@@ -50,21 +50,25 @@ import java.util.Map;
 
 public final class SafeString
 {
-	public static final String  ERROR_PREFIX = "[!!!";
-	public static final String  ERROR_SEPARATOR = "=>";
-	public static final char    ERROR_MSG_SEPARATOR = ':';
-	public static final String  ERROR_SUFFIX = "!!!]";
+	public static final String  ERROR_PREFIX            = "[!!!";
+	public static final String  ERROR_SEPARATOR         = "=>";
+	public static final char    ERROR_MSG_SEPARATOR     = ':';
+	public static final String  ERROR_SUFFIX            = "!!!]";
 
-	public static final String  RECURSION_PREFIX = "[...";
-	public static final String  RECURSION_SUFFIX = "...]";
+	public static final String  RECURSION_PREFIX        = "[...";
+	public static final String  RECURSION_SUFFIX        = "...]";
 
-	private static final char   CONTAINER_PREFIX = '[';
-	private static final String CONTAINER_SEPARATOR = ", ";
-	private static final char   CONTAINER_SUFFIX = ']';
+	private static final char   CONTAINER_PREFIX        = '[';
+	private static final String CONTAINER_SEPARATOR     = ", ";
+	private static final char   CONTAINER_SUFFIX        = ']';
 
-	private static final char   KEY_VALUE_SEPARATOR = '=';
+	private static final char   MAP_PREFIX              = '{';
+	private static final char   MAP_KEY_VALUE_SEPARATOR = '=';
+	private static final char   MAP_SUFFIX              = '}';
 
-	private static final String NULL_VALUE = "null";
+	private static final char   IDENTITY_SEPARATOR      = '@';
+
+	private static final String NULL_VALUE              = "null";
 
 	private static final DateTimeFormatter ISO_DATE_TIME_FORMATTER =
 			new DateTimeFormatterBuilder()
@@ -225,7 +229,7 @@ public final class SafeString
 			dejaVu.put(o, null);
 
 			Map<?, ?> oMap = (Map<?, ?>) o;
-			str.append("{");
+			str.append(MAP_PREFIX);
 			boolean first = true;
 			for(Map.Entry<?, ?> current : oMap.entrySet())
 			{
@@ -240,10 +244,10 @@ public final class SafeString
 				Object key = current.getKey();
 				Object value = current.getValue();
 				recursiveAppend(key, str, new IdentityHashMap<>(dejaVu));
-				str.append(KEY_VALUE_SEPARATOR);
+				str.append(MAP_KEY_VALUE_SEPARATOR);
 				recursiveAppend(value, str, new IdentityHashMap<>(dejaVu));
 			}
-			str.append("}");
+			str.append(MAP_SUFFIX);
 			return;
 		}
 
@@ -340,7 +344,7 @@ public final class SafeString
 		{
 			return null;
 		}
-		return obj.getClass().getName() + "@" + Integer.toHexString(System.identityHashCode(obj));
+		return obj.getClass().getName() + IDENTITY_SEPARATOR + Integer.toHexString(System.identityHashCode(obj));
 	}
 
 }
