@@ -319,22 +319,28 @@ class SafeStringSpec extends Specification {
 	}
 
 	@Unroll
-	def "SafeString.toString(explodingValue) returns #expectedValue"() {
+	def "SafeString.toString(explodingValue) returns #expectedResult"() {
 		expect:
 		// SafeString.toString(value) == expectedValue
-		result == expectedValue
+		result == expectedResult
 
 		where:
 		// using workaround to prevent StackOverflowError in Spock in case of failed comparison
 		// value << invalidValues()
 		result << workaround()
-		expectedValue << invalidValuesExpectedResults()
+		expectedResult << invalidValuesExpectedResults()
 	}
 
 	@Unroll
-	def "SafeString.toString(validValue) for #clazz returns #expectedValue"() {
-		expect:
-		SafeString.toString(value) == expectedValue
+	def "SafeString.toString(validValue) for #clazz returns #expectedResult"() {
+		when:
+		def result = SafeString.toString(value)
+
+		then:
+		result == expectedResult
+
+		and:
+		// value sanity check
 		if(value == null) {
 			assert clazz == null
 		} else {
@@ -344,7 +350,7 @@ class SafeStringSpec extends Specification {
 		where:
 		value << validValues()
 		clazz << validValuesClasses()
-		expectedValue << validValuesExpectedResults()
+		expectedResult << validValuesExpectedResults()
 	}
 
 	def "SafeString.identityToString(null) returns null."() {
