@@ -161,6 +161,12 @@ class SafeStringSpec extends Specification {
 				nullKeyMap,
 				new HashMap(['null': 'bar']),
 				objectKeyMap,
+				[] as Object[],
+				[] as ArrayList,
+				[] as HashSet,
+				[''] as Object[],
+				[''] as ArrayList,
+				[''] as HashSet,
 		] as Object[]
 	}
 
@@ -201,6 +207,12 @@ class SafeStringSpec extends Specification {
 				HashMap,
 				HashMap,
 				HashMap,
+				Object[],
+				ArrayList,
+				HashSet,
+				Object[],
+				ArrayList,
+				HashSet,
 		] as Class[]
 	}
 
@@ -240,6 +252,12 @@ class SafeStringSpec extends Specification {
 				'{null=foo}',
 				'{null=bar}',
 				'{UnproblematicToString=foo}',
+				'[]',
+				'[]',
+				'[]',
+				'[]',
+				'[]',
+				'[]',
 		]
 	}
 
@@ -279,6 +297,12 @@ class SafeStringSpec extends Specification {
 				'{null="foo"}',
 				'{"null"="bar"}',
 				'{UnproblematicToString="foo"}',
+				null,
+				null,
+				null,
+				'[""]',
+				'[""]',
+				'[""]',
 		]
 	}
 
