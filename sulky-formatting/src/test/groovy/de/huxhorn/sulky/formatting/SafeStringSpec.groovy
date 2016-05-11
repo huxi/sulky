@@ -194,7 +194,7 @@ class SafeStringSpec extends Specification {
 
 	static def validValuesExpectedResults() {
 		[
-				null,
+				"null",
 				"foo",
 				"UnproblematicToString",
 				"2009-02-13T23:31:30.000Z",

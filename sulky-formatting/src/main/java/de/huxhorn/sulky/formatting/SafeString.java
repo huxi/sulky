@@ -97,7 +97,7 @@ public final class SafeString
 	{
 		if(o == null)
 		{
-			return null;
+			return NULL_VALUE;
 		}
 		StringBuilder builder = new StringBuilder();
 		append(o, builder);
