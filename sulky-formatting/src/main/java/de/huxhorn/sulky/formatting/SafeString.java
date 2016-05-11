@@ -45,9 +45,8 @@ import java.time.temporal.TemporalAccessor;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Map;
-import java.util.Set;
 
 public final class SafeString
 {
@@ -106,7 +105,7 @@ public final class SafeString
 
 	public static void append(Object obj, StringBuilder into)
 	{
-		Set<String> dejaVu = new HashSet<>(); // that's actually a neat name ;)
+		IdentityHashMap<Object, Object> dejaVu = new IdentityHashMap<>(); // that's actually a neat name ;)
 		recursiveAppend(obj, into, dejaVu);
 	}
 
@@ -128,9 +127,9 @@ public final class SafeString
 	 *
 	 * @param o      the Object to convert into a String
 	 * @param str    the StringBuilder that o will be appended to
-	 * @param dejaVu a list of container identities that were already used.
+	 * @param dejaVu used to detect recursions.
 	 */
-	private static void recursiveAppend(Object o, StringBuilder str, Set<String> dejaVu)
+	private static void recursiveAppend(Object o, StringBuilder str, IdentityHashMap<Object, Object> dejaVu)
 	{
 		if(o == null)
 		{
@@ -188,14 +187,13 @@ public final class SafeString
 			}
 
 			// special handling of container Object[]
-			String id = identityToString(o);
-			if(dejaVu.contains(id))
+			if(dejaVu.containsKey(o))
 			{
-				str.append(RECURSION_PREFIX).append(id).append(RECURSION_SUFFIX);
+				str.append(RECURSION_PREFIX).append(identityToString(o)).append(RECURSION_SUFFIX);
 				return;
 			}
+			dejaVu.put(o, null);
 
-			dejaVu.add(id);
 			Object[] oArray = (Object[]) o;
 			str.append(CONTAINER_PREFIX);
 			boolean first = true;
@@ -209,7 +207,7 @@ public final class SafeString
 				{
 					str.append(CONTAINER_SEPARATOR);
 				}
-				recursiveAppend(current, str, new HashSet<>(dejaVu));
+				recursiveAppend(current, str, new IdentityHashMap<>(dejaVu));
 			}
 			str.append(CONTAINER_SUFFIX);
 
@@ -219,14 +217,13 @@ public final class SafeString
 		if(o instanceof Map)
 		{
 			// special handling of container Map
-			String id = identityToString(o);
-			if(dejaVu.contains(id))
+			if(dejaVu.containsKey(o))
 			{
-				str.append(RECURSION_PREFIX).append(id).append(RECURSION_SUFFIX);
+				str.append(RECURSION_PREFIX).append(identityToString(o)).append(RECURSION_SUFFIX);
 				return;
 			}
+			dejaVu.put(o, null);
 
-			dejaVu.add(id);
 			Map<?, ?> oMap = (Map<?, ?>) o;
 			str.append("{");
 			boolean first = true;
@@ -242,9 +239,9 @@ public final class SafeString
 				}
 				Object key = current.getKey();
 				Object value = current.getValue();
-				recursiveAppend(key, str, new HashSet<>(dejaVu));
+				recursiveAppend(key, str, new IdentityHashMap<>(dejaVu));
 				str.append(KEY_VALUE_SEPARATOR);
-				recursiveAppend(value, str, new HashSet<>(dejaVu));
+				recursiveAppend(value, str, new IdentityHashMap<>(dejaVu));
 			}
 			str.append("}");
 			return;
@@ -253,14 +250,13 @@ public final class SafeString
 		if(o instanceof Collection)
 		{
 			// special handling of container Collection
-			String id = identityToString(o);
-			if(dejaVu.contains(id))
+			if(dejaVu.containsKey(o))
 			{
-				str.append(RECURSION_PREFIX).append(id).append(RECURSION_SUFFIX);
+				str.append(RECURSION_PREFIX).append(identityToString(o)).append(RECURSION_SUFFIX);
 				return;
 			}
+			dejaVu.put(o, null);
 
-			dejaVu.add(id);
 			Collection<?> oCol = (Collection<?>) o;
 			str.append(CONTAINER_PREFIX);
 			boolean first = true;
@@ -274,7 +270,7 @@ public final class SafeString
 				{
 					str.append(CONTAINER_SEPARATOR);
 				}
-				recursiveAppend(current, str, new HashSet<>(dejaVu));
+				recursiveAppend(current, str, new IdentityHashMap<>(dejaVu));
 			}
 			str.append(CONTAINER_SUFFIX);
 			return;
