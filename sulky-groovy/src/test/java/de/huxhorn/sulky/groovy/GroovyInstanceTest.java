@@ -34,22 +34,16 @@
 
 package de.huxhorn.sulky.groovy;
 
+import de.huxhorn.sulky.junit.JUnitTools;
 import de.huxhorn.sulky.junit.LoggingTestBase;
 import groovy.lang.Script;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -79,32 +73,12 @@ public class GroovyInstanceTest
 		fooFile = folder.newFile("Foo.groovy");
 	}
 
-	private static void copyIntoFile(String resource, File output, long lastModified)
-		throws IOException
-	{
-		FileOutputStream out = null;
-		InputStream in = null;
-		try
-		{
-			out = FileUtils.openOutputStream(output);
-			in = GroovyInstanceTest.class.getResourceAsStream(resource);
-			IOUtils.copy(in, out);
-		}
-		finally
-		{
-			IOUtils.closeQuietly(out);
-			IOUtils.closeQuietly(in);
-		}
-		Path fooPath = output.toPath();
-		Files.setLastModifiedTime(fooPath, FileTime.fromMillis(lastModified));
-	}
-
 	@SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
 	@Test
 	public void normal()
 			throws IOException
 	{
-		copyIntoFile("/Foo.groovy", fooFile, System.currentTimeMillis() - ONE_MINUTE);
+		JUnitTools.copyResourceToFile("/Foo.groovy", fooFile, System.currentTimeMillis() - ONE_MINUTE);
 
 		GroovyInstance instance = new GroovyInstance();
 		instance.setGroovyFileName(fooFile.getAbsolutePath());
@@ -146,7 +120,7 @@ public class GroovyInstanceTest
 	public void refresh()
 		throws IOException, InterruptedException
 	{
-		copyIntoFile("/Foo.groovy", fooFile, System.currentTimeMillis() - ONE_MINUTE);
+		JUnitTools.copyResourceToFile("/Foo.groovy", fooFile, System.currentTimeMillis() - ONE_MINUTE);
 
 		GroovyInstance instance = new GroovyInstance();
 		instance.setGroovyFileName(fooFile.getAbsolutePath());
@@ -161,7 +135,7 @@ public class GroovyInstanceTest
 		String result = (String)script.run();
 		assertEquals("Foo", result);
 
-		copyIntoFile("/Bar.groovy", fooFile, System.currentTimeMillis());
+		JUnitTools.copyResourceToFile("/Bar.groovy", fooFile, System.currentTimeMillis());
 
 		Thread.sleep(100);
 
@@ -177,7 +151,7 @@ public class GroovyInstanceTest
 	public void broken()
 		throws IOException, InterruptedException
 	{
-		copyIntoFile("/Foo.groovy", fooFile, System.currentTimeMillis() - 2 * ONE_MINUTE);
+		JUnitTools.copyResourceToFile("/Foo.groovy", fooFile, System.currentTimeMillis() - 2 * ONE_MINUTE);
 
 		GroovyInstance instance = new GroovyInstance();
 		instance.setGroovyFileName(fooFile.getAbsolutePath());
@@ -192,7 +166,7 @@ public class GroovyInstanceTest
 		String result = (String)script.run();
 		assertEquals("Foo", result);
 
-		copyIntoFile("/Broken.b0rken", fooFile, System.currentTimeMillis() - ONE_MINUTE);
+		JUnitTools.copyResourceToFile("/Broken.b0rken", fooFile, System.currentTimeMillis() - ONE_MINUTE);
 
 		Thread.sleep(100);
 
@@ -210,7 +184,7 @@ public class GroovyInstanceTest
 		assertNotNull(instance.getErrorCause());
 		assertNotNull(instance.getErrorMessage());
 
-		copyIntoFile("/Bar.groovy", fooFile, System.currentTimeMillis());
+		JUnitTools.copyResourceToFile("/Bar.groovy", fooFile, System.currentTimeMillis());
 
 		object = instance.getInstance();
 		assertTrue(object instanceof Script);

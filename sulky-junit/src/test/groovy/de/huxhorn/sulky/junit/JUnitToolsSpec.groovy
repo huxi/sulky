@@ -34,12 +34,17 @@
 
 package de.huxhorn.sulky.junit
 
+import org.junit.Rule
+import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 import spock.lang.Unroll
 
 import java.time.DayOfWeek
 
 class JUnitToolsSpec extends Specification {
+
+	@Rule
+	public TemporaryFolder folder = new TemporaryFolder()
 
 	def validDifferentCloneValues() {
 		[
@@ -79,7 +84,7 @@ class JUnitToolsSpec extends Specification {
 	def validDifferentValues() {
 		[
 				new Integer(17),
-				"a string",
+				'a string',
 		]
 	}
 
@@ -114,7 +119,7 @@ class JUnitToolsSpec extends Specification {
 	public static class WorkingCloneableClass
 		implements Cloneable
 	{
-		private String value;
+		private String value
 
 		WorkingCloneableClass(String value) {
 			this.value = value
@@ -143,9 +148,9 @@ class JUnitToolsSpec extends Specification {
 
 		@Override
 		public String toString() {
-			return "WorkingCloneableClass{" +
-					"value='" + value + '\'' +
-					'}';
+			return 'WorkingCloneableClass{' +
+					'value=\'' + value + '\'' +
+					'}'
 		}
 	}
 
@@ -153,7 +158,7 @@ class JUnitToolsSpec extends Specification {
 			implements Cloneable
 	{
 		public static HackyCloneableSingletonClass INSTANCE = new HackyCloneableSingletonClass('Connor MacLeod')
-		private String value;
+		private String value
 
 		private HackyCloneableSingletonClass(String value) {
 			this.value = value
@@ -182,9 +187,9 @@ class JUnitToolsSpec extends Specification {
 
 		@Override
 		public String toString() {
-			return "HackyCloneableSingletonClass{" +
-					"value='" + value + '\'' +
-					'}';
+			return 'HackyCloneableSingletonClass{' +
+					'value=\'' + value + '\'' +
+					'}'
 		}
 	}
 
@@ -213,14 +218,14 @@ class JUnitToolsSpec extends Specification {
 
 		@Override
 		public String toString() {
-			return "ClassWithoutDefaultConstructor{" +
-					"value='" + value + '\'' +
-					'}';
+			return 'ClassWithoutDefaultConstructor{' +
+					'value=\'' + value + '\'' +
+					'}'
 		}
 	}
 
 	@Unroll
-	def "testClone(#value, #same) works as expected."() {
+	def 'testClone(#value, #same) works as expected.'() {
 		when:
 		def result = JUnitTools.testClone(value, same)
 		then:
@@ -237,7 +242,7 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "testClone(#value) does not fail."() {
+	def 'testClone(#value) does not fail.'() {
 		expect:
 		JUnitTools.testClone(value) != null
 
@@ -246,7 +251,7 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "testClone(#value) fails."() {
+	def 'testClone(#value) fails.'() {
 		when:
 		JUnitTools.testClone(value)
 
@@ -258,7 +263,7 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "testSerialization(#value, #same) works as expected."() {
+	def 'testSerialization(#value, #same) works as expected.'() {
 		when:
 		def result = JUnitTools.testXmlSerialization(value, same)
 		then:
@@ -275,7 +280,7 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "testSerialization(#value) does not fail."() {
+	def 'testSerialization(#value) does not fail.'() {
 		expect:
 		JUnitTools.testSerialization(value) != null
 
@@ -284,7 +289,7 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "testSerialization(#value) fails."() {
+	def 'testSerialization(#value) fails.'() {
 		when:
 		JUnitTools.testSerialization(value)
 
@@ -296,7 +301,7 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "testXmlSerialization(#value, #same) works as expected."() {
+	def 'testXmlSerialization(#value, #same) works as expected.'() {
 		when:
 		def result = JUnitTools.testXmlSerialization(value, same)
 		then:
@@ -313,7 +318,7 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "testXmlSerialization(#value) does not fail."() {
+	def 'testXmlSerialization(#value) does not fail.'() {
 		expect:
 		JUnitTools.testXmlSerialization(value) != null
 
@@ -322,7 +327,7 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "testXmlSerialization(#value) fails."() {
+	def 'testXmlSerialization(#value) fails.'() {
 		when:
 		JUnitTools.testXmlSerialization(value)
 
@@ -334,7 +339,7 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "testXmlSerialization(#value) also fails."() {
+	def 'testXmlSerialization(#value) also fails.'() {
 		when:
 		JUnitTools.testXmlSerialization(value)
 
@@ -348,9 +353,95 @@ class JUnitToolsSpec extends Specification {
 	}
 
 	@Unroll
-	def "equal(null, null, same) works regardless of 'same' value."() {
+	def 'equal(null, null, same) works regardless of "same" value.'() {
 		expect:
 		JUnitTools.equal(null, null, true)
 		JUnitTools.equal(null, null, false)
 	}
+
+	@Unroll
+	def 'copyResourceToFile("/#resourceName", ..., specificTime) works as expected.'() {
+		setup:
+		File rootDirectory = folder.newFolder()
+		println rootDirectory.absolutePath
+		File targetFile = new File(rootDirectory, resourceName)
+		long lastModified = System.currentTimeMillis()
+
+		// we just aim for seconds precision because some OS/FS suck
+		lastModified = ((long)(lastModified/1000L))*1000L
+		lastModified = lastModified - (3600 * 1000) // subtract one hour for good measures
+
+		when:
+		JUnitTools.copyResourceToFile('/'+resourceName, targetFile, lastModified)
+
+		then:
+		targetFile.isFile()
+		targetFile.lastModified() == lastModified
+
+		where:
+		resourceName << ['logback-test.xml']
+	}
+
+	@Unroll
+	def 'copyResourceToFile("/#resourceName", ..., negativeValue) works as expected.'() {
+		setup:
+		File rootDirectory = folder.newFolder()
+		println rootDirectory.absolutePath
+		File targetFile = new File(rootDirectory, resourceName)
+		long lastModified = System.currentTimeMillis()
+
+		// we just aim for seconds precision because some OS/FS suck
+		lastModified = ((long)(lastModified/1000L))*1000L
+
+		when:
+		JUnitTools.copyResourceToFile('/'+resourceName, targetFile, -1)
+
+		then:
+		targetFile.isFile()
+		targetFile.lastModified() >= lastModified
+
+		where:
+		resourceName << ['logback-test.xml']
+	}
+
+	@Unroll
+	def 'copyResourceToFile("/#resourceName", ...) works as expected.'() {
+		setup:
+		File rootDirectory = folder.newFolder()
+		println rootDirectory.absolutePath
+		File targetFile = new File(rootDirectory, resourceName)
+		long lastModified = System.currentTimeMillis()
+
+		// we just aim for seconds precision because some OS/FS suck
+		lastModified = ((long)(lastModified/1000L))*1000L
+
+		when:
+		JUnitTools.copyResourceToFile('/'+resourceName, targetFile)
+
+		then:
+		targetFile.isFile()
+		targetFile.lastModified() >= lastModified
+
+		where:
+		resourceName << ['logback-test.xml']
+	}
+
+	@Unroll
+	def 'copyResourceToFile("/#resourceName", ..., specificTime) fails as expected.'() {
+		setup:
+		File rootDirectory = folder.newFolder()
+		println rootDirectory.absolutePath
+		File targetFile = new File(rootDirectory, resourceName)
+
+		when:
+		JUnitTools.copyResourceToFile('/'+resourceName, targetFile, System.currentTimeMillis())
+
+		then:
+		IllegalArgumentException ex = thrown()
+		ex.message == 'Could not find resource \'/'+resourceName+'\' in classpath!'
+
+		where:
+		resourceName << ['missing-resource.snafu']
+	}
+
 }

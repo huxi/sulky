@@ -34,6 +34,7 @@
 
 package de.huxhorn.sulky.junit;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
@@ -43,12 +44,18 @@ import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.FileTime;
+import java.util.Objects;
 
 public final class JUnitTools
 {
@@ -189,4 +196,35 @@ public final class JUnitTools
 
 		return result;
 	}
+
+	public static void copyResourceToFile(String resource, File target)
+			throws IOException
+	{
+		copyResourceToFile(resource, target, -1);
+	}
+
+	public static void copyResourceToFile(String resource, File target, long lastModified)
+			throws IOException
+	{
+		Objects.requireNonNull(resource, "resource must not be null!");
+		Objects.requireNonNull(target, "target must not be null!");
+		File outputFile = target.getAbsoluteFile();
+		File parentFile = outputFile.getParentFile();
+		//noinspection ResultOfMethodCallIgnored
+		parentFile.mkdirs();
+		Path outputPath = outputFile.toPath();
+		try(InputStream in = JUnitTools.class.getResourceAsStream(resource))
+		{
+			if(in == null)
+			{
+				throw new IllegalArgumentException("Could not find resource '"+resource+"' in classpath!");
+			}
+			Files.copy(in, outputPath, REPLACE_EXISTING);
+		}
+		if(lastModified >= 0)
+		{
+			Files.setLastModifiedTime(outputPath, FileTime.fromMillis(lastModified));
+		}
+	}
+
 }
