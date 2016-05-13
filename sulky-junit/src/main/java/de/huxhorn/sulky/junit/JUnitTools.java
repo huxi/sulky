@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2014 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2014 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,11 +35,10 @@
 package de.huxhorn.sulky.junit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
-import java.beans.Encoder;
-import java.beans.Expression;
-import java.beans.PersistenceDelegate;
 import java.beans.XMLDecoder;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayInputStream;
@@ -53,8 +52,32 @@ import java.lang.reflect.Method;
 
 public final class JUnitTools
 {
+	static {
+		new JUnitTools(); // stfu, coverage.
+	}
+
 	private JUnitTools()
 	{}
+
+	public static void equal(Object original, Object other, boolean same)
+	{
+		if(original == null)
+		{
+			assertNull(other);
+			return;
+		}
+		String messagePart = "" + original + " and " + other;
+		if (same)
+		{
+			assertSame(original, other);
+		}
+		else
+		{
+			assertNotSame(messagePart + " are the same but shouldn't.", original, other);
+			assertEquals(messagePart + " are not equal.", original, other);
+			assertEquals("Hashes of " + messagePart + " differ!", original.hashCode(), other.hashCode());
+		}
+	}
 
 	/**
 	 * Serializes the original and returns the deserialized instance.
@@ -84,30 +107,19 @@ public final class JUnitTools
 	 * Serializes the original and returns the deserialized instance.
 	 * Serialization is using XMLEncoder/XMLDecoder.
 	 *
-	 * See http://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html
-	 * for a description of an enum problem.
-	 *
 	 * @param <T> The type to be serialized.
 	 * @param original the original Serializable,
-	 * @param enums    a list of enums that can be contained in original. Only needed in J2SE 1.5.
+	 * @param unused   was only needed in Java &lt;1.6.
 	 * @return the deserialized instance.
 	 * @throws java.io.IOException    In case of error during (de)serialization.
 	 * @throws ClassNotFoundException In case of error during (de)serialization.
 	 * @see java.beans.PersistenceDelegate
 	 */
-	public static <T extends Serializable> T serializeXml(T original, Class... enums)
+	public static <T extends Serializable> T serializeXml(T original, Class... unused)
 		throws IOException, ClassNotFoundException
 	{
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		XMLEncoder e = new XMLEncoder(os);
-		if(enums != null)
-		{
-			PersistenceDelegate delegate = new EnumPersistenceDelegate();
-			for(Class c : enums)
-			{
-				e.setPersistenceDelegate(c, delegate);
-			}
-		}
 		e.writeObject(original);
 		e.close();
 
@@ -130,38 +142,22 @@ public final class JUnitTools
 	{
 		T result = serialize(original);
 
-		if(same)
-		{
-			assertSame(original, result);
-		}
-		else
-		{
-			assertEquals("Hashes of " + original + " and " + result + " differ!", original.hashCode(), result.hashCode());
-			assertEquals(original, result);
-		}
+		equal(original, result, same);
 		return result;
 	}
 
-	public static <T extends Serializable> T testXmlSerialization(T original, Class... enums)
+	public static <T extends Serializable> T testXmlSerialization(T original, Class... unused)
 		throws IOException, ClassNotFoundException
 	{
-		return testXmlSerialization(original, false, enums);
+		return testXmlSerialization(original, false, unused);
 	}
 
-	public static <T extends Serializable> T testXmlSerialization(T original, boolean same, Class... enums)
+	public static <T extends Serializable> T testXmlSerialization(T original, boolean same, Class... unused)
 		throws IOException, ClassNotFoundException
 	{
-		T result = serializeXml(original, enums);
+		T result = serializeXml(original, unused);
 
-		if(same)
-		{
-			assertSame(original, result);
-		}
-		else
-		{
-			assertEquals("Hashes of " + original + " and " + result + " differ!", original.hashCode(), result.hashCode());
-			assertEquals(original, result);
-		}
+		equal(original, result, same);
 		return result;
 	}
 
@@ -189,35 +185,8 @@ public final class JUnitTools
 	{
 		T result = reflectionClone(original);
 
-		if(same)
-		{
-			assertSame(original, result);
-		}
-		else
-		{
-			assertEquals("Hashes of " + original + " and " + result + " differ!", original.hashCode(), result.hashCode());
-			assertEquals(original, result);
-		}
+		equal(original, result, same);
 
 		return result;
 	}
-
-	/**
-	 * As described in http://weblogs.java.net/blog/malenkov/archive/2006/08/how_to_encode_e.html
-	 */
-	static class EnumPersistenceDelegate
-		extends PersistenceDelegate
-	{
-		protected boolean mutatesTo(Object oldInstance, Object newInstance)
-		{
-			return oldInstance == newInstance;
-		}
-
-		protected Expression instantiate(Object oldInstance, Encoder out)
-		{
-			Enum e = (Enum) oldInstance;
-			return new Expression(e, e.getClass(), "valueOf", new Object[]{e.name()});
-		}
-	}
-
 }
