@@ -306,6 +306,51 @@ class SafeStringSpec extends Specification {
 		]
 	}
 
+	static def validValuesExpectedQuotedResults2() {
+		[
+				null,
+				'\'foo\'',
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				'[\'bar\':[\'One\', \'Two\'], \'foo\':[\'One\', \'Two\']]',
+				'[\'bar\':[\'One\', \'Two\'], \'foo\':[\'One\', \'Two\']]',
+				'[[\'One\', \'Two\'], [\'One\', \'Two\']]',
+				'[[\'One\', \'Two\'], [\'One\', \'Two\']]',
+				null,
+				'[\'foo\':null]',
+				'[\'bar\':\'null\']',
+				'[null:\'foo\']',
+				'[\'null\':\'bar\']',
+				'[UnproblematicToString:\'foo\']',
+				null,
+				null,
+				null,
+				'[\'\']',
+				'[\'\']',
+				'[\'\']',
+		]
+	}
+
 	static def invalidValues() {
 		[
 				RECURSIVE_MAP,
@@ -423,10 +468,11 @@ class SafeStringSpec extends Specification {
 	}
 
 	@Unroll
-	def 'SafeString.toString(validValue) for #valueClass returns #expectedResult#andQuoted'() {
+	def 'SafeString.toString(validValue) for #valueClass returns #expectedResult#andQuoted#andQuoted2'() {
 		when:
 		def result = SafeString.toString(value)
-		def quotedResult = SafeString.toString(value, true)
+		def quotedResult = SafeString.toString(value, SafeString.StringWrapping.CONTAINED, SafeString.StringStyle.JAVA, SafeString.MapStyle.JAVA)
+		def quotedResult2 = SafeString.toString(value, SafeString.StringWrapping.ALL, SafeString.StringStyle.GROOVY, SafeString.MapStyle.GROOVY)
 
 		then:
 		result == expectedResult
@@ -443,29 +489,40 @@ class SafeStringSpec extends Specification {
 			assert quotedResult == expectedQuotedResult
 		}
 
+		and:
+		if(expectedQuotedResult2 == null) {
+			assert quotedResult2 == expectedResult
+		} else {
+			assert quotedResult2 == expectedQuotedResult2
+		}
 
 		where:
 		value << validValues()
 		valueClass << validValuesClasses()
 		expectedResult << validValuesExpectedResults()
 		expectedQuotedResult << validValuesExpectedQuotedResults()
+		expectedQuotedResult2 << validValuesExpectedQuotedResults2()
 
-		andQuoted = expectedQuotedResult ? " and quoted ${expectedQuotedResult}" : ''
+		andQuoted = expectedQuotedResult ? " and ${expectedQuotedResult}" : ''
+		andQuoted2 = expectedQuotedResult2 ? " and ${expectedQuotedResult2}" : ''
 	}
 
 	@Unroll
-	def 'SafeString.append(validValue) for #valueClass appends #expectedResult#andQuoted'() {
+	def 'SafeString.append(validValue) for #valueClass appends #expectedResult#andQuoted#andQuoted2'() {
 		setup:
 		StringBuilder resultBuilder = new StringBuilder()
 		StringBuilder quotedResultBuilder = new StringBuilder()
+		StringBuilder quotedResultBuilder2 = new StringBuilder()
 
 		when:
 		SafeString.append(value, resultBuilder)
-		SafeString.append(value, quotedResultBuilder, true)
+		SafeString.append(value, quotedResultBuilder, SafeString.StringWrapping.CONTAINED, SafeString.StringStyle.JAVA, SafeString.MapStyle.JAVA)
+		SafeString.append(value, quotedResultBuilder2, SafeString.StringWrapping.ALL, SafeString.StringStyle.GROOVY, SafeString.MapStyle.GROOVY)
 
 		and:
 		def result = resultBuilder.toString()
 		def quotedResult = quotedResultBuilder.toString()
+		def quotedResult2 = quotedResultBuilder2.toString()
 
 		then:
 		result == expectedResult
@@ -477,18 +534,54 @@ class SafeStringSpec extends Specification {
 			assert quotedResult == expectedQuotedResult
 		}
 
+		and:
+		if(expectedQuotedResult2 == null) {
+			assert quotedResult2 == expectedResult
+		} else {
+			assert quotedResult2 == expectedQuotedResult2
+		}
 
 		where:
 		value << validValues()
 		valueClass << validValuesClasses()
 		expectedResult << validValuesExpectedResults()
 		expectedQuotedResult << validValuesExpectedQuotedResults()
+		expectedQuotedResult2 << validValuesExpectedQuotedResults2()
 
-		andQuoted = expectedQuotedResult ? " and quoted ${expectedQuotedResult}" : ''
+		andQuoted = expectedQuotedResult ? " and ${expectedQuotedResult}" : ''
+		andQuoted2 = expectedQuotedResult2 ? " and ${expectedQuotedResult2}" : ''
+	}
+
+	@Unroll
+	def 'SafeString.append throws expected exceptions.'() {
+		when:
+		SafeString.append(null, stringBuilder, stringWrapping, stringStyle, mapStyle)
+
+		then:
+		NullPointerException ex = thrown()
+		ex.message == messagePart + ' must not be null!'
+
+		where:
+		stringBuilder       | stringWrapping                | stringStyle                 | mapStyle                 | messagePart
+		null                | SafeString.StringWrapping.ALL | SafeString.StringStyle.JAVA | SafeString.MapStyle.JAVA | 'stringBuilder'
+		new StringBuilder() | null                          | SafeString.StringStyle.JAVA | SafeString.MapStyle.JAVA | 'stringWrapping'
+		new StringBuilder() | SafeString.StringWrapping.ALL | null                        | SafeString.MapStyle.JAVA | 'stringStyle'
+		new StringBuilder() | SafeString.StringWrapping.ALL | SafeString.StringStyle.JAVA | null                     | 'mapStyle'
 	}
 
 	def 'SafeString.identityToString(null) returns null.'() {
 		expect:
 		SafeString.identityToString(null) == null
+	}
+
+	def 'bow to coverage report'() {
+		expect:
+		SafeString.StringWrapping.ALL == SafeString.StringWrapping.valueOf('ALL')
+		SafeString.StringStyle.JAVA == SafeString.StringStyle.valueOf('JAVA')
+		SafeString.MapStyle.GROOVY == SafeString.MapStyle.valueOf('GROOVY')
+
+		SafeString.StringWrapping.values().contains(SafeString.StringWrapping.CONTAINED)
+		SafeString.StringStyle.values().contains(SafeString.StringStyle.GROOVY)
+		SafeString.MapStyle.values().contains(SafeString.MapStyle.JAVA)
 	}
 }

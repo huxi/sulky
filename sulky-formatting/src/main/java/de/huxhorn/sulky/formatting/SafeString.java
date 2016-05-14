@@ -47,6 +47,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Objects;
+
 
 public final class SafeString
 {
@@ -62,13 +64,7 @@ public final class SafeString
 	private static final String CONTAINER_SEPARATOR     = ", ";
 	private static final char   CONTAINER_SUFFIX        = ']';
 
-	private static final char   MAP_PREFIX              = '{';
-	private static final char   MAP_KEY_VALUE_SEPARATOR = '=';
-	private static final char   MAP_SUFFIX              = '}';
-
 	private static final char   IDENTITY_SEPARATOR      = '@';
-
-	private static final char   STRING_QUOTE            = '"';
 
 	private static final String NULL_VALUE              = "null";
 
@@ -100,11 +96,15 @@ public final class SafeString
 
 	public static String toString(Object o)
 	{
-		return toString(o, false);
+		return toString(o, StringWrapping.NONE, StringStyle.JAVA, MapStyle.JAVA);
 	}
 
-	public static String toString(Object o, boolean quoteStringsInContainers)
+	public static String toString(Object o, StringWrapping stringWrapping, StringStyle stringStyle, MapStyle mapStyle)
 	{
+		Objects.requireNonNull(stringWrapping, "stringWrapping must not be null!");
+		Objects.requireNonNull(stringStyle, "stringStyle must not be null!");
+		Objects.requireNonNull(mapStyle, "mapStyle must not be null!");
+
 		if(o == null)
 		{
 			return NULL_VALUE;
@@ -112,59 +112,84 @@ public final class SafeString
 
 		if(o instanceof String)
 		{
-			return (String) o;
+			String string = (String) o;
+			if(stringWrapping != StringWrapping.ALL)
+			{
+				return string;
+			}
+			char quoteChar=stringStyle.getQuoteChar();
+			return ""+quoteChar+string+quoteChar;
 		}
 
-		StringBuilder builder = new StringBuilder();
-		append(o, builder, quoteStringsInContainers);
-		return builder.toString();
+		StringBuilder stringBuilder = new StringBuilder();
+		append(o, stringBuilder, stringWrapping, stringStyle, mapStyle);
+		return stringBuilder.toString();
 	}
 
-	public static void append(Object o, StringBuilder into)
+	public static void append(Object o, StringBuilder stringBuilder)
 	{
-		append(o, into, false);
+		append(o, stringBuilder, StringWrapping.NONE, StringStyle.JAVA, MapStyle.JAVA);
 	}
 
-	public static void append(Object o, StringBuilder into, boolean quoteStringsInContainers)
+	public static void append(Object o, StringBuilder stringBuilder, StringWrapping stringWrapping, StringStyle stringStyle, MapStyle mapStyle)
 	{
+		Objects.requireNonNull(stringBuilder, "stringBuilder must not be null!");
+		Objects.requireNonNull(stringWrapping, "stringWrapping must not be null!");
+		Objects.requireNonNull(stringStyle, "stringStyle must not be null!");
+		Objects.requireNonNull(mapStyle, "mapStyle must not be null!");
+
 		if(o == null)
 		{
-			into.append(NULL_VALUE);
+			stringBuilder.append(NULL_VALUE);
 			return;
 		}
 
 		if(o instanceof String)
 		{
-			into.append((String)o);
+			String string = (String) o;
+			if(stringWrapping != StringWrapping.ALL)
+			{
+				stringBuilder.append(string);
+				return;
+			}
+			char quoteChar=stringStyle.getQuoteChar();
+			stringBuilder.append(quoteChar).append(string).append(quoteChar);
 			return;
 		}
 
 		IdentityHashMap<Object, Object> dejaVu = new IdentityHashMap<>(); // that's actually a neat name ;)
-		recursiveAppend(o, into, dejaVu, quoteStringsInContainers);
+		if(stringWrapping == StringWrapping.NONE)
+		{
+			stringStyle = null;
+		}
+		recursiveAppend(o, stringBuilder, stringStyle, mapStyle, dejaVu);
 	}
 
 	/**
 	 * This method performs a deep toString of the given Object.
-	 * Primitive arrays are converted using their respective Arrays.toString methods while
+	 *
+	 * <p>Primitive arrays are converted using their respective Arrays.toString methods while
 	 * special handling is implemented for "container types", i.e. Object[], Map and Collection because those could
 	 * contain themselves.
-	 * <p/>
-	 * dejaVu is used in case of those container types to prevent an endless recursion.
-	 * <p/>
-	 * It should be noted that neither AbstractMap.toString() nor AbstractCollection.toString() implement such a behavior.
+	 *
+	 * <p>dejaVu is used in case of those container types to prevent an endless recursion.
+	 *
+	 * <p>It should be noted that neither AbstractMap.toString() nor AbstractCollection.toString() implement such a behavior.
 	 * They only check if the container is directly contained in itself, but not if a contained container contains the
 	 * original one. Because of that, Arrays.toString(Object[]) isn't safe either.
-	 * Confusing? Just read the last paragraph again and check the respective toString() implementation.
-	 * <p/>
-	 * This means, in effect, that logging would produce a usable output even if an ordinary System.out.println(o)
+	 *
+	 * <p>Confusing? Just read the last paragraph again and check the respective toString() implementation.
+	 *
+	 * <p>This means, in effect, that logging would produce a usable output even if an ordinary System.out.println(o)
 	 * would produce a relatively hard-to-debug StackOverflowError.
 	 *
-	 * @param o      the Object to convert into a String
-	 * @param str    the StringBuilder that o will be appended to
-	 * @param dejaVu used to detect recursions.
-	 * @param quoteStringsInContainers whether or not Strings in containers should be wrapped in quotes.
+	 * @param o              the Object to convert into a String
+	 * @param stringBuilder  the StringBuilder that o will be appended to
+	 * @param stringStyle    the String quoting style.
+	 * @param mapStyle       the Map printing style.
+	 * @param dejaVu         used to detect recursions.
 	 */
-	private static void recursiveAppend(Object o, StringBuilder str, IdentityHashMap<Object, Object> dejaVu, boolean quoteStringsInContainers)
+	private static void recursiveAppend(Object o, StringBuilder stringBuilder, StringStyle stringStyle, MapStyle mapStyle, IdentityHashMap<Object, Object> dejaVu)
 	{
 		// o will never be null or String at this point since those cases are already handled by shortcuts.
 		Class oClass = o.getClass();
@@ -172,55 +197,55 @@ public final class SafeString
 		{
 			if(oClass == byte[].class)
 			{
-				str.append(Arrays.toString((byte[]) o));
+				stringBuilder.append(Arrays.toString((byte[]) o));
 				return;
 			}
 			if(oClass == short[].class)
 			{
-				str.append(Arrays.toString((short[]) o));
+				stringBuilder.append(Arrays.toString((short[]) o));
 				return;
 			}
 			if(oClass == int[].class)
 			{
-				str.append(Arrays.toString((int[]) o));
+				stringBuilder.append(Arrays.toString((int[]) o));
 				return;
 			}
 			if(oClass == long[].class)
 			{
-				str.append(Arrays.toString((long[]) o));
+				stringBuilder.append(Arrays.toString((long[]) o));
 				return;
 			}
 			if(oClass == float[].class)
 			{
-				str.append(Arrays.toString((float[]) o));
+				stringBuilder.append(Arrays.toString((float[]) o));
 				return;
 			}
 			if(oClass == double[].class)
 			{
-				str.append(Arrays.toString((double[]) o));
+				stringBuilder.append(Arrays.toString((double[]) o));
 				return;
 			}
 			if(oClass == boolean[].class)
 			{
-				str.append(Arrays.toString((boolean[]) o));
+				stringBuilder.append(Arrays.toString((boolean[]) o));
 				return;
 			}
 			if(oClass == char[].class)
 			{
-				str.append(Arrays.toString((char[]) o));
+				stringBuilder.append(Arrays.toString((char[]) o));
 				return;
 			}
 
 			// special handling of container Object[]
 			if(dejaVu.containsKey(o))
 			{
-				str.append(RECURSION_PREFIX).append(identityToString(o)).append(RECURSION_SUFFIX);
+				stringBuilder.append(RECURSION_PREFIX).append(identityToString(o)).append(RECURSION_SUFFIX);
 				return;
 			}
 			dejaVu.put(o, null);
 
 			Object[] oArray = (Object[]) o;
-			str.append(CONTAINER_PREFIX);
+			stringBuilder.append(CONTAINER_PREFIX);
 			boolean first = true;
 			for(Object current : oArray)
 			{
@@ -230,15 +255,15 @@ public final class SafeString
 				}
 				else
 				{
-					str.append(CONTAINER_SEPARATOR);
+					stringBuilder.append(CONTAINER_SEPARATOR);
 				}
 
-				if(!handleSimpleContainerValue(current, str, quoteStringsInContainers))
+				if(!handleSimpleContainerValue(current, stringBuilder, stringStyle))
 				{
-					recursiveAppend(current, str, new IdentityHashMap<>(dejaVu), quoteStringsInContainers);
+					recursiveAppend(current, stringBuilder, stringStyle, mapStyle, new IdentityHashMap<>(dejaVu));
 				}
 			}
-			str.append(CONTAINER_SUFFIX);
+			stringBuilder.append(CONTAINER_SUFFIX);
 
 			return;
 		}
@@ -248,13 +273,13 @@ public final class SafeString
 			// special handling of container Map
 			if(dejaVu.containsKey(o))
 			{
-				str.append(RECURSION_PREFIX).append(identityToString(o)).append(RECURSION_SUFFIX);
+				stringBuilder.append(RECURSION_PREFIX).append(identityToString(o)).append(RECURSION_SUFFIX);
 				return;
 			}
 			dejaVu.put(o, null);
 
 			Map<?, ?> oMap = (Map<?, ?>) o;
-			str.append(MAP_PREFIX);
+			stringBuilder.append(mapStyle.getPrefix());
 			boolean first = true;
 			for(Map.Entry<?, ?> current : oMap.entrySet())
 			{
@@ -264,24 +289,24 @@ public final class SafeString
 				}
 				else
 				{
-					str.append(CONTAINER_SEPARATOR);
+					stringBuilder.append(CONTAINER_SEPARATOR);
 				}
 
 				Object key = current.getKey();
-				if(!handleSimpleContainerValue(key, str, quoteStringsInContainers))
+				if(!handleSimpleContainerValue(key, stringBuilder, stringStyle))
 				{
-					recursiveAppend(key, str, new IdentityHashMap<>(dejaVu), quoteStringsInContainers);
+					recursiveAppend(key, stringBuilder, stringStyle, mapStyle, new IdentityHashMap<>(dejaVu));
 				}
 
-				str.append(MAP_KEY_VALUE_SEPARATOR);
+				stringBuilder.append(mapStyle.getKeyValueSeparator());
 
 				Object value = current.getValue();
-				if(!handleSimpleContainerValue(value, str, quoteStringsInContainers))
+				if(!handleSimpleContainerValue(value, stringBuilder, stringStyle))
 				{
-					recursiveAppend(value, str, new IdentityHashMap<>(dejaVu), quoteStringsInContainers);
+					recursiveAppend(value, stringBuilder, stringStyle, mapStyle, new IdentityHashMap<>(dejaVu));
 				}
 			}
-			str.append(MAP_SUFFIX);
+			stringBuilder.append(mapStyle.getSuffix());
 			return;
 		}
 
@@ -290,13 +315,13 @@ public final class SafeString
 			// special handling of container Collection
 			if(dejaVu.containsKey(o))
 			{
-				str.append(RECURSION_PREFIX).append(identityToString(o)).append(RECURSION_SUFFIX);
+				stringBuilder.append(RECURSION_PREFIX).append(identityToString(o)).append(RECURSION_SUFFIX);
 				return;
 			}
 			dejaVu.put(o, null);
 
 			Collection<?> oCol = (Collection<?>) o;
-			str.append(CONTAINER_PREFIX);
+			stringBuilder.append(CONTAINER_PREFIX);
 			boolean first = true;
 			for(Object current : oCol)
 			{
@@ -306,21 +331,21 @@ public final class SafeString
 				}
 				else
 				{
-					str.append(CONTAINER_SEPARATOR);
+					stringBuilder.append(CONTAINER_SEPARATOR);
 				}
 
-				if(!handleSimpleContainerValue(current, str, quoteStringsInContainers))
+				if(!handleSimpleContainerValue(current, stringBuilder, stringStyle))
 				{
-					recursiveAppend(current, str, new IdentityHashMap<>(dejaVu), quoteStringsInContainers);
+					recursiveAppend(current, stringBuilder, stringStyle, mapStyle, new IdentityHashMap<>(dejaVu));
 				}
 			}
-			str.append(CONTAINER_SUFFIX);
+			stringBuilder.append(CONTAINER_SUFFIX);
 			return;
 		}
 
 		if(o instanceof Date)
 		{
-			ISO_DATE_TIME_FORMATTER.formatTo(Instant.ofEpochMilli(((Date)o).getTime()), str);
+			ISO_DATE_TIME_FORMATTER.formatTo(Instant.ofEpochMilli(((Date)o).getTime()), stringBuilder);
 			return;
 		}
 
@@ -328,7 +353,7 @@ public final class SafeString
 		{
 			try
 			{
-				ISO_DATE_TIME_FORMATTER.formatTo((TemporalAccessor) o, str);
+				ISO_DATE_TIME_FORMATTER.formatTo((TemporalAccessor) o, stringBuilder);
 				return;
 			}
 			catch(DateTimeException ignore)
@@ -340,26 +365,26 @@ public final class SafeString
 		// it's just some other Object, we can only use toString().
 		try
 		{
-			str.append(o.toString());
+			stringBuilder.append(o.toString());
 		}
 		catch(Throwable t)
 		{
-			str.append(ERROR_PREFIX);
-			str.append(identityToString(o));
-			str.append(ERROR_SEPARATOR);
+			stringBuilder.append(ERROR_PREFIX);
+			stringBuilder.append(identityToString(o));
+			stringBuilder.append(ERROR_SEPARATOR);
 			String msg = t.getMessage();
 			String className = t.getClass().getName();
-			str.append(className);
+			stringBuilder.append(className);
 			if(msg != null && !className.equals(msg))
 			{
-				str.append(ERROR_MSG_SEPARATOR);
-				str.append(msg);
+				stringBuilder.append(ERROR_MSG_SEPARATOR);
+				stringBuilder.append(msg);
 			}
-			str.append(ERROR_SUFFIX);
+			stringBuilder.append(ERROR_SUFFIX);
 		}
 	}
 
-	private static boolean handleSimpleContainerValue(Object current, StringBuilder str, boolean quoteStringsInContainers)
+	private static boolean handleSimpleContainerValue(Object current, StringBuilder str, StringStyle stringStyle)
 	{
 		if(current == null)
 		{
@@ -369,13 +394,14 @@ public final class SafeString
 		if(current instanceof String)
 		{
 			String string = (String) current;
-			if(quoteStringsInContainers)
+			if(stringStyle == null)
 			{
-				str.append(STRING_QUOTE).append(string).append(STRING_QUOTE);
+				str.append(string);
 			}
 			else
 			{
-				str.append(string);
+				char quoteChar=stringStyle.getQuoteChar();
+				str.append(quoteChar).append(string).append(quoteChar);
 			}
 			return true;
 		}
@@ -385,18 +411,21 @@ public final class SafeString
 	}
 
 	/**
-	 * This method returns the same as if Object.toString() would not have been
+	 * This method returns the same as if {@code Object.toString()} would not have been
 	 * overridden in obj.
 	 *
-	 * Note that this isn't 100% secure as collisions can always happen with hash codes.
+	 * <p>Note that this isn't 100% secure as collisions can always happen with hash codes.
 	 *
-	 * Copied from Object.hashCode():
+	 * <p>Copied from {@code Object.hashCode()}:
+	 *
+	 * <blockquote>
 	 * As much as is reasonably practical, the hashCode method defined by
-	 * class <tt>Object</tt> does return distinct integers for distinct
+	 * class {@code Object} does return distinct integers for distinct
 	 * objects. (This is typically implemented by converting the internal
 	 * address of the object into an integer, but this implementation
 	 * technique is not required by the
-	 * Java&#x2122; programming language.)
+	 * Java&trade; programming language.)
+	 * </blockquote>
 	 *
 	 * @param obj the Object that is to be converted into an identity string.
 	 * @return the identity string as also defined in Object.toString()
@@ -410,4 +439,85 @@ public final class SafeString
 		return obj.getClass().getName() + IDENTITY_SEPARATOR + Integer.toHexString(System.identityHashCode(obj));
 	}
 
+	public enum StringWrapping
+	{
+		/**
+		 * Strings are not wrapped at all.
+		 */
+		NONE,
+
+		/**
+		 * Only Strings contained in Collection, Map or array are wrapped.
+		 */
+		CONTAINED,
+
+		/**
+		 * All Strings are wrapped.
+		 */
+		ALL
+	}
+
+	public enum StringStyle
+	{
+		/**
+		 * String is rendered as "String".
+		 */
+		JAVA('"'),
+
+		/**
+		 * String is rendered as 'String'.
+		 */
+		GROOVY('\'');
+
+		private char quoteChar;
+
+		StringStyle(char quoteChar)
+		{
+			this.quoteChar=quoteChar;
+		}
+
+		public char getQuoteChar()
+		{
+			return quoteChar;
+		}
+	}
+
+	public enum MapStyle
+	{
+		/**
+		 * Map is rendered as {key=value, key2=value2}.
+		 */
+		JAVA('{', '}', '='),
+
+		/**
+		 * Map is rendered as [key:value, key2:value2].
+		 */
+		GROOVY('[', ']', ':');
+
+		private char prefix;
+		private char suffix;
+		private char keyValueSeparator;
+
+		MapStyle(char prefix, char suffix, char keyValueSeparator)
+		{
+			this.prefix = prefix;
+			this.suffix = suffix;
+			this.keyValueSeparator = keyValueSeparator;
+		}
+
+		public char getPrefix()
+		{
+			return prefix;
+		}
+
+		public char getSuffix()
+		{
+			return suffix;
+		}
+
+		public char getKeyValueSeparator()
+		{
+			return keyValueSeparator;
+		}
+	}
 }
