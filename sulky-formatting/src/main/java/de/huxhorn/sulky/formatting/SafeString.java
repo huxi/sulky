@@ -85,10 +85,30 @@ public final class SafeString
 					.toFormatter()
 					.withZone(ZoneOffset.UTC);
 
+	private static final String BYTE_PREFIX = "0x";
+	private static final String[] BYTE_STRINGS;
+
 	static
 	{
 		// for the sake of coverage
 		new SafeString();
+
+		final char[] HEX_CHARS = new char[] {
+				'0', '1', '2', '3', '4', '5', '6', '7',
+				'8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+		};
+
+		BYTE_STRINGS = new String[256];
+		for(int i=0;i<256;i++)
+		{
+			@SuppressWarnings("StringBufferReplaceableByString")
+			StringBuilder sb=new StringBuilder(2);
+
+			sb.append(HEX_CHARS[i >>> 4]);
+			sb.append(HEX_CHARS[i & 0xf]);
+
+			BYTE_STRINGS[i]=sb.toString();
+		}
 	}
 
 	private SafeString()
@@ -197,7 +217,47 @@ public final class SafeString
 		{
 			if(oClass == byte[].class)
 			{
-				stringBuilder.append(Arrays.toString((byte[]) o));
+				stringBuilder.append(CONTAINER_PREFIX);
+
+				byte[] array = (byte[]) o;
+				boolean first = true;
+				for(byte current : array)
+				{
+					if (first)
+					{
+						first = false;
+					}
+					else
+					{
+						stringBuilder.append(CONTAINER_SEPARATOR);
+					}
+					appendByte(current, stringBuilder);
+				}
+
+				stringBuilder.append(CONTAINER_SUFFIX);
+				return;
+			}
+			if(oClass == Byte[].class)
+			{
+				//stringBuilder.append(Arrays.toString((byte[]) o));
+				stringBuilder.append(CONTAINER_PREFIX);
+
+				Byte[] array = (Byte[]) o;
+				boolean first = true;
+				for(Byte current : array)
+				{
+					if (first)
+					{
+						first = false;
+					}
+					else
+					{
+						stringBuilder.append(CONTAINER_SEPARATOR);
+					}
+					appendByte(current, stringBuilder);
+				}
+
+				stringBuilder.append(CONTAINER_SUFFIX);
 				return;
 			}
 			if(oClass == short[].class)
@@ -268,6 +328,11 @@ public final class SafeString
 			return;
 		}
 
+		if(o instanceof Byte)
+		{
+			appendByte((Byte)o, stringBuilder);
+			return;
+		}
 		if(o instanceof Map)
 		{
 			// special handling of container Map
@@ -519,5 +584,11 @@ public final class SafeString
 		{
 			return keyValueSeparator;
 		}
+	}
+
+	private static void appendByte(int byteIndex, StringBuilder stringBuilder)
+	{
+		stringBuilder.append(BYTE_PREFIX);
+		stringBuilder.append(BYTE_STRINGS[0x000000FF & byteIndex]);
 	}
 }
