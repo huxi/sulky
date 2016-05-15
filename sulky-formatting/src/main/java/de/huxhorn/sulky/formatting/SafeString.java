@@ -350,7 +350,6 @@ public final class SafeString
 			}
 			if(oClass == Byte[].class)
 			{
-				//stringBuilder.append(Arrays.toString((byte[]) o));
 				stringBuilder.append(CONTAINER_PREFIX);
 
 				Byte[] array = (Byte[]) o;
