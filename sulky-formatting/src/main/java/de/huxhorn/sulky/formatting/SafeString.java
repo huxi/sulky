@@ -52,6 +52,88 @@ import java.util.Objects;
 
 public final class SafeString
 {
+	public enum StringWrapping
+	{
+		/**
+		 * Strings are not wrapped at all.
+		 */
+		NONE,
+
+		/**
+		 * Only Strings contained in Collection, Map or array are wrapped.
+		 */
+		CONTAINED,
+
+		/**
+		 * All Strings are wrapped.
+		 */
+		ALL
+	}
+
+	public enum StringStyle
+	{
+		/**
+		 * String is rendered as "String".
+		 */
+		JAVA('"'),
+
+		/**
+		 * String is rendered as 'String'.
+		 */
+		GROOVY('\'');
+
+		private char quoteChar;
+
+		StringStyle(char quoteChar)
+		{
+			this.quoteChar=quoteChar;
+		}
+
+		public char getQuoteChar()
+		{
+			return quoteChar;
+		}
+	}
+
+	public enum MapStyle
+	{
+		/**
+		 * Map is rendered as {key=value, key2=value2}.
+		 */
+		JAVA('{', '}', '='),
+
+		/**
+		 * Map is rendered as [key:value, key2:value2].
+		 */
+		GROOVY('[', ']', ':');
+
+		private char prefix;
+		private char suffix;
+		private char keyValueSeparator;
+
+		MapStyle(char prefix, char suffix, char keyValueSeparator)
+		{
+			this.prefix = prefix;
+			this.suffix = suffix;
+			this.keyValueSeparator = keyValueSeparator;
+		}
+
+		public char getPrefix()
+		{
+			return prefix;
+		}
+
+		public char getSuffix()
+		{
+			return suffix;
+		}
+
+		public char getKeyValueSeparator()
+		{
+			return keyValueSeparator;
+		}
+	}
+
 	public static final String  ERROR_PREFIX            = "[!!!";
 	public static final String  ERROR_SEPARATOR         = "=>";
 	public static final char    ERROR_MSG_SEPARATOR     = ':';
@@ -183,6 +265,35 @@ public final class SafeString
 			stringStyle = null;
 		}
 		recursiveAppend(o, stringBuilder, stringStyle, mapStyle, dejaVu);
+	}
+
+	/**
+	 * This method returns the same as if {@code Object.toString()} would not have been
+	 * overridden in obj.
+	 *
+	 * <p>Note that this isn't 100% secure as collisions can always happen with hash codes.
+	 *
+	 * <p>Copied from {@code Object.hashCode()}:
+	 *
+	 * <blockquote>
+	 * As much as is reasonably practical, the hashCode method defined by
+	 * class {@code Object} does return distinct integers for distinct
+	 * objects. (This is typically implemented by converting the internal
+	 * address of the object into an integer, but this implementation
+	 * technique is not required by the
+	 * Java&trade; programming language.)
+	 * </blockquote>
+	 *
+	 * @param obj the Object that is to be converted into an identity string.
+	 * @return the identity string as also defined in Object.toString()
+	 */
+	public static String identityToString(Object obj)
+	{
+		if(obj == null)
+		{
+			return null;
+		}
+		return obj.getClass().getName() + IDENTITY_SEPARATOR + Integer.toHexString(System.identityHashCode(obj));
 	}
 
 	/**
@@ -473,117 +584,6 @@ public final class SafeString
 
 		// not calling recursiveAppend here to preserve stack space.
 		return false;
-	}
-
-	/**
-	 * This method returns the same as if {@code Object.toString()} would not have been
-	 * overridden in obj.
-	 *
-	 * <p>Note that this isn't 100% secure as collisions can always happen with hash codes.
-	 *
-	 * <p>Copied from {@code Object.hashCode()}:
-	 *
-	 * <blockquote>
-	 * As much as is reasonably practical, the hashCode method defined by
-	 * class {@code Object} does return distinct integers for distinct
-	 * objects. (This is typically implemented by converting the internal
-	 * address of the object into an integer, but this implementation
-	 * technique is not required by the
-	 * Java&trade; programming language.)
-	 * </blockquote>
-	 *
-	 * @param obj the Object that is to be converted into an identity string.
-	 * @return the identity string as also defined in Object.toString()
-	 */
-	public static String identityToString(Object obj)
-	{
-		if(obj == null)
-		{
-			return null;
-		}
-		return obj.getClass().getName() + IDENTITY_SEPARATOR + Integer.toHexString(System.identityHashCode(obj));
-	}
-
-	public enum StringWrapping
-	{
-		/**
-		 * Strings are not wrapped at all.
-		 */
-		NONE,
-
-		/**
-		 * Only Strings contained in Collection, Map or array are wrapped.
-		 */
-		CONTAINED,
-
-		/**
-		 * All Strings are wrapped.
-		 */
-		ALL
-	}
-
-	public enum StringStyle
-	{
-		/**
-		 * String is rendered as "String".
-		 */
-		JAVA('"'),
-
-		/**
-		 * String is rendered as 'String'.
-		 */
-		GROOVY('\'');
-
-		private char quoteChar;
-
-		StringStyle(char quoteChar)
-		{
-			this.quoteChar=quoteChar;
-		}
-
-		public char getQuoteChar()
-		{
-			return quoteChar;
-		}
-	}
-
-	public enum MapStyle
-	{
-		/**
-		 * Map is rendered as {key=value, key2=value2}.
-		 */
-		JAVA('{', '}', '='),
-
-		/**
-		 * Map is rendered as [key:value, key2:value2].
-		 */
-		GROOVY('[', ']', ':');
-
-		private char prefix;
-		private char suffix;
-		private char keyValueSeparator;
-
-		MapStyle(char prefix, char suffix, char keyValueSeparator)
-		{
-			this.prefix = prefix;
-			this.suffix = suffix;
-			this.keyValueSeparator = keyValueSeparator;
-		}
-
-		public char getPrefix()
-		{
-			return prefix;
-		}
-
-		public char getSuffix()
-		{
-			return suffix;
-		}
-
-		public char getKeyValueSeparator()
-		{
-			return keyValueSeparator;
-		}
 	}
 
 	private static void appendByte(int byteIndex, StringBuilder stringBuilder)
