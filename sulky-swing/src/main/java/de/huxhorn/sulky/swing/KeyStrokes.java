@@ -44,6 +44,8 @@ import javax.swing.*;
 
 public final class KeyStrokes
 {
+	private static final Logger logger = LoggerFactory.getLogger(KeyStrokes.class);
+
 	public static final String COMMAND_ALIAS = "command";
 
 	/**
@@ -61,8 +63,16 @@ public final class KeyStrokes
 	static
 	{
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		COMMAND_KEYMASK = toolkit.getMenuShortcutKeyMask();
-
+		int keyMask = Event.CTRL_MASK;
+		try
+		{
+			keyMask = toolkit.getMenuShortcutKeyMask();
+		}
+		catch(HeadlessException ignore)
+		{
+			if(logger.isWarnEnabled()) logger.warn("Failed to resolve MenuShortcutKeyMask. Falling back to 'control'.");
+		}
+		COMMAND_KEYMASK = keyMask;
 		COMMAND_MODIFIERS = getModifiersString(COMMAND_KEYMASK);
 	}
 
@@ -138,30 +148,20 @@ public final class KeyStrokes
 
 	public static KeyStroke resolveAcceleratorKeyStroke(String keyStroke)
 	{
-		final Logger logger = LoggerFactory.getLogger(KeyStrokes.class);
-
-		KeyStroke result;
 		String preprocessedKeyStroke = preprocessAccelerator(keyStroke);
-		result = KeyStroke.getKeyStroke(preprocessedKeyStroke);
-		if(logger.isDebugEnabled())
-		{
-			logger
-				.debug("keyStroke {} resolved to {} resulted in {}.", new Object[]{keyStroke, preprocessedKeyStroke, result});
-		}
+		KeyStroke result = KeyStroke.getKeyStroke(preprocessedKeyStroke);
+		if(logger.isDebugEnabled()) logger.debug("keyStroke {} resolved to {} resulted in {}.", keyStroke, preprocessedKeyStroke, result);
+
 		return result;
 	}
 
 	public static void registerCommand(JComponent component, Action action, String commandName)
 	{
-		final Logger logger = LoggerFactory.getLogger(KeyStrokes.class);
-
 		KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
 		if(keyStroke != null)
 		{
-			if(logger.isDebugEnabled())
-			{
-				logInputMaps(component, "BEFORE");
-			}
+			logInputMaps(component, "BEFORE");
+
 			InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 			ActionMap actionMap = component.getActionMap();
 			inputMap.put(keyStroke, commandName);
@@ -182,28 +182,26 @@ public final class KeyStrokes
 				inputMap.put(keyStroke, commandName);
 			}
 
-			if(logger.isDebugEnabled())
-			{
-				logInputMaps(component, "AFTER");
-			}
+			logInputMaps(component, "AFTER");
 		}
 	}
 
 	private static void logInputMaps(JComponent component, String identifier)
 	{
-		final Logger logger = LoggerFactory.getLogger(KeyStrokes.class);
-
-		StringBuilder buffer = new StringBuilder();
-		buffer.append("Component: ").append(component).append(":\n");
-		buffer.append("\t").append(identifier).append(":\n");
-		InputMap inputMap;
-		inputMap = component.getInputMap(JComponent.WHEN_FOCUSED);
-		appendInputMap(buffer, "WHEN_FOCUSED", inputMap);
-		inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-		appendInputMap(buffer, "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT", inputMap);
-		inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-		appendInputMap(buffer, "WHEN_IN_FOCUSED_WINDOW", inputMap);
-		logger.debug(buffer.toString());
+		if(logger.isDebugEnabled())
+		{
+			StringBuilder buffer = new StringBuilder();
+			buffer.append("Component: ").append(component).append(":\n");
+			buffer.append("\t").append(identifier).append(":\n");
+			InputMap inputMap;
+			inputMap = component.getInputMap(JComponent.WHEN_FOCUSED);
+			appendInputMap(buffer, "WHEN_FOCUSED", inputMap);
+			inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+			appendInputMap(buffer, "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT", inputMap);
+			inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+			appendInputMap(buffer, "WHEN_IN_FOCUSED_WINDOW", inputMap);
+			logger.debug(buffer.toString());
+		}
 	}
 
 	private static void appendInputMap(StringBuilder buffer, String mapName, InputMap inputMap)
