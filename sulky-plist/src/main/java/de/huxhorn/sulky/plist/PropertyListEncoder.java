@@ -37,6 +37,7 @@ package de.huxhorn.sulky.plist;
 import de.huxhorn.sulky.codec.Encoder;
 import de.huxhorn.sulky.codec.streaming.StreamingEncoder;
 import de.huxhorn.sulky.plist.impl.PropertyListWriter;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +77,7 @@ public class PropertyListEncoder
 
 		try
 		{
-			XMLStreamWriter writer = outputFactory.createXMLStreamWriter(into, StandardCharsets.UTF_8.toString());
+			XMLStreamWriter writer = outputFactory.createXMLStreamWriter(new OutputStreamWriter(into, StandardCharsets.UTF_8));
 			propertyListWriter.write(writer, obj, true);
 			writer.close();
 		}
