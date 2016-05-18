@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import de.huxhorn.sulky.plist.PropertyList;
 import de.huxhorn.sulky.stax.DateTimeFormatter;
 import de.huxhorn.sulky.stax.GenericStreamWriter;
 import de.huxhorn.sulky.stax.StaxUtilities;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ public class PropertyListWriter
 	{
 		if(isRoot)
 		{
-			writer.writeStartDocument("utf-8", "1.0");
+			writer.writeStartDocument(StandardCharsets.UTF_8.toString(), "1.0");
 			writer.writeCharacters("\n");
 			writer.writeDTD("<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">");
 			writer.writeCharacters("\n");

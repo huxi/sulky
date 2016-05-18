@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@
 
 package de.huxhorn.sulky.plist;
 
+import java.nio.charset.StandardCharsets;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -42,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -307,7 +307,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		byte[] value="Foobar Snafu".getBytes("UTF-8");
+		byte[] value="Foobar Snafu".getBytes(StandardCharsets.UTF_8);
 		list.setRoot(value);
 		PropertyList read = check(list, false);
 		assertArrayEquals(value, (byte[])read.getRoot());
@@ -388,9 +388,12 @@ public class PropertyListIOTest
 	}
 
 	private void logData(byte[] bytes)
-		throws UnsupportedEncodingException
 	{
-		if(logger.isDebugEnabled()) logger.debug("Encoded PropertyList: {}", new String(bytes, "UTF-8"));
+		if(logger.isDebugEnabled())
+		{
+			String output = bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
+			logger.debug("Encoded PropertyList: {}", output);
+		}
 	}
 
 	private PropertyList read(byte[] bytes)

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ package de.huxhorn.sulky.blobs.impl;
 
 import de.huxhorn.sulky.blobs.AmbiguousIdException;
 import de.huxhorn.sulky.junit.LoggingTestBase;
+import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -100,7 +101,7 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 
-		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
 	}
 
@@ -110,9 +111,9 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 
-		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
-		String otherId=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String otherId=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(id, otherId);
 	}
 
@@ -134,7 +135,7 @@ public class BlobRepositoryImplTest
 			fail("Couldn't create file '"+f.getAbsolutePath()+"'!");
 		}
 
-		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertNull(id);
 	}
 
@@ -145,7 +146,7 @@ public class BlobRepositoryImplTest
 		instance.setBaseDirectory(folder.newFolder("foo"));
 
 		assertFalse(instance.contains(TEST_DATA_ID));
-		instance.put(TEST_DATA.getBytes("UTF-8"));
+		instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertTrue(instance.contains(TEST_DATA_ID));
 	}
 
@@ -180,7 +181,7 @@ public class BlobRepositoryImplTest
 			assertEquals("aaa", ex.getId());
 			assertArrayEquals(new String[]{"aaaa", "aaab"}, ex.getCandidates());
 		}
-		instance.put(TEST_DATA.getBytes("UTF-8"));
+		instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertTrue(instance.contains(TEST_DATA_ID));
 	}
 
@@ -190,10 +191,10 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 
-		InputStream is = instance.get(instance.put(TEST_DATA.getBytes("UTF-8")));
+		InputStream is = instance.get(instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8)));
 		try
 		{
-			assertEquals(TEST_DATA, IOUtils.toString(is, "UTF-8"));
+			assertEquals(TEST_DATA, IOUtils.toString(is, StandardCharsets.UTF_8));
 		}
 		finally
 		{
@@ -206,7 +207,7 @@ public class BlobRepositoryImplTest
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
-		String id = instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id = instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		id = id.toUpperCase();
 		assertNull(instance.get(id));
 		assertFalse(instance.contains(id));
@@ -215,7 +216,7 @@ public class BlobRepositoryImplTest
 		InputStream is = instance.get(id);
 		try
 		{
-			assertEquals(TEST_DATA, IOUtils.toString(is, "UTF-8"));
+			assertEquals(TEST_DATA, IOUtils.toString(is, StandardCharsets.UTF_8));
 		}
 		finally
 		{
@@ -230,11 +231,11 @@ public class BlobRepositoryImplTest
 		instance.setValidating(true);
 		File baseDirectory = folder.newFolder("foo");
 		instance.setBaseDirectory(baseDirectory);
-		String id = instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id = instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		InputStream is = instance.get(id);
 		try
 		{
-			assertEquals(TEST_DATA, IOUtils.toString(is, "UTF-8"));
+			assertEquals(TEST_DATA, IOUtils.toString(is, StandardCharsets.UTF_8));
 		}
 		finally
 		{
@@ -258,12 +259,12 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 
-		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
 		InputStream is = instance.get(TEST_DATA_ID.substring(0,3));
 		try
 		{
-			assertEquals(TEST_DATA, IOUtils.toString(is, "UTF-8"));
+			assertEquals(TEST_DATA, IOUtils.toString(is, StandardCharsets.UTF_8));
 		}
 		finally
 		{
@@ -286,7 +287,7 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 
-		instance.put(TEST_DATA.getBytes("UTF-8"));
+		instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 
 		assertEquals(7,instance.sizeOf(TEST_DATA_ID));
 	}
@@ -316,12 +317,12 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 
-		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
 
-		String fooId=instance.put("foo".getBytes("UTF-8"));
+		String fooId=instance.put("foo".getBytes(StandardCharsets.UTF_8));
 
-		String barId=instance.put("bar".getBytes("UTF-8"));
+		String barId=instance.put("bar".getBytes(StandardCharsets.UTF_8));
 
 		Set<String> idSet = instance.idSet();
 		assertEquals(3, idSet.size());
@@ -337,7 +338,7 @@ public class BlobRepositoryImplTest
 		File baseDirectory = folder.newFolder("foo");
 		instance.setBaseDirectory(baseDirectory);
 
-		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
 		File parent = new File(baseDirectory, TEST_DATA_ID.substring(0, 2));
 		assertTrue(instance.contains(TEST_DATA_ID));
@@ -354,12 +355,12 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 
-		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
 
-		String fooId=instance.put("foo".getBytes("UTF-8"));
+		String fooId=instance.put("foo".getBytes(StandardCharsets.UTF_8));
 
-		String barId=instance.put("bar".getBytes("UTF-8"));
+		String barId=instance.put("bar".getBytes(StandardCharsets.UTF_8));
 
 		instance.delete(fooId);
 
@@ -447,7 +448,7 @@ public class BlobRepositoryImplTest
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 
-		instance.put(TEST_DATA.getBytes("UTF-8"));
+		instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -488,7 +489,7 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFile("foo"));
 
-		instance.put(TEST_DATA.getBytes("UTF-8"));
+		instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 	}
 
 	@Test
@@ -538,7 +539,7 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		File baseDirectory=folder.newFolder("foo");
 		instance.setBaseDirectory(baseDirectory);
-		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
 
 		new File(baseDirectory, "bar1").createNewFile();
@@ -557,7 +558,7 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		File baseDirectory=folder.newFolder("foo");
 		instance.setBaseDirectory(baseDirectory);
-		String id=instance.put(TEST_DATA.getBytes("UTF-8"));
+		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
 
 		File parent = new File(baseDirectory, TEST_DATA_ID.substring(0, 2));

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ package de.huxhorn.sulky.plist;
 import de.huxhorn.sulky.codec.Encoder;
 import de.huxhorn.sulky.codec.streaming.StreamingEncoder;
 import de.huxhorn.sulky.plist.impl.PropertyListWriter;
+import java.nio.charset.StandardCharsets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +76,7 @@ public class PropertyListEncoder
 
 		try
 		{
-			XMLStreamWriter writer = outputFactory.createXMLStreamWriter(into, "UTF-8");
+			XMLStreamWriter writer = outputFactory.createXMLStreamWriter(into, StandardCharsets.UTF_8.toString());
 			propertyListWriter.write(writer, obj, true);
 			writer.close();
 		}

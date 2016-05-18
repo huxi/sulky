@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
+import java.nio.charset.StandardCharsets;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -50,7 +51,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -179,16 +179,8 @@ public class LoggingTestBase
 			}
 			loggerContext.reset();
 
-			InputStream is = null;
-			try
-			{
-				byte[] stringBytes = loggingConfig.getBytes("UTF-8");
-				is = new ByteArrayInputStream(stringBytes);
-			}
-			catch(UnsupportedEncodingException e)
-			{
-				//this won't happen... famous last words :p
-			}
+			byte[] stringBytes = loggingConfig.getBytes(StandardCharsets.UTF_8);
+			InputStream is = new ByteArrayInputStream(stringBytes);
 
 			JoranConfigurator configurator = new JoranConfigurator();
 			configurator.setContext(loggerContext);
