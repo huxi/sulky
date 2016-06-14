@@ -2,7 +2,7 @@ apply from: 'dependencyDefinitions.gradle'
 apply from: 'projectDependencies.gradle'
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '2.14-rc-4'
+	gradleVersion = '2.14'
 }
 
 def globalSourceCompatibility = 1.8
