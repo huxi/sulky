@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,17 +52,16 @@ class ClassFileVersionSpec extends Specification {
         version.majorVersionCharacter == classFileMajorVersion as char
 
         where:
-        // @formatter:off
-        classFileMajorVersion | sourceName | classFileVersion
-                         0x2D |      '1.1' | ClassFileVersion.JAVA_1_1
-                         0x2E |      '1.2' | ClassFileVersion.JAVA_1_2
-                         0x2F |      '1.3' | ClassFileVersion.JAVA_1_3
-                         0x30 |      '1.4' | ClassFileVersion.JAVA_1_4
-                         0x31 |      '1.5' | ClassFileVersion.JAVA_1_5
-                         0x32 |      '1.6' | ClassFileVersion.JAVA_1_6
-                         0x33 |      '1.7' | ClassFileVersion.JAVA_1_7
-                         0x34 |      '1.8' | ClassFileVersion.JAVA_1_8
-        // @formatter:on
+		classFileMajorVersion | sourceName | classFileVersion
+		0x2D                  | '1.1'      | ClassFileVersion.JAVA_1_1
+		0x2E                  | '1.2'      | ClassFileVersion.JAVA_1_2
+		0x2F                  | '1.3'      | ClassFileVersion.JAVA_1_3
+		0x30                  | '1.4'      | ClassFileVersion.JAVA_1_4
+		0x31                  | '1.5'      | ClassFileVersion.JAVA_1_5
+		0x32                  | '1.6'      | ClassFileVersion.JAVA_1_6
+		0x33                  | '1.7'      | ClassFileVersion.JAVA_1_7
+		0x34                  | '1.8'      | ClassFileVersion.JAVA_1_8
+		0x35                  | '1.9'      | ClassFileVersion.JAVA_9
 
         majorVersionAsHex = '0x'+Integer.toHexString(classFileMajorVersion)
     }
@@ -78,18 +77,17 @@ class ClassFileVersionSpec extends Specification {
         version.majorVersionCharacter == classFileMajorVersion as char
 
         where:
-        // @formatter:off
-        classFileMajorVersion | sourceName | classFileVersion
-                         0x2D |      '1.1' | ClassFileVersion.JAVA_1_1
-                         0x2E |      '1.2' | ClassFileVersion.JAVA_1_2
-                         0x2F |      '1.3' | ClassFileVersion.JAVA_1_3
-                         0x30 |      '1.4' | ClassFileVersion.JAVA_1_4
-                         0x31 |      '1.5' | ClassFileVersion.JAVA_1_5
-                         0x32 |      '1.6' | ClassFileVersion.JAVA_1_6
-                         0x33 |      '1.7' | ClassFileVersion.JAVA_1_7
-                         0x34 |      '1.8' | ClassFileVersion.JAVA_1_8
-        // @formatter:on
-    }
+		classFileMajorVersion | sourceName | classFileVersion
+		0x2D                  | '1.1'      | ClassFileVersion.JAVA_1_1
+		0x2E                  | '1.2'      | ClassFileVersion.JAVA_1_2
+		0x2F                  | '1.3'      | ClassFileVersion.JAVA_1_3
+		0x30                  | '1.4'      | ClassFileVersion.JAVA_1_4
+		0x31                  | '1.5'      | ClassFileVersion.JAVA_1_5
+		0x32                  | '1.6'      | ClassFileVersion.JAVA_1_6
+		0x33                  | '1.7'      | ClassFileVersion.JAVA_1_7
+		0x34                  | '1.8'      | ClassFileVersion.JAVA_1_8
+		0x35                  | '1.9'      | ClassFileVersion.JAVA_9
+	}
 
     @Unroll
     def 'getBySourceName(#sourceName) returns null'(String sourceName) {

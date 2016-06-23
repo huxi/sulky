@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,14 +130,15 @@ class ClassFileScannerSpec
         scanner.scanJar(fooJarFile)
 
         then:
-        highestVersionMapper.highestVersionChar                 == 0x34 as char
-        highestVersionMapper.highestVersion                     == ClassFileVersion.JAVA_1_8
+        highestVersionMapper.highestVersionChar                 == 0x35 as char
+        highestVersionMapper.highestVersion                     == ClassFileVersion.JAVA_9
         packageVersionMapper.packageVersions.size()             == 2
-        packageVersionMapper.packageVersions[''].size()         == 4
+        packageVersionMapper.packageVersions[''].size()         == 5
         packageVersionMapper.packageVersions[''][0]             == 0x31 as char
         packageVersionMapper.packageVersions[''][1]             == 0x32 as char
         packageVersionMapper.packageVersions[''][2]             == 0x33 as char
         packageVersionMapper.packageVersions[''][3]             == 0x34 as char
+		packageVersionMapper.packageVersions[''][4]             == 0x35 as char
         packageVersionMapper.packageVersions['some.pkg'].size() == 4
         packageVersionMapper.packageVersions['some.pkg'][0]     == 0x31 as char
         packageVersionMapper.packageVersions['some.pkg'][1]     == 0x32 as char
@@ -163,14 +164,15 @@ class ClassFileScannerSpec
         //duplicateClassMapper.duplicates.each { println("Duplicate class: " + it + ":\n\t"+ duplicateClassMapper.classSourceMapping[it]) }
 
         then:
-        highestVersionMapper.highestVersionChar                          == 0x34 as char
-        highestVersionMapper.highestVersion                              == ClassFileVersion.JAVA_1_8
+        highestVersionMapper.highestVersionChar                          == 0x35 as char
+        highestVersionMapper.highestVersion                              == ClassFileVersion.JAVA_9
         packageVersionMapper.packageVersions.size()                      == 5
-        packageVersionMapper.packageVersions[''].size()                  == 4
+        packageVersionMapper.packageVersions[''].size()                  == 5
         packageVersionMapper.packageVersions[''][0]                      == 0x31 as char
         packageVersionMapper.packageVersions[''][1]                      == 0x32 as char
         packageVersionMapper.packageVersions[''][2]                      == 0x33 as char
         packageVersionMapper.packageVersions[''][3]                      == 0x34 as char
+		packageVersionMapper.packageVersions[''][4]                      == 0x35 as char
         packageVersionMapper.packageVersions['some.pkg'].size()          == 4
         packageVersionMapper.packageVersions['some.pkg'][0]              == 0x31 as char
         packageVersionMapper.packageVersions['some.pkg'][1]              == 0x32 as char
@@ -227,14 +229,15 @@ class ClassFileScannerSpec
         scanner.scanDirectory(unzippedSlf4jApiDirectory, 'manualSource')
 
         then:
-        highestVersionMapper.highestVersionChar                          == 0x34 as char
-        highestVersionMapper.highestVersion                              == ClassFileVersion.JAVA_1_8
+        highestVersionMapper.highestVersionChar                          == 0x35 as char
+        highestVersionMapper.highestVersion                              == ClassFileVersion.JAVA_9
         packageVersionMapper.packageVersions.size()                      == 5
-        packageVersionMapper.packageVersions[''].size()                  == 4
+        packageVersionMapper.packageVersions[''].size()                  == 5
         packageVersionMapper.packageVersions[''][0]                      == 0x31 as char
         packageVersionMapper.packageVersions[''][1]                      == 0x32 as char
         packageVersionMapper.packageVersions[''][2]                      == 0x33 as char
         packageVersionMapper.packageVersions[''][3]                      == 0x34 as char
+		packageVersionMapper.packageVersions[''][4]                      == 0x35 as char
         packageVersionMapper.packageVersions['some.pkg'].size()          == 4
         packageVersionMapper.packageVersions['some.pkg'][0]              == 0x31 as char
         packageVersionMapper.packageVersions['some.pkg'][1]              == 0x32 as char

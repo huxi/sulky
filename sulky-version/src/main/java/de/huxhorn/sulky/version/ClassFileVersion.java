@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ public enum ClassFileVersion
 	JAVA_1_5((char) 0x31, "1.5"),
 	JAVA_1_6((char) 0x32, "1.6"),
 	JAVA_1_7((char) 0x33, "1.7"),
-	JAVA_1_8((char) 0x34, "1.8");
-	// JAVA_1_9((char) 0x35, "1.9"); ??
+	JAVA_1_8((char) 0x34, "1.8"),
+	JAVA_9((char) 0x35, "1.9");
 
 	private char majorVersionCharacter;
 	private String sourceName;
