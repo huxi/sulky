@@ -39,7 +39,6 @@ import de.huxhorn.sulky.version.mappers.HighestVersionMapper
 import de.huxhorn.sulky.version.mappers.PackageVersionMapper
 import de.huxhorn.sulky.version.mappers.SourceVersionMapper
 import org.apache.commons.io.FileUtils
-import org.apache.commons.io.IOUtils
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
