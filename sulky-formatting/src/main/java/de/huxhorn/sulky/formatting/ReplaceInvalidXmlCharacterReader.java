@@ -41,7 +41,11 @@ import java.io.Reader;
 public class ReplaceInvalidXmlCharacterReader
 	extends FilterReader
 {
-	public static final char DEFAULT_REPLACEMENT_CHARACTER = ' ';
+	/**
+	 * The default replacement character. 0xFFFD
+	 */
+	public static final char DEFAULT_REPLACEMENT_CHARACTER = (char) 0xFFFD;
+
 	private final char replacementChar;
 
 	/**
@@ -59,7 +63,9 @@ public class ReplaceInvalidXmlCharacterReader
 	 * Creates a new filtered reader.
 	 *
 	 * @param in a Reader object providing the underlying stream.
+	 * @param replacementChar the character to replace invalid characters with.
 	 * @throws NullPointerException if <code>in</code> is <code>null</code>
+	 * @throws IllegalArgumentException if <code>replacementChar</code> is an invalid character itself.
 	 */
 	public ReplaceInvalidXmlCharacterReader(Reader in, char replacementChar)
 	{

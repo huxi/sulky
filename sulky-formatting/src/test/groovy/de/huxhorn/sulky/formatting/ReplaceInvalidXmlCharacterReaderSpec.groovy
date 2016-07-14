@@ -92,4 +92,30 @@ class ReplaceInvalidXmlCharacterReaderSpec extends Specification {
 		then:
 		buffer == ['f', 'o', 'o', '#', '#', 'b', 'a', 'r'] as char[]
 	}
+
+	def 'Invalid chars are replaced as expected in read(char cbuf[], int off, int len) in case of partial read with offset.'() {
+		setup:
+		def instance = new ReplaceInvalidXmlCharacterReader(new StringReader('f' + (0 as char) + (0xFFFF as char) + 'bar'), '#' as char)
+		char[] buffer = new char[8]
+
+		when:
+		int read = instance.read(buffer, 1, 7)
+
+		then:
+		buffer == [0, 'f', '#', '#', 'b', 'a', 'r', 0] as char[]
+		read == 6
+	}
+
+	def 'Invalid chars are replaced as expected in read(char cbuf[], int off, int len) in case of end of stream.'() {
+		setup:
+		def instance = new ReplaceInvalidXmlCharacterReader(new StringReader(''))
+		char[] buffer = new char[8]
+
+		when:
+		int read = instance.read(buffer, 0, 8)
+
+		then:
+		buffer == [0, 0, 0, 0, 0, 0, 0, 0] as char[]
+		read == -1
+	}
 }

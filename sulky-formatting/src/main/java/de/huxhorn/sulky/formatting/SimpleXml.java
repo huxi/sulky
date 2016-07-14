@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2014 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2014 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,6 +138,7 @@ public final class SimpleXml
 	 * @param in              The String whose non-valid characters we want to remove.
 	 * @param replacementChar the character to replace invalid characters with.
 	 * @return The in String, with non-valid characters replaced by replacementChar.
+	 * @throws IllegalArgumentException if <code>replacementChar</code> is an invalid character itself.
 	 */
 	public static String replaceNonValidXMLCharacters(String in, char replacementChar)
 	{
