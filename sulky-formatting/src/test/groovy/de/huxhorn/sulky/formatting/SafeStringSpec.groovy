@@ -171,6 +171,9 @@ class SafeStringSpec extends Specification {
 				[''] as Object[],
 				[''] as ArrayList,
 				[''] as HashSet,
+				['a', 'b', 'c'] as String[],
+				['a', null, 'c'] as String[],
+				['a', 'null', 'c'] as String[],
 		] as Object[]
 	}
 
@@ -221,6 +224,9 @@ class SafeStringSpec extends Specification {
 				Object[],
 				ArrayList,
 				HashSet,
+				String[],
+				String[],
+				String[],
 		] as Class[]
 	}
 
@@ -270,6 +276,9 @@ class SafeStringSpec extends Specification {
 				'[]',
 				'[]',
 				'[]',
+				'[a, b, c]',
+				'[a, null, c]',
+				'[a, null, c]',
 		]
 	}
 
@@ -319,6 +328,9 @@ class SafeStringSpec extends Specification {
 				'[""]',
 				'[""]',
 				'[""]',
+				'["a", "b", "c"]',
+				'["a", null, "c"]',
+				'["a", "null", "c"]',
 		]
 	}
 
@@ -368,6 +380,9 @@ class SafeStringSpec extends Specification {
 				'[\'\']',
 				'[\'\']',
 				'[\'\']',
+				'[\'a\', \'b\', \'c\']',
+				'[\'a\', null, \'c\']',
+				'[\'a\', \'null\', \'c\']',
 		]
 	}
 
