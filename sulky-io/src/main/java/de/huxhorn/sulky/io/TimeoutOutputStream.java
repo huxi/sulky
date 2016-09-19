@@ -41,7 +41,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Don't put a BufferedOutputStream into this class!
- * Its its close() method (inherited from FilterOutputStream) calls flush() before actually closing
+ * Its close() method (inherited from FilterOutputStream) calls flush() before actually closing
  * the underlying stream. While this is fine in most cases, it can cause a livelock in this case and prevents
  * the timeout of TimeoutOutputStream from working reliably.
  */
@@ -77,7 +77,10 @@ public class TimeoutOutputStream
 		watchdogThread.start();
 		try
 		{
-			Thread.sleep(10); // give the watchdog thread a chance to start...
+			while(!watchdogThreadRunning.get())
+			{
+				Thread.sleep(10); // give the watchdog thread a chance to start...
+			}
 		}
 		catch(InterruptedException e)
 		{
