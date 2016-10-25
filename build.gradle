@@ -2,7 +2,7 @@ apply from: 'dependencyDefinitions.gradle'
 apply from: 'projectDependencies.gradle'
 
 task wrapper(type: Wrapper) {
-	gradleVersion = '3.1'
+	gradleVersion = '3.2-rc-1'
 }
 
 def globalSourceCompatibility = 1.8
@@ -318,17 +318,17 @@ project.ext.deleteClosure = {
 	}
 }
 
-task (group: 'Repository', description: "Cleans the local staging-repository, i.e. '${localReleaseRepoFile.absolutePath}'.", 'cleanStaging') << {
+task (group: 'Repository', description: "Cleans the local staging-repository, i.e. '${localReleaseRepoFile.absolutePath}'.", 'cleanStaging') doLast {
 	deleteClosure(localReleaseRepoFile)
 	logger.info("Deleted content of ${localReleaseRepoFile.absolutePath}.")
 }
 
-task (group: 'Repository', description: "Cleans the local SNAPSHOT-repository, i.e. '${localSnapshotRepoFile.absolutePath}'.", 'cleanSnapshot') << {
+task (group: 'Repository', description: "Cleans the local SNAPSHOT-repository, i.e. '${localSnapshotRepoFile.absolutePath}'.", 'cleanSnapshot') doLast {
 	deleteClosure(localSnapshotRepoFile)
 	logger.info("Deleted content of ${localReleaseRepoFile.absolutePath}.")
 }
 
-task (group: 'Repository', description: 'Sync local staging-repository to oss.sonatype.org.', 'syncStaging') << {
+task (group: 'Repository', description: 'Sync local staging-repository to oss.sonatype.org.', 'syncStaging') doLast {
 	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
 		def stagingRepos = new org.apache.maven.wagon.repository.Repository('staging', 'https://oss.sonatype.org/service/local/staging/deploy/maven2')
 		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
@@ -349,7 +349,7 @@ task (group: 'Repository', description: 'Sync local staging-repository to oss.so
 	}
 }
 
-task (group: 'Repository', description: 'Sync local SNAPSHOT-repository to oss.sonatype.org.', 'syncSnapshot') << {
+task (group: 'Repository', description: 'Sync local SNAPSHOT-repository to oss.sonatype.org.', 'syncSnapshot') doLast {
 	if (project.hasProperty('remoteUsername') && project.hasProperty('remotePassword')) {
 		def snapshotRepos = new org.apache.maven.wagon.repository.Repository('snapshot', 'https://oss.sonatype.org/content/repositories/snapshots')
 		def auth = new org.apache.maven.wagon.authentication.AuthenticationInfo()
