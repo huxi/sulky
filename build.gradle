@@ -87,7 +87,8 @@ gradle.taskGraph.whenReady { taskGraph ->
 	if(taskGraph.allTasks.any { it instanceof Sign && it.required }) {
 		String pgpPassword = System.properties.'pgpPassword'
 		if(!pgpPassword) {
-			Console console = System.console()
+			// name clash with org.gradle.api.tasks.Console
+			java.io.Console console = System.console()
 			if(!console) {
 				throw new IllegalStateException('System.console() returned null. Restart with --no-daemon.')
 			}
