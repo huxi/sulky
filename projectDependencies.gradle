@@ -219,6 +219,13 @@ project(':sulky-ulid') {
 	description = 'This file is part of the sulky modules. It contains a ULID implementation.'
 	apply plugin: 'me.champeau.gradle.jmh'
 	
+	jmh {
+		fork = 2 // How many times to forks a single benchmark. Use 0 to disable forking altogether
+		iterations = 10 // Number of measurement iterations to do.
+		operationsPerInvocation = 1 // Operations per invocation.
+		jmhVersion = '1.17.2' // Specifies JMH version
+	}
+	
 	dependencies {
 		testRuntime libraries.'cglib'
 	}
