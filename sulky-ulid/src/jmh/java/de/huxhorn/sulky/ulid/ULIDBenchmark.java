@@ -57,7 +57,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
-	public String createULIDSecureThroughput()
+	public String createULIDThroughput()
 	{
 		return secureRandomInstance.nextULID();
 	}
@@ -65,7 +65,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public String createULIDSecureAverage()
+	public String createULIDAverage()
 	{
 		return secureRandomInstance.nextULID();
 	}
@@ -73,7 +73,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
-	public String createULIDThroughput()
+	public String createULIDThroughputInsecure()
 	{
 		return randomInstance.nextULID();
 	}
@@ -81,7 +81,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public String createULIDAverage()
+	public String createULIDAverageInsecure()
 	{
 		return randomInstance.nextULID();
 	}
