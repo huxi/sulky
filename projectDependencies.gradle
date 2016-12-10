@@ -214,3 +214,12 @@ project(':sulky-groovy') {
 	}
 }
 
+project(':sulky-ulid') {
+	archivesBaseName = 'de.huxhorn.sulky.ulid'
+	description = 'This file is part of the sulky modules. It contains a ULID implementation.'
+	apply plugin: 'me.champeau.gradle.jmh'
+	
+	dependencies {
+		testRuntime libraries.'cglib'
+	}
+}

@@ -6,6 +6,7 @@ project.ext.versions = [
 ]
 
 project.ext.libraries = [
+'cglib':                  'cglib:cglib-nodep:3.2.4',
 'commons-codec':          'commons-codec:commons-codec:1.10',
 'commons-io':             'commons-io:commons-io:2.5',
 'easymock':               'org.easymock:easymock:3.4',
