@@ -34,7 +34,6 @@
 
 package de.huxhorn.sulky.ulid;
 
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -52,12 +51,12 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 public class ULIDBenchmark
 {
 	private ULID secureRandomInstance = new ULID();
-	private ULID randomInstance = new ULID(new Random());
+	//private ULID randomInstance = new ULID(new Random());
 
 	@Benchmark
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
-	public String createULIDThroughput()
+	public String ULIDnextULIDThroughput()
 	{
 		return secureRandomInstance.nextULID();
 	}
@@ -65,15 +64,16 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public String createULIDAverage()
+	public String ULIDnextULIDAverage()
 	{
 		return secureRandomInstance.nextULID();
 	}
 
+	/*
 	@Benchmark
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
-	public String createULIDThroughputInsecure()
+	public String ULIDnextULIDThroughputInsecure()
 	{
 		return randomInstance.nextULID();
 	}
@@ -81,15 +81,33 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public String createULIDAverageInsecure()
+	public String ULIDnextULIDAverageInsecure()
 	{
 		return randomInstance.nextULID();
 	}
+	*/
 
 	@Benchmark
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
-	public String createUUIDThroughput()
+	public String ULIDnextValuetoStringThroughput()
+	{
+		return secureRandomInstance.nextValue().toString();
+	}
+
+	@Benchmark
+	@BenchmarkMode(Mode.AverageTime)
+	@OutputTimeUnit(TimeUnit.NANOSECONDS)
+	public String ULIDnextValuetoStringAverage()
+	{
+		return secureRandomInstance.nextValue().toString();
+	}
+
+
+	@Benchmark
+	@BenchmarkMode(Mode.Throughput)
+	@OutputTimeUnit(TimeUnit.SECONDS)
+	public String UUIDrandomUUIDtoStringThroughput()
 	{
 		return UUID.randomUUID().toString();
 	}
@@ -97,7 +115,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public String createUUIDAverage()
+	public String UUIDrandomUUIDtoStringAverage()
 	{
 		return UUID.randomUUID().toString();
 	}

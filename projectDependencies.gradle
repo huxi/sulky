@@ -227,6 +227,7 @@ project(':sulky-ulid') {
 	}
 	
 	dependencies {
+		testCompile project(':sulky-junit')
 		testRuntime libraries.'cglib'
 	}
 }
