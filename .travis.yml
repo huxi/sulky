@@ -11,6 +11,9 @@ cache:
   directories:
   - $HOME/.gradle
 
+before_install:
+  - rm -r ~/.gradle/caches
+
 script:
   - ./gradlew --stacktrace
   - git clone https://github.com/huxi/lilith.git ~/builds/lilith
