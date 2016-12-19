@@ -4,21 +4,21 @@ language: java
 jdk:
   - oraclejdk8
 
+env:
+  - TERM=dumb
+
 cache:
   directories:
   - $HOME/.gradle
 
 script:
-  - ./gradlew
-  - git clone https://github.com/huxi/lilith.git ~/builds/lilith 
+  - ./gradlew --stacktrace
+  - git clone https://github.com/huxi/lilith.git ~/builds/lilith
   - pushd ~/builds/lilith
-  - ./gradlew install 
+  - ./gradlew --stacktrace install
   - popd 
 
-env:
-- TERM=dumb
-
 after_success:
-- ./gradlew cleanTest
-- ./gradlew jacocoRootReport
-- ./gradlew coveralls
+  - ./gradlew --stacktrace cleanTest
+  - ./gradlew --stacktrace jacocoRootReport
+  - ./gradlew --stacktrace coveralls
