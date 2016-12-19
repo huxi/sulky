@@ -49,7 +49,7 @@ buildscript {
 		// needed for syncSnapshot and syncStaging
 		classpath 'org.apache.maven.wagon:wagon-webdav-jackrabbit:2.9'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
-		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.6.3'
+		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.7.1'
 		classpath 'me.champeau.gradle:jmh-gradle-plugin:0.3.1'
 	}
 }
