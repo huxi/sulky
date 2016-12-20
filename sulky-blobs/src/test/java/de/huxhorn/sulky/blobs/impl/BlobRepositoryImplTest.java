@@ -36,19 +36,19 @@ package de.huxhorn.sulky.blobs.impl;
 
 import de.huxhorn.sulky.blobs.AmbiguousIdException;
 import de.huxhorn.sulky.junit.LoggingTestBase;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Set;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -208,7 +208,7 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder("foo"));
 		String id = instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
-		id = id.toUpperCase();
+		id = id.toUpperCase(Locale.US);
 		assertNull(instance.get(id));
 		assertFalse(instance.contains(id));
 		instance.setCaseSensitive(false);

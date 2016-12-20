@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,24 +36,24 @@ package de.huxhorn.sulky.blobs.impl;
 
 import de.huxhorn.sulky.blobs.AmbiguousIdException;
 import de.huxhorn.sulky.blobs.BlobRepository;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
-import java.io.File;
+import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This implementation of the BlobRepository interface is similar the internal structure used by a git repository.
@@ -424,7 +424,7 @@ public class BlobRepositoryImpl
 		{
 			return id;
 		}
-		return id.toLowerCase();
+		return id.toLowerCase(Locale.US);
 	}
 
 	private File prepareFile(String id)
@@ -479,7 +479,7 @@ public class BlobRepositoryImpl
 				}
 			}
 			byte[] hash = digest.digest();
-			Formatter formatter = new Formatter();
+			Formatter formatter = new Formatter(Locale.US);
 			for (byte b : hash)
 			{
 				formatter.format("%02x", b);
@@ -510,7 +510,7 @@ public class BlobRepositoryImpl
 			fos=new FileOutputStream(into);
 			IOUtils.copyLarge(dis, fos);
 			byte[] hash = digest.digest();
-			Formatter formatter = new Formatter();
+			Formatter formatter = new Formatter(Locale.US);
 			for (byte b : hash)
 			{
 				formatter.format("%02x", b);

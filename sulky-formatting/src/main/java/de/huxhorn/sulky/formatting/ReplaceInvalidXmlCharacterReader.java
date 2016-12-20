@@ -37,6 +37,7 @@ package de.huxhorn.sulky.formatting;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Locale;
 
 public class ReplaceInvalidXmlCharacterReader
 	extends FilterReader
@@ -73,7 +74,7 @@ public class ReplaceInvalidXmlCharacterReader
 		if(!SimpleXml.isValidXMLCharacter(replacementChar))
 		{
 			throw new IllegalArgumentException("Replacement character 0x"
-					+ Integer.toString(replacementChar, 16).toUpperCase() + " is invalid itself!");
+					+ Integer.toString(replacementChar, 16).toUpperCase(Locale.US) + " is invalid itself!");
 		}
 		this.replacementChar = replacementChar;
 	}

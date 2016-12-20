@@ -1,6 +1,6 @@
 /*
  * sulky-resources - inheritance-safe class resources.
- * Copyright (C) 2002-2011 Joern Huxhorn
+ * Copyright (C) 2002-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2002-2011 Joern Huxhorn
+ * Copyright 2002-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,6 @@
 
 package de.huxhorn.sulky.resources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -45,8 +42,11 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * DOCUMENT: <code>MapLoader</code>
@@ -80,7 +80,7 @@ public abstract class MapLoader
 			}
 			else
 			{
-				cur = cur.trim().toLowerCase();
+				cur = cur.trim().toLowerCase(Locale.US);
 				if(cur.length() != 0)
 				{
 					if(suff.contains(cur))
@@ -107,7 +107,7 @@ public abstract class MapLoader
 
 	public boolean isSupported(URL url)
 	{
-		String fileName = url.getPath().toLowerCase();
+		String fileName = url.getPath().toLowerCase(Locale.US);
 		for(String suffix : suffixes)
 		{
 			if(fileName.endsWith(suffix))

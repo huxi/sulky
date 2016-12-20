@@ -1,6 +1,6 @@
 /*
  * sulky-resources - inheritance-safe class resources.
- * Copyright (C) 2002-2014 Joern Huxhorn
+ * Copyright (C) 2002-2016 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2002-2014 Joern Huxhorn
+ * Copyright 2002-2016 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,19 +34,19 @@
 
 package de.huxhorn.sulky.resources;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * <p><code>Resources</code> provides "object-oriented" resource resolution
@@ -733,7 +733,7 @@ public final class Resources
 		IOException exception = null;
 		try
 		{
-			InputStreamReader isr = new InputStreamReader(is);
+			InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
 			br = new BufferedReader(isr);
 
 			String sl;
@@ -806,7 +806,7 @@ public final class Resources
 			if(logger.isDebugEnabled()) logger.debug("Found a link '{}' for resource '{}'.", resourceLinkPath, resourcePath);
 
 			// this is necessary because Class.getResourceAsStream is case-insensitive
-			String lowLinkPath = resourceLinkPath.toLowerCase();
+			String lowLinkPath = resourceLinkPath.toLowerCase(Locale.US);
 			if(stack.contains(lowLinkPath))
 			{
 				// the exception is only used for logging (stack-trace) and won't be thrown...

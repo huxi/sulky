@@ -34,6 +34,8 @@
 
 package de.huxhorn.sulky.formatting;
 
+import java.util.Locale;
+
 public final class SimpleXml
 {
 	// below constants are the valid ranges of XML characters
@@ -147,7 +149,7 @@ public final class SimpleXml
 		if(!isValidXMLCharacter(replacementChar))
 		{
 			throw new IllegalArgumentException("Replacement character 0x"
-				+ Integer.toString(replacementChar, 16).toUpperCase() + " is invalid itself!");
+				+ Integer.toString(replacementChar, 16).toUpperCase(Locale.US) + " is invalid itself!");
 		}
 
 		for(int i = 0; i < in.length(); i++)
