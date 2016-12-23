@@ -34,14 +34,14 @@
 
 package de.huxhorn.sulky.buffers;
 
+import java.io.File;
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import static org.junit.Assert.assertEquals;
 
 public class SerializingFileBufferTest
 {

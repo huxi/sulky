@@ -36,12 +36,6 @@ package de.huxhorn.sulky.sounds.jlayer;
 
 import de.huxhorn.sulky.io.IOUtilities;
 import de.huxhorn.sulky.sounds.Sounds;
-
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -53,6 +47,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JLayerSounds
 	implements Sounds

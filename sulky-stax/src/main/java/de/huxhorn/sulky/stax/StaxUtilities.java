@@ -34,16 +34,14 @@
 
 package de.huxhorn.sulky.stax;
 
-import org.slf4j.Logger;
-
 import java.util.Iterator;
-
 import javax.xml.XMLConstants;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
+import org.slf4j.Logger;
 
 public final class StaxUtilities
 {

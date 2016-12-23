@@ -34,15 +34,17 @@
 
 package de.huxhorn.sulky.buffers;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class OverwritingCircularBufferTest
 {

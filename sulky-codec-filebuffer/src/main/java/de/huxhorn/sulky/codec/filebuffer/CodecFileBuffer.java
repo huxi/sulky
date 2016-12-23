@@ -42,11 +42,7 @@ import de.huxhorn.sulky.buffers.FileBuffer;
 import de.huxhorn.sulky.buffers.Reset;
 import de.huxhorn.sulky.buffers.SetOperation;
 import de.huxhorn.sulky.codec.Codec;
-
 import de.huxhorn.sulky.io.IOUtilities;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InvalidClassException;
@@ -61,6 +57,8 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * In contrast to SerializingFileBuffer, this implementation supports the following:

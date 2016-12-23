@@ -35,7 +35,6 @@
 package de.huxhorn.sulky.codec.filebuffer;
 
 import de.huxhorn.sulky.codec.Codec;
-
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.List;

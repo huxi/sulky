@@ -35,11 +35,10 @@
 package de.huxhorn.sulky.codec.streaming;
 
 import de.huxhorn.sulky.codec.Decoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DecoderBridge<E>
 	implements Decoder<E>

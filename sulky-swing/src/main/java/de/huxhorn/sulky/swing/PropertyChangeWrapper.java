@@ -35,7 +35,6 @@
 package de.huxhorn.sulky.swing;
 
 import de.huxhorn.sulky.generics.GenericWrapper;
-
 import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

@@ -4,9 +4,6 @@ import de.huxhorn.sulky.buffers.BasicBufferIterator;
 import de.huxhorn.sulky.buffers.Buffer;
 import de.huxhorn.sulky.codec.Codec;
 import de.huxhorn.sulky.io.IOUtilities;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InvalidClassException;
@@ -14,6 +11,8 @@ import java.io.RandomAccessFile;
 import java.util.Iterator;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReadOnlyExclusiveCodecFileBuffer<E>
 	implements Buffer<E>

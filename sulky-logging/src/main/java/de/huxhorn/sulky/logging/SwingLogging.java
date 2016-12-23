@@ -34,17 +34,19 @@
 
 package de.huxhorn.sulky.logging;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.awt.*;
+import java.awt.AWTKeyStroke;
+import java.awt.KeyboardFocusManager;
 import java.util.Enumeration;
 import java.util.Set;
-
-import javax.swing.*;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.text.Style;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class SwingLogging
 {

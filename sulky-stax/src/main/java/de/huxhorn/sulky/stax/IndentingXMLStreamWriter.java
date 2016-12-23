@@ -34,12 +34,11 @@
 
 package de.huxhorn.sulky.stax;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IndentingXMLStreamWriter
 	implements XMLStreamWriter

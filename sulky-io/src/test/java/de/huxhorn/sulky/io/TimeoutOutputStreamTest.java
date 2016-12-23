@@ -34,14 +34,19 @@
 
 package de.huxhorn.sulky.io;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import org.easymock.IAnswer;
-import static org.easymock.EasyMock.*;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.io.OutputStream;
+import org.easymock.IAnswer;
+import org.junit.Test;
+
+import static org.easymock.EasyMock.createStrictMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.makeThreadSafe;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TimeoutOutputStreamTest
 {

@@ -34,11 +34,11 @@
 
 package de.huxhorn.sulky.swing;
 
-import javax.swing.AbstractListModel;
-import javax.swing.MutableComboBoxModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.AbstractListModel;
+import javax.swing.MutableComboBoxModel;
 
 @SuppressWarnings({"unchecked"})
 public class ListComboBoxModel

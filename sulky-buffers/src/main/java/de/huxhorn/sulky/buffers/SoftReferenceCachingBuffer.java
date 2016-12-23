@@ -35,15 +35,14 @@
 package de.huxhorn.sulky.buffers;
 
 import de.huxhorn.sulky.io.IOUtilities;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SoftReferenceCachingBuffer<E>
 	implements Buffer<E>, ResetOperation, DisposeOperation, FlushOperation

@@ -34,13 +34,17 @@
 
 package de.huxhorn.sulky.swing;
 
+import java.awt.Event;
+import java.awt.HeadlessException;
+import java.awt.Toolkit;
+import java.awt.event.InputEvent;
+import javax.swing.Action;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.awt.*;
-import java.awt.event.InputEvent;
-
-import javax.swing.*;
 
 public final class KeyStrokes
 {

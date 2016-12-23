@@ -35,7 +35,6 @@
 package de.huxhorn.sulky.swing;
 
 import de.huxhorn.sulky.formatting.HumanReadable;
-
 import de.huxhorn.sulky.io.IOUtilities;
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -51,18 +50,16 @@ import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.Transparency;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
-
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.border.Border;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MemoryStatus
 	extends JComponent

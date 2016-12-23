@@ -34,11 +34,9 @@
 
 package de.huxhorn.sulky.codec.filebuffer;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import de.huxhorn.sulky.codec.Decoder;
 import de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.HashMap;

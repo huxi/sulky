@@ -35,16 +35,15 @@
 package de.huxhorn.sulky.resources;
 
 import de.huxhorn.sulky.resources.junit.Foobar;
-
+import java.util.Locale;
+import java.util.Map;
 import org.junit.AfterClass;
-import static org.junit.Assert.assertEquals;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Locale;
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
 
 public class ResourceMapsTest
 {

@@ -33,9 +33,9 @@
  */
 package de.huxhorn.sulky.codec.filebuffer
 
-import spock.lang.Specification
 import de.huxhorn.sulky.codec.Codec
 import de.huxhorn.sulky.codec.SerializableCodec
+import spock.lang.Specification
 
 abstract class DataStrategySpecBase
   extends Specification {

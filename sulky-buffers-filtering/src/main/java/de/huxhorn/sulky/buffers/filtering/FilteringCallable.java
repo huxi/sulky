@@ -38,7 +38,6 @@ import de.huxhorn.sulky.buffers.Buffer;
 import de.huxhorn.sulky.conditions.Condition;
 import de.huxhorn.sulky.io.IOUtilities;
 import de.huxhorn.sulky.tasks.AbstractProgressingCallable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

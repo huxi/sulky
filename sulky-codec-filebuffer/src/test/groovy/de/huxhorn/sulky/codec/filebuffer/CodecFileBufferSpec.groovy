@@ -1,10 +1,10 @@
 package de.huxhorn.sulky.codec.filebuffer
 
-import spock.lang.Specification
+import de.huxhorn.sulky.buffers.ElementProcessor
 import de.huxhorn.sulky.codec.Codec
 import de.huxhorn.sulky.codec.SerializableCodec
+import spock.lang.Specification
 import spock.lang.Unroll
-import de.huxhorn.sulky.buffers.ElementProcessor
 
 class CodecFileBufferSpec
   extends Specification {

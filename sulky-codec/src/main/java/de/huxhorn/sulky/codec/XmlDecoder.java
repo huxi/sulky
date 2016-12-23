@@ -35,7 +35,6 @@
 package de.huxhorn.sulky.codec;
 
 import de.huxhorn.sulky.io.IOUtilities;
-
 import java.beans.XMLDecoder;
 import java.io.ByteArrayInputStream;
 import java.util.zip.GZIPInputStream;

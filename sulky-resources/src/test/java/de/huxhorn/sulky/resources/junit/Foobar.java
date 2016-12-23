@@ -35,7 +35,6 @@
 package de.huxhorn.sulky.resources.junit;
 
 import de.huxhorn.sulky.resources.Localizable;
-
 import java.util.Locale;
 
 class BaseClass

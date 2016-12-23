@@ -40,14 +40,12 @@ import de.huxhorn.sulky.buffers.DisposeOperation;
 import de.huxhorn.sulky.buffers.Reset;
 import de.huxhorn.sulky.buffers.ResetOperation;
 import de.huxhorn.sulky.conditions.Condition;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FilteringBuffer<E>
 	implements Buffer<E>, DisposeOperation, ResetOperation

@@ -33,9 +33,9 @@
  */
 
 import de.huxhorn.sulky.resources.Resources;
+import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
 
 /**
  * DOCUMENT: <code>PackagelessTest</code>

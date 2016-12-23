@@ -37,17 +37,16 @@ package de.huxhorn.sulky.plist;
 import de.huxhorn.sulky.codec.Encoder;
 import de.huxhorn.sulky.codec.streaming.StreamingEncoder;
 import de.huxhorn.sulky.plist.impl.PropertyListWriter;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class writes a PropertyList into either an OutputStream or byte[].

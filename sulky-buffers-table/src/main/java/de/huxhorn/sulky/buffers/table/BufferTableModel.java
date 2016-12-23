@@ -39,17 +39,15 @@ import de.huxhorn.sulky.buffers.CircularBuffer;
 import de.huxhorn.sulky.buffers.Dispose;
 import de.huxhorn.sulky.buffers.DisposeOperation;
 import de.huxhorn.sulky.buffers.Reset;
-
 import de.huxhorn.sulky.io.IOUtilities;
 import de.huxhorn.sulky.swing.RowBasedTableModel;
 import java.awt.EventQueue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.util.concurrent.atomic.AtomicBoolean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class BufferTableModel<T>
 	implements RowBasedTableModel<T>, DisposeOperation

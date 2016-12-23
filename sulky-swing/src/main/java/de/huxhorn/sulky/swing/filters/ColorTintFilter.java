@@ -35,8 +35,7 @@ package de.huxhorn.sulky.swing.filters;
  */
 
 import de.huxhorn.sulky.swing.GraphicsUtilities;
-
-import java.awt.*;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 
 /**

@@ -35,7 +35,6 @@
 package de.huxhorn.sulky.codec;
 
 import de.huxhorn.sulky.io.IOUtilities;
-
 import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

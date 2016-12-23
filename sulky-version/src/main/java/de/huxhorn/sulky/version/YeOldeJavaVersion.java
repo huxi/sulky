@@ -35,8 +35,8 @@
 package de.huxhorn.sulky.version;
 
 import java.io.Serializable;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class handles parsing and comparison of

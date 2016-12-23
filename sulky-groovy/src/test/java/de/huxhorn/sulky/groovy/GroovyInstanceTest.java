@@ -37,13 +37,12 @@ package de.huxhorn.sulky.groovy;
 import de.huxhorn.sulky.junit.JUnitTools;
 import de.huxhorn.sulky.junit.LoggingTestBase;
 import groovy.lang.Script;
+import java.io.File;
+import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-
-import java.io.File;
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

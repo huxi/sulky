@@ -35,7 +35,6 @@
 package de.huxhorn.sulky.codec;
 
 import de.huxhorn.sulky.io.IOUtilities;
-
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.Serializable;

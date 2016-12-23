@@ -34,11 +34,10 @@
 
 package de.huxhorn.sulky.logging;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoggingPropertyChangeListener
 	implements PropertyChangeListener

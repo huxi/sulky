@@ -34,10 +34,10 @@
 
 package de.huxhorn.sulky.version
 
+import de.huxhorn.sulky.junit.JUnitTools
 import spock.lang.Specification
 import spock.lang.Subject
-import spock.lang.Unroll;
-import de.huxhorn.sulky.junit.JUnitTools;
+import spock.lang.Unroll
 
 @Subject(YeOldeJavaVersion)
 @SuppressWarnings("GrEqualsBetweenInconvertibleTypes")

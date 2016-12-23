@@ -36,7 +36,6 @@ package de.huxhorn.sulky.codec.filebuffer;
 
 import de.huxhorn.sulky.codec.Encoder;
 import de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Map;
