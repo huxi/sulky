@@ -20,6 +20,7 @@
 		<module name="FallThrough"/>
 		<module name="MultipleVariableDeclarations"/>
 		<module name="ModifiedControlVariable"/>
+		<module name="OneStatementPerLine"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>
