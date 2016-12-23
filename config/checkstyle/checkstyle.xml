@@ -19,6 +19,7 @@
 		<module name="EqualsHashCode"/>
 		<module name="FallThrough"/>
 		<module name="MultipleVariableDeclarations"/>
+		<module name="ModifiedControlVariable"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>
