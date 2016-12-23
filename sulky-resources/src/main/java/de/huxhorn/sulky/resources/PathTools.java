@@ -188,8 +188,6 @@ public final class PathTools
 		}
 		String first = pathStack.get(0);
 		if(isDotPattern(first))
-//        Matcher m=DOT_PATTERN.matcher(first);
-//        if(m.matches())
 		{
 			pathStack.remove(0);
 			int len = first.length();
@@ -249,8 +247,6 @@ public final class PathTools
 				// ignore wrong //-entries
 				if(evaluateDots)
 				{
-//                    Matcher m=DOT_PATTERN.matcher(pathElement);
-//                    if( m.matches())
 					if(isDotPattern(pathElement))
 					{
 						// we found a dot-element

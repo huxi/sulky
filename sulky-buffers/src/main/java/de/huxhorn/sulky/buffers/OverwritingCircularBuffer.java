@@ -361,16 +361,6 @@ public class OverwritingCircularBuffer<E>
 	public Object clone()
 		throws CloneNotSupportedException
 	{
-/*
-	private int getBufferSize;
-	transient private int startIndex;
-	transient private int endIndex;
-	transient private long overflowCounter;
-	transient private long getSize;
-	transient private boolean full;
-	transient private E[] array;
-*/
-
 		@SuppressWarnings({"unchecked"})
 		OverwritingCircularBuffer<E> v = (OverwritingCircularBuffer<E>) super.clone();
 		v.array = array.clone();

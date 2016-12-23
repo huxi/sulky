@@ -40,12 +40,12 @@ public final class SimpleXml
 {
 	// below constants are the valid ranges of XML characters
 	// according to http://www.w3.org/TR/REC-xml#charsets
-    private static final int XML_CHAR_RANGE_A_START = 0x000020;
-    private static final int XML_CHAR_RANGE_A_END   = 0x00D7FF;
-    private static final int XML_CHAR_RANGE_B_START = 0x00E000;
-    private static final int XML_CHAR_RANGE_B_END   = 0x00FFFD;
-    private static final int XML_CHAR_RANGE_C_START = 0x010000;
-    private static final int XML_CHAR_RANGE_C_END   = 0x10FFFF;
+	private static final int XML_CHAR_RANGE_A_START = 0x000020;
+	private static final int XML_CHAR_RANGE_A_END = 0x00D7FF;
+	private static final int XML_CHAR_RANGE_B_START = 0x00E000;
+	private static final int XML_CHAR_RANGE_B_END = 0x00FFFD;
+	private static final int XML_CHAR_RANGE_C_START = 0x010000;
+	private static final int XML_CHAR_RANGE_C_END = 0x10FFFF;
 
 	static
 	{
@@ -54,30 +54,31 @@ public final class SimpleXml
 	}
 
 	private SimpleXml()
-	{}
+	{
+	}
 
-    /**
-     * Tests a given character whether or not it is a valid XML character.
-	 *
+	/**
+	 * Tests a given character whether or not it is a valid XML character.
+	 * <p>
 	 * For reference, please see
 	 * <a href="http://www.w3.org/TR/REC-xml#charsets">the
 	 * specification</a>.
 	 *
-     * @param character The character to test
-     * @return whether or not the supplied character is a valid XML character
-     */
-    public static boolean isValidXMLCharacter(char character)
-    {
-	    return isValidXMLCharacter(0xFFFF & character);
-    }
+	 * @param character The character to test
+	 * @return whether or not the supplied character is a valid XML character
+	 */
+	public static boolean isValidXMLCharacter(char character)
+	{
+		return isValidXMLCharacter(0xFFFF & character);
+	}
 
-    public static boolean isValidXMLCharacter(int codePoint)
-    {
-        return codePoint == '\t' || codePoint == '\r' || codePoint == '\n' ||
-			(codePoint >= XML_CHAR_RANGE_A_START && codePoint <= XML_CHAR_RANGE_A_END) ||
-			(codePoint >= XML_CHAR_RANGE_B_START && codePoint <= XML_CHAR_RANGE_B_END) ||
-			(codePoint >= XML_CHAR_RANGE_C_START && codePoint <= XML_CHAR_RANGE_C_END);
-    }
+	public static boolean isValidXMLCharacter(int codePoint)
+	{
+		return codePoint == '\t' || codePoint == '\r' || codePoint == '\n' ||
+				(codePoint >= XML_CHAR_RANGE_A_START && codePoint <= XML_CHAR_RANGE_A_END) ||
+				(codePoint >= XML_CHAR_RANGE_B_START && codePoint <= XML_CHAR_RANGE_B_END) ||
+				(codePoint >= XML_CHAR_RANGE_C_START && codePoint <= XML_CHAR_RANGE_C_END);
+	}
 
 	/**
 	 * Replaces the characters '&amp;', '&lt;', '&gt;' and '&quot;' with their respective xml-entities. Does also replace a zero byte with space.
@@ -131,7 +132,7 @@ public final class SimpleXml
 	 * <p>
 	 * Based on code from http://cse-mjmcl.cse.bris.ac.uk/blog/2007/02/14/1171465494443.html
 	 * </p>
-	 *
+	 * <p>
 	 * <p>
 	 * This method takes into account that no change will be necessary most of the time so
 	 * nothing will be allocated/changed until the first non-valid character is found.
@@ -146,27 +147,27 @@ public final class SimpleXml
 	{
 		StringBuilder out = null;
 
-		if(!isValidXMLCharacter(replacementChar))
+		if (!isValidXMLCharacter(replacementChar))
 		{
 			throw new IllegalArgumentException("Replacement character 0x"
-				+ Integer.toString(replacementChar, 16).toUpperCase(Locale.US) + " is invalid itself!");
+					+ Integer.toString(replacementChar, 16).toUpperCase(Locale.US) + " is invalid itself!");
 		}
 
-		for(int i = 0; i < in.length(); i++)
+		for (int i = 0; i < in.length(); i++)
 		{
 			int current = in.codePointAt(i);
 
-			if(isValidXMLCharacter(current))
+			if (isValidXMLCharacter(current))
 			{
-                continue;
+				continue;
 			}
-            if(out == null)
-            {
-                out = new StringBuilder(in);
-            }
-            out.setCharAt(i, replacementChar);
+			if (out == null)
+			{
+				out = new StringBuilder(in);
+			}
+			out.setCharAt(i, replacementChar);
 		}
-		if(out != null)
+		if (out != null)
 		{
 			return out.toString();
 		}

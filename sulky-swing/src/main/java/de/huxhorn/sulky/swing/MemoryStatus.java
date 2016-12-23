@@ -62,7 +62,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MemoryStatus
-	extends JComponent
+		extends JComponent
 {
 	private static final long serialVersionUID = -7977658722158059284L;
 
@@ -88,7 +88,7 @@ public class MemoryStatus
 		//setMemoryInfo(new MemoryInfo(runtime));
 		updateMemoryBar();
 		addMouseListener(new GcMouseListener());
-		if(logger.isDebugEnabled()) logger.debug("Font: {}", getFont());
+		if (logger.isDebugEnabled()) logger.debug("Font: {}", getFont());
 		//initUi();
 		Thread t = new Thread(new PollRunnable(), "MemoryStatus-Poller");
 		t.setDaemon(true);
@@ -150,7 +150,7 @@ public class MemoryStatus
 	 * <code>Graphics</code> object to protect the rest of the
 	 * paint code from irrevocable changes
 	 * (for example, <code>Graphics.translate</code>).
-	 *
+	 * <p>
 	 * If you override this in a subclass you should not make permanent
 	 * changes to the passed in <code>Graphics</code>. For example, you
 	 * should not alter the clip <code>Rectangle</code> or modify the
@@ -162,7 +162,7 @@ public class MemoryStatus
 	 * if this component is opaque, you must completely fill in the background
 	 * in a non-opaque color. If you do not honor the opaque property you
 	 * will likely see visual artifacts.
-	 *
+	 * <p>
 	 * The passed in <code>Graphics</code> object might
 	 * have a transform other than the identify transform
 	 * installed on it.  In this case, you might get
@@ -178,7 +178,7 @@ public class MemoryStatus
 	{
 		Insets insets = getInsets();
 		Dimension size = getSize();
-		if(isOpaque())
+		if (isOpaque())
 		{
 			g.setColor(getBackground());
 			g.fillRect(0, 0, size.width, size.height);
@@ -188,24 +188,24 @@ public class MemoryStatus
 		paintingBounds.y = insets.top;
 		paintingBounds.width = size.width - insets.left - insets.right;
 		paintingBounds.height = size.height - insets.top - insets.bottom;
-		if(offscreenImage == null
-			|| offscreenImage.getWidth() != paintingBounds.width
-			|| offscreenImage.getHeight() != paintingBounds.height)
+		if (offscreenImage == null
+				|| offscreenImage.getWidth() != paintingBounds.width
+				|| offscreenImage.getHeight() != paintingBounds.height)
 		{
-			if(offscreenImage != null)
+			if (offscreenImage != null)
 			{
 				offscreenImage.flush();
 				offscreenImage = null;
 			}
-			if(paintingBounds.width > 0 && paintingBounds.height > 0)
+			if (paintingBounds.width > 0 && paintingBounds.height > 0)
 			{
 				GraphicsConfiguration gc = getGraphicsConfiguration();
 				offscreenImage = gc
-					.createCompatibleImage(paintingBounds.width, paintingBounds.height, Transparency.TRANSLUCENT);
-				if(logger.isDebugEnabled()) logger.debug("Created offscreen-image...");
+						.createCompatibleImage(paintingBounds.width, paintingBounds.height, Transparency.TRANSLUCENT);
+				if (logger.isDebugEnabled()) logger.debug("Created offscreen-image...");
 			}
 		}
-		if(offscreenImage != null)
+		if (offscreenImage != null)
 		{
 			Graphics gr = offscreenImage.getGraphics();
 			paintMemoryStatus(gr, paintingBounds);
@@ -224,9 +224,9 @@ public class MemoryStatus
 		g2.setComposite(AlphaComposite.Clear);
 		g2.fillRect(0, 0, paintingBounds.width, paintingBounds.height);
 		g2.setComposite(AlphaComposite.SrcOver);
-		if(info != null)
+		if (info != null)
 		{
-			if(!usingTotal)
+			if (!usingTotal)
 			{
 				double usedFraction = (((double) info.getUsed() / (double) info.getMax()));
 				double totalFraction = (((double) info.getTotal() / (double) info.getMax()));
@@ -254,11 +254,11 @@ public class MemoryStatus
 				TextLayout tl = new TextLayout(text, getFont(), frc);
 				Shape s = tl.getOutline(null);
 				Rectangle textBounds = s.getBounds();
-				if(logger.isDebugEnabled()) logger.debug("textBounds: {}", textBounds);
+				if (logger.isDebugEnabled()) logger.debug("textBounds: {}", textBounds);
 				textBounds.x = (textBounds.x * -1) + (paintingBounds.width - textBounds.width) / 2;
 				textBounds.y = (textBounds.y * -1) + (paintingBounds.height - textBounds.height) / 2;
 				g.translate(textBounds.x, textBounds.y);
-				if(logger.isDebugEnabled()) logger.debug("corrected textBounds: {}", textBounds);
+				if (logger.isDebugEnabled()) logger.debug("corrected textBounds: {}", textBounds);
 				//FontMetrics fm = g.getFontMetrics();
 				//Rectangle2D lm = fm.getStringBounds(text, g);
 				//int textX=(int) (paintingBounds.width-lm.getWidth());
@@ -277,7 +277,7 @@ public class MemoryStatus
 		int halfHeight = height / 2;
 		int gradientHeight = Math.min(GRADIENT_PIXELS, halfHeight);
 
-		if(2 * gradientHeight < height)
+		if (2 * gradientHeight < height)
 		{
 			g2.setColor(c);
 			g2.fillRect(startX, gradientHeight, endX, height - 2 * gradientHeight);
@@ -287,13 +287,13 @@ public class MemoryStatus
 		Color brighter = c.brighter().brighter();
 		Color darker = c.darker().darker();
 		int colorAlpha = c.getAlpha();
-		if(colorAlpha < 255)
+		if (colorAlpha < 255)
 		{
 			brighter = new Color(brighter.getRed(), brighter.getGreen(), brighter.getBlue(), colorAlpha);
 			darker = new Color(darker.getRed(), darker.getGreen(), darker.getBlue(), colorAlpha);
-			if(logger.isDebugEnabled()) logger.debug("Corrected alpha-values.");
+			if (logger.isDebugEnabled()) logger.debug("Corrected alpha-values.");
 		}
-		if(logger.isDebugEnabled()) logger.debug("original: {}\nbrighter: {}\ndarker: {}", c, brighter, darker);
+		if (logger.isDebugEnabled()) logger.debug("original: {}\nbrighter: {}\ndarker: {}", c, brighter, darker);
 
 		p = new GradientPaint(0, 0, brighter, 0, gradientHeight, c);
 		g2.setPaint(p);
@@ -310,17 +310,6 @@ public class MemoryStatus
 		this.paused = paused;
 		notifyAll();
 	}
-
-/*
-	private void initUi()
-	{
-		memory=new JProgressBar(JProgressBar.HORIZONTAL,0,100);
-		memory.addMouseListener(new GcMouseListener());
-		memory.setStringPainted(true);
-		add(memory);
-		updateMemoryBar();
-	}
-*/
 
 	private static class MemoryInfo
 	{
@@ -379,7 +368,7 @@ public class MemoryStatus
 	}
 
 	class PollRunnable
-		implements Runnable
+			implements Runnable
 	{
 		Runnable updateRunnable;
 		private long frequency = 5000;
@@ -391,19 +380,19 @@ public class MemoryStatus
 
 		public void run()
 		{
-			for(; ;)
+			for (; ; )
 			{
-				synchronized(MemoryStatus.this)
+				synchronized (MemoryStatus.this)
 				{
-					while(isPaused())
+					while (isPaused())
 					{
 						try
 						{
 							MemoryStatus.this.wait();
 						}
-						catch(InterruptedException e)
+						catch (InterruptedException e)
 						{
-							if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
+							if (logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 							IOUtilities.interruptIfNecessary(e);
 							return;
 						}
@@ -414,9 +403,9 @@ public class MemoryStatus
 				{
 					Thread.sleep(frequency);
 				}
-				catch(InterruptedException e)
+				catch (InterruptedException e)
 				{
-					if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
+					if (logger.isDebugEnabled()) logger.debug("Interrupted...", e);
 					IOUtilities.interruptIfNecessary(e);
 					return;
 				}
@@ -425,7 +414,7 @@ public class MemoryStatus
 	}
 
 	class UpdateRunnable
-		implements Runnable
+			implements Runnable
 	{
 		public void run()
 		{
@@ -433,45 +422,19 @@ public class MemoryStatus
 		}
 	}
 
-    //@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="DM_GC",justification="")
+	//@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="DM_GC",justification="")
 	class GcMouseListener
-		extends MouseAdapter
+			extends MouseAdapter
 	{
 		public void mouseClicked(MouseEvent evt)
 		{
-			if(evt.getClickCount() >= 2 && evt.getButton() == MouseEvent.BUTTON1)
+			if (evt.getClickCount() >= 2 && evt.getButton() == MouseEvent.BUTTON1)
 			{
-                // this is not a bug! - Performance - Explicit garbage collection; extremely dubious except in benchmarking code
+				// this is not a bug! - Performance - Explicit garbage collection; extremely dubious except in benchmarking code
 				System.gc(); //NOSONAR
-				if(logger.isInfoEnabled()) logger.info("Executed garbage-collection.");
+				if (logger.isInfoEnabled()) logger.info("Executed garbage-collection.");
 				updateMemoryBar();
 			}
 		}
 	}
-
-	/*
-	public static void main(String[] args)
-	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				JFrame frame = new JFrame("Test");
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				Container cp = frame.getContentPane();
-				cp.setLayout(new GridLayout(1, 1));
-				MemoryStatus status = new MemoryStatus();
-				status.setUsingTotal(false);
-				status.setUsingBinaryUnits(true);
-				status.setBorder(new EmptyBorder(5, 5, 5, 5));
-				status.setBackground(Color.MAGENTA);
-				status.setOpaque(true);
-				cp.add(status);
-				frame.pack();
-				frame.setVisible(true);
-
-			}
-		});
-	}
-	*/
 }

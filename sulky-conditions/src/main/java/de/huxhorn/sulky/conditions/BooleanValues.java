@@ -35,7 +35,7 @@
 package de.huxhorn.sulky.conditions;
 
 public class BooleanValues
-	implements Condition
+		implements Condition
 {
 	private static final long serialVersionUID = 1780367398890411212L;
 
@@ -51,7 +51,7 @@ public class BooleanValues
 
 	public static BooleanValues getInstance(boolean value)
 	{
-		if(value)
+		if (value)
 		{
 			return TRUE;
 		}
@@ -64,7 +64,7 @@ public class BooleanValues
 	private BooleanValues(boolean b)
 	{
 		this.value = b;
-  	    this.string = String.valueOf(b);
+		this.string = String.valueOf(b);
 	}
 
 	/**
@@ -78,13 +78,13 @@ public class BooleanValues
 		return value;
 	}
 
-    //@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="CN_IDIOM_NO_SUPER_CALL",justification="")
+	//@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="CN_IDIOM_NO_SUPER_CALL",justification="")
 	@SuppressWarnings({"CloneDoesntCallSuperClone"})
 	@Override
 	public BooleanValues clone()
-		throws CloneNotSupportedException
+			throws CloneNotSupportedException
 	{
-        // this is not a bug! - Bad practice - clone method does not call super.clone()
+		// this is not a bug! - Bad practice - clone method does not call super.clone()
 		return this; //NOSONAR
 	}
 

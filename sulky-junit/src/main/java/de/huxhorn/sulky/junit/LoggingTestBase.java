@@ -54,9 +54,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 
-/**
- */
-
 @SuppressWarnings({"PMD.SystemPrintln"})
 @RunWith(Parameterized.class)
 public class LoggingTestBase
@@ -75,20 +72,20 @@ public class LoggingTestBase
 	public static Collection<Object[]> configs()
 	{
 		return Arrays.asList(new Object[][]{
-			{null},
-			{Boolean.TRUE},
-			{Boolean.FALSE},
+				{null},
+				{Boolean.TRUE},
+				{Boolean.FALSE},
 		});
 	}
 
 	@Before
 	public void setUpLogging()
-		throws IOException
+			throws IOException
 	{
 		loggingFile = null;
-		if(this.logging != null)
+		if (this.logging != null)
 		{
-			if(this.logging)
+			if (this.logging)
 			{
 				loggingFile = File.createTempFile("logging", "log");
 				enableAllLogging(loggingFile, verbose);
@@ -107,32 +104,32 @@ public class LoggingTestBase
 	@After
 	public void tearDownLogging()
 	{
-		if(logging != null)
+		if (logging != null)
 		{
 			resetLogging(verbose);
 		}
-		if(loggingFile != null && deleteLogFiles)
+		if (loggingFile != null && deleteLogFiles)
 		{
-			if(!loggingFile.delete())
+			if (!loggingFile.delete())
 			{
 				System.out.println("Couldn't delete file " + loggingFile.getAbsolutePath() + "!");
 			}
 		}
 	}
 
-    @SuppressWarnings({"PMD.AvoidPrintStackTrace"})
+	@SuppressWarnings({"PMD.AvoidPrintStackTrace"})
 	public static void resetLogging(boolean verbose)
 	{
-		if(verbose)
+		if (verbose)
 		{
 			System.out.println("### Resetting logging configuration.");
 		}
 		ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
-		if(loggerFactory instanceof LoggerContext)
+		if (loggerFactory instanceof LoggerContext)
 		{
 			LoggerContext loggerContext = (LoggerContext) loggerFactory;
 			// reset previous configuration initially loaded from logback.xml
-			if(verbose)
+			if (verbose)
 			{
 				System.out.println("\nAbout to reset logging system.");
 			}
@@ -141,38 +138,38 @@ public class LoggingTestBase
 			configurator.setContext(loggerContext);
 			URL configUrl;
 			configUrl = LoggingTestBase.class.getResource("/logback-test.xml");
-			if(configUrl == null)
+			if (configUrl == null)
 			{
 				configUrl = LoggingTestBase.class.getResource("/logback.xml");
 			}
 			try
 			{
 				configurator.doConfigure(configUrl);
-				if(verbose)
+				if (verbose)
 				{
 					System.out.println("\nPrinting status of logging system:");
 					StatusPrinter.print(loggerContext);
 				}
 			}
-			catch(JoranException ex)
+			catch (JoranException ex)
 			{
 				System.err.println("!!! Error configuring logging framework with '" + configUrl + "'!");
-                // this is not a bug! - Avoid Print Stack Trace : Avoid printStackTrace(); use a logger call instead.
+				// this is not a bug! - Avoid Print Stack Trace : Avoid printStackTrace(); use a logger call instead.
 				ex.printStackTrace();
 				StatusPrinter.print(loggerContext);
 			}
 		}
 	}
 
-    @SuppressWarnings({"PMD.AvoidPrintStackTrace"})
+	@SuppressWarnings({"PMD.AvoidPrintStackTrace"})
 	private static void configureLoggingFromString(String loggingConfig, boolean verbose)
 	{
 		ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
-		if(loggerFactory instanceof LoggerContext)
+		if (loggerFactory instanceof LoggerContext)
 		{
 			LoggerContext loggerContext = (LoggerContext) loggerFactory;
 			// reset previous configuration initially loaded from logback.xml
-			if(verbose)
+			if (verbose)
 			{
 				System.out.println("\nAbout to reset logging system.");
 			}
@@ -186,16 +183,16 @@ public class LoggingTestBase
 			try
 			{
 				configurator.doConfigure(is);
-				if(verbose)
+				if (verbose)
 				{
 					System.out.println("\nPrinting status of logging system:");
 					StatusPrinter.print(loggerContext);
 				}
 			}
-			catch(JoranException ex)
+			catch (JoranException ex)
 			{
 				System.err.println("!!! Error configuring logging framework with '" + loggingConfig + "'!");
-                // this is not a bug! - Avoid Print Stack Trace : Avoid printStackTrace(); use a logger call instead.
+				// this is not a bug! - Avoid Print Stack Trace : Avoid printStackTrace(); use a logger call instead.
 				ex.printStackTrace();
 				StatusPrinter.print(loggerContext);
 			}
@@ -210,7 +207,7 @@ public class LoggingTestBase
 	 */
 	public static void disableAllLogging(boolean verbose)
 	{
-		if(verbose)
+		if (verbose)
 		{
 			System.out.println("### Disabling all logging.");
 		}
@@ -223,11 +220,11 @@ public class LoggingTestBase
 		*/
 
 		String configString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-			"<configuration>\n" +
-			"    <root>\n" +
-			"        <level value=\"OFF\"/>\n" +
-			"    </root>\n" +
-			"</configuration>";
+				"<configuration>\n" +
+				"    <root>\n" +
+				"        <level value=\"OFF\"/>\n" +
+				"    </root>\n" +
+				"</configuration>";
 
 		configureLoggingFromString(configString, verbose);
 	}
@@ -241,7 +238,7 @@ public class LoggingTestBase
 	 */
 	public static void enableAllLogging(File file, boolean verbose)
 	{
-		if(verbose)
+		if (verbose)
 		{
 			System.out.println("### Enabling all logging.\n### Logs are written to '" + file.getAbsolutePath() + "'.");
 		}
@@ -274,19 +271,19 @@ public class LoggingTestBase
 		*/
 
 		String configString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-			"<configuration>\n" +
-			"    <appender name=\"FILE\" class=\"ch.qos.logback.core.FileAppender\">\n" +
-			"        <File>" + file.getAbsolutePath() + "</File>\n" +
-			"        <Append>true</Append>\n" +
-			"        <layout class=\"ch.qos.logback.classic.PatternLayout\">\n" +
-			"            <Pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</Pattern>\n" +
-			"        </layout>\n" +
-			"    </appender>\n" +
-			"    <root>\n" +
-			"        <level value=\"ALL\"/>\n" +
-			"        <appender-ref ref=\"FILE\"/>\n" +
-			"    </root>\n" +
-			"</configuration>";
+				"<configuration>\n" +
+				"    <appender name=\"FILE\" class=\"ch.qos.logback.core.FileAppender\">\n" +
+				"        <File>" + file.getAbsolutePath() + "</File>\n" +
+				"        <Append>true</Append>\n" +
+				"        <layout class=\"ch.qos.logback.classic.PatternLayout\">\n" +
+				"            <Pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</Pattern>\n" +
+				"        </layout>\n" +
+				"    </appender>\n" +
+				"    <root>\n" +
+				"        <level value=\"ALL\"/>\n" +
+				"        <appender-ref ref=\"FILE\"/>\n" +
+				"    </root>\n" +
+				"</configuration>";
 
 		configureLoggingFromString(configString, verbose);
 	}

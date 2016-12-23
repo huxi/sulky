@@ -692,14 +692,6 @@ public final class Resources
 		return "/" + p.getName().replace('.', '/');
 	}
 
-//    /**
-//     * The suffixes that will be used for resource maps.
-//     * Currently only java.util.Properties (".properties") are supported.
-//     */
-//    private static final String[] BUNDLE_SUFFIXES = {
-//        PROPERTY_BUNDLE_SUFFIX,
-//    };
-
 	/**
 	 * Used internally to replace suffixes that are null or zero length.
 	 */
