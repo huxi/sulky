@@ -733,7 +733,7 @@ public class TaskManagerTest
 		private int sleepTime;
 		private String name;
 
-		public SleepingCallable(String name, int sleepTime)
+		SleepingCallable(String name, int sleepTime)
 		{
 			this.name = name;
 			this.sleepTime = sleepTime;
@@ -770,7 +770,7 @@ public class TaskManagerTest
 		private int sleepTime;
 		private String name;
 
-		public SleepingProgressingCallable(String name, int sleepTime)
+		SleepingProgressingCallable(String name, int sleepTime)
 		{
 			this.name = name;
 			this.sleepTime = sleepTime;
@@ -814,7 +814,7 @@ public class TaskManagerTest
 		private int sleepTime;
 		private String name;
 
-		public SleepingExceptionCallable(String name, int sleepTime)
+		SleepingExceptionCallable(String name, int sleepTime)
 		{
 			this.name = name;
 			this.sleepTime = sleepTime;
@@ -849,7 +849,7 @@ public class TaskManagerTest
 		private int sleepTime;
 		private String name;
 
-		public SleepingExceptionProgressingCallable(String name, int sleepTime)
+		SleepingExceptionProgressingCallable(String name, int sleepTime)
 		{
 			this.name = name;
 			this.sleepTime = sleepTime;
@@ -896,7 +896,7 @@ public class TaskManagerTest
 
 		List<String> messages;
 
-		public TestTaskListener()
+		TestTaskListener()
 		{
 			messages = new ArrayList<>();
 		}
@@ -945,7 +945,7 @@ public class TaskManagerTest
 		boolean failed = false;
 		private boolean usingEventQueue;
 
-		public DispatchTestTaskListener(boolean usingEventQueue)
+		DispatchTestTaskListener(boolean usingEventQueue)
 		{
 			this.usingEventQueue = usingEventQueue;
 		}

@@ -151,7 +151,7 @@ public class SoftReferenceCachingBuffer<E>
 		private Map<Long, MySoftReference<E>> cache;
 
 		@SuppressWarnings({"unchecked"})
-		public MySoftReference(Map<Long, MySoftReference<E>> cache, long index, E referent)
+		MySoftReference(Map<Long, MySoftReference<E>> cache, long index, E referent)
 		{
 			// the following cast is safe since we are not using the content in the reference queue......
 			super(referent, REFERENCE_QUEUE);
@@ -164,7 +164,7 @@ public class SoftReferenceCachingBuffer<E>
 			return index;
 		}
 
-		public void removeFromCache()
+		void removeFromCache()
 		{
 			cache.remove(index);
 			final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);

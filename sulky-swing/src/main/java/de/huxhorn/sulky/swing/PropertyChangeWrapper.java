@@ -70,7 +70,7 @@ public class PropertyChangeWrapper
 	{
 		private PropertyChangeEvent event;
 
-		public PropertyChangeRunnable(PropertyChangeEvent event)
+		PropertyChangeRunnable(PropertyChangeEvent event)
 		{
 			this.event=event;
 		}

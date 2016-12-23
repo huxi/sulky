@@ -270,19 +270,17 @@ public class Main
 	{
 		private final String msg;
 
-		public ShowVersionErrorDialog(String msg)
+		ShowVersionErrorDialog(String msg)
 		{
 			this.msg = msg;
 		}
 
-		@Override
 		public void run()
 		{
 			final String message = msg + "\n\nPlease upgrade your Java version.";
 			JOptionPane.showOptionDialog(null, message, TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
 		}
 
-		@Override
 		public boolean isStartingAnyway()
 		{
 			return false;
@@ -299,12 +297,11 @@ public class Main
 		private final String msg;
 		private boolean startingAnyway;
 
-		public ShowVersionWarningDialog(String msg)
+		ShowVersionWarningDialog(String msg)
 		{
 			this.msg = msg;
 		}
 
-		@Override
 		public void run()
 		{
 			final String message = msg + "\n\nStart anyway?";
@@ -313,7 +310,6 @@ public class Main
 			startingAnyway = result == JOptionPane.YES_OPTION;
 		}
 
-		@Override
 		public boolean isStartingAnyway()
 		{
 			return startingAnyway;

@@ -561,7 +561,7 @@ public class BlobRepositoryImpl
 	{
 		private String filenamePart;
 
-		public StartsWithFileFilter(String filenamePart)
+		StartsWithFileFilter(String filenamePart)
 		{
 			this.filenamePart = filenamePart;
 		}

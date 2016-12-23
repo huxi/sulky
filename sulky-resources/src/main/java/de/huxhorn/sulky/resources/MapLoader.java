@@ -167,9 +167,9 @@ public abstract class MapLoader
 class PropertiesMapLoader
 	extends MapLoader
 {
-	public static final String PROPERTY_BUNDLE_SUFFIX = ".properties";
+	private static final String PROPERTY_BUNDLE_SUFFIX = ".properties";
 
-	public PropertiesMapLoader()
+	PropertiesMapLoader()
 	{
 		super(new String[]{PROPERTY_BUNDLE_SUFFIX});
 	}

@@ -101,7 +101,7 @@ public final class LocalizableFactory
 		private final Method getter;
 		private final Method setter;
 
-		public LocalizableInvocationHandler(Object obj)
+		LocalizableInvocationHandler(Object obj)
 		{
 			this.object = obj;
 			Class<?> clazz = obj.getClass();

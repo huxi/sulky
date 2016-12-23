@@ -317,24 +317,24 @@ public class MemoryStatus
 		private long used;
 		private long max;
 
-		public MemoryInfo(Runtime runtime)
+		MemoryInfo(Runtime runtime)
 		{
 			total = runtime.totalMemory();
 			used = total - runtime.freeMemory();
 			max = runtime.maxMemory();
 		}
 
-		public long getTotal()
+		long getTotal()
 		{
 			return total;
 		}
 
-		public long getUsed()
+		long getUsed()
 		{
 			return used;
 		}
 
-		public long getMax()
+		long getMax()
 		{
 			return max;
 		}
@@ -373,7 +373,7 @@ public class MemoryStatus
 		Runnable updateRunnable;
 		private long frequency = 5000;
 
-		public PollRunnable()
+		PollRunnable()
 		{
 			updateRunnable = new UpdateRunnable();
 		}

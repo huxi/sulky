@@ -258,7 +258,7 @@ public class OverwritingCircularBuffer<E>
 	{
 		int current;
 
-		public BufferIterator()
+		BufferIterator()
 		{
 			current = 0;
 		}

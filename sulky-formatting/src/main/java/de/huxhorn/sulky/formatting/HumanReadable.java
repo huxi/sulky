@@ -51,7 +51,7 @@ public final class HumanReadable
 		private final String name;
 		private final String symbol;
 
-		public Unit(long factor, String name, String symbol)
+		Unit(long factor, String name, String symbol)
 		{
 			this.factor = factor;
 			this.name = name;

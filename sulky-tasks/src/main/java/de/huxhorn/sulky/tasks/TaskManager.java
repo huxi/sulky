@@ -384,18 +384,18 @@ public class TaskManager<T>
 		private final int progress;
 		private final Task<V> task;
 
-		public ProgressChange(Task<V> task, int progress)
+		ProgressChange(Task<V> task, int progress)
 		{
 			this.progress = progress;
 			this.task = task;
 		}
 
-		public int getProgress()
+		int getProgress()
 		{
 			return progress;
 		}
 
-		public Task<V> getTask()
+		Task<V> getTask()
 		{
 			return task;
 		}
@@ -531,7 +531,7 @@ public class TaskManager<T>
 		private List<TaskListener<T>> clonedListeners;
 		private List<ProgressChange<T>> progressChanges;
 
-		public ResultListenerFireRunnable(List<Task<T>> createdTasks, List<Task<T>> done, List<ProgressChange<T>> progressChanges)
+		ResultListenerFireRunnable(List<Task<T>> createdTasks, List<Task<T>> done, List<ProgressChange<T>> progressChanges)
 		{
 			this.createdTasks = createdTasks;
 			this.done = done;
@@ -754,7 +754,7 @@ public class TaskManager<T>
 		private final String description;
 		private final Map<String, String> metaData;
 
-		public TaskImpl(long id, TaskManager<V> taskManager, Future<V> future, Callable<V> callable, String name, String description, Map<String, String> metaData)
+		TaskImpl(long id, TaskManager<V> taskManager, Future<V> future, Callable<V> callable, String name, String description, Map<String, String> metaData)
 		{
 			this.id = id;
 			this.taskManager = taskManager;
