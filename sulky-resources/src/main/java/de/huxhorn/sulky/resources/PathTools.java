@@ -308,7 +308,7 @@ public final class PathTools
 		{
 			rootFound = true;
 			String currentEntry = pathStack.remove(0);
-			if(!currentEntry.equals("/"))
+			if(!"/".equals(currentEntry))
 			{
 
 				rootFound = false;
