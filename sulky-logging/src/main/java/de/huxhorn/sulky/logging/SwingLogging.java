@@ -166,14 +166,14 @@ public final class SwingLogging
 			KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS,
 			KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS,
 			KeyboardFocusManager.UP_CYCLE_TRAVERSAL_KEYS,
-			KeyboardFocusManager.DOWN_CYCLE_TRAVERSAL_KEYS
+			KeyboardFocusManager.DOWN_CYCLE_TRAVERSAL_KEYS,
 		};
 
 		final String[] names = {
 			"FORWARD_TRAVERSAL_KEYS",
 			"BACKWARD_TRAVERSAL_KEYS",
 			"UP_CYCLE_TRAVERSAL_KEYS",
-			"DOWN_CYCLE_TRAVERSAL_KEYS"
+			"DOWN_CYCLE_TRAVERSAL_KEYS",
 		};
 
 		if(logger.isDebugEnabled())

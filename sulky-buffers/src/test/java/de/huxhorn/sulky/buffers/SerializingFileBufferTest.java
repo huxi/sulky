@@ -75,7 +75,7 @@ public class SerializingFileBufferTest
 				"Siebene",
 				"Achtele",
 				"Neune",
-				"Zehne"
+				"Zehne",
 			};
 
 	}

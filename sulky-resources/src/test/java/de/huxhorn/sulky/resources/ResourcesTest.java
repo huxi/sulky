@@ -1088,7 +1088,7 @@ public class ResourcesTest
 		internalGetLocalResources(c, "................../underflow.txt", null, germanLocale, new String[]{});
 
 		internalGetLocalResources(c, "test.txt", null, germanLocale, new String[]{
-			"Foobar/test.txt"
+			"Foobar/test.txt",
 		});
 
 		// checking the different shortcuts...
@@ -1110,11 +1110,11 @@ public class ResourcesTest
 
 		// checking for links
 		internalGetLocalResources(c, "link.txt", null, germanLocale, new String[]{
-			"Foobar/test.txt"
+			"Foobar/test.txt",
 		});
 		internalGetLocalResources(c, "cyclic1", null, germanLocale, new String[]{});
 		internalGetLocalResources(c, "cyclicFallback1", null, germanLocale, new String[]{
-			"Foobar/cyclicFallback1"
+			"Foobar/cyclicFallback1",
 		});
 
 		// checking internal class handling
@@ -1211,58 +1211,58 @@ public class ResourcesTest
 		internalGetResources(c, "defaultFallback", new String[]{".txt", ".html"}, germanLocale, new String[]{}); // not anymore
 		internalGetResources(c, "................../underflow.txt", null, germanLocale, new String[]{});
 		internalGetResources(c, "test.txt", null, germanLocale, new String[]{
-			"Foobar/test.txt"
+			"Foobar/test.txt",
 		});
 
 		// checking the different shortcuts...
 		internalGetResources(c, "overloaded.txt", null, germanLocale, new String[]{
 			"Foobar/overloaded.txt",
-			"BaseClass/overloaded.txt"
+			"BaseClass/overloaded.txt",
 		});
 		internalGetResources(c, "overloaded.txt", null, null, new String[]{
 			"Foobar/overloaded.txt",
-			"BaseClass/overloaded.txt"
+			"BaseClass/overloaded.txt",
 		});
 		internalGetResources(c, "overloaded.txt", new String[]{}, null, new String[]{
 			"Foobar/overloaded.txt",
-			"BaseClass/overloaded.txt"
+			"BaseClass/overloaded.txt",
 		});
 		internalGetResources(c, "overloaded.txt", new String[]{""}, null, new String[]{
 			"Foobar/overloaded.txt",
-			"BaseClass/overloaded.txt"
+			"BaseClass/overloaded.txt",
 		});
 		internalGetResources(c, "overloaded", new String[]{".txt"}, null, new String[]{
 			"Foobar/overloaded.txt",
-			"BaseClass/overloaded.txt"
+			"BaseClass/overloaded.txt",
 		});
 
 		// checking for links
 		internalGetResources(c, "link.txt", null, germanLocale, new String[]{
-			"Foobar/test.txt"
+			"Foobar/test.txt",
 		});
 		internalGetResources(c, "cyclic1", null, germanLocale, new String[]{});
 		internalGetResources(c, "cyclicFallback1", null, germanLocale, new String[]{
-			"Foobar/cyclicFallback1"
+			"Foobar/cyclicFallback1",
 		});
 
 		// checking internal class handling
 		c = de.huxhorn.sulky.resources.junit.Foobar.Internal.class;
 		internalGetResources(c, "test.txt", null, germanLocale, new String[]{
 			"Foobar/Internal/test.txt",
-			"Foobar/test.txt"
+			"Foobar/test.txt",
 		});
 
 		c = de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.class;
 		internalGetResources(c, "test.txt", null, germanLocale, new String[]{
 			"Foobar/StaticInternal/de/test.txt",
 			"Foobar/StaticInternal/test.txt",
-			"Foobar/test.txt"
+			"Foobar/test.txt",
 		});
 		c = de.huxhorn.sulky.resources.junit.Foobar.StaticInternal.Foo.class;
 		internalGetResources(c, "test.txt", null, germanLocale, new String[]{
 			"Foobar/StaticInternal/de/test.txt",
 			"Foobar/StaticInternal/test.txt",
-			"Foobar/test.txt"
+			"Foobar/test.txt",
 		});
 	}
 

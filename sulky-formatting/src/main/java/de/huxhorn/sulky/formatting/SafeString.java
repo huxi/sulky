@@ -176,7 +176,7 @@ public final class SafeString
 
 		final char[] HEX_CHARS = new char[] {
 				'0', '1', '2', '3', '4', '5', '6', '7',
-				'8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+				'8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
 		};
 
 		BYTE_STRINGS = new String[256];
