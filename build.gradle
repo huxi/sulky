@@ -147,6 +147,13 @@ subprojects {
 	apply plugin: 'maven'
 	apply plugin: 'signing'
 	apply plugin: 'de.thetaphi.forbiddenapis'
+	apply plugin: 'checkstyle'
+	
+	checkstyle {
+		configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+		toolVersion = '7.3'
+		//ignoreFailures = true
+	}
 	
 	forbiddenApis {
 		bundledSignatures = [
