@@ -14,6 +14,7 @@
 		<module name="UpperEll"/>
 		<module name="ArrayTrailingComma"/>
 		<module name="EqualsAvoidNull"/>
+		<module name="EmptyStatement"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>
