@@ -77,7 +77,7 @@ public class PathToolsTest
 		assertEquals("getCompatiblePath(\"" + path + "\")", expectedResult, result);
 	}
 
-	private void internalGetPathStack(String path, boolean reduce, String expectedPathElements[])
+	private void internalGetPathStack(String path, boolean reduce, String[] expectedPathElements)
 	{
 		List<String> stack = PathTools.getPathStack(path, reduce);
 		String methodCall = "getPathStack(\"" + path + "\", " + reduce + ");";

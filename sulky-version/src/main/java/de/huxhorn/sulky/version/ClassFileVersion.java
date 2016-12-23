@@ -57,7 +57,7 @@ public enum ClassFileVersion
 
 	static
 	{
-		ClassFileVersion values[] = ClassFileVersion.values();
+		ClassFileVersion[] values = ClassFileVersion.values();
 		for (ClassFileVersion current : values)
 		{
 			charMapping.put(current.getMajorVersionCharacter(), current);

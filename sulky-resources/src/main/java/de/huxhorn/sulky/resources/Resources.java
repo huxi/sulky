@@ -153,7 +153,7 @@ public final class Resources
 	 */
 	public static URL getLocalResource(final Class clazz, final String resourceBaseName, final String[] suffixes, final Locale locale)
 	{
-		URL results[] = getLocalResources(clazz, resourceBaseName, suffixes, locale, true);
+		URL[] results = getLocalResources(clazz, resourceBaseName, suffixes, locale, true);
 		if(results.length == 0)
 		{
 			return null;
@@ -551,8 +551,8 @@ public final class Resources
 	 */
 	public static String[] getLocaleSuffixArray(final Locale locale)
 	{
-		String localeSuf[] = getSingleLocaleSuffixArray(locale);
-		String defaultSuf[] = getSingleLocaleSuffixArray(Locale.getDefault());
+		String[] localeSuf = getSingleLocaleSuffixArray(locale);
+		String[] defaultSuf = getSingleLocaleSuffixArray(Locale.getDefault());
 
 		List<String> resultList = new ArrayList<>(localeSuf.length + defaultSuf.length);
 		for(String currentSuffix : localeSuf)
@@ -569,7 +569,7 @@ public final class Resources
 				resultList.add(currentSuffix);
 			}
 		}
-		String result[] = new String[resultList.size()];
+		String[] result = new String[resultList.size()];
 		resultList.toArray(result);
 
 		return result;
@@ -642,7 +642,7 @@ public final class Resources
 				}
 			}
 		}
-		String result[] = new String[resultList.size()];
+		String[] result = new String[resultList.size()];
 		Collections.reverse(resultList);
 		resultList.toArray(result);
 
@@ -891,7 +891,7 @@ public final class Resources
 		while(currentClass != java.lang.Object.class)
 		{
 			if(logger.isDebugEnabled()) logger.debug("currentClass = " + currentClass.getName());
-			URL urls[] = getLocalResources(currentClass, resourceBaseName, suffixes, locale, firstOnly);
+			URL[] urls = getLocalResources(currentClass, resourceBaseName, suffixes, locale, firstOnly);
 			for(int i = 0; i < urls.length; i++)
 			{
 				if(!urlList.contains(urls[i]))
@@ -938,7 +938,7 @@ public final class Resources
 
 		List<URL> urls = new ArrayList<>();
 		// handle locale parameter localePaths
-		String localePaths[] = getLocaleSuffixArray(locale);
+		String[] localePaths = getLocaleSuffixArray(locale);
 		for(String currentLocPath : localePaths)
 		{
 			for(String aSuff : suff)

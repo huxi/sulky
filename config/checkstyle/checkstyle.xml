@@ -22,6 +22,7 @@
 		<module name="ModifiedControlVariable"/>
 		<module name="OneStatementPerLine"/>
 		<module name="StringLiteralEquality"/>
+		<module name="ArrayTypeStyle"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>

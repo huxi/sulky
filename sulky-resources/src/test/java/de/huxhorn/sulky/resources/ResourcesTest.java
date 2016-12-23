@@ -1039,10 +1039,10 @@ public class ResourcesTest
 		} // if no suffixes but locale
 	}
 
-	private void internalGetLocaleSuffixArray(Locale locale, String expectedResults[])
+	private void internalGetLocaleSuffixArray(Locale locale, String[] expectedResults)
 	{
 		String methodCall = "getLocaleSuffixArray(" + locale + ")";
-		String result[] = Resources.getLocaleSuffixArray(locale);
+		String[] result = Resources.getLocaleSuffixArray(locale);
 		assertEquals(methodCall + " - Number of Suffixes", expectedResults.length, result.length);
 		for(int i = 0; i < expectedResults.length; i++)
 		{
@@ -1053,7 +1053,7 @@ public class ResourcesTest
 	private void internalGetSingleLocaleSuffixArray(Locale locale, String[] expectedResults)
 	{
 		String methodCall = "getSingleLocaleSuffixArray(" + locale + ")";
-		String result[] = Resources.getSingleLocaleSuffixArray(locale);
+		String[] result = Resources.getSingleLocaleSuffixArray(locale);
 		assertEquals(methodCall + " - Number of Suffixes", expectedResults.length, result.length);
 		for(int i = 0; i < expectedResults.length; i++)
 		{

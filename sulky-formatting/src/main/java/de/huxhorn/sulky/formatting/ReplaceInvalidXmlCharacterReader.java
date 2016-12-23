@@ -105,7 +105,7 @@ public class ReplaceInvalidXmlCharacterReader
 	 *
 	 * @exception  IOException  If an I/O error occurs
 	 */
-	public int read(char cbuf[], int off, int len)
+	public int read(char[] cbuf, int off, int len)
 			throws IOException
 	{
 		int result = in.read(cbuf, off, len);

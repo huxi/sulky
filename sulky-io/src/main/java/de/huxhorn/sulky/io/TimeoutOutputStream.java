@@ -88,7 +88,7 @@ public class TimeoutOutputStream
 		}
 	}
 
-	public void write(byte b[])
+	public void write(byte[] b)
 		throws IOException
 	{
 		try
@@ -104,7 +104,7 @@ public class TimeoutOutputStream
 		}
 	}
 
-	public void write(byte b[], int off, int len)
+	public void write(byte[] b, int off, int len)
 		throws IOException
 	{
 		try
