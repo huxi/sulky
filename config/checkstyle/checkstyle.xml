@@ -24,6 +24,7 @@
 		<module name="StringLiteralEquality"/>
 		<module name="ArrayTypeStyle"/>
 		<module name="CommentsIndentation"/>
+		<module name="ModifierOrder"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>
