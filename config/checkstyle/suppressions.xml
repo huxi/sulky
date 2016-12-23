@@ -4,4 +4,5 @@
 	"http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 <suppressions>
 	<suppress checks="ArrayTrailingComma" files="generated"/>
+	<suppress checks="DefaultComesLast" files="generated"/>
 </suppressions>
