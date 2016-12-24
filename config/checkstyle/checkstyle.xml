@@ -35,6 +35,7 @@
 		<module name="OneTopLevelClass"/>
 		<module name="ConstantName"/>
 		<module name="LocalFinalVariableName"/>
+		<module name="LocalVariableName"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>

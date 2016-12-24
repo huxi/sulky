@@ -7,4 +7,5 @@
 	<suppress checks="DefaultComesLast" files="generated"/>
 	<suppress checks="RedundantModifier" files="generated"/>
 	<suppress checks="ConstantName" files="generated"/>
+	<suppress checks="LocalVariableName" files="generated"/>
 </suppressions>
