@@ -40,6 +40,7 @@
 		<module name="MethodName"/>
 		<module name="PackageName"/>
 		<module name="ParameterName"/>
+		<module name="StaticVariableName"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>
