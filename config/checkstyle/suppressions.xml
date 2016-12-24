@@ -8,4 +8,5 @@
 	<suppress checks="RedundantModifier" files="generated"/>
 	<suppress checks="ConstantName" files="generated"/>
 	<suppress checks="LocalVariableName" files="generated"/>
+	<suppress checks="MemberName" files="generated"/>
 </suppressions>
