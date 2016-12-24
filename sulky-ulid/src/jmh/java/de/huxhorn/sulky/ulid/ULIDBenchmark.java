@@ -56,7 +56,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
-	public String ULIDnextULIDThroughput()
+	public String ulidNextULIDThroughput()
 	{
 		return secureRandomInstance.nextULID();
 	}
@@ -64,7 +64,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public String ULIDnextULIDAverage()
+	public String ulidNextULIDAverage()
 	{
 		return secureRandomInstance.nextULID();
 	}
@@ -73,7 +73,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
-	public String ULIDnextULIDThroughputInsecure()
+	public String ulidNextULIDThroughputInsecure()
 	{
 		return randomInstance.nextULID();
 	}
@@ -81,7 +81,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public String ULIDnextULIDAverageInsecure()
+	public String ulidNextULIDAverageInsecure()
 	{
 		return randomInstance.nextULID();
 	}
@@ -90,7 +90,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
-	public String ULIDnextValuetoStringThroughput()
+	public String ulidNextValuetoStringThroughput()
 	{
 		return secureRandomInstance.nextValue().toString();
 	}
@@ -98,7 +98,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public String ULIDnextValuetoStringAverage()
+	public String ulidNextValuetoStringAverage()
 	{
 		return secureRandomInstance.nextValue().toString();
 	}
@@ -107,7 +107,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.Throughput)
 	@OutputTimeUnit(TimeUnit.SECONDS)
-	public String UUIDrandomUUIDtoStringThroughput()
+	public String uuidRandomUUIDtoStringThroughput()
 	{
 		return UUID.randomUUID().toString();
 	}
@@ -115,7 +115,7 @@ public class ULIDBenchmark
 	@Benchmark
 	@BenchmarkMode(Mode.AverageTime)
 	@OutputTimeUnit(TimeUnit.NANOSECONDS)
-	public String UUIDrandomUUIDtoStringAverage()
+	public String uuidRandomUUIDtoStringAverage()
 	{
 		return UUID.randomUUID().toString();
 	}

@@ -37,6 +37,7 @@
 		<module name="LocalFinalVariableName"/>
 		<module name="LocalVariableName"/>
 		<module name="MemberName"/>
+		<module name="MethodName"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>
