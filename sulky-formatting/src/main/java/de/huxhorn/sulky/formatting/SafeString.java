@@ -174,7 +174,7 @@ public final class SafeString
 		// for the sake of coverage
 		new SafeString();
 
-		final char[] HEX_CHARS = new char[] {
+		final char[] hexChars = new char[] {
 				'0', '1', '2', '3', '4', '5', '6', '7',
 				'8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
 		};
@@ -185,8 +185,8 @@ public final class SafeString
 			@SuppressWarnings("StringBufferReplaceableByString")
 			StringBuilder sb=new StringBuilder(2);
 
-			sb.append(HEX_CHARS[i >>> 4]);
-			sb.append(HEX_CHARS[i & 0xf]);
+			sb.append(hexChars[i >>> 4]);
+			sb.append(hexChars[i & 0xf]);
 
 			BYTE_STRINGS[i]=sb.toString();
 		}
