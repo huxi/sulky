@@ -28,6 +28,7 @@
 		<module name="RedundantModifier"/>
 		<module name="GenericWhitespace"/>
 		<module name="NoLineWrap"/>
+		<module name="OneTopLevelClass"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>

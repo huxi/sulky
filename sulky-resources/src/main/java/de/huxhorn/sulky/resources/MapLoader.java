@@ -162,42 +162,42 @@ public abstract class MapLoader
 
 	public abstract Map<String, Object> loadMap(URL url)
 		throws IOException;
-}
 
-class PropertiesMapLoader
-	extends MapLoader
-{
-	private static final String PROPERTY_BUNDLE_SUFFIX = ".properties";
-
-	PropertiesMapLoader()
+	private static class PropertiesMapLoader
+			extends MapLoader
 	{
-		super(new String[]{PROPERTY_BUNDLE_SUFFIX});
-	}
+		private static final String PROPERTY_BUNDLE_SUFFIX = ".properties";
 
-	public Map<String, Object> loadMap(URL url)
-		throws IOException
-	{
-		if(!isSupported(url))
+		PropertiesMapLoader()
 		{
-			return null;
+			super(new String[]{PROPERTY_BUNDLE_SUFFIX});
 		}
-		Map<String, Object> result = new HashMap<>();
-		InputStream is = url.openStream();
 
-		Properties bundle = new Properties();
-		bundle.load(is);
-
-		Enumeration e = bundle.keys();
-		while(e.hasMoreElements())
+		public Map<String, Object> loadMap(URL url)
+				throws IOException
 		{
-			String key = (String) e.nextElement();
-			Object value = bundle.get(key);
-			if(value != null)
+			if(!isSupported(url))
 			{
-				result.put(key, value);
+				return null;
 			}
-		}
+			Map<String, Object> result = new HashMap<>();
+			InputStream is = url.openStream();
 
-		return result;
+			Properties bundle = new Properties();
+			bundle.load(is);
+
+			Enumeration e = bundle.keys();
+			while(e.hasMoreElements())
+			{
+				String key = (String) e.nextElement();
+				Object value = bundle.get(key);
+				if(value != null)
+				{
+					result.put(key, value);
+				}
+			}
+
+			return result;
+		}
 	}
 }

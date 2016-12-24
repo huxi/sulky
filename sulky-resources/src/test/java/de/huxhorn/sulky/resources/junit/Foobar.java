@@ -37,11 +37,6 @@ package de.huxhorn.sulky.resources.junit;
 import de.huxhorn.sulky.resources.Localizable;
 import java.util.Locale;
 
-class BaseClass
-{
-
-}
-
 /**
  * <code>Foobar</code> is used to test the ResourceTools functionality.
  * It extends the package-private class <code>BaseClass</code> and has the
