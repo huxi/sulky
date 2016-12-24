@@ -40,19 +40,14 @@ import java.util.Map;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 
 public class ResourceMapsTest
 {
-	private final Logger logger = LoggerFactory.getLogger(ResourceMapsTest.class);
-
-	private static final Locale usLocale = new Locale("en", "US");
-	final Locale germanLocale = new Locale("de", "DE");
-	final Locale hessianLocale = new Locale("de", "DE", "hessisch");
-	final Locale empty = new Locale("", "", "");
+	private static final Locale US_LOCALE = new Locale("en", "US");
+	private static final Locale GERMANY_LOCALE = new Locale("de", "DE");
+	private static final  Locale HESSIAN_LOCALE = new Locale("de", "DE", "hessisch");
 	private static Locale prevDefault;
 
 	private void internalGetResourceMap(Class clazz, String resourceBaseName, Locale locale, String[][] expectedResults)
@@ -113,7 +108,7 @@ public class ResourceMapsTest
 		throws Exception
 	{
 		prevDefault = Locale.getDefault();
-		Locale.setDefault(usLocale);
+		Locale.setDefault(US_LOCALE);
 	}
 
 	@AfterClass
@@ -130,13 +125,13 @@ public class ResourceMapsTest
 		Class c;
 
 		c = Foobar.class;
-		internalGetResourceMap(c, "resources", hessianLocale, new String[][]{
+		internalGetResourceMap(c, "resources", HESSIAN_LOCALE, new String[][]{
 			{"attention.txt", "Uffbasse!"},
 			{"ok.txt", "OK"},
 			{"cancel.txt", "Abbruch"},
 			{"base.txt", "BaseClass"},
 		});
-		internalGetResourceMap(c, "resources", germanLocale, new String[][]{
+		internalGetResourceMap(c, "resources", GERMANY_LOCALE, new String[][]{
 			{"attention.txt", "Achtung!"},
 			{"ok.txt", "OK"},
 			{"cancel.txt", "Abbruch"},
@@ -162,12 +157,12 @@ public class ResourceMapsTest
 		Class c;
 
 		c = Foobar.class;
-		internalGetLocalResourceMap(c, "resources", hessianLocale, new String[][]{
+		internalGetLocalResourceMap(c, "resources", HESSIAN_LOCALE, new String[][]{
 			{"attention.txt", "Uffbasse!"},
 			{"ok.txt", "OK"},
 			{"cancel.txt", "Abbruch"},
 		});
-		internalGetLocalResourceMap(c, "resources", germanLocale, new String[][]{
+		internalGetLocalResourceMap(c, "resources", GERMANY_LOCALE, new String[][]{
 			{"attention.txt", "Achtung!"},
 			{"ok.txt", "OK"},
 			{"cancel.txt", "Abbruch"},

@@ -55,11 +55,11 @@ public class ResourceSupportTest
 {
 	private final Logger logger = LoggerFactory.getLogger(ResourceSupportTest.class);
 
-	ResourceSupport resourcesupport = null;
+	private ResourceSupport resourcesupport = null;
 
-	private static final Locale usLocale = new Locale("en", "US");
-	final Locale germanLocale = new Locale("de", "DE");
-	final Locale hessianLocale = new Locale("de", "DE", "hessisch");
+	private static final Locale US_LOCALE = new Locale("en", "US");
+	private static final Locale GERMANY_LOCALE = new Locale("de", "DE");
+	private static final Locale HESSIAN_LOCALE = new Locale("de", "DE", "hessisch");
 	private static Locale prevDefault;
 
 
@@ -1113,7 +1113,7 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		prevDefault = Locale.getDefault();
-		Locale.setDefault(usLocale);
+		Locale.setDefault(US_LOCALE);
 	}
 
 	@AfterClass
@@ -1140,11 +1140,11 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		Localizable l = resourcesupport.getLocalizable();
-		internalResolveLocale(germanLocale, germanLocale);
+		internalResolveLocale(GERMANY_LOCALE, GERMANY_LOCALE);
 		internalResolveLocale(null, null);
-		l.setLocale(hessianLocale);
-		internalResolveLocale(germanLocale, hessianLocale);
-		internalResolveLocale(null, hessianLocale);
+		l.setLocale(HESSIAN_LOCALE);
+		internalResolveLocale(GERMANY_LOCALE, HESSIAN_LOCALE);
+		internalResolveLocale(null, HESSIAN_LOCALE);
 	}
 
 	@Test
@@ -1200,9 +1200,9 @@ public class ResourceSupportTest
 		o = new Foobar();
 		resourcesupport = new ResourceSupport(o);
 		loc = resourcesupport.getLocalizable();
-		loc.setLocale(hessianLocale);
+		loc.setLocale(HESSIAN_LOCALE);
 		l = loc.getLocale();
-		assertEquals(hessianLocale, l);
+		assertEquals(HESSIAN_LOCALE, l);
 
 		// getter only
 		o = ((Foobar) o).new Internal();
@@ -1210,21 +1210,21 @@ public class ResourceSupportTest
 		loc = resourcesupport.getLocalizable();
 		loc.setLocale(null);
 		l = loc.getLocale();
-		assertEquals(hessianLocale, l);
+		assertEquals(HESSIAN_LOCALE, l);
 
 		// getter and setter
 		o = new Foobar.StaticInternal();
 		resourcesupport = new ResourceSupport(o);
 		loc = resourcesupport.getLocalizable();
-		loc.setLocale(hessianLocale);
+		loc.setLocale(HESSIAN_LOCALE);
 		l = loc.getLocale();
-		assertEquals(hessianLocale, l);
+		assertEquals(HESSIAN_LOCALE, l);
 
 		// neither getter nor setter
 		o = new Foobar.StaticInternal.Foo();
 		resourcesupport = new ResourceSupport(o);
 		loc = resourcesupport.getLocalizable();
-		loc.setLocale(hessianLocale);
+		loc.setLocale(HESSIAN_LOCALE);
 		l = loc.getLocale();
 		assertEquals(null, l);
 	}
@@ -1234,14 +1234,14 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		// de.huxhorn.sulky.resources.junit.Foobar.class;
-		internalGetLocalResources("defaultFallback.txt", null, germanLocale, new String[]{}); // not anymore
-		internalGetLocalResources("defaultFallback", new String[]{".txt", ".html"}, germanLocale, new String[]{}); // not anymore
-		internalGetLocalResources("test.txt", null, germanLocale, new String[]{
+		internalGetLocalResources("defaultFallback.txt", null, GERMANY_LOCALE, new String[]{}); // not anymore
+		internalGetLocalResources("defaultFallback", new String[]{".txt", ".html"}, GERMANY_LOCALE, new String[]{}); // not anymore
+		internalGetLocalResources("test.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/test.txt",
 		});
 
 		// checking the different shortcuts...
-		internalGetLocalResources("overloaded.txt", null, germanLocale, new String[]{
+		internalGetLocalResources("overloaded.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/overloaded.txt",
 		});
 		internalGetLocalResources("overloaded.txt", null, null, new String[]{
@@ -1258,27 +1258,27 @@ public class ResourceSupportTest
 		});
 
 		// checking for links
-		internalGetLocalResources("link.txt", null, germanLocale, new String[]{
+		internalGetLocalResources("link.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/test.txt",
 		});
-		internalGetLocalResources("cyclic1", null, germanLocale, new String[]{});
-		internalGetLocalResources("cyclicFallback1", null, germanLocale, new String[]{
+		internalGetLocalResources("cyclic1", null, GERMANY_LOCALE, new String[]{});
+		internalGetLocalResources("cyclicFallback1", null, GERMANY_LOCALE, new String[]{
 			"Foobar/cyclicFallback1",
 		});
 
 		// checking internal class handling
 		resourcesupport = new ResourceSupport(Foobar.Internal.class);
-		internalGetLocalResources("test.txt", null, germanLocale, new String[]{
+		internalGetLocalResources("test.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/Internal/test.txt",
 		});
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
-		internalGetLocalResources("test.txt", null, germanLocale, new String[]{
+		internalGetLocalResources("test.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/StaticInternal/de/test.txt",
 			"Foobar/StaticInternal/test.txt",
 		});
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
-		internalGetLocalResources("test.txt", null, germanLocale, new String[]{});
+		internalGetLocalResources("test.txt", null, GERMANY_LOCALE, new String[]{});
 	}
 
 	@Test
@@ -1286,31 +1286,31 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		// de.huxhorn.sulky.resources.junit.Foobar.class;
-		internalGetLocalResource("defaultFallback.txt", null, germanLocale, null); // not anymore
-		internalGetLocalResource("defaultFallback", new String[]{".txt", ".html"}, germanLocale, null); // not anymore
-		internalGetLocalResource("test.txt", null, germanLocale, "Foobar/test.txt");
+		internalGetLocalResource("defaultFallback.txt", null, GERMANY_LOCALE, null); // not anymore
+		internalGetLocalResource("defaultFallback", new String[]{".txt", ".html"}, GERMANY_LOCALE, null); // not anymore
+		internalGetLocalResource("test.txt", null, GERMANY_LOCALE, "Foobar/test.txt");
 
 		// checking the different shortcuts...
-		internalGetLocalResource("overloaded.txt", null, germanLocale, "Foobar/overloaded.txt");
+		internalGetLocalResource("overloaded.txt", null, GERMANY_LOCALE, "Foobar/overloaded.txt");
 		internalGetLocalResource("overloaded.txt", null, null, "Foobar/overloaded.txt");
 		internalGetLocalResource("overloaded.txt", new String[]{}, null, "Foobar/overloaded.txt");
 		internalGetLocalResource("overloaded.txt", new String[]{""}, null, "Foobar/overloaded.txt");
 		internalGetLocalResource("overloaded", new String[]{".txt"}, null, "Foobar/overloaded.txt");
 
 		// checking for links
-		internalGetLocalResource("link.txt", null, germanLocale, "Foobar/test.txt");
-		internalGetLocalResource("cyclic1", null, germanLocale, null);
-		internalGetLocalResource("cyclicFallback1", null, germanLocale, "Foobar/cyclicFallback1");
+		internalGetLocalResource("link.txt", null, GERMANY_LOCALE, "Foobar/test.txt");
+		internalGetLocalResource("cyclic1", null, GERMANY_LOCALE, null);
+		internalGetLocalResource("cyclicFallback1", null, GERMANY_LOCALE, "Foobar/cyclicFallback1");
 
 		// checking internal class handling
 		resourcesupport = new ResourceSupport(Foobar.Internal.class);
-		internalGetLocalResource("test.txt", null, germanLocale, "Foobar/Internal/test.txt");
+		internalGetLocalResource("test.txt", null, GERMANY_LOCALE, "Foobar/Internal/test.txt");
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
-		internalGetLocalResource("test.txt", null, germanLocale, "Foobar/StaticInternal/de/test.txt");
+		internalGetLocalResource("test.txt", null, GERMANY_LOCALE, "Foobar/StaticInternal/de/test.txt");
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
-		internalGetLocalResource("test.txt", null, germanLocale, null);
+		internalGetLocalResource("test.txt", null, GERMANY_LOCALE, null);
 	}
 
 	@Test
@@ -1318,31 +1318,31 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		// de.huxhorn.sulky.resources.junit.Foobar.class;
-		internalGetLocalResourceAsStream("defaultFallback.txt", null, germanLocale, false); // not anymore
-		internalGetLocalResourceAsStream("defaultFallback", new String[]{".txt", ".html"}, germanLocale, false); // not anymore
-		internalGetLocalResourceAsStream("test.txt", null, germanLocale, true);
+		internalGetLocalResourceAsStream("defaultFallback.txt", null, GERMANY_LOCALE, false); // not anymore
+		internalGetLocalResourceAsStream("defaultFallback", new String[]{".txt", ".html"}, GERMANY_LOCALE, false); // not anymore
+		internalGetLocalResourceAsStream("test.txt", null, GERMANY_LOCALE, true);
 
 		// checking the different shortcuts...
-		internalGetLocalResourceAsStream("overloaded.txt", null, germanLocale, true);
+		internalGetLocalResourceAsStream("overloaded.txt", null, GERMANY_LOCALE, true);
 		internalGetLocalResourceAsStream("overloaded.txt", null, null, true);
 		internalGetLocalResourceAsStream("overloaded.txt", new String[]{}, null, true);
 		internalGetLocalResourceAsStream("overloaded.txt", new String[]{""}, null, true);
 		internalGetLocalResourceAsStream("overloaded", new String[]{".txt"}, null, true);
 
 		// checking for links
-		internalGetLocalResourceAsStream("link.txt", null, germanLocale, true);
-		internalGetLocalResourceAsStream("cyclic1", null, germanLocale, false);
-		internalGetLocalResourceAsStream("cyclicFallback1", null, germanLocale, true);
+		internalGetLocalResourceAsStream("link.txt", null, GERMANY_LOCALE, true);
+		internalGetLocalResourceAsStream("cyclic1", null, GERMANY_LOCALE, false);
+		internalGetLocalResourceAsStream("cyclicFallback1", null, GERMANY_LOCALE, true);
 
 		// checking internal class handling
 		resourcesupport = new ResourceSupport(Foobar.Internal.class);
-		internalGetLocalResourceAsStream("test.txt", null, germanLocale, true);
+		internalGetLocalResourceAsStream("test.txt", null, GERMANY_LOCALE, true);
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
-		internalGetLocalResourceAsStream("test.txt", null, germanLocale, true);
+		internalGetLocalResourceAsStream("test.txt", null, GERMANY_LOCALE, true);
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
-		internalGetLocalResourceAsStream("test.txt", null, germanLocale, false);
+		internalGetLocalResourceAsStream("test.txt", null, GERMANY_LOCALE, false);
 	}
 
 	@Test
@@ -1350,14 +1350,14 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		// de.huxhorn.sulky.resources.junit.Foobar.class;
-		internalGetResources("defaultFallback.txt", null, germanLocale, new String[]{}); // not anymore
-		internalGetResources("defaultFallback", new String[]{".txt", ".html"}, germanLocale, new String[]{}); // not anymore
-		internalGetResources("test.txt", null, germanLocale, new String[]{
+		internalGetResources("defaultFallback.txt", null, GERMANY_LOCALE, new String[]{}); // not anymore
+		internalGetResources("defaultFallback", new String[]{".txt", ".html"}, GERMANY_LOCALE, new String[]{}); // not anymore
+		internalGetResources("test.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/test.txt",
 		});
 
 		// checking the different shortcuts...
-		internalGetResources("overloaded.txt", null, germanLocale, new String[]{
+		internalGetResources("overloaded.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/overloaded.txt",
 			"BaseClass/overloaded.txt",
 		});
@@ -1379,29 +1379,29 @@ public class ResourceSupportTest
 		});
 
 		// checking for links
-		internalGetResources("link.txt", null, germanLocale, new String[]{
+		internalGetResources("link.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/test.txt",
 		});
-		internalGetResources("cyclic1", null, germanLocale, new String[]{});
-		internalGetResources("cyclicFallback1", null, germanLocale, new String[]{
+		internalGetResources("cyclic1", null, GERMANY_LOCALE, new String[]{});
+		internalGetResources("cyclicFallback1", null, GERMANY_LOCALE, new String[]{
 			"Foobar/cyclicFallback1",
 		});
 
 		// checking internal class handling
 		resourcesupport = new ResourceSupport(Foobar.Internal.class);
-		internalGetResources("test.txt", null, germanLocale, new String[]{
+		internalGetResources("test.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/Internal/test.txt",
 			"Foobar/test.txt",
 		});
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
-		internalGetResources("test.txt", null, germanLocale, new String[]{
+		internalGetResources("test.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/StaticInternal/de/test.txt",
 			"Foobar/StaticInternal/test.txt",
 			"Foobar/test.txt",
 		});
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
-		internalGetResources("test.txt", null, germanLocale, new String[]{
+		internalGetResources("test.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/StaticInternal/de/test.txt",
 			"Foobar/StaticInternal/test.txt",
 			"Foobar/test.txt",
@@ -1415,7 +1415,7 @@ public class ResourceSupportTest
 			"Foobar/locale.txt",
 		});
 
-		internalGetResources("locale.txt", null, germanLocale, new String[]{
+		internalGetResources("locale.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/de_DE/locale.txt",
 			"Foobar/de/locale.txt",
 			"Foobar/en_US/locale.txt",
@@ -1423,8 +1423,8 @@ public class ResourceSupportTest
 			"Foobar/locale.txt",
 		});
 		Localizable l = resourcesupport.getLocalizable();
-		l.setLocale(hessianLocale);
-		internalGetResources("locale.txt", null, germanLocale, new String[]{
+		l.setLocale(HESSIAN_LOCALE);
+		internalGetResources("locale.txt", null, GERMANY_LOCALE, new String[]{
 			"Foobar/de_DE_hessisch/locale.txt",
 			"Foobar/de_DE/locale.txt",
 			"Foobar/de/locale.txt",
@@ -1432,7 +1432,7 @@ public class ResourceSupportTest
 			"Foobar/en/locale.txt",
 			"Foobar/locale.txt",
 		});
-		internalGetResources("locale", new String[]{".html", ".txt"}, germanLocale, new String[]{
+		internalGetResources("locale", new String[]{".html", ".txt"}, GERMANY_LOCALE, new String[]{
 			"Foobar/de_DE_hessisch/locale.txt",
 			"Foobar/de_DE/locale.html",
 			"Foobar/de_DE/locale.txt",
@@ -1449,31 +1449,31 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		// de.huxhorn.sulky.resources.junit.Foobar.class;
-		internalGetResource("defaultFallback.txt", null, germanLocale, null); // not anymore
-		internalGetResource("defaultFallback", new String[]{".txt", ".html"}, germanLocale, null); // not anymore
-		internalGetResource("test.txt", null, germanLocale, "Foobar/test.txt");
+		internalGetResource("defaultFallback.txt", null, GERMANY_LOCALE, null); // not anymore
+		internalGetResource("defaultFallback", new String[]{".txt", ".html"}, GERMANY_LOCALE, null); // not anymore
+		internalGetResource("test.txt", null, GERMANY_LOCALE, "Foobar/test.txt");
 
 		// checking the different shortcuts...
-		internalGetResource("overloaded.txt", null, germanLocale, "Foobar/overloaded.txt");
+		internalGetResource("overloaded.txt", null, GERMANY_LOCALE, "Foobar/overloaded.txt");
 		internalGetResource("overloaded.txt", null, null, "Foobar/overloaded.txt");
 		internalGetResource("overloaded.txt", new String[]{}, null, "Foobar/overloaded.txt");
 		internalGetResource("overloaded.txt", new String[]{""}, null, "Foobar/overloaded.txt");
 		internalGetResource("overloaded", new String[]{".txt"}, null, "Foobar/overloaded.txt");
 
 		// checking for links
-		internalGetResource("link.txt", null, germanLocale, "Foobar/test.txt");
-		internalGetResource("cyclic1", null, germanLocale, null);
-		internalGetResource("cyclicFallback1", null, germanLocale, "Foobar/cyclicFallback1");
+		internalGetResource("link.txt", null, GERMANY_LOCALE, "Foobar/test.txt");
+		internalGetResource("cyclic1", null, GERMANY_LOCALE, null);
+		internalGetResource("cyclicFallback1", null, GERMANY_LOCALE, "Foobar/cyclicFallback1");
 
 		// checking internal class handling
 		resourcesupport = new ResourceSupport(Foobar.Internal.class);
-		internalGetResource("test.txt", null, germanLocale, "Foobar/Internal/test.txt");
+		internalGetResource("test.txt", null, GERMANY_LOCALE, "Foobar/Internal/test.txt");
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
-		internalGetResource("test.txt", null, germanLocale, "Foobar/StaticInternal/de/test.txt");
+		internalGetResource("test.txt", null, GERMANY_LOCALE, "Foobar/StaticInternal/de/test.txt");
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
-		internalGetResource("test.txt", null, germanLocale, "Foobar/StaticInternal/de/test.txt");
+		internalGetResource("test.txt", null, GERMANY_LOCALE, "Foobar/StaticInternal/de/test.txt");
 	}
 
 	@Test
@@ -1481,31 +1481,31 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		// de.huxhorn.sulky.resources.junit.Foobar.class;
-		internalGetResourceAsStream("defaultFallback.txt", null, germanLocale, false); // not anymore
-		internalGetResourceAsStream("defaultFallback", new String[]{".txt", ".html"}, germanLocale, false); // not anymore
-		internalGetResourceAsStream("test.txt", null, germanLocale, true);
+		internalGetResourceAsStream("defaultFallback.txt", null, GERMANY_LOCALE, false); // not anymore
+		internalGetResourceAsStream("defaultFallback", new String[]{".txt", ".html"}, GERMANY_LOCALE, false); // not anymore
+		internalGetResourceAsStream("test.txt", null, GERMANY_LOCALE, true);
 
 		// checking the different shortcuts...
-		internalGetResourceAsStream("overloaded.txt", null, germanLocale, true);
+		internalGetResourceAsStream("overloaded.txt", null, GERMANY_LOCALE, true);
 		internalGetResourceAsStream("overloaded.txt", null, null, true);
 		internalGetResourceAsStream("overloaded.txt", new String[]{}, null, true);
 		internalGetResourceAsStream("overloaded.txt", new String[]{""}, null, true);
 		internalGetResourceAsStream("overloaded", new String[]{".txt"}, null, true);
 
 		// checking for links
-		internalGetResourceAsStream("link.txt", null, germanLocale, true);
-		internalGetResourceAsStream("cyclic1", null, germanLocale, false);
-		internalGetResourceAsStream("cyclicFallback1", null, germanLocale, true);
+		internalGetResourceAsStream("link.txt", null, GERMANY_LOCALE, true);
+		internalGetResourceAsStream("cyclic1", null, GERMANY_LOCALE, false);
+		internalGetResourceAsStream("cyclicFallback1", null, GERMANY_LOCALE, true);
 
 		// checking internal class handling
 		resourcesupport = new ResourceSupport(Foobar.Internal.class);
-		internalGetResourceAsStream("test.txt", null, germanLocale, true);
+		internalGetResourceAsStream("test.txt", null, GERMANY_LOCALE, true);
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.class);
-		internalGetResourceAsStream("test.txt", null, germanLocale, true);
+		internalGetResourceAsStream("test.txt", null, GERMANY_LOCALE, true);
 
 		resourcesupport = new ResourceSupport(Foobar.StaticInternal.Foo.class);
-		internalGetResourceAsStream("test.txt", null, germanLocale, true);
+		internalGetResourceAsStream("test.txt", null, GERMANY_LOCALE, true);
 	}
 
 	@Test
@@ -1513,12 +1513,12 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		// Foobar.class;
-		internalGetLocalResourceMap("resources", hessianLocale, new String[][]{
+		internalGetLocalResourceMap("resources", HESSIAN_LOCALE, new String[][]{
 			{"attention.txt", "Uffbasse!"},
 			{"ok.txt", "OK"},
 			{"cancel.txt", "Abbruch"},
 		});
-		internalGetLocalResourceMap("resources", germanLocale, new String[][]{
+		internalGetLocalResourceMap("resources", GERMANY_LOCALE, new String[][]{
 			{"attention.txt", "Achtung!"},
 			{"ok.txt", "OK"},
 			{"cancel.txt", "Abbruch"},
@@ -1540,13 +1540,13 @@ public class ResourceSupportTest
 		throws Exception
 	{
 		// Foobar.class;
-		internalGetResourceMap("resources", hessianLocale, new String[][]{
+		internalGetResourceMap("resources", HESSIAN_LOCALE, new String[][]{
 			{"attention.txt", "Uffbasse!"},
 			{"ok.txt", "OK"},
 			{"cancel.txt", "Abbruch"},
 			{"base.txt", "BaseClass"},
 		});
-		internalGetResourceMap("resources", germanLocale, new String[][]{
+		internalGetResourceMap("resources", GERMANY_LOCALE, new String[][]{
 			{"attention.txt", "Achtung!"},
 			{"ok.txt", "OK"},
 			{"cancel.txt", "Abbruch"},

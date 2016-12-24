@@ -6,4 +6,5 @@
 	<suppress checks="ArrayTrailingComma" files="generated"/>
 	<suppress checks="DefaultComesLast" files="generated"/>
 	<suppress checks="RedundantModifier" files="generated"/>
+	<suppress checks="ConstantName" files="generated"/>
 </suppressions>

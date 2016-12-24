@@ -52,16 +52,16 @@ public enum ClassFileVersion
 	private char majorVersionCharacter;
 	private String sourceName;
 
-	private static final Map<Character, ClassFileVersion> charMapping = new HashMap<Character, ClassFileVersion>();
-	private static final Map<String, ClassFileVersion> sourceNameMapping = new HashMap<String, ClassFileVersion>();
+	private static final Map<Character, ClassFileVersion> MAJOR_VERSION_MAPPING = new HashMap<Character, ClassFileVersion>();
+	private static final Map<String, ClassFileVersion> SOURCE_NAME_MAPPING = new HashMap<String, ClassFileVersion>();
 
 	static
 	{
 		ClassFileVersion[] values = ClassFileVersion.values();
 		for (ClassFileVersion current : values)
 		{
-			charMapping.put(current.getMajorVersionCharacter(), current);
-			sourceNameMapping.put(current.getSourceName(), current);
+			MAJOR_VERSION_MAPPING.put(current.getMajorVersionCharacter(), current);
+			SOURCE_NAME_MAPPING.put(current.getSourceName(), current);
 		}
 	}
 
@@ -83,12 +83,12 @@ public enum ClassFileVersion
 
 	public static ClassFileVersion getByMajorVersionChar(char majorVersionNumber)
 	{
-		return charMapping.get(majorVersionNumber);
+		return MAJOR_VERSION_MAPPING.get(majorVersionNumber);
 	}
 
 	public static ClassFileVersion getBySourceName(String sourceName)
 	{
-		return sourceNameMapping.get(sourceName);
+		return SOURCE_NAME_MAPPING.get(sourceName);
 	}
 
 	@Override

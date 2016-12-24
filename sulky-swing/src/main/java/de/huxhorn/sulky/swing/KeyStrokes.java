@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 
 public final class KeyStrokes
 {
-	private static final Logger logger = LoggerFactory.getLogger(KeyStrokes.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(KeyStrokes.class);
 
 	public static final String COMMAND_ALIAS = "command";
 
@@ -74,7 +74,7 @@ public final class KeyStrokes
 		}
 		catch(HeadlessException ignore)
 		{
-			if(logger.isWarnEnabled()) logger.warn("Failed to resolve MenuShortcutKeyMask. Falling back to 'control'.");
+			if(LOGGER.isWarnEnabled()) LOGGER.warn("Failed to resolve MenuShortcutKeyMask. Falling back to 'control'.");
 		}
 		COMMAND_KEYMASK = keyMask;
 		COMMAND_MODIFIERS = getModifiersString(COMMAND_KEYMASK);
@@ -154,7 +154,7 @@ public final class KeyStrokes
 	{
 		String preprocessedKeyStroke = preprocessAccelerator(keyStroke);
 		KeyStroke result = KeyStroke.getKeyStroke(preprocessedKeyStroke);
-		if(logger.isDebugEnabled()) logger.debug("keyStroke {} resolved to {} resulted in {}.", keyStroke, preprocessedKeyStroke, result);
+		if(LOGGER.isDebugEnabled()) LOGGER.debug("keyStroke {} resolved to {} resulted in {}.", keyStroke, preprocessedKeyStroke, result);
 
 		return result;
 	}
@@ -192,7 +192,7 @@ public final class KeyStrokes
 
 	private static void logInputMaps(JComponent component, String identifier)
 	{
-		if(logger.isDebugEnabled())
+		if(LOGGER.isDebugEnabled())
 		{
 			StringBuilder buffer = new StringBuilder();
 			buffer.append("Component: ").append(component).append(":\n");
@@ -204,7 +204,7 @@ public final class KeyStrokes
 			appendInputMap(buffer, "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT", inputMap);
 			inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 			appendInputMap(buffer, "WHEN_IN_FOCUSED_WINDOW", inputMap);
-			logger.debug(buffer.toString());
+			LOGGER.debug(buffer.toString());
 		}
 	}
 
