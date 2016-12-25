@@ -3,6 +3,12 @@
     "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
     "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 <module name="Checker">
+	<!--
+		If you set the basedir property below, then all reported file
+		names will be relative to the specified directory. See
+		http://checkstyle.sourceforge.net/config.html#Checker
+	-->
+	<property name="basedir" value="${baseDir}"/>
 	<property name="charset" value="UTF-8"/>
 	<property name="localeCountry" value="US"/>
 	<property name="localeLanguage" value="en"/>
