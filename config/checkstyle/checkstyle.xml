@@ -18,6 +18,7 @@
 		<property name="optional" value="false"/>
 	</module>
 	<module name="TreeWalker">
+		<property name="tabWidth" value="4"/>
 		<module name="IllegalImport"/>
 		<module name="UnusedImports"/>
 		<module name="AvoidStarImport"/>
