@@ -133,7 +133,6 @@ public final class SimpleXml
 	 * Based on code from http://cse-mjmcl.cse.bris.ac.uk/blog/2007/02/14/1171465494443.html
 	 * </p>
 	 * <p>
-	 * <p>
 	 * This method takes into account that no change will be necessary most of the time so
 	 * nothing will be allocated/changed until the first non-valid character is found.
 	 * </p>
