@@ -68,7 +68,7 @@ public final class SwingLogging
 				InputMap inputMap = component.getInputMap(conditions[i]);
 
 				msg.append("InputMap for '").append(conditionStrings[i]).append("':\n");
-				for(; ;)
+				for(;;)
 				{
 					KeyStroke[] keyStrokes = inputMap.keys();
 					if(keyStrokes != null)
@@ -95,7 +95,7 @@ public final class SwingLogging
 			}
 			ActionMap actionMap = component.getActionMap();
 			msg.append("ActionMap:\n");
-			for(; ;)
+			for(;;)
 			{
 				Object[] keys = actionMap.keys();
 				if(keys != null)

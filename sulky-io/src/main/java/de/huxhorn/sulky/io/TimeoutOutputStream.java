@@ -197,7 +197,7 @@ public class TimeoutOutputStream
 			watchdogThreadRunning.set(true);
 			try
 			{
-				for(; ;)
+				for(;;)
 				{
 					if(closed.get())
 					{

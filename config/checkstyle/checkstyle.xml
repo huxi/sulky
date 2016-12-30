@@ -53,6 +53,7 @@
 		<module name="StaticVariableName"/>
 		<module name="TypeName"/>
 		<module name="NoWhitespaceAfter"/>
+		<module name="NoWhitespaceBefore"/>
 	</module>
 	<module name="NewlineAtEndOfFile">
 		<property name="lineSeparator" value="lf"/>

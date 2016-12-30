@@ -729,7 +729,7 @@ public final class Resources
 			br = new BufferedReader(isr);
 
 			String sl;
-			for(; ;)
+			for(;;)
 			{
 				sl = br.readLine();
 				if(sl == null)

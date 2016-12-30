@@ -177,7 +177,7 @@ public class SerializingFileBuffer<E>
 			if(throwable instanceof ClassNotFoundException
 				|| throwable instanceof InvalidClassException)
 			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index {}!\n{}" ,index, throwable);
+				if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index {}!\n{}", index, throwable);
 			}
 			else if(throwable instanceof ClassCastException)
 			{

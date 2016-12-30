@@ -10,4 +10,5 @@
 	<suppress checks="LocalVariableName" files="generated"/>
 	<suppress checks="MemberName" files="generated"/>
 	<suppress checks="NoWhitespaceAfter" files="generated"/>
+	<suppress checks="NoWhitespaceBefore" files="generated"/>
 </suppressions>

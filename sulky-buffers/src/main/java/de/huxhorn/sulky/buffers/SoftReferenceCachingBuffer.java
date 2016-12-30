@@ -179,7 +179,7 @@ public class SoftReferenceCachingBuffer<E>
 		public void run()
 		{
 
-			for(; ;)
+			for(;;)
 			{
 				try
 				{

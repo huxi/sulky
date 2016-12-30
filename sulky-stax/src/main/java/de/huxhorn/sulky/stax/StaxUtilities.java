@@ -285,7 +285,7 @@ public final class StaxUtilities
 	{
 		int counter = 1;
 		String prefixCandidate = prefix;
-		for(; ;)
+		for(;;)
 		{
 			String ns = nsc.getNamespaceURI(prefixCandidate);
 			if(!XMLConstants.NULL_NS_URI.equals(ns))

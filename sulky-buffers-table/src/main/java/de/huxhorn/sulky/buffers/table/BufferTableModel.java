@@ -291,7 +291,7 @@ public abstract class BufferTableModel<T>
 
 		public void run()
 		{
-			for(; ;)
+			for(;;)
 			{
 				if(isDisposed())
 				{
@@ -331,7 +331,7 @@ public abstract class BufferTableModel<T>
 				}
                 synchronized(BufferTableModel.this)
                 {
-                    for(; ;)
+                    for(;;)
                     {
                         if(!isPaused())
                         {

@@ -42,8 +42,8 @@ public class DefaultFileHeaderStrategy
 				}
 				else
 				{
-					if(logger.isWarnEnabled()) logger.warn("Couldn't read magic value because codecMagic was 0x{} instead of 0x{}!"
-							, Integer.toHexString(codecMagic), Integer.toHexString(CODEC_FILE_HEADER_MAGIC_VALUE));
+					if(logger.isWarnEnabled()) logger.warn("Couldn't read magic value because codecMagic was 0x{} instead of 0x{}!",
+							Integer.toHexString(codecMagic), Integer.toHexString(CODEC_FILE_HEADER_MAGIC_VALUE));
 				}
 			}
 			else

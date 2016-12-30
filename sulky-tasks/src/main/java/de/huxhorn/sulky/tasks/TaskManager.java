@@ -410,7 +410,7 @@ public class TaskManager<T>
 
 		public void run()
 		{
-			for(; ;)
+			for(;;)
 			{
 				try
 				{

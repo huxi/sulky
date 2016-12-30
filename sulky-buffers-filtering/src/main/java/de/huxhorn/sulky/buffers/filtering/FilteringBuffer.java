@@ -54,7 +54,7 @@ public class FilteringBuffer<E>
 
 	public static <E> Buffer<E> resolveSourceBuffer(Buffer<E> buffer)
 	{
-		for(; ;)
+		for(;;)
 		{
 			if(!(buffer instanceof FilteringBuffer))
 			{

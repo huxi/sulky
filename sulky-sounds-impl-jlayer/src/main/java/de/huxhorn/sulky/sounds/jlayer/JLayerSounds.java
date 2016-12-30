@@ -41,7 +41,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,10 +147,6 @@ public class JLayerSounds
 					URL url = new URL(soundLocation);
 					soundStream = url.openStream();
 				}
-				catch(MalformedURLException e)
-				{
-					if(logger.isInfoEnabled()) logger.info("Couldn't open {} as a URL.", soundLocation);
-				}
 				catch(IOException e)
 				{
 					if(logger.isInfoEnabled()) logger.info("Couldn't open {} as a URL.", soundLocation);
@@ -177,12 +172,12 @@ public class JLayerSounds
 	{
 		public void run()
 		{
-			for(; ;)
+			for(;;)
 			{
 				String nextSound;
 				synchronized(playList)
 				{
-					for(; ;)
+					for(;;)
 					{
 						if(playList.size() == 0)
 						{

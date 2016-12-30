@@ -380,7 +380,7 @@ public class MemoryStatus
 
 		public void run()
 		{
-			for (; ; )
+			for (;;)
 			{
 				synchronized (MemoryStatus.this)
 				{

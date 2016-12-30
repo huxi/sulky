@@ -60,7 +60,7 @@ public class FilteringCallable<E>
 	public Long call()
 		throws Exception
 	{
-		for(; ;)
+		for(;;)
 		{
 			Buffer<E> sourceBuffer = filteringBuffer.getSourceBuffer();
 			Condition condition = filteringBuffer.getCondition();

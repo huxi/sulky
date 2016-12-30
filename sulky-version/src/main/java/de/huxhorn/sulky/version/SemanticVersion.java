@@ -316,7 +316,7 @@ public class SemanticVersion
 
 		int maxLength = Math.max(preRelease.length, other.preRelease.length);
 
-		for(int i=0 ; i<maxLength ; i++)
+		for(int i=0; i<maxLength; i++)
 		{
 			String a;
 			String b;
