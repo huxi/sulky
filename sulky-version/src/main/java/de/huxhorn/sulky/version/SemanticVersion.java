@@ -269,7 +269,6 @@ public class SemanticVersion
 		return versionString;
 	}
 
-	@Override
 	public int compareTo(SemanticVersion other)
 	{
 		if(other == null)
@@ -315,7 +314,7 @@ public class SemanticVersion
 			return -1;
 		}
 
-		int maxLength = Integer.max(preRelease.length, other.preRelease.length);
+		int maxLength = Math.max(preRelease.length, other.preRelease.length);
 
 		for(int i=0 ; i<maxLength ; i++)
 		{
