@@ -140,7 +140,7 @@ public final class HumanReadable
 			return result.append(size).append(" ").toString();
 		}
 		long remainder = size % correctUnit.getFactor();
-		remainder = Math.round( ((((double)remainder) * 100L) / correctUnit.getFactor()) );
+		remainder = Math.round(((((double)remainder) * 100L) / correctUnit.getFactor()));
 		if(remainder > 99)
 		{
 			fraction++;
