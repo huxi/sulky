@@ -223,7 +223,7 @@ project(':sulky-ulid') {
 		fork = 2 // How many times to forks a single benchmark. Use 0 to disable forking altogether
 		iterations = 10 // Number of measurement iterations to do.
 		operationsPerInvocation = 1 // Operations per invocation.
-		jmhVersion = '1.17.2' // Specifies JMH version
+		jmhVersion = '1.17.4' // Specifies JMH version
 	}
 	
 	dependencies {
