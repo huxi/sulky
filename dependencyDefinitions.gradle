@@ -2,7 +2,7 @@ project.ext.versions = [
 'groovy':   '2.4.10',
 'logback':  '1.2.3',
 'slf4j':    '1.7.25',
-'spock':    '1.0-groovy-2.4'
+'spock':    '1.1-groovy-2.4-rc-4'
 ]
 
 project.ext.libraries = [
