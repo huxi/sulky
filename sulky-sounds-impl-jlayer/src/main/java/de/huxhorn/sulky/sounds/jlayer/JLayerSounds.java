@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,11 +37,10 @@ package de.huxhorn.sulky.sounds.jlayer;
 import de.huxhorn.sulky.io.IOUtilities;
 import de.huxhorn.sulky.sounds.Sounds;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -133,9 +132,9 @@ public class JLayerSounds
 			{
 				try
 				{
-					soundStream = new FileInputStream(file);
+					soundStream = Files.newInputStream(file.toPath());
 				}
-				catch(FileNotFoundException e)
+				catch(IOException e)
 				{
 					if(logger.isInfoEnabled()) logger.info("Couldn't open {} as a file.", soundLocation);
 				}

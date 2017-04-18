@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2016 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2016 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,10 +39,10 @@ import de.huxhorn.sulky.blobs.BlobRepository;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -226,7 +226,7 @@ public class BlobRepositoryImpl
 		}
 		if(valid(id, file))
 		{
-			return new FileInputStream(file);
+			return Files.newInputStream(file.toPath());
 		}
 		if(file.delete())
 		{
@@ -466,10 +466,8 @@ public class BlobRepositoryImpl
 		}
 		MessageDigest digest = createMessageDigest();
 
-		FileInputStream input=null;
-		try
+		try(InputStream input = Files.newInputStream(file.toPath()))
 		{
-			input=new FileInputStream(file);
 			DigestInputStream dis = new DigestInputStream(input, digest);
 			for(;;)
 			{
@@ -490,10 +488,6 @@ public class BlobRepositoryImpl
 		{
 			// ignore...
 		}
-		finally
-		{
-			IOUtils.closeQuietly(input);
-		}
 		return false;
 	}
 
@@ -504,10 +498,8 @@ public class BlobRepositoryImpl
 
 		DigestInputStream dis = new DigestInputStream(input, digest);
 		IOException ex;
-		FileOutputStream fos=null;
-		try
+		try(OutputStream fos = Files.newOutputStream(into.toPath()))
 		{
-			fos=new FileOutputStream(into);
 			IOUtils.copyLarge(dis, fos);
 			byte[] hash = digest.digest();
 			Formatter formatter = new Formatter(Locale.US);
@@ -524,7 +516,6 @@ public class BlobRepositoryImpl
 		finally
 		{
 			IOUtils.closeQuietly(dis);
-			IOUtils.closeQuietly(fos);
 		}
 		if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve data from input!", ex);
 		deleteTempFile(into);
