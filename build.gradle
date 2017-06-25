@@ -51,6 +51,7 @@ buildscript {
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.12.0'
 		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.7.1'
 		classpath 'me.champeau.gradle:jmh-gradle-plugin:0.4.1'
+		// https://github.com/policeman-tools/forbidden-apis/issues/120
 		classpath 'de.thetaphi:forbiddenapis:2.3'
 	}
 }
