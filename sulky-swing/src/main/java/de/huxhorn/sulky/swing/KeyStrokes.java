@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2014 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2014 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,10 +34,10 @@
 
 package de.huxhorn.sulky.swing;
 
-import java.awt.Event;
+import java.awt.AWTKeyStroke;
 import java.awt.HeadlessException;
 import java.awt.Toolkit;
-import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
@@ -50,111 +50,70 @@ public final class KeyStrokes
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KeyStrokes.class);
 
+	/**
+	 * The command alias that is replaced with the system-dependent command modifiers.
+	 */
 	public static final String COMMAND_ALIAS = "command";
 
 	/**
-	 * The string representation of the system-dependant command modifier.
-	 *
-	 * It is obtained by calling getModifiersString(Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()).
+	 * The string representation of the system-dependent command modifiers.
 	 */
-	public static final String COMMAND_MODIFIERS;
+	public static final String COMMAND_MODIFIERS_STRING;
 
 	/**
-	 * Contains Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()
+	 * The system-dependent command modifiers.
 	 */
-	public static final int COMMAND_KEYMASK;
+	public static final int COMMAND_MODIFIERS;
 
 	static
 	{
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		int keyMask = Event.CTRL_MASK;
+		String keyMaskString = "control";
 		try
 		{
-			keyMask = toolkit.getMenuShortcutKeyMask();
+			int keyMask = toolkit.getMenuShortcutKeyMask();
+			keyMaskString = AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_A, keyMask).toString();
+			keyMaskString = keyMaskString.substring(0, keyMaskString.length()-" pressed A".length());
+			if(LOGGER.isDebugEnabled()) LOGGER.debug("Resolved system-dependent command modifiers '{}'.", keyMaskString);
 		}
 		catch(HeadlessException ignore)
 		{
-			if(LOGGER.isWarnEnabled()) LOGGER.warn("Failed to resolve MenuShortcutKeyMask. Falling back to 'control'.");
+			if(LOGGER.isWarnEnabled()) LOGGER.warn("Failed to resolve system-dependent command modifiers! Falling back to '{}'.", keyMaskString);
 		}
-		COMMAND_KEYMASK = keyMask;
-		COMMAND_MODIFIERS = getModifiersString(COMMAND_KEYMASK);
+
+		COMMAND_MODIFIERS = AWTKeyStroke.getAWTKeyStroke(keyMaskString + " A").getModifiers();
+		COMMAND_MODIFIERS_STRING = keyMaskString;
 	}
 
 	private KeyStrokes()
 	{}
 
-	/**
-	 * Creates a string containing the text representation of the given modifiers.
-	 * Calling this method with the value (InputEvent.SHIFT_MASK | InputEvent.CTRL_MASK)
-	 * would return the string "shift control". Calling this method
-	 * without any modifiers set in the modifiers will return an empty string.
-	 * Calling it with all modifiers set will return "shift control meta alt altGraph".
-	 *
-	 * This method is only used to initialize the system-dependant COMMAND_MODIFIERS
-	 * attribute but was left public because it can be quite handy for debugging.
-	 *
-	 * @param modifiers the modifiers that can be obtained by calling getModifiers() on any InputEvent.
-	 * @return the string representation of the given modifiers.
-	 * @see java.awt.event.InputEvent#getModifiers()
-	 */
-	public static String getModifiersString(int modifiers)
+	private static String processAccelerator(String accelerator)
 	{
-		StringBuilder result = new StringBuilder();
-		if((modifiers & InputEvent.SHIFT_MASK) != 0)
+		if(accelerator == null)
 		{
-			result.append("shift");
+			return null;
 		}
-		if((modifiers & InputEvent.CTRL_MASK) != 0)
-		{
-			if(result.length() != 0)
-			{
-				result.append(" ");
-			}
-			result.append("control");
-		}
-		if((modifiers & InputEvent.META_MASK) != 0)
-		{
-			if(result.length() != 0)
-			{
-				result.append(" ");
-			}
-			result.append("meta");
-		}
-		if((modifiers & InputEvent.ALT_MASK) != 0)
-		{
-			if(result.length() != 0)
-			{
-				result.append(" ");
-			}
-			result.append("alt");
-		}
-		if((modifiers & InputEvent.ALT_GRAPH_MASK) != 0)
-		{
-			if(result.length() != 0)
-			{
-				result.append(" ");
-			}
-			result.append("altGraph");
-		}
-		return result.toString();
+		return accelerator.replaceAll(COMMAND_ALIAS, COMMAND_MODIFIERS_STRING);
 	}
 
 	/**
-	 * Shortcut for accel.replaceAll(COMMAND_ALIAS, COMMAND_MODIFIERS).
+	 * This method expects a keyStrokeString as required by KeyStroke.getKeyStroke(String).
 	 *
-	 * @param accel the accelerator string to be processed.
-	 * @return The accelerator with "command" replaced by the system command key, i.e. Ctrl on Windows, Cmd on Mac.
+	 * Additionally, this String may contain the special modifier alias "command".
+	 * This special modifier is replaced by the system-dependent command modifiers,
+	 * i.e. Ctrl on Windows, Cmd on Mac.
+	 *
+	 * @param keyStrokeString a String formatted as described above
+	 * @return a KeyStroke object for that String, or null if the specified
+	 *         String is null, or is formatted incorrectly
+	 * @see javax.swing.KeyStroke#getKeyStroke(String)
 	 */
-	public static String preprocessAccelerator(String accel)
+	public static KeyStroke resolveAcceleratorKeyStroke(String keyStrokeString)
 	{
-		return accel.replaceAll(COMMAND_ALIAS, COMMAND_MODIFIERS);
-	}
-
-	public static KeyStroke resolveAcceleratorKeyStroke(String keyStroke)
-	{
-		String preprocessedKeyStroke = preprocessAccelerator(keyStroke);
-		KeyStroke result = KeyStroke.getKeyStroke(preprocessedKeyStroke);
-		if(LOGGER.isDebugEnabled()) LOGGER.debug("keyStroke {} resolved to {} resulted in {}.", keyStroke, preprocessedKeyStroke, result);
+		String processedKeyStrokeString = processAccelerator(keyStrokeString);
+		KeyStroke result = KeyStroke.getKeyStroke(processedKeyStrokeString);
+		if(LOGGER.isDebugEnabled()) LOGGER.debug("keyStrokeString {} was changed to {} and resulted in {}.", keyStrokeString, processedKeyStrokeString, result);
 
 		return result;
 	}
@@ -162,32 +121,34 @@ public final class KeyStrokes
 	public static void registerCommand(JComponent component, Action action, String commandName)
 	{
 		KeyStroke keyStroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-		if(keyStroke != null)
+		if(keyStroke == null)
 		{
-			logInputMaps(component, "BEFORE");
-
-			InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-			ActionMap actionMap = component.getActionMap();
-			inputMap.put(keyStroke, commandName);
-			actionMap.put(commandName, action);
-
-			Object value;
-			inputMap = component.getInputMap(JComponent.WHEN_FOCUSED);
-			value = inputMap.get(keyStroke);
-			if(value != null)
-			{
-				inputMap.put(keyStroke, commandName);
-			}
-
-			inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-			value = inputMap.get(keyStroke);
-			if(value != null)
-			{
-				inputMap.put(keyStroke, commandName);
-			}
-
-			logInputMaps(component, "AFTER");
+			return;
 		}
+
+		logInputMaps(component, "BEFORE");
+
+		InputMap inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+		ActionMap actionMap = component.getActionMap();
+		inputMap.put(keyStroke, commandName);
+		actionMap.put(commandName, action);
+
+		Object value;
+		inputMap = component.getInputMap(JComponent.WHEN_FOCUSED);
+		value = inputMap.get(keyStroke);
+		if(value != null)
+		{
+			inputMap.put(keyStroke, commandName);
+		}
+
+		inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		value = inputMap.get(keyStroke);
+		if(value != null)
+		{
+			inputMap.put(keyStroke, commandName);
+		}
+
+		logInputMaps(component, "AFTER");
 	}
 
 	private static void logInputMaps(JComponent component, String identifier)
