@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class GroovyInstance
 
 	private String groovyFileName;
 	private int refreshInterval = DEFAULT_REFRESH_INTERVAL;
-	private transient Class instanceClass;
+	private transient Class<?> instanceClass;
 	private transient Object instance;
 	private transient long lastRefresh;
 	private transient long previousFileTimestamp;
@@ -176,7 +176,7 @@ public class GroovyInstance
 			actualInstanceClass = instanceClass;
 			try
 			{
-				instance = instanceClass.newInstance();
+				instance = instanceClass.getDeclaredConstructor().newInstance();
 				errorMessage = null;
 				errorCause = null;
 			}
@@ -231,7 +231,7 @@ public class GroovyInstance
 		{
 			try
 			{
-				return instanceClass.newInstance();
+				return instanceClass.getDeclaredConstructor().newInstance();
 			}
 			catch(Throwable e)
 			{
