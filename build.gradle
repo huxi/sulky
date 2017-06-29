@@ -310,8 +310,8 @@ subprojects {
 
 project(':sulky-version') {
 	// override for sulky-version after subprojects
-	sourceCompatibility = 1.5
-	targetCompatibility = 1.5
+	sourceCompatibility = 1.6
+	targetCompatibility = 1.6
 }
 
 
