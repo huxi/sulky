@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2016 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2016 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,13 +37,20 @@ package de.huxhorn.sulky.version
 import spock.lang.IgnoreIf
 import spock.lang.Specification
 import spock.lang.Subject
-import spock.lang.Unroll;
+import spock.lang.Unroll
 
 @Subject(JavaVersion)
 @SuppressWarnings("GrEqualsBetweenInconvertibleTypes")
-public class JavaVersionSpec extends Specification {
+class JavaVersionSpec extends Specification {
 
     private static final String CURRENT_VERSION_STRING = JavaVersion.systemJavaVersion.toVersionString()
+
+	/**
+	 * A JEP 223 version is always "bigger" than an old version.
+	 * Huge old versions, i.e. an old version with "huge" version != 1, will never actually exist
+	 * because !startsWith("1.") is the condition to parse a version as a JEP 223 version.
+	 */
+	private static final boolean CURRENT_VERSION_IS_JEP223 = JavaVersion.systemJavaVersion instanceof Jep223JavaVersion
 
     @Unroll
     def 'parse("#versionString") throws an exception'(String versionString) {
@@ -89,47 +96,69 @@ public class JavaVersionSpec extends Specification {
 
     @Unroll('JVM #jvmString is#compareString at least #version')
     def 'isAtLeast(JavaVersion) works'() {
-        when:
-        boolean result = JavaVersion.isAtLeast(version)
-
-        then:
-        result == expectedResult
+        expect:
+		expectedResult == JavaVersion.isAtLeast(version)
 
         where:
         // @formatter:off
-        version                                                                    | expectedResult
-        new YeOldeJavaVersion(1, 0, 0)                                             | true
-        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString())         | true
-        new YeOldeJavaVersion(17, 0)                                               | false
-        new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)                  | false
-        // @formatter:on
+		version                                                            | expectedResult
+		new YeOldeJavaVersion(1, 0, 0)                                     | true
+		JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString()) | true
+		new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)          | false
+		// @formatter:on
 
         compareString = expectedResult? '' : 'n\'t'
         jvmString = JavaVersion.systemJavaVersion.toVersionString()
     }
 
-    @Unroll('JVM #jvmString is#compareString at least #version - ignoring pre-release identifier')
+	@Unroll('JVM #jvmString is#compareString at least #version for huge old version')
+	def 'isAtLeast(JavaVersion) works for huge old version'() {
+		expect:
+		expectedResult == JavaVersion.isAtLeast(version)
+
+		where:
+		// @formatter:off
+		version                      | expectedResult
+		new YeOldeJavaVersion(17, 0) | CURRENT_VERSION_IS_JEP223
+		// @formatter:on
+
+		compareString = expectedResult? '' : 'n\'t'
+		jvmString = JavaVersion.systemJavaVersion.toVersionString()
+	}
+
+	@Unroll('JVM #jvmString is#compareString at least #version - ignoring pre-release identifier')
     def 'isAtLeast(JavaVersion) works without pre-release'() {
-        when:
-        boolean result = JavaVersion.isAtLeast(version, true)
-
-        then:
-        result == expectedResult
+        expect:
+		expectedResult == JavaVersion.isAtLeast(version, true)
 
         where:
         // @formatter:off
-        version                                                                    | expectedResult
-        new YeOldeJavaVersion(1, 0, 0)                                             | true
-        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString())         | true
-        new YeOldeJavaVersion(17, 0)                                               | false
-        new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)                  | false
-        // @formatter:on
+		version                                                            | expectedResult
+		new YeOldeJavaVersion(1, 0, 0)                                     | true
+		JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString()) | true
+		new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)          | false
+		// @formatter:on
 
         compareString = expectedResult? '' : 'n\'t'
         jvmString = JavaVersion.systemJavaVersion.toVersionString()
     }
 
-    @IgnoreIf({CURRENT_VERSION_STRING.contains('-')})
+	@Unroll('JVM #jvmString is#compareString at least #version for huge old version - ignoring pre-release identifier')
+	def 'isAtLeast(JavaVersion) works for huge old version without pre-release'() {
+		expect:
+		expectedResult == JavaVersion.isAtLeast(version, true)
+
+		where:
+		// @formatter:off
+		version                      | expectedResult
+		new YeOldeJavaVersion(17, 0) | CURRENT_VERSION_IS_JEP223
+		// @formatter:on
+
+		compareString = expectedResult? '' : 'n\'t'
+		jvmString = JavaVersion.systemJavaVersion.toVersionString()
+	}
+
+	@IgnoreIf({CURRENT_VERSION_STRING.contains('-')})
     @Unroll('JVM #jvmString is#compareString at least #version')
     def 'isAtLeast(JavaVersion) works - special'() {
         when:
