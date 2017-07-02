@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -96,13 +96,7 @@ public class DateTimeFormatter
 					.toFormatter()
 					.withZone(ZoneOffset.UTC);
 
-	private Pattern javaTimezonePattern;
-
-	public DateTimeFormatter()
-	{
-		javaTimezonePattern = Pattern.compile(TIMEZONE_DATE_FORMAT_PATTERN);
-
-	}
+	private final Pattern javaTimezonePattern = Pattern.compile(TIMEZONE_DATE_FORMAT_PATTERN);
 
 	/**
 	 * This method parses a given string containing a dateTime in ISO8601 notation into a date.
@@ -119,6 +113,7 @@ public class DateTimeFormatter
 		Matcher matcher = javaTimezonePattern.matcher(dateTime);
 		if(matcher.matches())
 		{
+			// correct +/-hhmm to +/-hh:mm
 			String hh = matcher.group(1);
 			String mm = matcher.group(2);
 			dateTime = dateTime.substring(0, dateTime.length() - TIMEZONE_DATE_FORMAT_LENGTH) + hh + ":" + mm;
@@ -170,5 +165,4 @@ public class DateTimeFormatter
 		}
 		return ISO_DATE_TIME_FORMATTER_WITHOUT_MILLIS.format(zoned);
 	}
-
 }
