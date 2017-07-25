@@ -17,18 +17,18 @@
 		<property name="file" value="${configDir}/suppressions.xml"/>
 		<property name="optional" value="false"/>
 	</module>
-	<module name="SuppressWithNearbyCommentFilter">
-		<property name="commentFormat" value="@cs-\: ([\w\|]+)"/>
-		<property name="checkFormat" value="$1"/>
-		<property name="influenceFormat" value="1"/>
-	</module>	
-	<module name="SuppressWithNearbyCommentFilter">
-		<property name="commentFormat" value="@cs-\: ([\w\|]+) influence (\d+)"/>
-		<property name="checkFormat" value="$1"/>
-		<property name="influenceFormat" value="$2"/>
-	</module>	
 	<module name="TreeWalker">
 		<property name="tabWidth" value="4"/>
+		<module name="SuppressWithNearbyCommentFilter">
+			<property name="commentFormat" value="@cs-\: ([\w\|]+)"/>
+			<property name="checkFormat" value="$1"/>
+			<property name="influenceFormat" value="1"/>
+		</module>	
+		<module name="SuppressWithNearbyCommentFilter">
+			<property name="commentFormat" value="@cs-\: ([\w\|]+) influence (\d+)"/>
+			<property name="checkFormat" value="$1"/>
+			<property name="influenceFormat" value="$2"/>
+		</module>	
 		<module name="FileContentsHolder"/>
 		<module name="IllegalImport"/>
 		<module name="UnusedImports"/>
