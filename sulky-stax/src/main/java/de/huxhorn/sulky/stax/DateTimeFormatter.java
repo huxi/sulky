@@ -98,6 +98,18 @@ public class DateTimeFormatter
 
 	private final Pattern javaTimezonePattern = Pattern.compile(TIMEZONE_DATE_FORMAT_PATTERN);
 
+	private static final boolean IS_JAVA_8;
+
+	static {
+		boolean java8 = true;
+		String javaVersion = System.getProperty("java.version");
+		if(javaVersion != null)
+		{
+			java8 = javaVersion.startsWith("1.");
+		}
+		IS_JAVA_8 = java8;
+	}
+
 	/**
 	 * This method parses a given string containing a dateTime in ISO8601 notation into a date.
 	 *
@@ -119,7 +131,13 @@ public class DateTimeFormatter
 			dateTime = dateTime.substring(0, dateTime.length() - TIMEZONE_DATE_FORMAT_LENGTH) + hh + ":" + mm;
 		}
 		TemporalAccessor temporal = ISO_DATE_TIME_PARSER.parse(dateTime);
-		long seconds = temporal.getLong(ChronoField.INSTANT_SECONDS) + temporal.getLong(ChronoField.OFFSET_SECONDS);
+		long seconds = temporal.getLong(ChronoField.INSTANT_SECONDS);
+		if(IS_JAVA_8)
+		{
+			// http://bugs.java.com/bugdatabase/view_bug.do?bug_id=JDK-8183913
+			seconds = seconds - temporal.getLong(ChronoField.OFFSET_SECONDS);
+		}
+
 		long millis = seconds * 1000 + temporal.getLong(ChronoField.MILLI_OF_SECOND);
 
 		return new Date(millis);
