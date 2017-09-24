@@ -327,6 +327,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 	reports {
 		html.enabled = true
 		xml.enabled = true
+		xml.destination "${buildDir}/reports/jacoco/report.xml"
 		csv.enabled = false
 	}
 	onlyIf = {
@@ -340,7 +341,7 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 }
 
 coveralls {
-	jacocoReportPath = 'build/reports/jacoco/jacocoRootReport/jacocoRootReport.xml'
+	jacocoReportPath = "${buildDir}/reports/jacoco/report.xml"
 	sourceDirs += jacocoRootReport.sourceDirectories
 }
 
