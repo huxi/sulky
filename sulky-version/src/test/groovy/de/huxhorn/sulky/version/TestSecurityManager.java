@@ -44,6 +44,7 @@ public class TestSecurityManager extends SecurityManager
 	private static final java.lang.String PROPERTY_RW_ACTION = "read,write";
 	private static final java.lang.String PROPERTY_READ_ACTION = "read";
 	private static final java.lang.String PROPERTY_WRITE_ACTION = "write";
+	private static final String ACCESS_DENIED_BASE = "access denied ";
 
 	private Set<String> deniedProperties;
 	private Set<String> unreadableProperties;
@@ -80,19 +81,19 @@ public class TestSecurityManager extends SecurityManager
 			PropertyPermission p = (PropertyPermission) perm;
 			String permissionName = p.getName();
 			if(deniedProperties != null && deniedProperties.contains(permissionName)) {
-				throw new AccessControlException("access denied " + perm, perm);
+				throw new AccessControlException(ACCESS_DENIED_BASE + perm, perm);
 			}
 
 			String actions = p.getActions();
 
 			if(PROPERTY_READ_ACTION.equals(actions) && unreadableProperties != null && unreadableProperties.contains(permissionName))
 			{
-				throw new AccessControlException("access denied " + perm, perm);
+				throw new AccessControlException(ACCESS_DENIED_BASE + perm, perm);
 			}
 
 			if(PROPERTY_WRITE_ACTION.equals(actions) && unwritableProperties != null && unwritableProperties.contains(permissionName))
 			{
-				throw new AccessControlException("access denied " + perm, perm);
+				throw new AccessControlException(ACCESS_DENIED_BASE + perm, perm);
 			}
 
 			if(PROPERTY_RW_ACTION.equals(actions) && (
@@ -100,7 +101,7 @@ public class TestSecurityManager extends SecurityManager
 					(unwritableProperties != null && unwritableProperties.contains(permissionName))
 					))
 			{
-				throw new AccessControlException("access denied " + perm, perm);
+				throw new AccessControlException(ACCESS_DENIED_BASE + perm, perm);
 			}
 		}
 	}

@@ -61,6 +61,7 @@ import static org.junit.Assume.assumeTrue;
 public class BlobRepositoryImplTest
 	extends LoggingTestBase
 {
+	public static final String FOO = "foo";
 	private final Logger logger = LoggerFactory.getLogger(BlobRepositoryImplTest.class);
 
 	@Rule
@@ -99,7 +100,7 @@ public class BlobRepositoryImplTest
 	public void put() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
@@ -109,7 +110,7 @@ public class BlobRepositoryImplTest
 	public void putDuplicate() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
@@ -121,7 +122,7 @@ public class BlobRepositoryImplTest
 	public void putHashClash() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		File baseDirectory = folder.newFolder("foo");
+		File baseDirectory = folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 
 		File dataParent = new File(baseDirectory, TEST_DATA_ID.substring(0,2));
@@ -143,7 +144,7 @@ public class BlobRepositoryImplTest
 	public void putContains() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		assertFalse(instance.contains(TEST_DATA_ID));
 		instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
@@ -154,7 +155,7 @@ public class BlobRepositoryImplTest
 	public void containsAmbiguous() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		File baseDirectory = folder.newFolder("foo");
+		File baseDirectory = folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 		File dataParent = new File(baseDirectory, "aa");
 		if(!dataParent.mkdirs())
@@ -189,7 +190,7 @@ public class BlobRepositoryImplTest
 	public void putGet() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		InputStream is = instance.get(instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8)));
 		try
@@ -206,7 +207,7 @@ public class BlobRepositoryImplTest
 	public void putGetCaseSensitive() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 		String id = instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		id = id.toUpperCase(Locale.US);
 		assertNull(instance.get(id));
@@ -229,7 +230,7 @@ public class BlobRepositoryImplTest
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setValidating(true);
-		File baseDirectory = folder.newFolder("foo");
+		File baseDirectory = folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 		String id = instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		InputStream is = instance.get(id);
@@ -257,7 +258,7 @@ public class BlobRepositoryImplTest
 	public void putGetIncomplete() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
@@ -276,7 +277,7 @@ public class BlobRepositoryImplTest
 	public void getMissing() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		assertNull(instance.get(TEST_DATA_ID));
 	}
@@ -285,7 +286,7 @@ public class BlobRepositoryImplTest
 	public void size() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 
@@ -296,7 +297,7 @@ public class BlobRepositoryImplTest
 	public void sizeMissing() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		assertEquals(-1,instance.sizeOf(TEST_DATA_ID));
 	}
@@ -306,7 +307,7 @@ public class BlobRepositoryImplTest
 		throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		assertEquals(0, instance.idSet().size());
 	}
@@ -315,12 +316,12 @@ public class BlobRepositoryImplTest
 	public void putIdSet() throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
 
-		String fooId=instance.put("foo".getBytes(StandardCharsets.UTF_8));
+		String fooId=instance.put(FOO.getBytes(StandardCharsets.UTF_8));
 
 		String barId=instance.put("bar".getBytes(StandardCharsets.UTF_8));
 
@@ -335,7 +336,7 @@ public class BlobRepositoryImplTest
 	public void putDeleteContains() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		File baseDirectory = folder.newFolder("foo");
+		File baseDirectory = folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 
 		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
@@ -353,12 +354,12 @@ public class BlobRepositoryImplTest
 	public void putDeleteIdSet() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
 
-		String fooId=instance.put("foo".getBytes(StandardCharsets.UTF_8));
+		String fooId=instance.put(FOO.getBytes(StandardCharsets.UTF_8));
 
 		String barId=instance.put("bar".getBytes(StandardCharsets.UTF_8));
 
@@ -375,7 +376,7 @@ public class BlobRepositoryImplTest
 	public void containsNull() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		instance.contains(null);
 	}
@@ -384,7 +385,7 @@ public class BlobRepositoryImplTest
 	public void getNull() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		instance.get(null);
 	}
@@ -393,7 +394,7 @@ public class BlobRepositoryImplTest
 	public void deleteNull() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		instance.delete(null);
 	}
@@ -402,7 +403,7 @@ public class BlobRepositoryImplTest
 	public void sizeOfNull() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		instance.sizeOf(null);
 	}
@@ -411,7 +412,7 @@ public class BlobRepositoryImplTest
 	public void putEmptyByteArray() throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		instance.put(new byte[0]);
 	}
@@ -420,7 +421,7 @@ public class BlobRepositoryImplTest
 	public void putEmptyStream() throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		instance.put(new ByteArrayInputStream(new byte[0]));
 	}
@@ -429,7 +430,7 @@ public class BlobRepositoryImplTest
 	public void putNullByteArray() throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		instance.put((byte[])null);
 	}
@@ -438,7 +439,7 @@ public class BlobRepositoryImplTest
 	public void putNullStream() throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFolder("foo"));
+		instance.setBaseDirectory(folder.newFolder(FOO));
 
 		instance.put((InputStream)null);
 	}
@@ -487,7 +488,7 @@ public class BlobRepositoryImplTest
 	public void misconfigurationFile() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		instance.setBaseDirectory(folder.newFile("foo"));
+		instance.setBaseDirectory(folder.newFile(FOO));
 
 		instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 	}
@@ -497,7 +498,7 @@ public class BlobRepositoryImplTest
 		throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		File baseDirectory=folder.newFolder("foo");
+		File baseDirectory=folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 		assertEquals(baseDirectory, instance.getBaseDirectory());
 	}
@@ -508,7 +509,7 @@ public class BlobRepositoryImplTest
 		throws IOException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		File baseDirectory=folder.newFolder("foo");
+		File baseDirectory=folder.newFolder(FOO);
 		baseDirectory.delete();
 		instance.setBaseDirectory(baseDirectory);
 		assertEquals(baseDirectory, instance.getBaseDirectory());
@@ -518,7 +519,7 @@ public class BlobRepositoryImplTest
 	public void nullId() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		File baseDirectory=folder.newFolder("foo");
+		File baseDirectory=folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 		instance.get(null);
 	}
@@ -527,7 +528,7 @@ public class BlobRepositoryImplTest
 	public void shortId() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		File baseDirectory=folder.newFolder("foo");
+		File baseDirectory=folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 		instance.get("a");
 	}
@@ -537,7 +538,7 @@ public class BlobRepositoryImplTest
 	public void junkFiles() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		File baseDirectory=folder.newFolder("foo");
+		File baseDirectory=folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
@@ -556,7 +557,7 @@ public class BlobRepositoryImplTest
 	public void keepDir() throws IOException, AmbiguousIdException
 	{
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
-		File baseDirectory=folder.newFolder("foo");
+		File baseDirectory=folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
@@ -578,7 +579,7 @@ public class BlobRepositoryImplTest
 		throws IOException
     {
         BlobRepositoryImpl instance=new BlobRepositoryImpl();
-        File readonlyBaseDirectory = folder.newFolder("foo");
+        File readonlyBaseDirectory = folder.newFolder(FOO);
         readonlyBaseDirectory.setWritable(false, false);
         File baseDirectory=new File(readonlyBaseDirectory, "bar");
 		// lets check if creating baseDirectory actually fails...

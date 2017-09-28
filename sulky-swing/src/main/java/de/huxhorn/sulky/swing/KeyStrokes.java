@@ -156,30 +156,30 @@ public final class KeyStrokes
 		if(LOGGER.isDebugEnabled())
 		{
 			StringBuilder buffer = new StringBuilder();
-			buffer.append("Component: ").append(component).append(":\n");
-			buffer.append("\t").append(identifier).append(":\n");
-			InputMap inputMap;
-			inputMap = component.getInputMap(JComponent.WHEN_FOCUSED);
-			appendInputMap(buffer, "WHEN_FOCUSED", inputMap);
-			inputMap = component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-			appendInputMap(buffer, "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT", inputMap);
-			inputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-			appendInputMap(buffer, "WHEN_IN_FOCUSED_WINDOW", inputMap);
+			buffer.append("Component: ").append(component).append(":\n\t")
+					.append(identifier).append(":\n");
+
+			appendInputMap(buffer, "WHEN_FOCUSED", component.getInputMap(JComponent.WHEN_FOCUSED));
+
+			appendInputMap(buffer, "WHEN_ANCESTOR_OF_FOCUSED_COMPONENT", component.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT));
+
+			appendInputMap(buffer, "WHEN_IN_FOCUSED_WINDOW", component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW));
+
 			LOGGER.debug(buffer.toString());
 		}
 	}
 
 	private static void appendInputMap(StringBuilder buffer, String mapName, InputMap inputMap)
 	{
-		buffer.append("\tmapName: ").append(mapName).append("\n");
+		buffer.append("\tmapName: ").append(mapName).append('\n');
 		KeyStroke[] keys = inputMap.allKeys();
 		if(keys != null)
 		{
 			for(KeyStroke ks : keys)
 			{
-				buffer.append("\t\tKey  : ").append(ks).append("\n");
-				buffer.append("\t\tValue: ").append(inputMap.get(ks)).append("\n");
-				buffer.append("\t\t----------\n");
+				buffer.append("\t\tKey  : ").append(ks)
+						.append("\n\t\tValue: ").append(inputMap.get(ks))
+						.append("\n\t\t----------\n");
 			}
 		}
 	}

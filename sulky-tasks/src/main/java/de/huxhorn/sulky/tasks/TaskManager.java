@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -844,10 +844,9 @@ public class TaskManager<T>
 		@Override
 		public String toString()
 		{
-			StringBuilder result = new StringBuilder();
+			StringBuilder result = new StringBuilder(200);
 			result.append("Task[id=").append(id)
-				.append(", name=\"").append(name).append("\"");
-			result.append(", progress=");
+				.append(", name=\"").append(name).append("\", progress=");
 			int progress = getProgress();
 			if(progress < 0)
 			{
@@ -857,7 +856,7 @@ public class TaskManager<T>
 			{
 				result.append(progress);
 			}
-			result.append("]");
+			result.append(']');
 
 			return result.toString();
 		}

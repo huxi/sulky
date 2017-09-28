@@ -1,6 +1,6 @@
 /*
  * sulky-resources - inheritance-safe class resources.
- * Copyright (C) 2002-2011 Joern Huxhorn
+ * Copyright (C) 2002-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2002-2011 Joern Huxhorn
+ * Copyright 2002-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,9 +67,7 @@ public class CyclicLinkException
 			{
 				result.append(" => ");
 			}
-			result.append("\"");
-			result.append(linkStack.get(i));
-			result.append("\"");
+			result.append('"').append(linkStack.get(i)).append('"');
 		}
 
 		return result.toString();
@@ -77,14 +75,11 @@ public class CyclicLinkException
 
 	public String toString()
 	{
-		StringBuilder result = new StringBuilder();
-		result.append("CyclicLinkException: ");
-		result.append("Link-Stack: {");
-		result.append(getLinkStackString());
-		result.append(" => \"");
-		result.append(cycleCause);
-		result.append("\"}");
-
-		return result.toString();
+		return "CyclicLinkException: " +
+				"Link-Stack: {" +
+				getLinkStackString() +
+				" => \"" +
+				cycleCause +
+				"\"}";
 	}
 }

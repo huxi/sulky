@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import java.util.List;
  * Returns true if any of it's sub-conditions return true.
  */
 public class Or
-	implements ConditionGroup
+	implements ConditionGroup, Cloneable
 {
 	private static final long serialVersionUID = 4475481127736826653L;
 
@@ -116,7 +116,7 @@ public class Or
 		}
 		else
 		{
-			result.append("(");
+			result.append('(');
 			boolean first = true;
 			for(Condition condition : conditions)
 			{
@@ -130,7 +130,7 @@ public class Or
 				}
 				result.append(condition);
 			}
-			result.append(")");
+			result.append(')');
 		}
 		return result.toString();
 	}

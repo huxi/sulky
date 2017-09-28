@@ -597,41 +597,32 @@ public class CodecFileBuffer<E>
 
 	public String toString()
 	{
-		StringBuilder result = new StringBuilder();
-		result.append("CodecFileBuffer[");
-
-		result.append("fileHeader=");
-		result.append(fileHeader);
-		result.append(", ");
-
-		result.append("preferredMetaData=").append(preferredMetaData);
-		result.append(", ");
-
-		result.append("dataFile=");
+		StringBuilder result = new StringBuilder(300);
+		result.append("CodecFileBuffer[fileHeader=").append(fileHeader)
+				.append(", preferredMetaData=").append(preferredMetaData)
+				.append(", dataFile=");
 		if(dataFile == null)
 		{
 			result.append("null");
 		}
 		else
 		{
-			result.append("\"").append(dataFile.getAbsolutePath()).append("\"");
+			result.append('"').append(dataFile.getAbsolutePath()).append('"');
 		}
-		result.append(", ");
 
-		result.append("indexFile=");
+		result.append(", indexFile=");
 		if(indexFile == null)
 		{
 			result.append("null");
 		}
 		else
 		{
-			result.append("\"").append(indexFile.getAbsolutePath()).append("\"");
+			result.append('"').append(indexFile.getAbsolutePath()).append('"');
 		}
-		result.append(", ");
 
-		result.append("codec=").append(codec);
+		result.append(", codec=").append(codec)
+				.append(']');
 
-		result.append("]");
 		return result.toString();
 	}
 

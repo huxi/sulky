@@ -1,6 +1,6 @@
 /*
  * sulky-resources - inheritance-safe class resources.
- * Copyright (C) 2002-2011 Joern Huxhorn
+ * Copyright (C) 2002-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2002-2011 Joern Huxhorn
+ * Copyright 2002-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -128,11 +128,7 @@ public final class ResourceMaps
 			StringBuilder debug = new StringBuilder();
 			for(int i = 0; i < resourceUrls.length; i++)
 			{
-				debug.append("URL[");
-				debug.append(i);
-				debug.append("]: ");
-				debug.append(resourceUrls[i]);
-				debug.append("\n");
+				debug.append("URL[").append(i).append("]: ").append(resourceUrls[i]).append('\n');
 			}
 			logger.debug(debug.toString());
 		}
@@ -156,14 +152,10 @@ public final class ResourceMaps
 			{
 				Object key = current.getKey();
 				Object value = current.getValue();
-				buffer.append("Key: ");
-				buffer.append(key);
-				buffer.append("    Value: ");
-				buffer.append(value);
-				buffer.append("\n");
-
+				buffer.append("Key: ").append(key)
+						.append("    Value: ").append(value).append('\n');
 			}
-			logger.debug("ResourceMap for \"" + resourceMapBaseName + "\":\n" + buffer.toString());
+			logger.debug("ResourceMap for \"{}\":\n{}", resourceMapBaseName, buffer);
 		}
 		return result;
 	}

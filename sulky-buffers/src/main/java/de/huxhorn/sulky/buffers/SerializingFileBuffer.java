@@ -477,31 +477,27 @@ public class SerializingFileBuffer<E>
 
 	public String toString()
 	{
-		StringBuilder result = new StringBuilder();
-		result.append("SerializingFileBuffer[");
-
-		result.append("dataFile=");
+		StringBuilder result = new StringBuilder(200);
+		result.append("SerializingFileBuffer[dataFile=");
 		if(dataFile == null)
 		{
 			result.append("null");
 		}
 		else
 		{
-			result.append("\"").append(dataFile.getAbsolutePath()).append("\"");
+			result.append('"').append(dataFile.getAbsolutePath()).append('"');
 		}
-		result.append(", ");
-
-		result.append("indexFile=");
+		result.append(", indexFile=");
 		if(indexFile == null)
 		{
 			result.append("null");
 		}
 		else
 		{
-			result.append("\"").append(indexFile.getAbsolutePath()).append("\"");
+			result.append('"').append(indexFile.getAbsolutePath()).append('"');
 		}
 
-		result.append("]");
+		result.append(']');
 		return result.toString();
 	}
 }

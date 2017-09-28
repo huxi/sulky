@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,22 +88,20 @@ public class FileHeader
 
 	public String toString()
 	{
-		StringBuilder result=new StringBuilder();
-		result.append("FileHeader[");
-		result.append("magicValue=");
-		result.append("0x");
+		StringBuilder result=new StringBuilder(200);
+		result.append("FileHeader[magicValue=0x");
+
 		String hexValue = Integer.toHexString(magicValue);
 		int zeroes = 8 - hexValue.length();
 		for(int i = 0; i < zeroes; i++)
 		{
-			result.append("0");
+			result.append('0');
 		}
-		result.append(hexValue);
-		result.append(", ");
-		result.append("metaData=").append(metaData);
-		result.append(", ");
-		result.append("dataOffset=").append(dataOffset);
-		result.append("]");
+		result.append(hexValue)
+
+				.append(", metaData=").append(metaData)
+				.append(", dataOffset=").append(dataOffset)
+				.append(']');
 
 		return result.toString();
 	}

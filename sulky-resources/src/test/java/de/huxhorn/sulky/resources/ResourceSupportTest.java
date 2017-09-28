@@ -1,6 +1,6 @@
 /*
  * sulky-resources - inheritance-safe class resources.
- * Copyright (C) 2002-2011 Joern Huxhorn
+ * Copyright (C) 2002-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2002-2011 Joern Huxhorn
+ * Copyright 2002-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,6 +46,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static de.huxhorn.sulky.resources.ResourceTestHelper.appendSuffixes;
+import static de.huxhorn.sulky.resources.ResourceTestHelper.assertResultEndsWith;
+import static de.huxhorn.sulky.resources.ResourceTestHelper.logResult;
+import static de.huxhorn.sulky.resources.ResourceTestHelper.logResults;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -66,24 +70,24 @@ public class ResourceSupportTest
 	private void internalGetLocalResources(String resourceBaseName, String[] suffixes, Locale locale, String[] resultEndsWith)
 	{
 		// checking method with four arguments
-		StringBuilder methCallBuff = new StringBuilder();
+		StringBuilder methCallBuff = new StringBuilder(100);
 		methCallBuff.append("getLocalResources(\"").append(resourceBaseName).append("\", ");
 		if(suffixes == null)
 		{
-			methCallBuff.append(suffixes);
+			methCallBuff.append("null");
 		}
 		else
 		{
-			methCallBuff.append("[");
+			methCallBuff.append('[');
 			for(int i = 0; i < suffixes.length; i++)
 			{
 				if(i != 0)
 				{
 					methCallBuff.append(", ");
 				}
-				methCallBuff.append("\"").append(suffixes[i]).append("\"");
+				methCallBuff.append('"').append(suffixes[i]).append('"');
 			}
-			methCallBuff.append("]");
+			methCallBuff.append(']');
 		}
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
@@ -91,18 +95,7 @@ public class ResourceSupportTest
 
 		URL[] result;
 		result = resourcesupport.getLocalResources(resourceBaseName, suffixes, locale);
-		if(logger.isInfoEnabled())
-		{
-			StringBuilder debug = new StringBuilder();
-			debug.append("Results returned by method call ");
-			debug.append(methodCall);
-			debug.append(":\n");
-			for(int i = 0; i < result.length; i++)
-			{
-				debug.append("#").append(i).append(": ").append(result[i]).append("\n");
-			}
-			logger.info(debug.toString());
-		}
+		logResults(logger, methodCall, result);
 		assertEquals(methodCall + " - Number of results", resultEndsWith.length, result.length);
 
 		for(int i = 0; i < result.length; i++)
@@ -118,39 +111,12 @@ public class ResourceSupportTest
 			// results must be the same...
 			methCallBuff = new StringBuilder();
 			methCallBuff.append("getLocalResources(\"").append(resourceBaseName).append("\", ");
-			if(suffixes == null)
-			{
-				methCallBuff.append(suffixes);
-			}
-			else
-			{
-				methCallBuff.append("[");
-				for(int i = 0; i < suffixes.length; i++)
-				{
-					if(i != 0)
-					{
-						methCallBuff.append(", ");
-					}
-					methCallBuff.append("\"").append(suffixes[i]).append("\"");
-				}
-				methCallBuff.append("]");
-			}
+			appendSuffixes(methCallBuff, suffixes);
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getLocalResources(resourceBaseName, suffixes);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Results returned by method call ");
-				debug.append(methodCall);
-				debug.append(":\n");
-				for(int i = 0; i < result.length; i++)
-				{
-					debug.append("#").append(i).append(": ").append(result[i]).append("\n");
-				}
-				logger.info(debug.toString());
-			}
+			logResults(logger, methodCall, result);
 			assertEquals(methodCall + " - Number of results", resultEndsWith.length, result.length);
 
 			for(int i = 0; i < result.length; i++)
@@ -168,18 +134,7 @@ public class ResourceSupportTest
 				methodCall = methCallBuff.toString();
 				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = resourcesupport.getLocalResources(resourceBaseName);
-				if(logger.isInfoEnabled())
-				{
-					StringBuilder debug = new StringBuilder();
-					debug.append("Results returned by method call ");
-					debug.append(methodCall);
-					debug.append(":\n");
-					for(int i = 0; i < result.length; i++)
-					{
-						debug.append("#").append(i).append(": ").append(result[i]).append("\n");
-					}
-					logger.info(debug.toString());
-				}
+				logResults(logger, methodCall, result);
 				assertEquals(methodCall + " - Number of results", resultEndsWith.length, result.length);
 
 				for(int i = 0; i < result.length; i++)
@@ -196,22 +151,11 @@ public class ResourceSupportTest
 			// results must be the same...
 			methCallBuff = new StringBuilder();
 			methCallBuff.append("getLocalResources(\"").append(resourceBaseName).append("\", ");
-			methCallBuff.append(locale).append(")");
+			methCallBuff.append(locale).append(')');
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getLocalResources(resourceBaseName, locale);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Results returned by method call ");
-				debug.append(methodCall);
-				debug.append(":\n");
-				for(int i = 0; i < result.length; i++)
-				{
-					debug.append("#").append(i).append(": ").append(result[i]).append("\n");
-				}
-				logger.info(debug.toString());
-			}
+			logResults(logger, methodCall, result);
 			assertEquals(methodCall + " - Number of results", resultEndsWith.length, result.length);
 
 			for(int i = 0; i < result.length; i++)
@@ -223,56 +167,22 @@ public class ResourceSupportTest
 		} // if no suffixes but locale
 	}
 
+
 	private void internalGetLocalResource(String resourceBaseName, String[] suffixes, Locale locale, String resultEndsWith)
 	{
 		// checking method with four arguments
-		StringBuilder methCallBuff = new StringBuilder();
+		StringBuilder methCallBuff = new StringBuilder(200);
 		methCallBuff.append("getLocalResource(\"").append(resourceBaseName).append("\", ");
-		if(suffixes == null)
-		{
-			methCallBuff.append(suffixes);
-		}
-		else
-		{
-			methCallBuff.append("[");
-			for(int i = 0; i < suffixes.length; i++)
-			{
-				if(i != 0)
-				{
-					methCallBuff.append(", ");
-				}
-				methCallBuff.append("\"").append(suffixes[i]).append("\"");
-			}
-			methCallBuff.append("]");
-		}
+		appendSuffixes(methCallBuff, suffixes);
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
 		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		URL result;
 		result = resourcesupport.getLocalResource(resourceBaseName, suffixes, locale);
-		if(logger.isInfoEnabled())
-		{
-			StringBuilder debug = new StringBuilder();
-			debug.append("Result returned by method call ");
-			debug.append(methodCall);
-			debug.append(": ").append(result);
-			logger.info(debug.toString());
-		}
+		logResult(logger, methodCall, result);
 
-		if(result == null)
-		{
-			if(resultEndsWith != null)
-			{
-				fail(methodCall + " - result was null but should end in \"" + resultEndsWith + "\"!");
-			}
-		}
-		else
-		{
-			String cur = result.toString();
-			String msg = methodCall + " - resultUrl:\"" + cur + "\" does not end with \"" + resultEndsWith + "\"!";
-			assertTrue(msg, cur.endsWith(resultEndsWith));
-		}
+		assertResultEndsWith(methodCall, result, resultEndsWith);
 
 		if(locale == null)
 		{
@@ -280,49 +190,14 @@ public class ResourceSupportTest
 			// results must be the same...
 			methCallBuff = new StringBuilder();
 			methCallBuff.append("getLocalResource(\"").append(resourceBaseName).append("\", ");
-			if(suffixes == null)
-			{
-				methCallBuff.append(suffixes);
-			}
-			else
-			{
-				methCallBuff.append("[");
-				for(int i = 0; i < suffixes.length; i++)
-				{
-					if(i != 0)
-					{
-						methCallBuff.append(", ");
-					}
-					methCallBuff.append("\"").append(suffixes[i]).append("\"");
-				}
-				methCallBuff.append("]");
-			}
+			appendSuffixes(methCallBuff, suffixes);
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getLocalResource(resourceBaseName, suffixes);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Result returned by method call ");
-				debug.append(methodCall);
-				debug.append(": ").append(result);
-				logger.info(debug.toString());
-			}
+			logResult(logger, methodCall, result);
 
-			if(result == null)
-			{
-				if(resultEndsWith != null)
-				{
-					fail(methodCall + " - result was null but should end in \"" + resultEndsWith + "\"!");
-				}
-			}
-			else
-			{
-				String cur = result.toString();
-				String msg = methodCall + " - resultUrl:\"" + cur + "\" does not end with \"" + resultEndsWith + "\"!";
-				assertTrue(msg, cur.endsWith(resultEndsWith));
-			}
+			assertResultEndsWith(methodCall, result, resultEndsWith);
 
 			if(suffixes == null || suffixes.length == 0 || (suffixes.length == 1 && suffixes[0].length() == 0))
 			{
@@ -333,101 +208,40 @@ public class ResourceSupportTest
 				methodCall = methCallBuff.toString();
 				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = resourcesupport.getLocalResource(resourceBaseName);
-				if(logger.isInfoEnabled())
-				{
-					StringBuilder debug = new StringBuilder();
-					debug.append("Result returned by method call ");
-					debug.append(methodCall);
-					debug.append(": ").append(result);
-					logger.info(debug.toString());
-				}
+				logResult(logger, methodCall, result);
 
-				if(result == null)
-				{
-					if(resultEndsWith != null)
-					{
-						fail(methodCall + " - result was null but should end in \"" + resultEndsWith + "\"!");
-					}
-				}
-				else
-				{
-					String cur = result.toString();
-					String msg = methodCall + " - resultUrl:\"" + cur + "\" does not end with \"" + resultEndsWith + "\"!";
-					assertTrue(msg, cur.endsWith(resultEndsWith));
-				}
+				assertResultEndsWith(methodCall, result, resultEndsWith);
 			} // if no suffixes
 		} // if locale == null
 		else if(suffixes == null || suffixes.length == 0 || (suffixes.length == 1 && suffixes[0].length() == 0))
 		{
 			// checking shortcut method (Class,String,Locale) without suffixes
 			// results must be the same...
-			methCallBuff = new StringBuilder();
+			methCallBuff = new StringBuilder(200);
 			methCallBuff.append("getLocalResource(\"").append(resourceBaseName).append("\", ");
-			methCallBuff.append(locale).append(")");
+			methCallBuff.append(locale).append(')');
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getLocalResource(resourceBaseName, locale);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Result returned by method call ");
-				debug.append(methodCall);
-				debug.append(": ").append(result);
-				logger.info(debug.toString());
-			}
+			logResult(logger, methodCall, result);
 
-			if(result == null)
-			{
-				if(resultEndsWith != null)
-				{
-					fail(methodCall + " - result was null but should end in \"" + resultEndsWith + "\"!");
-				}
-			}
-			else
-			{
-				String cur = result.toString();
-				String msg = methodCall + " - resultUrl:\"" + cur + "\" does not end with \"" + resultEndsWith + "\"!";
-				assertTrue(msg, cur.endsWith(resultEndsWith));
-			}
+			assertResultEndsWith(methodCall, result, resultEndsWith);
 		} // if no suffixes but locale
 	}
 
 	private void internalGetLocalResourceAsStream(String resourceBaseName, String[] suffixes, Locale locale, boolean found)
 	{
 		// checking method with four arguments
-		StringBuilder methCallBuff = new StringBuilder();
+		StringBuilder methCallBuff = new StringBuilder(200);
 		methCallBuff.append("getLocalResourceAsStream(\"").append(resourceBaseName).append("\", ");
-		if(suffixes == null)
-		{
-			methCallBuff.append(suffixes);
-		}
-		else
-		{
-			methCallBuff.append("[");
-			for(int i = 0; i < suffixes.length; i++)
-			{
-				if(i != 0)
-				{
-					methCallBuff.append(", ");
-				}
-				methCallBuff.append("\"").append(suffixes[i]).append("\"");
-			}
-			methCallBuff.append("]");
-		}
+		appendSuffixes(methCallBuff, suffixes);
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
 		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		InputStream result;
 		result = resourcesupport.getLocalResourceAsStream(resourceBaseName, suffixes, locale);
-		if(logger.isInfoEnabled())
-		{
-			StringBuilder debug = new StringBuilder();
-			debug.append("Result returned by method call ");
-			debug.append(methodCall);
-			debug.append(": ").append(result);
-			logger.info(debug.toString());
-		}
+		logResult(logger, methodCall, result);
 
 		if(result == null && found)
 		{
@@ -444,35 +258,12 @@ public class ResourceSupportTest
 			// results must be the same...
 			methCallBuff = new StringBuilder();
 			methCallBuff.append("getLocalResourceAsStream(\"").append(resourceBaseName).append("\", ");
-			if(suffixes == null)
-			{
-				methCallBuff.append(suffixes);
-			}
-			else
-			{
-				methCallBuff.append("[");
-				for(int i = 0; i < suffixes.length; i++)
-				{
-					if(i != 0)
-					{
-						methCallBuff.append(", ");
-					}
-					methCallBuff.append("\"").append(suffixes[i]).append("\"");
-				}
-				methCallBuff.append("]");
-			}
+			appendSuffixes(methCallBuff, suffixes);
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getLocalResourceAsStream(resourceBaseName, suffixes);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Result returned by method call ");
-				debug.append(methodCall);
-				debug.append(": ").append(result);
-				logger.info(debug.toString());
-			}
+			logResult(logger, methodCall, result);
 
 			if(result == null && found)
 			{
@@ -492,14 +283,7 @@ public class ResourceSupportTest
 				methodCall = methCallBuff.toString();
 				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = resourcesupport.getLocalResourceAsStream(resourceBaseName);
-				if(logger.isInfoEnabled())
-				{
-					StringBuilder debug = new StringBuilder();
-					debug.append("Result returned by method call ");
-					debug.append(methodCall);
-					debug.append(": ").append(result);
-					logger.info(debug.toString());
-				}
+				logResult(logger, methodCall, result);
 
 				if(result == null && found)
 				{
@@ -515,20 +299,13 @@ public class ResourceSupportTest
 		{
 			// checking shortcut method (Class,String,Locale) without suffixes
 			// results must be the same...
-			methCallBuff = new StringBuilder();
+			methCallBuff = new StringBuilder(200);
 			methCallBuff.append("getLocalResourceAsStream(\"").append(resourceBaseName).append("\", ");
-			methCallBuff.append(locale).append(")");
+			methCallBuff.append(locale).append(')');
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getLocalResourceAsStream(resourceBaseName, locale);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Result returned by method call ");
-				debug.append(methodCall);
-				debug.append(": ").append(result);
-				logger.info(debug.toString());
-			}
+			logResult(logger, methodCall, result);
 
 			if(result == null && found)
 			{
@@ -544,43 +321,16 @@ public class ResourceSupportTest
 	private void internalGetResources(String resourceBaseName, String[] suffixes, Locale locale, String[] resultEndsWith)
 	{
 		// checking method with four arguments
-		StringBuilder methCallBuff = new StringBuilder();
+		StringBuilder methCallBuff = new StringBuilder(200);
 		methCallBuff.append("getResources(\"").append(resourceBaseName).append("\", ");
-		if(suffixes == null)
-		{
-			methCallBuff.append(suffixes);
-		}
-		else
-		{
-			methCallBuff.append("[");
-			for(int i = 0; i < suffixes.length; i++)
-			{
-				if(i != 0)
-				{
-					methCallBuff.append(", ");
-				}
-				methCallBuff.append("\"").append(suffixes[i]).append("\"");
-			}
-			methCallBuff.append("]");
-		}
+		appendSuffixes(methCallBuff, suffixes);
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
 		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		URL[] result;
 		result = resourcesupport.getResources(resourceBaseName, suffixes, locale);
-		if(logger.isInfoEnabled())
-		{
-			StringBuilder debug = new StringBuilder();
-			debug.append("Results returned by method call ");
-			debug.append(methodCall);
-			debug.append(":\n");
-			for(int i = 0; i < result.length; i++)
-			{
-				debug.append("#").append(i).append(": ").append(result[i]).append("\n");
-			}
-			logger.info(debug.toString());
-		}
+		logResults(logger, methodCall, result);
 		assertEquals(methodCall + " - Number of results", resultEndsWith.length, result.length);
 
 		for(int i = 0; i < result.length; i++)
@@ -596,39 +346,12 @@ public class ResourceSupportTest
 			// results must be the same...
 			methCallBuff = new StringBuilder();
 			methCallBuff.append("getResources(\"").append(resourceBaseName).append("\", ");
-			if(suffixes == null)
-			{
-				methCallBuff.append(suffixes);
-			}
-			else
-			{
-				methCallBuff.append("[");
-				for(int i = 0; i < suffixes.length; i++)
-				{
-					if(i != 0)
-					{
-						methCallBuff.append(", ");
-					}
-					methCallBuff.append("\"").append(suffixes[i]).append("\"");
-				}
-				methCallBuff.append("]");
-			}
+			appendSuffixes(methCallBuff, suffixes);
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getResources(resourceBaseName, suffixes);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Results returned by method call ");
-				debug.append(methodCall);
-				debug.append(":\n");
-				for(int i = 0; i < result.length; i++)
-				{
-					debug.append("#").append(i).append(": ").append(result[i]).append("\n");
-				}
-				logger.info(debug.toString());
-			}
+			logResults(logger, methodCall, result);
 			assertEquals(methodCall + " - Number of results", resultEndsWith.length, result.length);
 
 			for(int i = 0; i < result.length; i++)
@@ -646,18 +369,7 @@ public class ResourceSupportTest
 				methodCall = methCallBuff.toString();
 				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = resourcesupport.getResources(resourceBaseName);
-				if(logger.isInfoEnabled())
-				{
-					StringBuilder debug = new StringBuilder();
-					debug.append("Results returned by method call ");
-					debug.append(methodCall);
-					debug.append(":\n");
-					for(int i = 0; i < result.length; i++)
-					{
-						debug.append("#").append(i).append(": ").append(result[i]).append("\n");
-					}
-					logger.info(debug.toString());
-				}
+				logResults(logger, methodCall, result);
 				assertEquals(methodCall + " - Number of results", resultEndsWith.length, result.length);
 
 				for(int i = 0; i < result.length; i++)
@@ -672,24 +384,13 @@ public class ResourceSupportTest
 		{
 			// checking shortcut method (Class,String,Locale) without suffixes
 			// results must be the same...
-			methCallBuff = new StringBuilder();
+			methCallBuff = new StringBuilder(200);
 			methCallBuff.append("getResources(\"").append(resourceBaseName).append("\", ");
-			methCallBuff.append(locale).append(")");
+			methCallBuff.append(locale).append(')');
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getResources(resourceBaseName, locale);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Results returned by method call ");
-				debug.append(methodCall);
-				debug.append(":\n");
-				for(int i = 0; i < result.length; i++)
-				{
-					debug.append("#").append(i).append(": ").append(result[i]).append("\n");
-				}
-				logger.info(debug.toString());
-			}
+			logResults(logger, methodCall, result);
 			assertEquals(methodCall + " - Number of results", resultEndsWith.length, result.length);
 
 			for(int i = 0; i < result.length; i++)
@@ -704,53 +405,18 @@ public class ResourceSupportTest
 	private void internalGetResource(String resourceBaseName, String[] suffixes, Locale locale, String resultEndsWith)
 	{
 		// checking method with four arguments
-		StringBuilder methCallBuff = new StringBuilder();
+		StringBuilder methCallBuff = new StringBuilder(200);
 		methCallBuff.append("getResource(\"").append(resourceBaseName).append("\", ");
-		if(suffixes == null)
-		{
-			methCallBuff.append(suffixes);
-		}
-		else
-		{
-			methCallBuff.append("[");
-			for(int i = 0; i < suffixes.length; i++)
-			{
-				if(i != 0)
-				{
-					methCallBuff.append(", ");
-				}
-				methCallBuff.append("\"").append(suffixes[i]).append("\"");
-			}
-			methCallBuff.append("]");
-		}
+		appendSuffixes(methCallBuff, suffixes);
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
 		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		URL result;
 		result = resourcesupport.getResource(resourceBaseName, suffixes, locale);
-		if(logger.isInfoEnabled())
-		{
-			StringBuilder debug = new StringBuilder();
-			debug.append("Result returned by method call ");
-			debug.append(methodCall);
-			debug.append(": ").append(result);
-			logger.info(debug.toString());
-		}
+		logResult(logger, methodCall, result);
 
-		if(result == null)
-		{
-			if(resultEndsWith != null)
-			{
-				fail(methodCall + " - result was null but should end in \"" + resultEndsWith + "\"!");
-			}
-		}
-		else
-		{
-			String cur = result.toString();
-			String msg = methodCall + " - resultUrl:\"" + cur + "\" does not end with \"" + resultEndsWith + "\"!";
-			assertTrue(msg, cur.endsWith(resultEndsWith));
-		}
+		assertResultEndsWith(methodCall, result, resultEndsWith);
 
 		if(locale == null)
 		{
@@ -758,49 +424,14 @@ public class ResourceSupportTest
 			// results must be the same...
 			methCallBuff = new StringBuilder();
 			methCallBuff.append("getResource(\"").append(resourceBaseName).append("\", ");
-			if(suffixes == null)
-			{
-				methCallBuff.append(suffixes);
-			}
-			else
-			{
-				methCallBuff.append("[");
-				for(int i = 0; i < suffixes.length; i++)
-				{
-					if(i != 0)
-					{
-						methCallBuff.append(", ");
-					}
-					methCallBuff.append("\"").append(suffixes[i]).append("\"");
-				}
-				methCallBuff.append("]");
-			}
+			appendSuffixes(methCallBuff, suffixes);
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getResource(resourceBaseName, suffixes);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Result returned by method call ");
-				debug.append(methodCall);
-				debug.append(": ").append(result);
-				logger.info(debug.toString());
-			}
+			logResult(logger, methodCall, result);
 
-			if(result == null)
-			{
-				if(resultEndsWith != null)
-				{
-					fail(methodCall + " - result was null but should end in \"" + resultEndsWith + "\"!");
-				}
-			}
-			else
-			{
-				String cur = result.toString();
-				String msg = methodCall + " - resultUrl:\"" + cur + "\" does not end with \"" + resultEndsWith + "\"!";
-				assertTrue(msg, cur.endsWith(resultEndsWith));
-			}
+			assertResultEndsWith(methodCall, result, resultEndsWith);
 
 			if(suffixes == null || suffixes.length == 0 || (suffixes.length == 1 && suffixes[0].length() == 0))
 			{
@@ -811,101 +442,40 @@ public class ResourceSupportTest
 				methodCall = methCallBuff.toString();
 				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = resourcesupport.getResource(resourceBaseName);
-				if(logger.isInfoEnabled())
-				{
-					StringBuilder debug = new StringBuilder();
-					debug.append("Result returned by method call ");
-					debug.append(methodCall);
-					debug.append(": ").append(result);
-					logger.info(debug.toString());
-				}
+				logResult(logger, methodCall, result);
 
-				if(result == null)
-				{
-					if(resultEndsWith != null)
-					{
-						fail(methodCall + " - result was null but should end in \"" + resultEndsWith + "\"!");
-					}
-				}
-				else
-				{
-					String cur = result.toString();
-					String msg = methodCall + " - resultUrl:\"" + cur + "\" does not end with \"" + resultEndsWith + "\"!";
-					assertTrue(msg, cur.endsWith(resultEndsWith));
-				}
+				assertResultEndsWith(methodCall, result, resultEndsWith);
 			} // if no suffixes
 		} // if locale == null
 		else if(suffixes == null || suffixes.length == 0 || (suffixes.length == 1 && suffixes[0].length() == 0))
 		{
 			// checking shortcut method (Class,String,Locale) without suffixes
 			// results must be the same...
-			methCallBuff = new StringBuilder();
+			methCallBuff = new StringBuilder(200);
 			methCallBuff.append("getResource(\"").append(resourceBaseName).append("\", ");
-			methCallBuff.append(locale).append(")");
+			methCallBuff.append(locale).append(')');
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getResource(resourceBaseName, locale);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Result returned by method call ");
-				debug.append(methodCall);
-				debug.append(": ").append(result);
-				logger.info(debug.toString());
-			}
+			logResult(logger, methodCall, result);
 
-			if(result == null)
-			{
-				if(resultEndsWith != null)
-				{
-					fail(methodCall + " - result was null but should end in \"" + resultEndsWith + "\"!");
-				}
-			}
-			else
-			{
-				String cur = result.toString();
-				String msg = methodCall + " - resultUrl:\"" + cur + "\" does not end with \"" + resultEndsWith + "\"!";
-				assertTrue(msg, cur.endsWith(resultEndsWith));
-			}
+			assertResultEndsWith(methodCall, result, resultEndsWith);
 		} // if no suffixes but locale
 	}
 
 	private void internalGetResourceAsStream(String resourceBaseName, String[] suffixes, Locale locale, boolean found)
 	{
 		// checking method with four arguments
-		StringBuilder methCallBuff = new StringBuilder();
+		StringBuilder methCallBuff = new StringBuilder(200);
 		methCallBuff.append("getResourceAsStream(\"").append(resourceBaseName).append("\", ");
-		if(suffixes == null)
-		{
-			methCallBuff.append(suffixes);
-		}
-		else
-		{
-			methCallBuff.append("[");
-			for(int i = 0; i < suffixes.length; i++)
-			{
-				if(i != 0)
-				{
-					methCallBuff.append(", ");
-				}
-				methCallBuff.append("\"").append(suffixes[i]).append("\"");
-			}
-			methCallBuff.append("]");
-		}
+		appendSuffixes(methCallBuff, suffixes);
 		methCallBuff.append(", ").append(locale).append(");");
 		String methodCall = methCallBuff.toString();
 		if(logger.isInfoEnabled()) logger.info("Testing {}.", methodCall);
 
 		InputStream result;
 		result = resourcesupport.getResourceAsStream(resourceBaseName, suffixes, locale);
-		if(logger.isInfoEnabled())
-		{
-			StringBuilder debug = new StringBuilder();
-			debug.append("Result returned by method call ");
-			debug.append(methodCall);
-			debug.append(": ").append(result);
-			logger.info(debug.toString());
-		}
+		logResult(logger, methodCall, result);
 
 		if(result == null && found)
 		{
@@ -922,35 +492,12 @@ public class ResourceSupportTest
 			// results must be the same...
 			methCallBuff = new StringBuilder();
 			methCallBuff.append("getResourceAsStream(\"").append(resourceBaseName).append("\", ");
-			if(suffixes == null)
-			{
-				methCallBuff.append(suffixes);
-			}
-			else
-			{
-				methCallBuff.append("[");
-				for(int i = 0; i < suffixes.length; i++)
-				{
-					if(i != 0)
-					{
-						methCallBuff.append(", ");
-					}
-					methCallBuff.append("\"").append(suffixes[i]).append("\"");
-				}
-				methCallBuff.append("]");
-			}
+			appendSuffixes(methCallBuff, suffixes);
 			methCallBuff.append(");");
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getResourceAsStream(resourceBaseName, suffixes);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Result returned by method call ");
-				debug.append(methodCall);
-				debug.append(": ").append(result);
-				logger.info(debug.toString());
-			}
+			logResult(logger, methodCall, result);
 
 			if(result == null && found)
 			{
@@ -970,14 +517,7 @@ public class ResourceSupportTest
 				methodCall = methCallBuff.toString();
 				if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 				result = resourcesupport.getResourceAsStream(resourceBaseName);
-				if(logger.isInfoEnabled())
-				{
-					StringBuilder debug = new StringBuilder();
-					debug.append("Result returned by method call ");
-					debug.append(methodCall);
-					debug.append(": ").append(result);
-					logger.info(debug.toString());
-				}
+				logResult(logger, methodCall, result);
 
 				if(result == null && found)
 				{
@@ -993,20 +533,13 @@ public class ResourceSupportTest
 		{
 			// checking shortcut method (Class,String,Locale) without suffixes
 			// results must be the same...
-			methCallBuff = new StringBuilder();
+			methCallBuff = new StringBuilder(200);
 			methCallBuff.append("getResourceAsStream(\"").append(resourceBaseName).append("\", ");
-			methCallBuff.append(locale).append(")");
+			methCallBuff.append(locale).append(')');
 			methodCall = methCallBuff.toString();
 			if(logger.isInfoEnabled()) logger.info("Testing shortcut {}.", methodCall);
 			result = resourcesupport.getResourceAsStream(resourceBaseName, locale);
-			if(logger.isInfoEnabled())
-			{
-				StringBuilder debug = new StringBuilder();
-				debug.append("Result returned by method call ");
-				debug.append(methodCall);
-				debug.append(": ").append(result);
-				logger.info(debug.toString());
-			}
+			logResult(logger, methodCall, result);
 
 			if(result == null && found)
 			{
@@ -1019,7 +552,7 @@ public class ResourceSupportTest
 		} // if no suffixes but locale
 	}
 
-	private void internalGetResourceMap(String resourceBaseName, Locale locale, String[][] expectedResults)
+	private void internalGetResourceMap(@SuppressWarnings("SameParameterValue") String resourceBaseName, Locale locale, String[][] expectedResults)
 	{
 		Map<String, Object> result;
 		result = resourcesupport.getResourceMap(resourceBaseName, locale);
@@ -1045,7 +578,7 @@ public class ResourceSupportTest
 		}
 	}
 
-	private void internalGetLocalResourceMap(String resourceBaseName, Locale locale, String[][] expectedResults)
+	private void internalGetLocalResourceMap(@SuppressWarnings("SameParameterValue") String resourceBaseName, Locale locale, String[][] expectedResults)
 	{
 		Map result;
 		result = resourcesupport.getLocalResourceMap(resourceBaseName, locale);

@@ -727,14 +727,14 @@ public final class StaxUtilities
 
 	public static String writerStatus(String msg, XMLStreamWriter writer, String namespaceURI)
 	{
-		StringBuilder msgBuf = new StringBuilder();
+		StringBuilder msgBuf = new StringBuilder(200);
 		NamespaceContext nsc = writer.getNamespaceContext();
 		Iterator iter = nsc.getPrefixes(namespaceURI);
 		if(msg != null)
 		{
 			msgBuf.append(msg).append(" - ");
 		}
-		msgBuf.append("Prefixes defined for namespace ").append(namespaceURI).append(":");
+		msgBuf.append("Prefixes defined for namespace ").append(namespaceURI).append(':');
 		if(iter.hasNext())
 		{
 			boolean isFirst = true;
@@ -748,7 +748,7 @@ public final class StaxUtilities
 				{
 					isFirst = false;
 				}
-				msgBuf.append("'").append(iter.next()).append("'");
+				msgBuf.append('\'').append(iter.next()).append('\'');
 			}
 		}
 		else
@@ -771,12 +771,12 @@ public final class StaxUtilities
 	{
 		int type = reader.getEventType();
 		StringBuilder msgBuf = new StringBuilder(msg);
-		msgBuf.append(NEWLINE);
-		msgBuf.append(INDENT).append("eventType=").append(getEventTypeString(type)).append(NEWLINE);
+		msgBuf.append(NEWLINE)
+				.append(INDENT).append("eventType=").append(getEventTypeString(type)).append(NEWLINE);
 		if(type == XMLStreamConstants.START_ELEMENT || type == XMLStreamConstants.END_ELEMENT)
 		{
-			msgBuf.append(INDENT).append("localName=").append(reader.getLocalName()).append(NEWLINE);
-			msgBuf.append(INDENT).append("namespaceURI=").append(reader.getNamespaceURI()).append(NEWLINE);
+			msgBuf.append(INDENT).append("localName=").append(reader.getLocalName()).append(NEWLINE)
+					.append(INDENT).append("namespaceURI=").append(reader.getNamespaceURI()).append(NEWLINE);
 		}
 		if(type == XMLStreamConstants.START_ELEMENT)
 		{
@@ -784,13 +784,11 @@ public final class StaxUtilities
 			msgBuf.append(INDENT).append("attributeCount=").append(attCount).append(NEWLINE);
 			for(int i = 0; i < attCount; i++)
 			{
-				msgBuf.append(INDENT).append(INDENT).append("#####\n");
-				msgBuf.append(INDENT).append(INDENT).append("attributeNamespace=").append(reader.getAttributeNamespace(i))
-					.append(NEWLINE);
-				msgBuf.append(INDENT).append(INDENT).append("attributeLocalName=").append(reader.getAttributeLocalName(i))
-					.append(NEWLINE);
-				msgBuf.append(INDENT).append(INDENT).append("attributeValue=").append(reader.getAttributeValue(i)).append(NEWLINE);
-				msgBuf.append(INDENT).append(INDENT).append("attributePrefix=").append(reader.getAttributePrefix(i)).append(NEWLINE);
+				msgBuf.append(INDENT).append(INDENT).append("#####\n")
+						.append(INDENT).append(INDENT).append("attributeNamespace=").append(reader.getAttributeNamespace(i)).append(NEWLINE)
+						.append(INDENT).append(INDENT).append("attributeLocalName=").append(reader.getAttributeLocalName(i)).append(NEWLINE)
+						.append(INDENT).append(INDENT).append("attributeValue=").append(reader.getAttributeValue(i)).append(NEWLINE)
+						.append(INDENT).append(INDENT).append("attributePrefix=").append(reader.getAttributePrefix(i)).append(NEWLINE);
 			}
 
 		}

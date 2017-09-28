@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,6 +65,7 @@ public final class SwingLogging
 			for(int i = 0; i < conditions.length; i++)
 			{
 
+				@SuppressWarnings("MagicConstant")
 				InputMap inputMap = component.getInputMap(conditions[i]);
 
 				msg.append("InputMap for '").append(conditionStrings[i]).append("':\n");
@@ -75,8 +76,9 @@ public final class SwingLogging
 					{
 						for(KeyStroke ks : keyStrokes)
 						{
-							msg.append("\tKeyStroke: ").append(ks).append("\n");
-							msg.append("\tActionMapKey: ").append(inputMap.get(ks)).append("\n\n");
+							msg.append("\tKeyStroke: ").append(ks)
+									.append("\n\tActionMapKey: ").append(inputMap.get(ks))
+									.append("\n\n");
 						}
 					}
 					msg.append("######################################\n");
@@ -102,8 +104,9 @@ public final class SwingLogging
 				{
 					for(Object key : keys)
 					{
-						msg.append("\tKey: ").append(key).append("\n");
-						msg.append("\tAction: ").append(actionMap.get(key)).append("\n\n");
+						msg.append("\tKey: ").append(key)
+								.append("\n\tAction: ").append(actionMap.get(key))
+								.append("\n\n");
 					}
 				}
 				msg.append("######################################\n");
@@ -151,7 +154,7 @@ public final class SwingLogging
 		{
 			for(int i = 0; i < styleSheets.length; i++)
 			{
-				msg.append("Child #").append(i).append(":");
+				msg.append("Child #").append(i).append(':');
 				StyleSheet ss = styleSheets[i];
 				appendStyles(ss, msg);
 			}

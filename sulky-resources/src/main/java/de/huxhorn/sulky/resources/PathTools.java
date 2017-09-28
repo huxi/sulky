@@ -1,6 +1,6 @@
 /*
  * sulky-resources - inheritance-safe class resources.
- * Copyright (C) 2002-2011 Joern Huxhorn
+ * Copyright (C) 2002-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2002-2011 Joern Huxhorn
+ * Copyright 2002-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -275,10 +275,10 @@ public final class PathTools
 		}
 		if(underflowCounter > 0)
 		{
-			StringBuilder dots = new StringBuilder(".");
-			for(int i = 0; i < underflowCounter; i++)
+			StringBuilder dots = new StringBuilder(underflowCounter);
+			for(int i = 0; i <= underflowCounter; i++)
 			{
-				dots.append(".");
+				dots.append('.');
 			}
 			pathStack.add(0, dots.toString());
 		}
@@ -313,13 +313,12 @@ public final class PathTools
 
 			while(!pathStack.isEmpty())
 			{
-				result.append("/");
-				result.append(pathStack.remove(0));
+				result.append('/').append(pathStack.remove(0));
 			}
 		}
 		if(rootFound && result.length() == 0)
 		{
-			result.append("/");
+			result.append('/');
 		}
 		return result.toString();
 	}

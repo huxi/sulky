@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2014 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2014 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,17 +58,17 @@ public final class HumanReadable
 			this.symbol = symbol;
 		}
 
-		public String getSymbol()
+		String getSymbol()
 		{
 			return symbol;
 		}
 
-		public long getFactor()
+		long getFactor()
 		{
 			return factor;
 		}
 
-		public String getName()
+		String getName()
 		{
 			return name;
 		}
@@ -133,11 +133,11 @@ public final class HumanReadable
 		StringBuilder result = new StringBuilder();
 		if(negative)
 		{
-			result.append("-");
+			result.append('-');
 		}
 		if(correctUnit == null)
 		{
-			return result.append(size).append(" ").toString();
+			return result.append(size).append(' ').toString();
 		}
 		long remainder = size % correctUnit.getFactor();
 		remainder = Math.round(((((double)remainder) * 100L) / correctUnit.getFactor()));
@@ -146,16 +146,12 @@ public final class HumanReadable
 			fraction++;
 			remainder = 0;
 		}
-		result.append(fraction);
-
-		result.append(".");
+		result.append(fraction).append('.');
 		if(remainder < 10)
 		{
-			result.append("0");
+			result.append('0');
 		}
-		result.append(remainder);
-
-		result.append(" ");
+		result.append(remainder).append(' ');
 		if(useSymbol)
 		{
 			result.append(correctUnit.getSymbol());

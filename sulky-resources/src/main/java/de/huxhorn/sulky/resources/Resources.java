@@ -1,6 +1,6 @@
 /*
  * sulky-resources - inheritance-safe class resources.
- * Copyright (C) 2002-2016 Joern Huxhorn
+ * Copyright (C) 2002-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2002-2016 Joern Huxhorn
+ * Copyright 2002-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -664,13 +664,8 @@ public final class Resources
 	{
 		String className = clazz.getName();
 
-		StringBuilder result = new StringBuilder(className.length() + 1);
-
-		result.append("/");
-		className = className.replace('.', '/');
-		result.append(className.replace('$', '/')); // use subdirs for internal classes instead
-
-		return result.toString();
+		// use subdirs for internal classes instead
+		return "/" + className.replace('.', '/').replace('$', '/');
 	}
 
 
@@ -1035,7 +1030,7 @@ public final class Resources
 		if(logger.isInfoEnabled() && result.length == 0)
 		{
 			StringBuilder msg = new StringBuilder();
-			msg.append("Couldn't obtain any URL's for resource '").append(resourceBaseName).append("'");
+			msg.append("Couldn't obtain any URL's for resource '").append(resourceBaseName).append('\'');
 			if(suffixes != null && suffixes.length != 0)
 			{
 				if(suffixes.length == 1 && suffixes[0].length() == 0)
@@ -1049,9 +1044,9 @@ public final class Resources
 					{
 						if(i != 0)
 						{
-							msg.append(",");
+							msg.append(", ");
 						}
-						msg.append("\"").append(suffixes[i]).append("\"");
+						msg.append('"').append(suffixes[i]).append('"');
 					}
 					msg.append("]. ");
 				}
