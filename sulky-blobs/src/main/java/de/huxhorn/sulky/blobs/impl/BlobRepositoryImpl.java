@@ -437,7 +437,7 @@ public class BlobRepositoryImpl
 		File parentFile = new File(baseDirectory, hashStart);
 		if(parentFile.mkdirs())
 		{
-			if(logger.isDebugEnabled()) logger.debug("Created directory {}.", parentFile.getAbsolutePath());
+			if(logger.isDebugEnabled()) logger.debug("Created directory {}.", parentFile.getAbsolutePath()); // NOPMD
 		}
 		return new File(parentFile, hashRest);
 	}

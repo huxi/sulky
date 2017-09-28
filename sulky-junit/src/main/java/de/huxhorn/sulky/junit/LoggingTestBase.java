@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2016 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2016 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -108,12 +108,9 @@ public class LoggingTestBase
 		{
 			resetLogging(verbose);
 		}
-		if (loggingFile != null && deleteLogFiles)
+		if (loggingFile != null && deleteLogFiles && !loggingFile.delete())
 		{
-			if (!loggingFile.delete())
-			{
-				System.out.println("Couldn't delete file " + loggingFile.getAbsolutePath() + "!");
-			}
+			System.out.println("Couldn't delete file " + loggingFile.getAbsolutePath() + "!");
 		}
 	}
 
@@ -212,13 +209,6 @@ public class LoggingTestBase
 			System.out.println("### Disabling all logging.");
 		}
 
-		/*
-		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-		loggerContext.reset();
-		Logger root = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-		root.setLevel(Level.OFF);
-		*/
-
 		String configString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 				"<configuration>\n" +
 				"    <root>\n" +
@@ -242,33 +232,6 @@ public class LoggingTestBase
 		{
 			System.out.println("### Enabling all logging.\n### Logs are written to '" + file.getAbsolutePath() + "'.");
 		}
-
-		/*
-		LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-		if(verbose)
-		{
-			StatusPrinter.print(loggerContext);
-		}
-		loggerContext.reset();
-		Logger root = loggerContext.getLogger(Logger.ROOT_LOGGER_NAME);
-		root.setLevel(Level.ALL);
-		PatternLayout patternLayout = new PatternLayout();
-		patternLayout.setPattern("%-4relative [%thread] %-5level %logger{35} - %msg%n");
-		patternLayout.setContext(loggerContext);
-		FileAppender<LoggingEvent> appender = new FileAppender<LoggingEvent>();
-		appender.setLayout(patternLayout);
-		appender.setFile(file.getAbsolutePath());
-		appender.setName("FILE");
-		appender.setContext(loggerContext);
-		root.addAppender(appender);
-		appender.start();
-
-		if(verbose)
-		{
-			System.out.println("### Status after enabling all logging.\n### Logs are written to '" + file.getAbsolutePath() + "'.");
-			StatusPrinter.print(loggerContext);
-		}
-		*/
 
 		String configString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
 				"<configuration>\n" +

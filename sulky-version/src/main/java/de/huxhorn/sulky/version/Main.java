@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2016 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2016 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,13 +143,12 @@ public class Main
 		}
 
 		boolean ignorePreReleaseIdentifier = Boolean.parseBoolean(properties.getProperty(IGNORE_PRE_RELEASE_IDENTIFIER, "false"));
-		if(!unknownVersion && !JavaVersion.isAtLeast(requiredJavaVersion, ignorePreReleaseIdentifier))
+		if(!unknownVersion
+				&& !JavaVersion.isAtLeast(requiredJavaVersion, ignorePreReleaseIdentifier)
+				&& !showVersionWarning(requiredJavaVersion))
 		{
-			if(!showVersionWarning(requiredJavaVersion))
-			{
-				exit(VERSION_MISMATCH_STATUS_CODE);
-				return;
-			}
+			exit(VERSION_MISMATCH_STATUS_CODE);
+			return;
 		}
 
 		String mainClassName = properties.getProperty(MAIN_CLASS_KEY);

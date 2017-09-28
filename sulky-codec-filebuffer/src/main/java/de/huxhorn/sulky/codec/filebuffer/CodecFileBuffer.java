@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -183,12 +183,9 @@ public class CodecFileBuffer<E>
 			{
 				throw new IllegalArgumentException("Wrong magic value. Expected 0x" + Integer.toHexString(magicValue) + " but was " + Integer.toHexString(header.getMagicValue()) + "!");
 			}
-			if(dataFile.length() > header.getDataOffset())
+			if(dataFile.length() > header.getDataOffset() && !indexFile.exists())
 			{
-				if(!indexFile.exists()) // || indexFile.length() < DATA_OFFSET_SIZE)
-				{
-					throw new IllegalArgumentException("dataFile contains data but indexFile " + indexFile.getAbsolutePath() + " is not valid!");
-				}
+				throw new IllegalArgumentException("dataFile contains data but indexFile " + indexFile.getAbsolutePath() + " is not valid!");
 			}
 			setFileHeader(header);
 		}
@@ -265,11 +262,11 @@ public class CodecFileBuffer<E>
 			}
 			if(!indexDeleted)
 			{
-				if(logger.isDebugEnabled()) logger.debug("Couldn't delete index file {}.", indexFile.getAbsolutePath());
+				if(logger.isDebugEnabled()) logger.debug("Couldn't delete index file {}.", indexFile.getAbsolutePath()); // NOPMD
 			}
 			if(!dataDeleted)
 			{
-				if(logger.isDebugEnabled()) logger.debug("Couldn't delete data file {}.", dataFile.getAbsolutePath());
+				if(logger.isDebugEnabled()) logger.debug("Couldn't delete data file {}.", dataFile.getAbsolutePath()); // NOPMD
 			}
 			if(t!=null)
 			{
@@ -539,11 +536,11 @@ public class CodecFileBuffer<E>
 		}
 		if(!indexDeleted)
 		{
-			if(logger.isDebugEnabled()) logger.debug("Couldn't delete index file {}.", indexFile.getAbsolutePath());
+			if(logger.isDebugEnabled()) logger.debug("Couldn't delete index file {}.", indexFile.getAbsolutePath()); // NOPMD
 		}
 		if(!dataDeleted)
 		{
-			if(logger.isDebugEnabled()) logger.debug("Couldn't delete data file {}.", dataFile.getAbsolutePath());
+			if(logger.isDebugEnabled()) logger.debug("Couldn't delete data file {}.", dataFile.getAbsolutePath()); // NOPMD
 		}
 		if(t != null)
 		{
@@ -585,7 +582,7 @@ public class CodecFileBuffer<E>
 		{
 			if(parent.mkdirs())
 			{
-				if(logger.isDebugEnabled()) logger.debug("Created directory {}.", parent.getAbsolutePath());
+				if(logger.isDebugEnabled()) logger.debug("Created directory {}.", parent.getAbsolutePath()); // NOPMD
 			}
 			if(!parent.isDirectory())
 			{

@@ -519,15 +519,14 @@ public class Jep223JavaVersion
 			{
 				otherCurrent = otherVersionNumbers[i];
 			}
-			if(thisCurrent == otherCurrent)
+			if(thisCurrent > otherCurrent)
 			{
-				continue;
+				return 1;
 			}
 			if(thisCurrent < otherCurrent)
 			{
 				return -1;
 			}
-			return 1;
 		}
 
 		// When comparing two version strings, a string with a pre-release

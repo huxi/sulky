@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2014 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2014 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,20 +60,19 @@ public class GenericWrapper<T>
 		{
 			return iface.cast(wrapped);
 		}
-		if(Wrapper.class.isInstance(wrapped))
+		if(Wrapper.class.isInstance(wrapped)
+				&& Wrapper.class.cast(wrapped).isWrapperFor(iface))
 		{
-			if(Wrapper.class.cast(wrapped).isWrapperFor(iface))
-			{
-				return Wrapper.class.cast(wrapped).unwrap(iface);
-			}
+			return Wrapper.class.cast(wrapped).unwrap(iface);
 		}
 		throw new IllegalArgumentException("This Wrapper does not wrap an instance of the given interface!");
 	}
 
 	public boolean isWrapperFor(Class<?> iface)
 	{
-		return iface.isInstance(wrapped) ||
-				Wrapper.class.isInstance(wrapped) && Wrapper.class.cast(wrapped).isWrapperFor(iface);
+		return iface.isInstance(wrapped)
+				|| Wrapper.class.isInstance(wrapped)
+				&& Wrapper.class.cast(wrapped).isWrapperFor(iface);
 	}
 
 	public boolean equals(Object o)

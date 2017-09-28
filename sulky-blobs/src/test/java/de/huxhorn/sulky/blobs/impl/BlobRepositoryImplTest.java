@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2016 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2016 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -246,7 +246,7 @@ public class BlobRepositoryImplTest
 		File f2=new File(dataParent, WRONG_DATA_ID.substring(2));
 		if(f1.renameTo(f2))
 		{
-			if(logger.isDebugEnabled()) logger.debug("Renamed {} to {}.", f1.getAbsolutePath(), f2.getAbsolutePath());
+			if(logger.isDebugEnabled()) logger.debug("Renamed {} to {}.", f1.getAbsolutePath(), f2.getAbsolutePath()); // NOPMD
 		}
 		assertTrue(instance.contains(WRONG_DATA_ID));
 		assertNull(instance.get(WRONG_DATA_ID));
@@ -565,7 +565,7 @@ public class BlobRepositoryImplTest
 		File foo=new File(parent, "bar1");
 		if(foo.createNewFile())
 		{
-			if(logger.isDebugEnabled()) logger.debug("Created file {}.", foo.getAbsolutePath());
+			if(logger.isDebugEnabled()) logger.debug("Created file {}.", foo.getAbsolutePath()); // NOPMD
 		}
 		assertTrue(instance.delete(TEST_DATA_ID));
 		assertTrue(parent.isDirectory());

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2014 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2014 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,39 +79,29 @@ public class TestSecurityManager extends SecurityManager
 		{
 			PropertyPermission p = (PropertyPermission) perm;
 			String permissionName = p.getName();
-			if(deniedProperties != null) {
-				if (deniedProperties.contains(permissionName)) {
-					throw new AccessControlException("access denied " + perm, perm);
-				}
+			if(deniedProperties != null && deniedProperties.contains(permissionName)) {
+				throw new AccessControlException("access denied " + perm, perm);
 			}
+
 			String actions = p.getActions();
 
-			if(PROPERTY_READ_ACTION.equals(actions))
+			if(PROPERTY_READ_ACTION.equals(actions) && unreadableProperties != null && unreadableProperties.contains(permissionName))
 			{
-
-				if(unreadableProperties != null && unreadableProperties.contains(permissionName))
-				{
-					throw new AccessControlException("access denied " + perm, perm);
-				}
-
-			}
-			if(PROPERTY_WRITE_ACTION.equals(actions))
-			{
-				if(unwritableProperties != null && unwritableProperties.contains(permissionName))
-				{
-					throw new AccessControlException("access denied " + perm, perm);
-				}
-
-			}
-			if(PROPERTY_RW_ACTION.equals(actions))
-			{
-				if(unreadableProperties != null && unreadableProperties.contains(permissionName) ||
-					unwritableProperties != null && unwritableProperties.contains(permissionName))
-				{
-					throw new AccessControlException("access denied " + perm, perm);
-				}
+				throw new AccessControlException("access denied " + perm, perm);
 			}
 
+			if(PROPERTY_WRITE_ACTION.equals(actions) && unwritableProperties != null && unwritableProperties.contains(permissionName))
+			{
+				throw new AccessControlException("access denied " + perm, perm);
+			}
+
+			if(PROPERTY_RW_ACTION.equals(actions) && (
+					(unreadableProperties != null && unreadableProperties.contains(permissionName)) ||
+					(unwritableProperties != null && unwritableProperties.contains(permissionName))
+					))
+			{
+				throw new AccessControlException("access denied " + perm, perm);
+			}
 		}
 	}
 }

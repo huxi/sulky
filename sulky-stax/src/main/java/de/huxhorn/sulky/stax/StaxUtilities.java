@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2014 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2014 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,13 +92,12 @@ public final class StaxUtilities
 	{
 		int type = reader.getEventType();
 		String result = null;
-		if(XMLStreamConstants.START_ELEMENT == type && nodeName.equals(reader.getLocalName()))
+		if(XMLStreamConstants.START_ELEMENT == type
+				&& nodeName.equals(reader.getLocalName())
+				&& (namespaceURI == null || namespaceURI.equals(reader.getNamespaceURI())))
 		{
-			if(namespaceURI == null || namespaceURI.equals(reader.getNamespaceURI()))
-			{
-				result = readText(reader, whiteSpace);
-				reader.nextTag();
-			}
+			result = readText(reader, whiteSpace);
+			reader.nextTag();
 		}
 		return result;
 	}
