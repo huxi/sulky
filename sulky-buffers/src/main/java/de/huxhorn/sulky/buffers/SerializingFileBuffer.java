@@ -94,7 +94,7 @@ public class SerializingFileBuffer<E>
 				// remove extension,
 				indexName = indexName.substring(0, dotIndex);
 			}
-			indexName += INDEX_EXTENSION;
+			indexName = indexName + INDEX_EXTENSION;
 			indexFile = new File(parent, indexName);
 		}
 

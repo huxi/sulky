@@ -92,24 +92,29 @@ public final class PathTools
 			if(logger.isDebugEnabled()) logger.debug("Parameter 'path' of method 'resolvePath' must not be null!", ex);
 			throw ex;
 		}
-		if(path.startsWith("/"))
+		int basePathLength = basePath.length();
+		if(basePathLength == 0)
+		{
+			return path;
+		}
+		int pathLength = path.length();
+		if(pathLength == 0)
+		{
+			return basePath;
+		}
+		if(path.charAt(0) == '/')
 		{
 			// path is absolute
 			return path;
 		}
-		if(basePath.length() == 0)
+		StringBuilder result = new StringBuilder(basePathLength + pathLength + 1);
+		result.append(basePath);
+		if(basePath.charAt(basePathLength-1) != '/')
 		{
-			return path;
+			result.append('/');
 		}
-		if(path.length() == 0)
-		{
-			return basePath;
-		}
-		if(!basePath.endsWith("/"))
-		{
-			basePath = basePath + "/";
-		}
-		return basePath + path;
+		result.append(path);
+		return result.toString();
 	}
 
 
@@ -151,15 +156,11 @@ public final class PathTools
 		String resolvedPath = resolvePath(basePath, path);
 
 		String result = evaluatePath(resolvedPath);
-		if(!result.startsWith("/"))
+		if(result.isEmpty() || result.charAt(0) != '/')
 		{
 			final Logger logger = LoggerFactory.getLogger(PathTools.class);
 			// path is not absolute - returning null...
-			if(logger.isDebugEnabled())
-			{
-				logger
-					.debug("The evaluated path is not absolute: \"" + result + "\". Returning null for getAbsolutePath(\"" + basePath + "\", \"" + path + "\").");
-			}
+			if(logger.isDebugEnabled()) logger.debug("The evaluated path is not absolute: \"{}\". Returning null for getAbsolutePath(\"{}\", \"{}\").", result, basePath, path);
 			return null;
 		}
 
@@ -232,7 +233,7 @@ public final class PathTools
 	{
 		List<String> pathStack = new ArrayList<>();
 		boolean wasAbsolute = false;
-		if(path.startsWith("/"))
+		if(!path.isEmpty() && path.charAt(0) =='/')
 		{
 			// remember absolute path...
 			wasAbsolute = true;

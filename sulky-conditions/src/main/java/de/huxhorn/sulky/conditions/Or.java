@@ -40,6 +40,7 @@ import java.util.List;
 /**
  * Returns true if any of it's sub-conditions return true.
  */
+@SuppressWarnings("PMD.ShortClassName")
 public class Or
 	implements ConditionGroup, Cloneable
 {

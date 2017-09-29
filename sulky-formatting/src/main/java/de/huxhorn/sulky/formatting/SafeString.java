@@ -218,7 +218,10 @@ public final class SafeString
 				return string;
 			}
 			char quoteChar=stringStyle.getQuoteChar();
-			return ""+quoteChar+string+quoteChar;
+			@SuppressWarnings("StringBufferReplaceableByString")
+			StringBuilder result = new StringBuilder(string.length() + 2);
+			result.append(quoteChar).append(string).append(quoteChar);
+			return result.toString();
 		}
 
 		StringBuilder stringBuilder = new StringBuilder();

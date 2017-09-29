@@ -205,7 +205,7 @@ public class Jep223JavaVersion
 			return null;
 		}
 		Integer[] result=new Integer[input.length];
-		for(int i=0;i<input.length;i++)
+		for(int i=0;i<input.length;i++) // NOPMD AvoidArrayLoops
 		{
 			result[i] = input[i];
 		}

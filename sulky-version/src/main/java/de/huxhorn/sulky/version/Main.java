@@ -42,6 +42,7 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 import javax.swing.JOptionPane;
 
+@SuppressWarnings("PMD.ShortClassName")
 public class Main
 {
 	public static final String PROPERTIES_NAME_PROPERTY = "main.properties.name";

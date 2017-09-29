@@ -40,6 +40,7 @@ import java.util.List;
 /**
  * Returns false if any of it's sub-conditions return false.
  */
+@SuppressWarnings("PMD.ShortClassName")
 public class And
 	implements ConditionGroup, Cloneable
 {

@@ -158,13 +158,13 @@ public class ColorTintFilter
 
 		int[] pixels = new int[width * height];
 		GraphicsUtilities.getPixels(src, 0, 0, width, height, pixels);
-		mixColor(pixels);
+		mixColors(pixels);
 		GraphicsUtilities.setPixels(dst, 0, 0, width, height, pixels);
 
 		return dst;
 	}
 
-	private void mixColor(int[] pixels)
+	private void mixColors(int[] pixels)
 	{
 		for(int i = 0; i < pixels.length; i++)
 		{

@@ -45,6 +45,7 @@ public final class HumanReadable
 	private HumanReadable()
 	{}
 
+	@SuppressWarnings("PMD.ShortClassName")
 	private static class Unit
 	{
 		private final long factor;

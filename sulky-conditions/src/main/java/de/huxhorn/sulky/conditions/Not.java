@@ -37,6 +37,7 @@ package de.huxhorn.sulky.conditions;
 /**
  * Returns true if it's sub-condition returns false.
  */
+@SuppressWarnings("PMD.ShortClassName")
 public class Not
 	implements ConditionWrapper, Cloneable
 {

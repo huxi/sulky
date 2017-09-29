@@ -154,7 +154,7 @@ public class BlobRepositoryImpl
 		{
 			if(tempFile.delete())
 			{
-				if(logger.isDebugEnabled()) logger.debug("Deleted empty file '{}'.");
+				if(logger.isDebugEnabled()) logger.debug("Deleted empty file '{}'.", tempFile.getAbsolutePath());
 			}
 			else
 			{

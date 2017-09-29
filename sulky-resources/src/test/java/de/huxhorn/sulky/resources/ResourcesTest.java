@@ -578,7 +578,7 @@ public class ResourcesTest
 	}
 
 	@BeforeClass
-	public static void setUp()
+	public static void beforeClass()
 		throws Exception
 	{
 		prevDefault = Locale.getDefault();
@@ -586,7 +586,7 @@ public class ResourcesTest
 	}
 
 	@AfterClass
-	public static void tearDown()
+	public static void afterClass()
 		throws Exception
 	{
 		Locale.setDefault(prevDefault);

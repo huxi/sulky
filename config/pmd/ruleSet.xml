@@ -19,5 +19,27 @@
 	<rule ref="rulesets/java/strings.xml">
 		<exclude name="AvoidDuplicateLiterals"/>
 	</rule>
+	<rule ref="rulesets/java/unnecessary.xml">
+		<exclude name="UselessParentheses"/>
+	</rule>
+	<rule ref="rulesets/java/migrating.xml"/>
+	<rule ref="rulesets/java/naming.xml">
+		<exclude name="ShortVariable"/>
+		<exclude name="LongVariable"/>
+		<exclude name="AbstractNaming"/>
+	</rule>
+	<rule ref="rulesets/java/typeresolution.xml">
+		<exclude name="SignatureDeclareThrowsException"/>
+	</rule>
+	<rule ref="rulesets/java/optimizations.xml">
+		<exclude name="MethodArgumentCouldBeFinal"/>
+		<exclude name="LocalVariableCouldBeFinal"/>
+		<exclude name="AvoidInstantiatingObjectsInLoops"/>
+		<exclude name="PrematureDeclaration"/>
+		<exclude name="UseStringBufferForStringAppends"/>
+		<exclude name="RedundantFieldInitializer"/>
+		<exclude name="AddEmptyString"/>
+	</rule>
+	<rule ref="rulesets/java/logging-java.xml/InvalidSlf4jMessageFormat"/>
 
 </ruleset>

@@ -736,9 +736,9 @@ public final class Resources
 				{
 					continue;
 				}
-				if(sl.startsWith("#"))
+				if(sl.charAt(0) == '#')
 				{
-					if(logger.isDebugEnabled()) logger.debug("Comment: " + sl.substring(1));
+					if(logger.isDebugEnabled()) logger.debug("Comment: {}", sl.substring(1));
 					continue;
 				}
 				result.add(sl);
@@ -816,7 +816,7 @@ public final class Resources
 				while(result == null && iter.hasNext())
 				{
 					String currentLinkTarget = (String) iter.next();
-					// empty lines are allready ignored in readLinkInputStream
+					// empty lines are already ignored in readLinkInputStream
 					// Stack is cloned to support multiple lines...
 					String basePath = PathTools.getParentPath(resourceLinkPath);
 					String previousLinkTarget=currentLinkTarget;
@@ -877,7 +877,7 @@ public final class Resources
 		Class currentClass = clazz;
 		while(currentClass != java.lang.Object.class)
 		{
-			if(logger.isDebugEnabled()) logger.debug("currentClass = " + currentClass.getName());
+			if(logger.isDebugEnabled()) logger.debug("currentClass = {}", currentClass.getName());
 			URL[] urls = getLocalResources(currentClass, resourceBaseName, suffixes, locale, firstOnly);
 			for(int i = 0; i < urls.length; i++)
 			{
