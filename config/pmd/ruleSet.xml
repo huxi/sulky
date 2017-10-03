@@ -41,5 +41,19 @@
 		<exclude name="AddEmptyString"/>
 	</rule>
 	<rule ref="rulesets/java/logging-java.xml/InvalidSlf4jMessageFormat"/>
-
+	<rule ref="rulesets/java/design.xml">
+		<exclude name="UseVarargs"/>
+		<exclude name="AvoidReassigningParameters"/>
+		<exclude name="GodClass"/>
+		<exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
+		<exclude name="AccessorMethodGeneration"/>
+		<exclude name="ConfusingTernary"/>
+		<exclude name="ConstantsInInterface"/>
+	</rule>
+	<rule ref="rulesets/java/design.xml/AvoidDeeplyNestedIfStmts">
+		<properties>
+			<property name="problemDepth" value="5"/>
+		</properties>
+	</rule>
+	
 </ruleset>

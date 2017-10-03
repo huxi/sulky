@@ -138,7 +138,6 @@ public class SerializingFileBuffer<E>
 	{
 		RandomAccessFile randomSerializeIndexFile = null;
 		RandomAccessFile randomSerializeFile = null;
-		E result = null;
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
 		Throwable throwable = null;
@@ -155,9 +154,7 @@ public class SerializingFileBuffer<E>
 			if(index >= 0 && index < elementsCount)
 			{
 				long offset = internalOffsetOfElement(randomSerializeIndexFile, index);
-				result = internalReadElement(randomSerializeFile, offset);
-
-				return result;
+				return internalReadElement(randomSerializeFile, offset);
 			}
 		}
 		catch(Throwable e)
@@ -172,30 +169,21 @@ public class SerializingFileBuffer<E>
 		}
 
 		// it's a really bad idea to log while locked *sigh*
-		if(throwable != null)
+		if(throwable instanceof ClassNotFoundException || throwable instanceof InvalidClassException)
 		{
-			if(throwable instanceof ClassNotFoundException
-				|| throwable instanceof InvalidClassException)
-			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index {}!\n{}", index, throwable);
-			}
-			else if(throwable instanceof ClassCastException)
-			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index {}!\n{}", index, throwable);
-			}
-			else
-			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index {}!", index, throwable);
-			}
-			IOUtilities.interruptIfNecessary(throwable);
+			if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index {}!\n{}", index, throwable);
 		}
-		else if(index < 0 || index >= elementsCount)
+		else if(throwable instanceof ClassCastException)
 		{
-			if(logger.isInfoEnabled()) logger.info("index ({}) must be in the range [0..<{}]. Returning null.", index, elementsCount);
-			return null;
+			if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index {}!\n{}", index, throwable);
 		}
+		else
+		{
+			if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index {}!", index, throwable);
+		}
+		IOUtilities.interruptIfNecessary(throwable);
 
-		return result;
+		return null;
 	}
 
 	public void add(E element)
@@ -390,7 +378,6 @@ public class SerializingFileBuffer<E>
 		ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
 		GZIPInputStream gis = new GZIPInputStream(bis);
 		ObjectInputStream ois = new ObjectInputStream(gis);
-		//if(logger.isDebugEnabled()) logger.debug("Read element from offset {}.", offset);
 		@SuppressWarnings({"unchecked"})
 		E e= (E) ois.readObject();
 		return e;

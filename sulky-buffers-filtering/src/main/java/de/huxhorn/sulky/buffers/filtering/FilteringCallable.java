@@ -38,6 +38,7 @@ import de.huxhorn.sulky.buffers.Buffer;
 import de.huxhorn.sulky.conditions.Condition;
 import de.huxhorn.sulky.io.IOUtilities;
 import de.huxhorn.sulky.tasks.AbstractProgressingCallable;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,15 +47,14 @@ public class FilteringCallable<E>
 {
 	private final Logger logger = LoggerFactory.getLogger(FilteringCallable.class);
 
-	private int filterDelay;
+	private final FilteringBuffer<E> filteringBuffer;
+	private final int filterDelay;
 	private long lastFilteredElement = -1;
-	private FilteringBuffer<E> filteringBuffer;
-
 
 	public FilteringCallable(FilteringBuffer<E> filteringBuffer, int filterDelay)
 	{
+		this.filteringBuffer = Objects.requireNonNull(filteringBuffer, "filteringBuffer must not be null!");
 		this.filterDelay = filterDelay;
-		this.filteringBuffer = filteringBuffer;
 	}
 
 	public Long call()
@@ -91,7 +91,7 @@ public class FilteringCallable<E>
 						break;
 					}
 					E current = sourceBuffer.get(i);
-					if(current != null && condition != null && condition.isTrue(current))
+					if(current != null && condition.isTrue(current))
 					{
 						filteringBuffer.addFilteredIndex(i);
 						if(logger.isDebugEnabled()) logger.debug("Added index: {}", i);

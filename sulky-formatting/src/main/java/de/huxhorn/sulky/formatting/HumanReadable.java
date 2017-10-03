@@ -36,6 +36,26 @@ package de.huxhorn.sulky.formatting;
 
 public final class HumanReadable
 {
+	private static final Unit[] BINARY_UNITS =
+			{
+					new Unit(1L << 60, "exbi", "Ei"),
+					new Unit(1L << 50, "pebi", "Pi"),
+					new Unit(1L << 40, "tebi", "Ti"),
+					new Unit(1L << 30, "gibi", "Gi"),
+					new Unit(1L << 20, "mebi", "Mi"),
+					new Unit(1L << 10, "kibi", "Ki"),
+			};
+
+	private static final Unit[] DECIMAL_UNITS =
+			{
+					new Unit(1000L * 1000L * 1000L * 1000L * 1000L * 1000L, "exa", "E"),
+					new Unit(1000L * 1000L * 1000L * 1000L * 1000L, "peta", "P"),
+					new Unit(1000L * 1000L * 1000L * 1000L, "tera", "T"),
+					new Unit(1000L * 1000L * 1000L, "giga", "G"),
+					new Unit(1000L * 1000L, "mega", "M"),
+					new Unit(1000L, "kilo", "k"),
+			};
+
 	static
 	{
 		// for the sake of coverage
@@ -44,56 +64,6 @@ public final class HumanReadable
 
 	private HumanReadable()
 	{}
-
-	@SuppressWarnings("PMD.ShortClassName")
-	private static class Unit
-	{
-		private final long factor;
-		private final String name;
-		private final String symbol;
-
-		Unit(long factor, String name, String symbol)
-		{
-			this.factor = factor;
-			this.name = name;
-			this.symbol = symbol;
-		}
-
-		String getSymbol()
-		{
-			return symbol;
-		}
-
-		long getFactor()
-		{
-			return factor;
-		}
-
-		String getName()
-		{
-			return name;
-		}
-	}
-
-	private static final Unit[] BINARY_UNITS =
-		{
-			new Unit(1L << 60, "exbi", "Ei"),
-			new Unit(1L << 50, "pebi", "Pi"),
-			new Unit(1L << 40, "tebi", "Ti"),
-			new Unit(1L << 30, "gibi", "Gi"),
-			new Unit(1L << 20, "mebi", "Mi"),
-			new Unit(1L << 10, "kibi", "Ki"),
-		};
-
-	private static final Unit[] DECIMAL_UNITS =
-		{
-			new Unit(1000L * 1000L * 1000L * 1000L * 1000L * 1000L, "exa", "E"),
-			new Unit(1000L * 1000L * 1000L * 1000L * 1000L, "peta", "P"),
-			new Unit(1000L * 1000L * 1000L * 1000L, "tera", "T"),
-			new Unit(1000L * 1000L * 1000L, "giga", "G"),
-			new Unit(1000L * 1000L, "mega", "M"),
-			new Unit(1000L, "kilo", "k"),
-		};
 
 	public static String getHumanReadableSize(long size, boolean useBinaryUnits, boolean useSymbol)
 	{
@@ -164,4 +134,33 @@ public final class HumanReadable
 		return result.toString();
 	}
 
+	@SuppressWarnings("PMD.ShortClassName")
+	private static class Unit
+	{
+		private final long factor;
+		private final String name;
+		private final String symbol;
+
+		Unit(long factor, String name, String symbol)
+		{
+			this.factor = factor;
+			this.name = name;
+			this.symbol = symbol;
+		}
+
+		String getSymbol()
+		{
+			return symbol;
+		}
+
+		long getFactor()
+		{
+			return factor;
+		}
+
+		String getName()
+		{
+			return name;
+		}
+	}
 }

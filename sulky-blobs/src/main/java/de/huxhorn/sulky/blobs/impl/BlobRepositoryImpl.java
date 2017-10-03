@@ -316,27 +316,22 @@ public class BlobRepositoryImpl
 	{
 		if(baseDirectory == null)
 		{
-			String message="baseDirectory must not be null!";
-			if(logger.isErrorEnabled()) logger.error(message);
-			throw new IllegalStateException(message);
+			throw new IllegalStateException("baseDirectory must not be null!");
 		}
 		if(!baseDirectory.exists())
 		{
-			if(!baseDirectory.mkdirs())
+			if(baseDirectory.mkdirs())
 			{
-				String message="Couldn't create directory '"+baseDirectory.getAbsolutePath()+"'!";
-				if(logger.isWarnEnabled()) logger.warn(message);
+				if(logger.isDebugEnabled()) logger.debug("Created directory '{}'.", baseDirectory.getAbsolutePath());
 			}
 			else
 			{
-				if(logger.isDebugEnabled()) logger.debug("Created directory '{}'.", baseDirectory.getAbsolutePath());
+				if(logger.isWarnEnabled()) logger.warn("Couldn't create directory '{}'!", baseDirectory.getAbsolutePath());
 			}
 		}
 		if(!baseDirectory.isDirectory())
 		{
-			String message="baseDirectory '"+baseDirectory.getAbsolutePath()+" is not a directory!";
-			if(logger.isErrorEnabled()) logger.error(message);
-			throw new IllegalStateException(message);
+			throw new IllegalStateException("baseDirectory '"+baseDirectory.getAbsolutePath()+" is not a directory!");
 		}
 	}
 
@@ -451,9 +446,7 @@ public class BlobRepositoryImpl
 		}
 		catch(NoSuchAlgorithmException ex)
 		{
-			String message="Can't generate hash! Algorithm "+ALGORITHM+" does not exist!";
-			if(logger.isErrorEnabled()) logger.error(message, ex);
-			throw new IllegalStateException(message, ex);
+			throw new IllegalStateException("Can't generate hash! Algorithm "+ALGORITHM+" does not exist!", ex);
 		}
 		return digest;
 	}
@@ -550,7 +543,7 @@ public class BlobRepositoryImpl
 	private static class StartsWithFileFilter
 		implements FileFilter
 	{
-		private String filenamePart;
+		private final String filenamePart;
 
 		StartsWithFileFilter(String filenamePart)
 		{

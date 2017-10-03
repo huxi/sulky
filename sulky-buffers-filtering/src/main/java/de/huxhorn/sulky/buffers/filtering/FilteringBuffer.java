@@ -43,6 +43,7 @@ import de.huxhorn.sulky.conditions.Condition;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,20 +53,8 @@ public class FilteringBuffer<E>
 {
 	private final Logger logger = LoggerFactory.getLogger(FilteringBuffer.class);
 
-	public static <E> Buffer<E> resolveSourceBuffer(Buffer<E> buffer)
-	{
-		for(;;)
-		{
-			if(!(buffer instanceof FilteringBuffer))
-			{
-				return buffer;
-			}
-			buffer = ((FilteringBuffer<E>) buffer).getSourceBuffer();
-		}
-	}
-
-	private Buffer<E> sourceBuffer;
-	private Condition condition;
+	private final Buffer<E> sourceBuffer;
+	private final Condition condition;
 	private final ReentrantReadWriteLock indicesLock;
 	private final List<Long> filteredIndices;
 	private boolean disposed;
@@ -73,8 +62,8 @@ public class FilteringBuffer<E>
 	public FilteringBuffer(Buffer<E> sourceBuffer, Condition condition)
 	{
 		this.indicesLock = new ReentrantReadWriteLock(true);
-		this.sourceBuffer = sourceBuffer;
-		this.condition = condition;
+		this.sourceBuffer = Objects.requireNonNull(sourceBuffer, "sourceBuffer must not be null!");
+		this.condition = Objects.requireNonNull(condition, "condition must not be null!");
 		this.filteredIndices = new ArrayList<>();
 		this.disposed = false;
 	}
@@ -187,6 +176,18 @@ public class FilteringBuffer<E>
 		if(reset)
 		{
 			clearFilteredIndices();
+		}
+	}
+
+	public static <E> Buffer<E> resolveSourceBuffer(Buffer<E> buffer)
+	{
+		for(;;)
+		{
+			if(!(buffer instanceof FilteringBuffer))
+			{
+				return buffer;
+			}
+			buffer = ((FilteringBuffer<E>) buffer).getSourceBuffer();
 		}
 	}
 }

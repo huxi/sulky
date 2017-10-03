@@ -422,12 +422,12 @@ public class TaskManager<T>
 					lock.lock();
 					try
 					{
-						if(internalCreatedTasks.size() > 0)
+						if(!internalCreatedTasks.isEmpty())
 						{
 							createdTasks = new ArrayList<>(internalCreatedTasks);
 							internalCreatedTasks.clear();
 						}
-						if(internalProgressChanges.size() > 0)
+						if(!internalProgressChanges.isEmpty())
 						{
 							progressChanges = new ArrayList<>(internalProgressChanges);
 							internalProgressChanges.clear();
@@ -526,10 +526,11 @@ public class TaskManager<T>
 	{
 		private final Logger logger = LoggerFactory.getLogger(TaskManager.class);
 
-		private List<Task<T>> createdTasks;
-		private List<Task<T>> done;
+		private final List<Task<T>> createdTasks;
+		private final List<Task<T>> done;
+		private final List<ProgressChange<T>> progressChanges;
+
 		private List<TaskListener<T>> clonedListeners;
-		private List<ProgressChange<T>> progressChanges;
 
 		ResultListenerFireRunnable(List<Task<T>> createdTasks, List<Task<T>> done, List<ProgressChange<T>> progressChanges)
 		{
@@ -617,11 +618,8 @@ public class TaskManager<T>
 				}
 				catch(Throwable t)
 				{
-					if(logger.isErrorEnabled())
-					{
-						logger
-							.error("TaskListener " + listener + " threw an exception while progressUpdated was called!", t);
-					}
+					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while taskCreated was called!", listener, t);
+
 					IOUtilities.interruptIfNecessary(t);
 				}
 			}
@@ -637,11 +635,8 @@ public class TaskManager<T>
 				}
 				catch(Throwable t)
 				{
-					if(logger.isErrorEnabled())
-					{
-						logger
-							.error("TaskListener " + listener + " threw an exception while progressUpdated was called!", t);
-					}
+					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while progressUpdated was called!", listener, t);
+
 					IOUtilities.interruptIfNecessary(t);
 				}
 			}
@@ -657,11 +652,8 @@ public class TaskManager<T>
 				}
 				catch(Throwable t)
 				{
-					if(logger.isErrorEnabled())
-					{
-						logger
-							.error("TaskListener " + listener + " threw an exception while executionFailed was called!", t);
-					}
+					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while executionFailed was called!", listener, t);
+
 					IOUtilities.interruptIfNecessary(t);
 				}
 			}
@@ -677,11 +669,8 @@ public class TaskManager<T>
 				}
 				catch(Throwable t)
 				{
-					if(logger.isErrorEnabled())
-					{
-						logger
-							.error("TaskListener " + listener + " threw an exception while executionFinished was called!", t);
-					}
+					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while executionFinished was called!", listener, t);
+
 					IOUtilities.interruptIfNecessary(t);
 				}
 			}
@@ -697,11 +686,8 @@ public class TaskManager<T>
 				}
 				catch(Throwable t)
 				{
-					if(logger.isErrorEnabled())
-					{
-						logger
-							.error("TaskListener " + listener + " threw an exception while executionCanceled was called!", t);
-					}
+					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while executionCanceled was called!", listener, t);
+
 					IOUtilities.interruptIfNecessary(t);
 				}
 			}
@@ -824,15 +810,12 @@ public class TaskManager<T>
 		@Override
 		public boolean equals(Object o)
 		{
-			if(this == o) return true;
-			if(!(o instanceof TaskImpl)) return false;
+			if (this == o) return true;
+			if (!(o instanceof TaskImpl)) return false;
 
 			TaskImpl<?> task = (TaskImpl<?>) o;
 
-			if(id != task.id) return false;
-			if(taskManager != task.getTaskManager()) return false;
-
-			return true;
+			return id == task.id && taskManager == task.getTaskManager();
 		}
 
 		@Override

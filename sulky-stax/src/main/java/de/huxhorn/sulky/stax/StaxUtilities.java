@@ -139,8 +139,9 @@ public final class StaxUtilities
 				return replaceWhiteSpace(string);
 			case COLLAPSE:
 				return collapseWhiteSpace(string);
+			default: // PRESERVE
+				return string;
 		}
-		return string;
 	}
 
 	/**
@@ -299,8 +300,8 @@ public final class StaxUtilities
 
 	public static class NamespaceInfo
 	{
-		private String prefix;
-		private boolean created;
+		private final String prefix;
+		private final boolean created;
 
 		public NamespaceInfo(String prefix, boolean created)
 		{

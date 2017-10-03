@@ -152,6 +152,7 @@ public class Foobar
 
 		public void foo()
 		{
+			// Just an empty method.
 		}
 
 		public void setLocale(Locale locale)

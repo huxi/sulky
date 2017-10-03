@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,9 +61,9 @@ public class SoftReferenceCachingBuffer<E>
 		if(logger.isInfoEnabled()) logger.info("Started thread {}.", cleanupThread);
 	}
 
-	private Buffer<E> buffer;
+	private final Buffer<E> buffer;
 
-	private Map<Long, MySoftReference<E>> cache;
+	private final Map<Long, MySoftReference<E>> cache;
 	private boolean disposed;
 
 	public SoftReferenceCachingBuffer(Buffer<E> buffer)
@@ -147,8 +147,8 @@ public class SoftReferenceCachingBuffer<E>
 	private static class MySoftReference<E>
 		extends SoftReference<E>
 	{
-		private long index;
-		private Map<Long, MySoftReference<E>> cache;
+		private final long index;
+		private final Map<Long, MySoftReference<E>> cache;
 
 		@SuppressWarnings({"unchecked"})
 		MySoftReference(Map<Long, MySoftReference<E>> cache, long index, E referent)

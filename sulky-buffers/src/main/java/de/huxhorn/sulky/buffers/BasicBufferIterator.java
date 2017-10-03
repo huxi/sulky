@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,17 +36,18 @@ package de.huxhorn.sulky.buffers;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 public class BasicBufferIterator<E>
 	implements Iterator<E>
 {
+	private final Buffer<E> buffer;
+	private final long size;
 	private long current;
-	private Buffer<E> buffer;
-	private long size;
 
 	public BasicBufferIterator(Buffer<E> buffer)
 	{
-		this.buffer = buffer;
+		this.buffer = Objects.requireNonNull(buffer, "buffer must not be null!");
 		this.size = buffer.getSize();
 		this.current = 0;
 	}

@@ -125,7 +125,7 @@ public class And
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder();
-		if(conditions == null || conditions.size() == 0)
+		if(conditions == null || conditions.isEmpty())
 		{
 			result.append("true");
 		}

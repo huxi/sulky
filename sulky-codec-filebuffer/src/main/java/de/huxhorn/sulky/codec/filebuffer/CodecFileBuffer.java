@@ -224,7 +224,7 @@ public class CodecFileBuffer<E>
 	{
 		if(elementProcessors != null)
 		{
-			if(elementProcessors.size() == 0)
+			if(elementProcessors.isEmpty())
 			{
 				// performance enhancement
 				elementProcessors = null;

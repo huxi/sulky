@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,11 +49,12 @@ public class TimeoutOutputStream
 	extends OutputStream
 {
 	private final OutputStream stream;
-	private int timeout;
-	private AtomicLong operationStartTime;
-	private AtomicBoolean closed;
+	private final int timeout;
+	private final AtomicLong operationStartTime;
+	private final AtomicBoolean closed;
+	private final AtomicBoolean watchdogThreadRunning;
+
 	private Thread watchdogThread;
-	private AtomicBoolean watchdogThreadRunning;
 
 
 	public TimeoutOutputStream(OutputStream stream, int timeout)

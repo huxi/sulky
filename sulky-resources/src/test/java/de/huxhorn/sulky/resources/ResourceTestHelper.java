@@ -40,8 +40,10 @@ import org.slf4j.Logger;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-class ResourceTestHelper
+final class ResourceTestHelper
 {
+	private ResourceTestHelper() {}
+
 	static void logResult(Logger logger, String methodCall, Object result)
 	{
 		if(logger.isInfoEnabled()) logger.info("Result returned by method call {}: {}", methodCall, result);

@@ -153,93 +153,6 @@ public class ULID
 	private static final int MASK_BITS = 5;
 	private static final long TIMESTAMP_MASK = 0x0000_FFFF_FFFF_FFFFL;
 
-	/*
-	 * http://crockford.com/wrmg/base32.html
-	 */
-	static void internalAppendCrockford(StringBuilder builder, long value, int count)
-	{
-		for(int i = count-1; i >= 0; i--)
-		{
-			int index = (int)((value >>> (i * MASK_BITS)) & MASK);
-			builder.append(ENCODING_CHARS[index]);
-		}
-	}
-
-	static long internalParseCrockford(String input)
-	{
-		Objects.requireNonNull(input, "input must not be null!");
-		long result = 0;
-		int length = input.length();
-		if(length > 12)
-		{
-			throw new IllegalArgumentException("input length must not exceed 12 but was "+length+"!");
-		}
-		for(int i=0;i<length;i++)
-		{
-			char current = input.charAt(i);
-			byte value = -1;
-			if(current < DECODING_CHARS.length)
-			{
-				value = DECODING_CHARS[current];
-			}
-			if(value < 0)
-			{
-				throw new IllegalArgumentException("Illegal character '"+current+"'!");
-			}
-			result |= ((long)value) << ((length - 1 - i)*MASK_BITS);
-		}
-		return result;
-	}
-
-	/*
-	 * http://crockford.com/wrmg/base32.html
-	 */
-	static void internalWriteCrockford(char[] buffer, long value, int count, int offset)
-	{
-		for(int i = 0; i < count; i++)
-		{
-			int index = (int)((value >>> ((count - i - 1) * MASK_BITS)) & MASK);
-			buffer[offset+i] = ENCODING_CHARS[index];
-		}
-	}
-
-	static String internalUIDString(long timeStamp, Random random)
-	{
-		// this will be extremely important in the summer of 10889.
-		timeStamp = timeStamp & TIMESTAMP_MASK;
-
-		char[] buffer = new char[26];
-
-		internalWriteCrockford(buffer, timeStamp, 10, 0);
-		// could use nextBytes(byte[] bytes) instead
-		internalWriteCrockford(buffer, random.nextLong(), 8, 10);
-		internalWriteCrockford(buffer, random.nextLong(), 8, 18);
-
-		return new String(buffer);
-	}
-
-	static void internalAppendULID(StringBuilder builder, long timeStamp, Random random)
-	{
-		// this will be extremely important in the summer of 10889.
-		timeStamp = timeStamp & TIMESTAMP_MASK;
-
-		internalAppendCrockford(builder, timeStamp, 10);
-		// could use nextBytes(byte[] bytes) instead
-		internalAppendCrockford(builder, random.nextLong(), 8);
-		internalAppendCrockford(builder, random.nextLong(), 8);
-	}
-
-	static Value internalNextValue(long timeStamp, Random random)
-	{
-		// could use nextBytes(byte[] bytes) instead
-		long mostSignificantBits = random.nextLong();
-		long leastSignificantBits = random.nextLong();
-		mostSignificantBits &= 0xFFFF;
-		mostSignificantBits |= (timeStamp << 16);
-		return new Value(mostSignificantBits, leastSignificantBits);
-	}
-
-
 	private final Random random;
 
 	public ULID()
@@ -412,5 +325,91 @@ public class ULID
 
 			return new String(buffer);
 		}
+	}
+
+	/*
+	 * http://crockford.com/wrmg/base32.html
+	 */
+	static void internalAppendCrockford(StringBuilder builder, long value, int count)
+	{
+		for(int i = count-1; i >= 0; i--)
+		{
+			int index = (int)((value >>> (i * MASK_BITS)) & MASK);
+			builder.append(ENCODING_CHARS[index]);
+		}
+	}
+
+	static long internalParseCrockford(String input)
+	{
+		Objects.requireNonNull(input, "input must not be null!");
+		long result = 0;
+		int length = input.length();
+		if(length > 12)
+		{
+			throw new IllegalArgumentException("input length must not exceed 12 but was "+length+"!");
+		}
+		for(int i=0;i<length;i++)
+		{
+			char current = input.charAt(i);
+			byte value = -1;
+			if(current < DECODING_CHARS.length)
+			{
+				value = DECODING_CHARS[current];
+			}
+			if(value < 0)
+			{
+				throw new IllegalArgumentException("Illegal character '"+current+"'!");
+			}
+			result |= ((long)value) << ((length - 1 - i)*MASK_BITS);
+		}
+		return result;
+	}
+
+	/*
+	 * http://crockford.com/wrmg/base32.html
+	 */
+	static void internalWriteCrockford(char[] buffer, long value, int count, int offset)
+	{
+		for(int i = 0; i < count; i++)
+		{
+			int index = (int)((value >>> ((count - i - 1) * MASK_BITS)) & MASK);
+			buffer[offset+i] = ENCODING_CHARS[index];
+		}
+	}
+
+	static String internalUIDString(long timeStamp, Random random)
+	{
+		// this will be extremely important in the summer of 10889.
+		timeStamp = timeStamp & TIMESTAMP_MASK;
+
+		char[] buffer = new char[26];
+
+		internalWriteCrockford(buffer, timeStamp, 10, 0);
+		// could use nextBytes(byte[] bytes) instead
+		internalWriteCrockford(buffer, random.nextLong(), 8, 10);
+		internalWriteCrockford(buffer, random.nextLong(), 8, 18);
+
+		return new String(buffer);
+	}
+
+	static void internalAppendULID(StringBuilder builder, long timeStamp, Random random)
+	{
+		// this will be extremely important in the summer of 10889.
+		timeStamp = timeStamp & TIMESTAMP_MASK;
+
+		internalAppendCrockford(builder, timeStamp, 10);
+		// could use nextBytes(byte[] bytes) instead
+		internalAppendCrockford(builder, random.nextLong(), 8);
+		internalAppendCrockford(builder, random.nextLong(), 8);
+	}
+
+	static Value internalNextValue(long timeStamp, Random random)
+	{
+		// could use nextBytes(byte[] bytes) instead
+		long mostSignificantBits = random.nextLong();
+		long leastSignificantBits = random.nextLong();
+		mostSignificantBits &= 0xFFFF;
+		mostSignificantBits |= (timeStamp << 16);
+		return new Value(mostSignificantBits, leastSignificantBits);
 	}
 }

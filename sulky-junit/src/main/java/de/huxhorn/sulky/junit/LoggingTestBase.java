@@ -60,7 +60,7 @@ public class LoggingTestBase
 {
 	protected boolean verbose = false;
 	protected boolean deleteLogFiles = false;
-	private Boolean logging;
+	private final Boolean logging;
 	private File loggingFile;
 
 	public LoggingTestBase(Boolean logging)

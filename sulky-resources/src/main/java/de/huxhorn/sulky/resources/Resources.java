@@ -84,6 +84,12 @@ public final class Resources
 	private static final String[] EMPTY_STRING_ARRAY = {};
 
 	/**
+	 * Used internally to replace suffixes that are null or zero length.
+	 */
+	private static final String[] NO_SUFFIX = new String[]{""};
+
+
+	/**
 	 * DOCUMENT: document
 	 *
 	 * @param clazz            the <code>Class</code> that is used to locate the resource.
@@ -688,11 +694,6 @@ public final class Resources
 	}
 
 	/**
-	 * Used internally to replace suffixes that are null or zero length.
-	 */
-	private static final String[] NO_SUFFIX = new String[]{""};
-
-	/**
 	 * private constructor, no instances needed/possible.
 	 */
 	private Resources()
@@ -1009,14 +1010,14 @@ public final class Resources
 		List<URL> urlList = new ArrayList<>();
 		// collect resources from given class...
 		collectResources(urlList, clazz, resourceBaseName, suffixes, locale, firstOnly);
-		if(!firstOnly || urlList.size() == 0)
+		if(!firstOnly || urlList.isEmpty())
 		{
 			// collect resources from declaring classes...
 			Class currentClass = clazz.getDeclaringClass();
 			while(currentClass != null)
 			{
 				collectResources(urlList, currentClass, resourceBaseName, suffixes, locale, firstOnly);
-				if(firstOnly && urlList.size() != 0)
+				if(firstOnly && !urlList.isEmpty())
 				{
 					break;
 				}

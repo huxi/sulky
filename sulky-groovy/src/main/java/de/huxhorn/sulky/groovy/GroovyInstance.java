@@ -166,7 +166,7 @@ public class GroovyInstance
 			return;
 		}
 		initInstanceClass();
-		if(actualInstanceClass == instanceClass)
+		if(actualInstanceClass == instanceClass) // NOPMD
 		{
 			return;
 		}

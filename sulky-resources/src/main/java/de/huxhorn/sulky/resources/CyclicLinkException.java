@@ -35,6 +35,7 @@
 package de.huxhorn.sulky.resources;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * DOCUMENT: <code>CyclicLinkException</code>
@@ -44,12 +45,12 @@ public class CyclicLinkException
 {
 	private static final long serialVersionUID = 5197383554254357523L;
 
-	private List<String> linkStack;
-	private String cycleCause;
+	private final List<String> linkStack;
+	private final String cycleCause;
 
 	public CyclicLinkException(List<String> linkStack, String cycleCause)
 	{
-		this.linkStack = linkStack;
+		this.linkStack = Objects.requireNonNull(linkStack, "linkStack must not be null!");
 		this.cycleCause = cycleCause;
 	}
 

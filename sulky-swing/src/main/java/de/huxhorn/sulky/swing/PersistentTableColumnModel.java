@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,29 +44,12 @@ import javax.swing.table.TableColumn;
 /**
  * This class is based on code and ideas from Stephen Kelvin (mail at StephenKelvin.de) and Thomas Darimont.
  */
-public class PersistentTableColumnModel
+public final class PersistentTableColumnModel
 	extends DefaultTableColumnModel
 {
 	private static final long serialVersionUID = 367475030324866809L;
 
-	protected List<TableColumn> allTableColumns = new ArrayList<>();
-
-	/**
-	 * Creates an extended table column model.
-	 */
-	public PersistentTableColumnModel()
-	{
-		allTableColumns = new ArrayList<>();
-		initColumns();
-	}
-
-	/**
-	 * Should be implemented by subclasses if needed.
-	 */
-	protected void initColumns()
-	{
-
-	}
+	private final List<TableColumn> allTableColumns = new ArrayList<>();
 
 	/**
 	 * Sets the visibility of the specified TableColumn.
@@ -97,16 +80,16 @@ public class PersistentTableColumnModel
 				TableColumn visibleColumn = (visibleIndex < noVisibleColumns ? tableColumns.get(visibleIndex) : null);
 				TableColumn testColumn = allTableColumns.get(invisibleIndex);
 
-				if(testColumn == column)
+				if(testColumn == column) // NOPMD
 				{
-					if(visibleColumn != column)
+					if(visibleColumn != column) // NOPMD
 					{
 						super.addColumn(column);
 						super.moveColumn(tableColumns.size() - 1, visibleIndex);
 					}
-					return; // ####################
+					return;
 				}
-				if(testColumn == visibleColumn)
+				if(testColumn == visibleColumn) // NOPMD
 				{
 					++visibleIndex;
 				}
@@ -126,7 +109,7 @@ public class PersistentTableColumnModel
 			TableColumn visibleColumn = (columnIndex < tableColumns.size() ? tableColumns.get(columnIndex) : null);
 			TableColumn invisibleColumn = allTableColumns.get(columnIndex);
 
-			if(visibleColumn != invisibleColumn)
+			if(visibleColumn != invisibleColumn) // NOPMD
 			{
 				super.addColumn(invisibleColumn);
 				super.moveColumn(tableColumns.size() - 1, columnIndex);
@@ -135,7 +118,7 @@ public class PersistentTableColumnModel
 	}
 
 	/**
-	 * Checks wether the specified column is currently visible.
+	 * Checks whether the specified column is currently visible.
 	 *
 	 * @param aColumn column to check
 	 * @return visibility of specified column (false if there is no such column at all. [It's not visible, right?])
@@ -303,6 +286,7 @@ public class PersistentTableColumnModel
 
 		public TableColumnLayoutInfo()
 		{
+			// needed for XML serialization.
 		}
 
 		public TableColumnLayoutInfo(String columnName, int width, boolean visible)

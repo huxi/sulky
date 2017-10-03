@@ -70,9 +70,9 @@ public class ColorTintFilter
 
     private static final int RGB_MAX = 256;
 
-	private int[] preMultipliedRed;
-	private int[] preMultipliedGreen;
-	private int[] preMultipliedBlue;
+	private final int[] preMultipliedRed;
+	private final int[] preMultipliedGreen;
+	private final int[] preMultipliedBlue;
 
 	/**
 	 * <p>Creates a new color mixer filter. The specified color will be used

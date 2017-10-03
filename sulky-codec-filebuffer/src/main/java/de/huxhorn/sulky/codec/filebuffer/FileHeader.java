@@ -36,9 +36,9 @@ package de.huxhorn.sulky.codec.filebuffer;
 
 public class FileHeader
 {
-	private int magicValue;
-	private MetaData metaData;
-	private long dataOffset;
+	private final int magicValue;
+	private final MetaData metaData;
+	private final long dataOffset;
 
 	public FileHeader(int magicValue, MetaData metaData, long dataOffset)
 	{
@@ -65,16 +65,14 @@ public class FileHeader
 	@Override
 	public boolean equals(Object o)
 	{
-		if(this == o) return true;
-		if(o == null || getClass() != o.getClass()) return false;
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
 
 		FileHeader that = (FileHeader) o;
 
-		if(dataOffset != that.dataOffset) return false;
-		if(magicValue != that.magicValue) return false;
-		if(metaData != null ? !metaData.equals(that.metaData) : that.metaData != null) return false;
-
-		return true;
+		return dataOffset == that.dataOffset
+				&& magicValue == that.magicValue
+				&& (metaData != null ? metaData.equals(that.metaData) : that.metaData == null);
 	}
 
 	@Override

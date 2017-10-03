@@ -34,7 +34,7 @@
 
 package de.huxhorn.sulky.conditions;
 
-public class BooleanValues
+public final class BooleanValues
 		implements Condition, Cloneable
 {
 	private static final long serialVersionUID = 1780367398890411212L;
@@ -48,15 +48,6 @@ public class BooleanValues
 	 * false singleton
 	 */
 	public static final BooleanValues FALSE = new BooleanValues(false);
-
-	public static BooleanValues getInstance(boolean value)
-	{
-		if (value)
-		{
-			return TRUE;
-		}
-		return FALSE;
-	}
 
 	private final boolean value;
 	private final transient String string;
@@ -97,5 +88,10 @@ public class BooleanValues
 	public String toString()
 	{
 		return string;
+	}
+
+	public static BooleanValues getInstance(boolean value)
+	{
+		return value ? TRUE : FALSE;
 	}
 }

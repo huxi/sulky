@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ package de.huxhorn.sulky.codec.streaming;
 import de.huxhorn.sulky.codec.Decoder;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,11 +46,11 @@ public class DecoderBridge<E>
 {
 	private final Logger logger = LoggerFactory.getLogger(DecoderBridge.class);
 
-	private StreamingDecoder<E> wrapped;
+	private final StreamingDecoder<E> wrapped;
 
 	public DecoderBridge(StreamingDecoder<E> wrapped)
 	{
-		this.wrapped = wrapped;
+		this.wrapped = Objects.requireNonNull(wrapped, "wrapped must not be null!");
 	}
 
 	public E decode(byte[] bytes)

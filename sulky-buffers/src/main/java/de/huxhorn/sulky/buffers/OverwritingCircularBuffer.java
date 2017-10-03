@@ -44,12 +44,12 @@ import java.util.RandomAccess;
 /**
  * http://c2.com/cgi/wiki?CircularBuffer
  */
-public class OverwritingCircularBuffer<E>
+public final class OverwritingCircularBuffer<E>
 	implements CircularBuffer<E>, RandomAccess, Cloneable, Serializable
 {
 	private static final long serialVersionUID = 3423268103026176567L;
 
-	private int bufferSize;
+	private final int bufferSize;
 	private transient int startIndex;
 	private transient int endIndex;
 	private transient long overflowCounter;

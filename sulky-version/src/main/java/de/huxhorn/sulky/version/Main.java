@@ -43,7 +43,7 @@ import java.util.Properties;
 import javax.swing.JOptionPane;
 
 @SuppressWarnings("PMD.ShortClassName")
-public class Main
+public final class Main
 {
 	public static final String PROPERTIES_NAME_PROPERTY = "main.properties.name";
 	public static final String PROPERTIES_NAME = "/main.properties";
@@ -75,6 +75,12 @@ public class Main
 	private static int statusCode;
 	private static boolean showingErrorDialog;
 	private static boolean showingWarningDialog;
+
+	static {
+		new Main(); // stfu
+	}
+
+	private Main() {}
 
 	public static void main(String[] args)
 	{

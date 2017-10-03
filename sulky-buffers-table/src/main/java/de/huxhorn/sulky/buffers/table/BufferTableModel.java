@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ import de.huxhorn.sulky.io.IOUtilities;
 import de.huxhorn.sulky.swing.RowBasedTableModel;
 import java.awt.EventQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.swing.event.EventListenerList;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -60,13 +61,13 @@ public abstract class BufferTableModel<T>
 	private final AtomicBoolean disposed=new AtomicBoolean();
 	private final AtomicBoolean paused=new AtomicBoolean();
 
-	private int pauseRowCount;
-	private int lastRowCount;
+	private final AtomicInteger pauseRowCount=new AtomicInteger(0);
+	private final AtomicInteger lastRowCount=new AtomicInteger(0);
 
+	@SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
 	public BufferTableModel(Buffer<T> buffer)
 	{
 		eventListenerList = new EventListenerList();
-		lastRowCount = 0;
 		disposed.set(false);
 		setBuffer(buffer);
 
@@ -77,19 +78,23 @@ public abstract class BufferTableModel<T>
 		setPaused(false);
 	}
 
-	public synchronized boolean isPaused()
+	public boolean isPaused()
 	{
 		return paused.get();
 	}
 
-	public synchronized void setPaused(boolean paused)
+	public void setPaused(boolean paused)
 	{
 		if(paused)
 		{
-			pauseRowCount = getRowCount();
+			pauseRowCount.set(getRowCount());
 		}
 		this.paused.set(paused);
-		notifyAll();
+
+		synchronized(this)
+		{
+			notifyAll();
+		}
 	}
 
 	public Buffer<T> getBuffer()
@@ -108,8 +113,8 @@ public abstract class BufferTableModel<T>
 		{
 			this.circularBuffer = null;
 		}
-		setLastRowCount(0);
-		this.pauseRowCount = 0;
+		lastRowCount.set(0);
+		pauseRowCount.set(0);
 		fireTableChange();
 	}
 
@@ -118,31 +123,29 @@ public abstract class BufferTableModel<T>
 		boolean reset = Reset.reset(buffer);
 		if(reset)
 		{
-			setLastRowCount(0);
+			lastRowCount.set(0);
 			fireTableChange();
 			return true;
 		}
 		return false;
 	}
 
-	public synchronized int getRowCount()
+	public int getRowCount()
 	{
-		return lastRowCount;
+		return lastRowCount.get();
 	}
 
-	private synchronized void setLastRowCount(int lastRowCount)
-	{
-		this.lastRowCount = lastRowCount;
-	}
-
-	public synchronized void dispose()
+	public void dispose()
 	{
 		disposed.set(true);
 		Dispose.dispose(buffer);
-		notifyAll();
+		synchronized (this)
+		{
+			notifyAll();
+		}
 	}
 
-	public synchronized boolean isDisposed()
+	public boolean isDisposed()
 	{
 		return disposed.get();
 	}
@@ -151,7 +154,7 @@ public abstract class BufferTableModel<T>
 	{
 		if(isPaused())
 		{
-			return pauseRowCount;
+			return pauseRowCount.get();
 		}
 		if(circularBuffer != null)
 		{
@@ -198,6 +201,7 @@ public abstract class BufferTableModel<T>
 
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex)
 	{
+		// read-only
 	}
 
 	private void fireTableChange()
@@ -228,7 +232,7 @@ public abstract class BufferTableModel<T>
 	private class FireTableChangeRunnable
 		implements Runnable
 	{
-		private TableModelEvent event;
+		private final TableModelEvent event;
 
 		FireTableChangeRunnable(TableModelEvent event)
 		{
@@ -308,12 +312,12 @@ public abstract class BufferTableModel<T>
 						if(prevValue != 0 && currentValue > prevValue)
 						{
 							int lastRow = currentValue - 1;
-							setLastRowCount(currentValue);
+							lastRowCount.set(currentValue);
 							fireTableChange(prevValue, lastRow);
 						}
 						else if(currentValue != prevValue)
 						{
-							setLastRowCount(currentValue);
+							lastRowCount.set(currentValue);
 							fireTableChange();
 						}
 					}

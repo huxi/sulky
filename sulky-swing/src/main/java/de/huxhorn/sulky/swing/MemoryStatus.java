@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2015 Joern Huxhorn
+ * Copyright (C) 2007-2017 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2015 Joern Huxhorn
+ * Copyright 2007-2017 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,13 +55,14 @@ import java.awt.event.MouseEvent;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.border.Border;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MemoryStatus
+public final class MemoryStatus
 		extends JComponent
 {
 	private static final long serialVersionUID = -7977658722158059284L;
@@ -71,7 +72,7 @@ public class MemoryStatus
 
 	private final Runtime runtime;
 	private MemoryInfo memoryInfo;
-	private boolean paused;
+	private final AtomicBoolean paused=new AtomicBoolean(true);
 	private boolean usingTotal;
 	private boolean usingBinaryUnits;
 
@@ -82,7 +83,6 @@ public class MemoryStatus
 	public MemoryStatus()
 	{
 		runtime = Runtime.getRuntime();
-		paused = true;
 		JLabel fontLabel = new JLabel("8,888.88 XXX");
 		setFont(fontLabel.getFont());
 		//setMemoryInfo(new MemoryInfo(runtime));
@@ -139,9 +139,9 @@ public class MemoryStatus
 		this.usingTotal = usingTotal;
 	}
 
-	public synchronized boolean isPaused()
+	public boolean isPaused()
 	{
-		return paused;
+		return paused.get();
 	}
 
 	/**
@@ -305,17 +305,20 @@ public class MemoryStatus
 	}
 
 
-	public synchronized void setPaused(boolean paused)
+	public void setPaused(boolean paused)
 	{
-		this.paused = paused;
-		notifyAll();
+		this.paused.set(paused);
+		synchronized (this)
+		{
+			notifyAll();
+		}
 	}
 
 	private static class MemoryInfo
 	{
-		private long total;
-		private long used;
-		private long max;
+		private final long total;
+		private final long used;
+		private final long max;
 
 		MemoryInfo(Runtime runtime)
 		{
@@ -371,7 +374,7 @@ public class MemoryStatus
 			implements Runnable
 	{
 		Runnable updateRunnable;
-		private long frequency = 5000;
+		private static final long FREQUENCY = 5000;
 
 		PollRunnable()
 		{
@@ -401,7 +404,7 @@ public class MemoryStatus
 				EventQueue.invokeLater(updateRunnable);
 				try
 				{
-					Thread.sleep(frequency);
+					Thread.sleep(FREQUENCY);
 				}
 				catch (InterruptedException e)
 				{

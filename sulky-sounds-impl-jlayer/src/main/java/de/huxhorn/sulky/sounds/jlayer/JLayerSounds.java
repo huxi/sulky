@@ -120,7 +120,7 @@ public class JLayerSounds
 		}
 		if(soundLocation == null)
 		{
-			if(logger.isInfoEnabled()) logger.info("No soundlocation defined for sound {}.", soundName);
+			if(logger.isInfoEnabled()) logger.info("No sound location defined for sound {}.", soundName);
 			return null;
 		}
 		InputStream soundStream = JLayerSounds.class.getResourceAsStream(soundLocation);
@@ -178,7 +178,7 @@ public class JLayerSounds
 				{
 					for(;;)
 					{
-						if(playList.size() == 0)
+						if(playList.isEmpty())
 						{
 							try
 							{

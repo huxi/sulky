@@ -68,53 +68,6 @@ public final class YeOldeJavaVersion
 	 */
 	public static final YeOldeJavaVersion MIN_VALUE = new YeOldeJavaVersion(0,0,0,0,"!");
 
-	/**
-	 * Parses a Java version and returns the corresponding JavaVersion instance.
-	 *
-	 * @param versionString the String to be parsed
-	 * @return the JavaVersion corresponding to the given versionString
-	 * @throws java.lang.NullPointerException if versionString is null.
-	 * @throws java.lang.IllegalArgumentException if versionString is invalid.
-	 */
-	public static YeOldeJavaVersion parse(String versionString)
-	{
-		if(versionString == null)
-		{
-			throw new NullPointerException("versionString must not be null!");
-		}
-		Matcher matcher = VERSION_PATTERN.matcher(versionString);
-		if(!matcher.matches())
-		{
-			throw new IllegalArgumentException("versionString '"+versionString+"' is invalid.");
-		}
-
-		/*
-		for (int i=0; i<=matcher.groupCount(); i++)
-		{
-			System.out.println("Index #"+i+": "+matcher.group(i));
-		}
-		*/
-
-		int huge = Integer.parseInt(matcher.group(HUGE_GROUP_INDEX));
-		int major = Integer.parseInt(matcher.group(MAJOR_GROUP_INDEX));
-		int minor = 0;
-		int patch = 0;
-
-		String minorString = matcher.group(MINOR_GROUP_INDEX);
-		if(minorString != null)
-		{
-			minor = Integer.parseInt(minorString);
-		}
-		String patchString = matcher.group(PATCH_GROUP_INDEX);
-		if(patchString != null)
-		{
-			patch = Integer.parseInt(patchString);
-		}
-
-		String identifier = matcher.group(IDENTIFIER_GROUP_INDEX);
-		return new YeOldeJavaVersion(huge, major, minor, patch, identifier);
-	}
-
 	private final int huge;
 	private final int major;
 	private final int minor;
@@ -309,7 +262,6 @@ public final class YeOldeJavaVersion
 		return new YeOldeJavaVersion(huge, major, minor, patch);
 	}
 
-	@SuppressWarnings("RedundantIfStatement")
 	@Override
 	public boolean equals(Object o)
 	{
@@ -318,13 +270,11 @@ public final class YeOldeJavaVersion
 
 		YeOldeJavaVersion that = (YeOldeJavaVersion) o;
 
-		if (huge != that.huge) return false;
-		if (major != that.major) return false;
-		if (minor != that.minor) return false;
-		if (patch != that.patch) return false;
-		if (preReleaseIdentifier != null ? !preReleaseIdentifier.equals(that.preReleaseIdentifier) : that.preReleaseIdentifier != null) return false;
-
-		return true;
+		return huge == that.huge
+				&& major == that.major
+				&& minor == that.minor
+				&& patch == that.patch
+				&& (preReleaseIdentifier != null ? preReleaseIdentifier.equals(that.preReleaseIdentifier) : that.preReleaseIdentifier == null);
 	}
 
 	@Override
@@ -424,5 +374,45 @@ public final class YeOldeJavaVersion
 		// both this and other are rc/ea, i.e. non-GA/non-FCS.
 		// the code below is only an approximation.
 		return preReleaseIdentifier.compareTo(other.preReleaseIdentifier);
+	}
+
+	/**
+	 * Parses a Java version and returns the corresponding JavaVersion instance.
+	 *
+	 * @param versionString the String to be parsed
+	 * @return the JavaVersion corresponding to the given versionString
+	 * @throws java.lang.NullPointerException if versionString is null.
+	 * @throws java.lang.IllegalArgumentException if versionString is invalid.
+	 */
+	public static YeOldeJavaVersion parse(String versionString)
+	{
+		if(versionString == null)
+		{
+			throw new NullPointerException("versionString must not be null!");
+		}
+		Matcher matcher = VERSION_PATTERN.matcher(versionString);
+		if(!matcher.matches())
+		{
+			throw new IllegalArgumentException("versionString '"+versionString+"' is invalid.");
+		}
+
+		int huge = Integer.parseInt(matcher.group(HUGE_GROUP_INDEX));
+		int major = Integer.parseInt(matcher.group(MAJOR_GROUP_INDEX));
+		int minor = 0;
+		int patch = 0;
+
+		String minorString = matcher.group(MINOR_GROUP_INDEX);
+		if(minorString != null)
+		{
+			minor = Integer.parseInt(minorString);
+		}
+		String patchString = matcher.group(PATCH_GROUP_INDEX);
+		if(patchString != null)
+		{
+			patch = Integer.parseInt(patchString);
+		}
+
+		String identifier = matcher.group(IDENTIFIER_GROUP_INDEX);
+		return new YeOldeJavaVersion(huge, major, minor, patch, identifier);
 	}
 }
