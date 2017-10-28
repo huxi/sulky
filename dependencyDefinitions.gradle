@@ -10,7 +10,7 @@ project.ext.libraries = [
 'cglib':                  'cglib:cglib-nodep:3.2.5',
 'commons-codec':          'commons-codec:commons-codec:1.11',
 'commons-io':             'commons-io:commons-io:2.6',
-'easymock':               'org.easymock:easymock:3.4',
+'easymock':               'org.easymock:easymock:3.5',
 'groovy':                 "org.codehaus.groovy:groovy:${versions.groovy}",
 'jcl-over-slf4j':         "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
 'jlayer':                 'de.huxhorn.sulky:de.huxhorn.sulky.3rdparty.jlayer:1.0',
