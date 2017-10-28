@@ -489,9 +489,9 @@ public class BlobRepositoryImpl
 	{
 		MessageDigest digest = createMessageDigest();
 
-		DigestInputStream dis = new DigestInputStream(input, digest);
 		IOException ex;
-		try(OutputStream fos = Files.newOutputStream(into.toPath()))
+		try(DigestInputStream dis = new DigestInputStream(input, digest);
+		    OutputStream fos = Files.newOutputStream(into.toPath()))
 		{
 			IOUtils.copyLarge(dis, fos);
 			byte[] hash = digest.digest();
@@ -506,10 +506,7 @@ public class BlobRepositoryImpl
 		{
 			ex=e;
 		}
-		finally
-		{
-			IOUtils.closeQuietly(dis);
-		}
+
 		if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve data from input!", ex);
 		deleteTempFile(into);
 		throw ex;

@@ -61,7 +61,7 @@ import static org.junit.Assume.assumeTrue;
 public class BlobRepositoryImplTest
 	extends LoggingTestBase
 {
-	public static final String FOO = "foo";
+	private static final String FOO = "foo";
 	private final Logger logger = LoggerFactory.getLogger(BlobRepositoryImplTest.class);
 
 	@Rule
@@ -192,14 +192,9 @@ public class BlobRepositoryImplTest
 		BlobRepositoryImpl instance=new BlobRepositoryImpl();
 		instance.setBaseDirectory(folder.newFolder(FOO));
 
-		InputStream is = instance.get(instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8)));
-		try
+		try(InputStream is = instance.get(instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8))))
 		{
 			assertEquals(TEST_DATA, IOUtils.toString(is, StandardCharsets.UTF_8));
-		}
-		finally
-		{
-			IOUtils.closeQuietly(is);
 		}
 	}
 
@@ -214,14 +209,10 @@ public class BlobRepositoryImplTest
 		assertFalse(instance.contains(id));
 		instance.setCaseSensitive(false);
 		assertTrue(instance.contains(id));
-		InputStream is = instance.get(id);
-		try
+
+		try(InputStream is = instance.get(id))
 		{
 			assertEquals(TEST_DATA, IOUtils.toString(is, StandardCharsets.UTF_8));
-		}
-		finally
-		{
-			IOUtils.closeQuietly(is);
 		}
 	}
 
@@ -233,15 +224,12 @@ public class BlobRepositoryImplTest
 		File baseDirectory = folder.newFolder(FOO);
 		instance.setBaseDirectory(baseDirectory);
 		String id = instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
-		InputStream is = instance.get(id);
-		try
+
+		try(InputStream is = instance.get(id))
 		{
 			assertEquals(TEST_DATA, IOUtils.toString(is, StandardCharsets.UTF_8));
 		}
-		finally
-		{
-			IOUtils.closeQuietly(is);
-		}
+
 		File dataParent = new File(baseDirectory, TEST_DATA_ID.substring(0,2));
 		File f1=new File(dataParent, TEST_DATA_ID.substring(2));
 		File f2=new File(dataParent, WRONG_DATA_ID.substring(2));
@@ -262,14 +250,10 @@ public class BlobRepositoryImplTest
 
 		String id=instance.put(TEST_DATA.getBytes(StandardCharsets.UTF_8));
 		assertEquals(TEST_DATA_ID, id);
-		InputStream is = instance.get(TEST_DATA_ID.substring(0,3));
-		try
+
+		try(InputStream is = instance.get(TEST_DATA_ID.substring(0,3)))
 		{
 			assertEquals(TEST_DATA, IOUtils.toString(is, StandardCharsets.UTF_8));
-		}
-		finally
-		{
-			IOUtils.closeQuietly(is);
 		}
 	}
 
