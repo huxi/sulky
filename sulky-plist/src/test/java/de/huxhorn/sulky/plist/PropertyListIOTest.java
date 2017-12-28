@@ -140,7 +140,7 @@ public class PropertyListIOTest
 		float value = 3.141f;
 		list.setRoot(value);
 		PropertyList read = check(list, false);
-		assertTrue(Float.compare(3.141f, ((Double)read.getRoot()).floatValue())==0);
+		assertTrue(Float.compare(3.141f, ((Double)read.getRoot()).floatValue())==0); // NOPMD
 	}
 
 	@Test
@@ -271,7 +271,7 @@ public class PropertyListIOTest
 		{
 			float v1=value[i];
 			float v2=readValues.get(i).floatValue();
-			assertTrue("Index "+i+" differs!", Float.compare(v1, v2)==0);
+			assertTrue("Index "+i+" differs!", Float.compare(v1, v2)==0); // NOPMD
 		}
 	}
 

@@ -45,6 +45,7 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.makeThreadSafe;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -66,21 +67,21 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		instance.write(bytes);
 		instance.flush();
 		instance.write(17);
 		instance.write(bytes, 0, 5);
 
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 
 		instance.close();
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -97,12 +98,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.write(17);
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(IOException ex)
 		{
@@ -111,7 +112,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 
@@ -130,12 +131,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.write(bytes);
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(IOException ex)
 		{
@@ -144,7 +145,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -162,12 +163,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.write(bytes, 0, 5);
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(IOException ex)
 		{
@@ -176,7 +177,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -193,12 +194,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.flush();
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(IOException ex)
 		{
@@ -207,7 +208,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -222,12 +223,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.close();
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(IOException ex)
 		{
@@ -236,7 +237,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 
@@ -254,12 +255,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.write(17);
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(RuntimeException ex)
 		{
@@ -268,7 +269,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -286,12 +287,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.write(bytes);
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(RuntimeException ex)
 		{
@@ -300,7 +301,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -318,12 +319,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.write(bytes, 0, 5);
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(RuntimeException ex)
 		{
@@ -332,7 +333,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -349,12 +350,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.flush();
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(RuntimeException ex)
 		{
@@ -363,7 +364,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -378,12 +379,12 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 1000);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 		try
 		{
 			instance.close();
-			fail("Exception should have been thrown!");
+			fail("Exception should have been thrown!"); // NOPMD
 		}
 		catch(RuntimeException ex)
 		{
@@ -392,7 +393,7 @@ public class TimeoutOutputStreamTest
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 
@@ -417,14 +418,14 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 100);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 
 		instance.write(17); // would throw exception in case of a real output stream.
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -449,14 +450,14 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 100);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 
 		instance.write(bytes); // would throw exception in case of a real output stream.
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -481,14 +482,14 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 100);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 
 		instance.write(bytes, 0, 5); // would throw exception in case of a real output stream.
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -512,14 +513,14 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 100);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 
 		instance.flush(); // would throw exception in case of a real output stream.
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	@Test
@@ -542,14 +543,14 @@ public class TimeoutOutputStreamTest
 		replay(mockStream);
 
 		TimeoutOutputStream instance = new TimeoutOutputStream(mockStream, 100);
-		assertTrue("Stream is already closed!", !instance.isClosed());
+		assertFalse("Stream is already closed!", instance.isClosed());
 		assertTrue("Watchdog Thread is not running!", instance.isWatchdogThreadRunning());
 
 		instance.close(); // would throw exception in case of a real output stream.
 		waitForSomeTime();
 		verify(mockStream);
 		assertTrue("Stream is not closed!", instance.isClosed());
-		assertTrue("Watchdog Thread is still running!", !instance.isWatchdogThreadRunning());
+		assertFalse("Watchdog Thread is still running!", instance.isWatchdogThreadRunning());
 	}
 
 	private void waitForSomeTime()

@@ -124,7 +124,7 @@ public class SemanticVersion
 		this(major, minor, patch, preRelease, EMPTY_STRING_ARRAY);
 	}
 
-	public SemanticVersion(long major, long minor, long patch, String[] preRelease, String[] buildMetadata)
+	public SemanticVersion(long major, long minor, long patch, final String[] preRelease, final String[] buildMetadata)
 	{
 		if(major < 0)
 		{
@@ -138,16 +138,10 @@ public class SemanticVersion
 		{
 			throw new IllegalArgumentException("patch must not be negative!");
 		}
-		if(preRelease == null)
-		{
-			preRelease = EMPTY_STRING_ARRAY;
-		}
-		if(buildMetadata == null)
-		{
-			buildMetadata = EMPTY_STRING_ARRAY;
-		}
+		String[] preReleaseCopy = preProcess(preRelease);
+		String[] buildMetadataCopy = preProcess(buildMetadata);
 
-		for (String current : preRelease)
+		for (String current : preReleaseCopy)
 		{
 			if(current == null)
 			{
@@ -159,7 +153,7 @@ public class SemanticVersion
 			}
 		}
 
-		for (String current : buildMetadata)
+		for (String current : buildMetadataCopy)
 		{
 			if(current == null)
 			{
@@ -171,26 +165,25 @@ public class SemanticVersion
 			}
 		}
 
-		// ensure immutability
-		if(preRelease.length != 0)
-		{
-			String[] newArray = new String[preRelease.length];
-			System.arraycopy(preRelease, 0, newArray, 0, preRelease.length);
-			preRelease = newArray;
-		}
-
-		if(buildMetadata.length != 0)
-		{
-			String[] newArray = new String[buildMetadata.length];
-			System.arraycopy(buildMetadata, 0, newArray, 0, buildMetadata.length);
-			buildMetadata = newArray;
-		}
-
 		this.major = major;
 		this.minor = minor;
 		this.patch = patch;
-		this.preRelease = preRelease;
-		this.buildMetadata = buildMetadata;
+		this.preRelease = preReleaseCopy;
+		this.buildMetadata = buildMetadataCopy;
+	}
+
+	private static String[] preProcess(String[] input) {
+		if(input == null)
+		{
+			return EMPTY_STRING_ARRAY;
+		}
+		if(input.length == 0)
+		{
+			return EMPTY_STRING_ARRAY;
+		}
+		String[] newArray = new String[input.length];
+		System.arraycopy(input, 0, newArray, 0, input.length);
+		return newArray;
 	}
 
 	public long getMajor()

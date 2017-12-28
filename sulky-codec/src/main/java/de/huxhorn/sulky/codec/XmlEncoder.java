@@ -123,7 +123,7 @@ public class XmlEncoder<E>
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			e.printStackTrace(); // NOPMD
 			return null;
 		}
 		finally

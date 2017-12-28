@@ -569,14 +569,6 @@ public class BlobRepositoryImplTest
 		// lets check if creating baseDirectory actually fails...
 		assumeTrue(!baseDirectory.mkdirs());
 		if(logger.isInfoEnabled()) logger.info("Actually executing brokenBaseDirectory test...");
-		try
-		{
-        	instance.setBaseDirectory(baseDirectory);
-			fail("Expected exception was not thrown!");
-		}
-		catch(IllegalArgumentException ex)
-		{
-			// expected
-		}
+        instance.setBaseDirectory(baseDirectory);
     }
 }

@@ -429,12 +429,13 @@ public final class MemoryStatus
 	class GcMouseListener
 			extends MouseAdapter
 	{
+		@SuppressWarnings("PMD.DoNotCallGarbageCollectionExplicitly")
 		public void mouseClicked(MouseEvent evt)
 		{
 			if (evt.getClickCount() >= 2 && evt.getButton() == MouseEvent.BUTTON1)
 			{
 				// this is not a bug! - Performance - Explicit garbage collection; extremely dubious except in benchmarking code
-				System.gc(); //NOSONAR
+				System.gc();
 				if (logger.isInfoEnabled()) logger.info("Executed garbage-collection.");
 				updateMemoryBar();
 			}

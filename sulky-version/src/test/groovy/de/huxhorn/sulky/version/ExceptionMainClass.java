@@ -34,6 +34,7 @@
 
 package de.huxhorn.sulky.version;
 
+@SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
 public final class ExceptionMainClass
 {
 	private ExceptionMainClass() {}

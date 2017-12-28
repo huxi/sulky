@@ -131,7 +131,7 @@ public class PropertyListReader
 		{
 			return readDict(reader);
 		}
-		throw new RuntimeException("Unexpected XML-Node: "+reader.getLocalName());
+		throw new XMLStreamException("Unexpected XML-Node: "+reader.getLocalName());
 	}
 
 	private Object readDate(XMLStreamReader reader)

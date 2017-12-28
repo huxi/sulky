@@ -88,7 +88,7 @@ public class SerializableEncoder<E extends Serializable>
 		}
 		catch(IOException e)
 		{
-			e.printStackTrace();
+			e.printStackTrace(); // NOPMD
 			return null;
 		}
 		finally

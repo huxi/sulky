@@ -150,13 +150,14 @@ public class AndTest
 	}
 
 	@Test
-	@SuppressWarnings("PMD.EqualsNull")
+	@SuppressWarnings({"PMD.EqualsNull", "PMD.UseAssertEqualsInsteadOfAssertTrue"})
 	public void testBasicEquals()
 	{
 		Condition condition = new And();
 		//noinspection ObjectEqualsNull
 		assertFalse(condition.equals(null));
 		assertFalse(condition.equals(new Object()));
+		//noinspection EqualsWithItself
 		assertTrue(condition.equals(condition));
 	}
 

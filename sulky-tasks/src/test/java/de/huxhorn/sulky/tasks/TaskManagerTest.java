@@ -866,7 +866,7 @@ public class TaskManagerTest
 			if(logger.isInfoEnabled()) logger.info("Sleeping for {}ms.", sleepTime);
 			Thread.sleep(sleepTime);
 			if(logger.isInfoEnabled()) logger.info("Throwing exception.");
-			throw new RuntimeException("Foo.");
+			throw new RuntimeException("Foo."); // NOPMD
 		}
 
 		@Override
@@ -907,7 +907,7 @@ public class TaskManagerTest
 				setCurrentStep(i);
 			}
 			if(logger.isInfoEnabled()) logger.info("Throwing exception.");
-			throw new RuntimeException("Foo.");
+			throw new RuntimeException("Foo."); // NOPMD
 		}
 
 		@Override

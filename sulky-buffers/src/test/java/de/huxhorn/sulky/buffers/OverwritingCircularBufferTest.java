@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -64,12 +65,12 @@ public class OverwritingCircularBufferTest
 	public void empty()
 	{
 		assertTrue("Instance is not empty!", instance.isEmpty());
-		assertTrue("Instance is full!", !instance.isFull());
+		assertFalse("Instance is full!", instance.isFull());
 		assertEquals("Size doesn't match!", 0, instance.getAvailableElements());
 		assertEquals("getBufferSize doesn't match!", TEST_BUFFER_SIZE, instance.getBufferSize());
 		assertEquals("overflowCounter doesn't match!", 0, instance.getOverflowCounter());
 		Iterator<Long> iterator = instance.iterator();
-		assertTrue("iterator has next!", !iterator.hasNext());
+		assertFalse("iterator has next!", iterator.hasNext());
 	}
 
 	@Test
@@ -77,8 +78,8 @@ public class OverwritingCircularBufferTest
 	{
 		instance.add((long) 1);
 
-		assertTrue("Instance is empty!", !instance.isEmpty());
-		assertTrue("Instance is full!", !instance.isFull());
+		assertFalse("Instance is empty!", instance.isEmpty());
+		assertFalse("Instance is full!", instance.isFull());
 		assertEquals("Size doesn't match!", 1, instance.getAvailableElements());
 		assertEquals("getBufferSize doesn't match!", TEST_BUFFER_SIZE, instance.getBufferSize());
 		assertEquals("overflowCounter doesn't match!", 0, instance.getOverflowCounter());
@@ -102,8 +103,8 @@ public class OverwritingCircularBufferTest
 			instance.add((long) i);
 		}
 
-		assertTrue("Instance is empty!", !instance.isEmpty());
-		assertTrue("Instance is full!", !instance.isFull());
+		assertFalse("Instance is empty!", instance.isEmpty());
+		assertFalse("Instance is full!", instance.isFull());
 		assertEquals("Size doesn't match!", TEST_BUFFER_SIZE - 1, instance.getAvailableElements());
 		assertEquals("getBufferSize doesn't match!", TEST_BUFFER_SIZE, instance.getBufferSize());
 		assertEquals("overflowCounter doesn't match!", 0, instance.getOverflowCounter());
@@ -130,7 +131,7 @@ public class OverwritingCircularBufferTest
 			instance.add((long) i);
 		}
 
-		assertTrue("Instance is empty!", !instance.isEmpty());
+		assertFalse("Instance is empty!", instance.isEmpty());
 		assertTrue("Instance isn't full!", instance.isFull());
 		assertEquals("Size doesn't match!", TEST_BUFFER_SIZE, instance.getAvailableElements());
 		assertEquals("getBufferSize doesn't match!", TEST_BUFFER_SIZE, instance.getBufferSize());
@@ -159,7 +160,7 @@ public class OverwritingCircularBufferTest
 		}
 		instance.add((long) TEST_BUFFER_SIZE);
 
-		assertTrue("Instance is empty!", !instance.isEmpty());
+		assertFalse("Instance is empty!", instance.isEmpty());
 		assertTrue("Instance isn't full!", instance.isFull());
 		assertEquals("Size doesn't match!", TEST_BUFFER_SIZE, instance.getAvailableElements());
 		assertEquals("getBufferSize doesn't match!", TEST_BUFFER_SIZE, instance.getBufferSize());
@@ -188,7 +189,7 @@ public class OverwritingCircularBufferTest
 			instance.add((long) i);
 		}
 
-		assertTrue("Instance is empty!", !instance.isEmpty());
+		assertFalse("Instance is empty!", instance.isEmpty());
 		assertTrue("Instance isn't full!", instance.isFull());
 		assertEquals("Size doesn't match!", TEST_BUFFER_SIZE, instance.getAvailableElements());
 		assertEquals("getBufferSize doesn't match!", TEST_BUFFER_SIZE, instance.getBufferSize());
@@ -221,7 +222,7 @@ public class OverwritingCircularBufferTest
 		instance.addAll(values);
 		if(logger.isInfoEnabled()) logger.info("Buffer after adding: {}", instance);
 
-		assertTrue("Instance is empty!", !instance.isEmpty());
+		assertFalse("Instance is empty!", instance.isEmpty());
 		assertTrue("Instance isn't full!", instance.isFull());
 		assertEquals("Size doesn't match!", TEST_BUFFER_SIZE, instance.getAvailableElements());
 		assertEquals("getBufferSize doesn't match!", TEST_BUFFER_SIZE, instance.getBufferSize());
@@ -254,7 +255,7 @@ public class OverwritingCircularBufferTest
 		instance.addAll(values);
 		if(logger.isInfoEnabled()) logger.info("Buffer after adding: {}", instance);
 
-		assertTrue("Instance is empty!", !instance.isEmpty());
+		assertFalse("Instance is empty!", instance.isEmpty());
 		assertTrue("Instance isn't full!", instance.isFull());
 		assertEquals("Size doesn't match!", TEST_BUFFER_SIZE, instance.getAvailableElements());
 		assertEquals("getBufferSize doesn't match!", TEST_BUFFER_SIZE, instance.getBufferSize());
@@ -327,7 +328,7 @@ public class OverwritingCircularBufferTest
 		}
 		else
 		{
-			assertTrue("Instance is empty!", !impl.isEmpty());
+			assertFalse("Instance is empty!", impl.isEmpty());
 		}
 		long expectedElementCount = valueCount;
 		long expectedOverflowCount = 0;
@@ -339,7 +340,7 @@ public class OverwritingCircularBufferTest
 		}
 		else
 		{
-			assertTrue("Instance is full!", !impl.isFull());
+			assertFalse("Instance is full!", impl.isFull());
 		}
 		assertEquals("Available doesn't match!", expectedElementCount, impl.getAvailableElements());
 		long overflowCounter = instance.getOverflowCounter();
@@ -347,7 +348,7 @@ public class OverwritingCircularBufferTest
 		assertEquals("Size doesn't match!", valueCount, impl.getSize());
 		for(int i = 0; i < expectedElementCount; i++)
 		{
-			assertTrue("Instance is empty!", !impl.isEmpty());
+			assertFalse("Instance is empty!", impl.isEmpty());
 			assertEquals("Size doesn't match!", expectedElementCount - i, impl.getAvailableElements());
 			if(logger.isDebugEnabled()) logger.debug("Size before removal of element #{}: {}", i, impl.getAvailableElements());
 
@@ -357,7 +358,7 @@ public class OverwritingCircularBufferTest
 			if(logger.isInfoEnabled()) logger.info("Element #{}: removeValue={}", i, removeValue);
 			assertEquals("Unexpected value returned by remove!", (Long) (expectedOverflowCount + i), removeValue);
 
-			assertTrue("Instance is full!", !impl.isFull());
+			assertFalse("Instance is full!", impl.isFull());
 			assertEquals("Size doesn't match!", expectedElementCount - i - 1, impl.getAvailableElements());
 		}
 		assertTrue("Instance isn't empty!", impl.isEmpty());
@@ -372,7 +373,7 @@ public class OverwritingCircularBufferTest
 		assertEquals("overflowCounter doesn't match!", 0, impl.getOverflowCounter());
 		assertEquals("getSize doesn't match!", 0, impl.getSize());
 		assertTrue("Instance isn't empty!", impl.isEmpty());
-		assertTrue("Instance is full!", !impl.isFull());
+		assertFalse("Instance is full!", impl.isFull());
 	}
 
 	public void internalTestRemoveAll(OverwritingCircularBuffer<Long> impl, int valueCount)
@@ -395,7 +396,7 @@ public class OverwritingCircularBufferTest
 		}
 		else
 		{
-			assertTrue("Instance is empty!", !impl.isEmpty());
+			assertFalse("Instance is empty!", impl.isEmpty());
 		}
 		long expectedElementCount = valueCount;
 		long expectedOverflowCount = 0;
@@ -407,7 +408,7 @@ public class OverwritingCircularBufferTest
 		}
 		else
 		{
-			assertTrue("Instance is full!", !impl.isFull());
+			assertFalse("Instance is full!", impl.isFull());
 		}
 		assertEquals("Size doesn't match!", expectedElementCount, impl.getAvailableElements());
 		assertEquals("overflowCounter doesn't match!", expectedOverflowCount, impl.getOverflowCounter());
@@ -429,6 +430,6 @@ public class OverwritingCircularBufferTest
 		assertEquals("overflowCounter doesn't match!", 0, impl.getOverflowCounter());
 		assertEquals("getSize doesn't match!", 0, impl.getSize());
 		assertTrue("Instance isn't empty!", impl.isEmpty());
-		assertTrue("Instance is full!", !impl.isFull());
+		assertFalse("Instance is full!", impl.isFull());
 	}
 }
