@@ -76,4 +76,10 @@
 		<exclude name="NullAssignment"/>
 	</rule>
 
+	<rule ref="category/java/performance.xml">
+		<exclude name="AvoidUsingShortType"/> <!-- also triggered by short[] -->
+		<exclude name="RedundantFieldInitializer"/> <!-- correct, but eeeew -->
+		<exclude name="UseStringBufferForStringAppends"/> <!-- outdated rule -->
+	</rule>
+
 </ruleset>

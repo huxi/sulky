@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,8 +47,6 @@ import java.util.zip.ZipFile;
 
 public class ClassFileScanner
 {
-	private final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(ClassFileScanner.class);
-
 	private static final String CLASS_EXTENSION = ".class";
 	private static final int MAGIC_NUMBER_CLASS = 0xCAFEBABE;
 
@@ -106,6 +104,7 @@ public class ClassFileScanner
 
 	}
 
+	@SuppressWarnings("PMD.AvoidFileStream")
 	private void processFile(String absoluteBasePath, File file, String source)
 			throws IOException
 	{
@@ -133,7 +132,7 @@ public class ClassFileScanner
 			FileInputStream input = null;
 			try
 			{
-				// not changed to Files.newInputStream() because targetCompatibility = 1.5
+				// not changed to Files.newInputStream() because targetCompatibility = 1.6
 				input = new FileInputStream(file);
 				scanClass(input, classFileName, source);
 			}
@@ -233,7 +232,7 @@ public class ClassFileScanner
 		int magic = dis.readInt();
 		if(MAGIC_NUMBER_CLASS != magic)
 		{
-			if(logger.isDebugEnabled()) logger.debug("Wrong magic number for class in {}. Ignoring.", classFileName);
+			//if(logger.isDebugEnabled()) logger.debug("Wrong magic number for class in {}. Ignoring.", classFileName);
 			return;
 		}
 		/*char minor = */dis.readChar();

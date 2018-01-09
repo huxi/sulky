@@ -1,6 +1,6 @@
 /*
  * sulky-resources - inheritance-safe class resources.
- * Copyright (C) 2002-2017 Joern Huxhorn
+ * Copyright (C) 2002-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2002-2017 Joern Huxhorn
+ * Copyright 2002-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -778,6 +778,7 @@ public final class Resources
 		return recursiveResolve(stack, clazz, resourcePath);
 	}
 
+	@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 	private static URL recursiveResolve(List<String> stack, Class clazz, String resourcePath)
 	{
 		final Logger logger = LoggerFactory.getLogger(Resources.class);
@@ -824,11 +825,7 @@ public final class Resources
 					currentLinkTarget = PathTools.getAbsolutePath(basePath, previousLinkTarget);
 					if(currentLinkTarget == null)
 					{
-						if(logger.isDebugEnabled())
-						{
-							logger
-								.debug("getAbsolutePath(\"" + basePath + "\", \"" + previousLinkTarget + "\") returned null - no valid absolute path found.");
-						}
+						if(logger.isDebugEnabled()) logger.debug("getAbsolutePath(\"{}\", \"{}\") returned null - no valid absolute path found.", basePath, previousLinkTarget);
 					}
 					else
 					{

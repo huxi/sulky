@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -297,10 +297,18 @@ public class BlobRepositoryImpl
 	{
 		prepare();
 		Set<String> result=new HashSet<>();
-		File[] subDirs = baseDirectory.listFiles(new MatchingDirectoriesFileFilter());
+		File[] subDirs = baseDirectory.listFiles(MatchingDirectoriesFileFilter.INSTANCE);
+		if(subDirs == null)
+		{
+			return result;
+		}
 		for(File current : subDirs)
 		{
-			File[] contained=current.listFiles(new MatchingFilesFileFilter());
+			File[] contained=current.listFiles(MatchingFilesFileFilter.INSTANCE);
+			if(contained == null)
+			{
+				continue;
+			}
 			for(File curBlob:contained)
 			{
 				result.add(current.getName()+curBlob.getName());
@@ -358,6 +366,10 @@ public class BlobRepositoryImpl
 		{
 			if (logger.isDebugEnabled()) logger.debug("Searching for candidates - HashStart='{}', hashRest='{}'", hashStart, hashRest);
 			File[] files = parent.listFiles(new StartsWithFileFilter(hashRest));
+			if(files == null)
+			{
+				return null;
+			}
 			int count = files.length;
 			if (count == 0)
 			{
@@ -556,6 +568,8 @@ public class BlobRepositoryImpl
 	private static class MatchingDirectoriesFileFilter
 		implements FileFilter
 	{
+		static final FileFilter INSTANCE = new MatchingDirectoriesFileFilter();
+
 		public boolean accept(File file)
 		{
 			return file.isDirectory() && file.getName().length() == HASH_DIRECTORY_NAME_LENGTH;
@@ -565,6 +579,8 @@ public class BlobRepositoryImpl
 	private static class MatchingFilesFileFilter
 		implements FileFilter
 	{
+		static final FileFilter INSTANCE = new MatchingFilesFileFilter();
+
 		public boolean accept(File file)
 		{
 			return file.isFile() && file.getName().length() == HASH_REMAINDER_NAME_LENGTH;

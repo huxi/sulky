@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,7 +182,7 @@ public final class SafeString
 		BYTE_STRINGS = new String[256];
 		for(int i=0;i<256;i++)
 		{
-			@SuppressWarnings("StringBufferReplaceableByString")
+			@SuppressWarnings({"StringBufferReplaceableByString", "PMD.AvoidInstantiatingObjectsInLoops"})
 			StringBuilder sb=new StringBuilder(2);
 
 			sb.append(hexChars[i >>> 4]).append(hexChars[i & 0xf]);
@@ -321,6 +321,7 @@ public final class SafeString
 	 * @param mapStyle       the Map printing style.
 	 * @param dejaVu         used to detect recursions.
 	 */
+	@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 	private static void recursiveAppend(Object o, StringBuilder stringBuilder, StringStyle stringStyle, MapStyle mapStyle, IdentityHashMap<Object, Object> dejaVu)
 	{
 		// o will never be null or String at this point since those cases are already handled by shortcuts.
