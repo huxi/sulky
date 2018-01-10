@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@
 
 package de.huxhorn.sulky.buffers;
 
-import de.huxhorn.sulky.io.IOUtilities;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
@@ -178,6 +177,7 @@ public class SoftReferenceCachingBuffer<E>
 
 		public void run()
 		{
+			final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);
 
 			for(;;)
 			{
@@ -191,15 +191,12 @@ public class SoftReferenceCachingBuffer<E>
 					}
 					else
 					{
-						final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);
 						if(logger.isWarnEnabled()) logger.warn("Unexpected reference!! {}", ref);
 					}
 				}
 				catch(InterruptedException e)
 				{
-					final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);
 					if(logger.isInfoEnabled()) logger.info("Interrupted ReferenceQueueRunnable...");
-					IOUtilities.interruptIfNecessary(e);
 					break;
 				}
 			}

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ package de.huxhorn.sulky.buffers.filtering;
 
 import de.huxhorn.sulky.buffers.Buffer;
 import de.huxhorn.sulky.conditions.Condition;
-import de.huxhorn.sulky.io.IOUtilities;
 import de.huxhorn.sulky.tasks.AbstractProgressingCallable;
 import java.util.Objects;
 import org.slf4j.Logger;
@@ -107,7 +106,6 @@ public class FilteringCallable<E>
 			catch(InterruptedException e)
 			{
 				if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
-				IOUtilities.interruptIfNecessary(e);
 				return lastFilteredElement;
 			}
 		}

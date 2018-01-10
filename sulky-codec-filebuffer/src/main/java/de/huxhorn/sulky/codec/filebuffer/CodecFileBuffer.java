@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,6 @@ import de.huxhorn.sulky.buffers.FileBuffer;
 import de.huxhorn.sulky.buffers.Reset;
 import de.huxhorn.sulky.buffers.SetOperation;
 import de.huxhorn.sulky.codec.Codec;
-import de.huxhorn.sulky.io.IOUtilities;
 import java.io.File;
 import java.io.IOException;
 import java.io.InvalidClassException;
@@ -191,7 +190,6 @@ public class CodecFileBuffer<E>
 		}
 		catch(IOException ex)
 		{
-			IOUtilities.interruptIfNecessary(ex);
 			throw new IllegalArgumentException("Could not read magic value from file '" + dataFile.getAbsolutePath() + "'!", ex);
 		}
 		finally
@@ -199,7 +197,6 @@ public class CodecFileBuffer<E>
 			lock.unlock();
 		}
 	}
-
 
 	public Codec<E> getCodec()
 	{
@@ -271,7 +268,6 @@ public class CodecFileBuffer<E>
 			if(t!=null)
 			{
 				if(logger.isWarnEnabled()) logger.warn("Exception while initializing files!", t);
-				IOUtilities.interruptIfNecessary(t);
 				return false;
 			}
 			return true;
@@ -308,17 +304,16 @@ public class CodecFileBuffer<E>
 
 	public long getSize()
 	{
-		RandomAccessFile raf = null;
+		if(!indexFile.canRead())
+		{
+			return 0;
+		}
+
 		Throwable throwable;
 		Lock lock = readWriteLock.readLock();
 		lock.lock(); // FindBugs "Multithreaded correctness - Method does not release lock on all exception paths" is a false positive
-		try
+		try(RandomAccessFile raf = new RandomAccessFile(indexFile, "r"))
 		{
-			if(!indexFile.canRead())
-			{
-				return 0;
-			}
-			raf = new RandomAccessFile(indexFile, "r");
 			return indexStrategy.getSize(raf);
 		}
 		catch(Throwable e)
@@ -327,15 +322,10 @@ public class CodecFileBuffer<E>
 		}
 		finally
 		{
-			IOUtilities.closeQuietly(raf);
 			lock.unlock();
 		}
 		// it's a really bad idea to log while locked *sigh*
-		if(throwable != null)
-		{
-			IOUtilities.interruptIfNecessary(throwable);
-			if(logger.isDebugEnabled()) logger.debug("Couldn't retrieve size!", throwable);
-		}
+		if(logger.isDebugEnabled()) logger.debug("Couldn't retrieve size!", throwable);
 		return 0;
 	}
 
@@ -348,20 +338,17 @@ public class CodecFileBuffer<E>
 	 */
 	public E get(long index)
 	{
-		RandomAccessFile randomSerializeIndexFile = null;
-		RandomAccessFile randomSerializeFile = null;
+		if(!dataFile.canRead() || !indexFile.canRead())
+		{
+			return null;
+		}
+
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
-		Throwable throwable = null;
-		try
+		Throwable throwable;
+		try(RandomAccessFile randomSerializeIndexFile = new RandomAccessFile(indexFile, "r");
+			RandomAccessFile randomSerializeFile = new RandomAccessFile(dataFile, "r"))
 		{
-			if(!dataFile.canRead() || !indexFile.canRead())
-			{
-				return null;
-			}
-			randomSerializeIndexFile = new RandomAccessFile(indexFile, "r");
-			randomSerializeFile = new RandomAccessFile(dataFile, "r");
-
 			return dataStrategy.get(index, randomSerializeIndexFile, randomSerializeFile, codec, indexStrategy);
 		}
 		catch(Throwable e)
@@ -370,28 +357,22 @@ public class CodecFileBuffer<E>
 		}
 		finally
 		{
-			IOUtilities.closeQuietly(randomSerializeFile);
-			IOUtilities.closeQuietly(randomSerializeIndexFile);
 			lock.unlock();
 		}
 
 		// it's a really bad idea to log while locked *sigh*
-		if(throwable != null)
+		if(throwable instanceof ClassNotFoundException
+			|| throwable instanceof InvalidClassException)
 		{
-			if(throwable instanceof ClassNotFoundException
-				|| throwable instanceof InvalidClassException)
-			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index {}!\n{}", index, throwable);
-			}
-			else if(throwable instanceof ClassCastException)
-			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index {}!\n{}", index, throwable);
-			}
-			else
-			{
-				if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index {}!", index, throwable);
-			}
-			IOUtilities.interruptIfNecessary(throwable);
+			if(logger.isWarnEnabled()) logger.warn("Couldn't deserialize object at index {}!\n{}", index, throwable);
+		}
+		else if(throwable instanceof ClassCastException)
+		{
+			if(logger.isWarnEnabled()) logger.warn("Couldn't cast deserialized object at index {}!\n{}", index, throwable);
+		}
+		else
+		{
+			if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index {}!", index, throwable);
 		}
 		return null;
 	}
@@ -405,16 +386,13 @@ public class CodecFileBuffer<E>
 	public void add(E element)
 	{
 		initFilesIfNecessary();
-		RandomAccessFile randomIndexFile = null;
-		RandomAccessFile randomDataFile = null;
+
 		Lock lock = readWriteLock.writeLock();
 		lock.lock();
 		Throwable throwable = null;
-		try
+		try(RandomAccessFile randomIndexFile = new RandomAccessFile(indexFile, "rw");
+			RandomAccessFile randomDataFile = new RandomAccessFile(dataFile, "rw"))
 		{
-			randomIndexFile = new RandomAccessFile(indexFile, "rw");
-			randomDataFile = new RandomAccessFile(dataFile, "rw");
-
 			dataStrategy.add(element, randomIndexFile, randomDataFile, codec, indexStrategy);
 			// call processors if available
 			List<ElementProcessor<E>> localProcessors = elementProcessors;
@@ -432,15 +410,12 @@ public class CodecFileBuffer<E>
 		}
 		finally
 		{
-			IOUtilities.closeQuietly(randomDataFile);
-			IOUtilities.closeQuietly(randomIndexFile);
 			lock.unlock();
 		}
 		if(throwable != null)
 		{
 			// it's a really bad idea to log while locked *sigh*
-			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
-			IOUtilities.interruptIfNecessary(throwable);
+			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable); // NOPMD
 		}
 	}
 
@@ -458,16 +433,13 @@ public class CodecFileBuffer<E>
 			int newElementCount = elements.size();
 			if(newElementCount > 0)
 			{
-				RandomAccessFile randomIndexFile = null;
-				RandomAccessFile randomDataFile = null;
 				Lock lock = readWriteLock.writeLock();
 				lock.lock();
-				Throwable throwable = null;
-				try
+				Throwable throwable;
+				try(RandomAccessFile randomIndexFile = new RandomAccessFile(indexFile, "rw");
+					RandomAccessFile randomDataFile = new RandomAccessFile(dataFile, "rw")
+				)
 				{
-					randomIndexFile = new RandomAccessFile(indexFile, "rw");
-					randomDataFile = new RandomAccessFile(dataFile, "rw");
-
 					dataStrategy.addAll(elements, randomIndexFile, randomDataFile, codec, indexStrategy);
 
 					// call processors if available
@@ -478,6 +450,7 @@ public class CodecFileBuffer<E>
 							current.processElements(elements);
 						}
 					}
+					return;
 				}
 				catch(Throwable e)
 				{
@@ -485,18 +458,11 @@ public class CodecFileBuffer<E>
 				}
 				finally
 				{
-					IOUtilities.closeQuietly(randomDataFile);
-					IOUtilities.closeQuietly(randomIndexFile);
 					lock.unlock();
 				}
-				if(throwable != null)
-				{
-					// it's a really bad idea to log while locked *sigh*
-					if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
-					IOUtilities.interruptIfNecessary(throwable);
-				}
+				// it's a really bad idea to log while locked *sigh*
+				if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable); // NOPMD
 			}
-
 		}
 	}
 
@@ -544,8 +510,7 @@ public class CodecFileBuffer<E>
 		}
 		if(t != null)
 		{
-			if(logger.isWarnEnabled()) logger.warn("Exception while resetting file!", t);
-			IOUtilities.interruptIfNecessary(t);
+			if(logger.isWarnEnabled()) logger.warn("Exception while resetting file!", t); // NOPMD
 		}
 	}
 
@@ -661,17 +626,14 @@ public class CodecFileBuffer<E>
 	public boolean set(long index, E element)
 	{
 		initFilesIfNecessary();
-		RandomAccessFile randomIndexFile = null;
-		RandomAccessFile randomDataFile = null;
+
 		Lock lock = readWriteLock.writeLock();
 		lock.lock();
 		Throwable throwable = null;
 		boolean result = false;
-		try
+		try(RandomAccessFile randomIndexFile = new RandomAccessFile(indexFile, "rw");
+			RandomAccessFile randomDataFile = new RandomAccessFile(dataFile, "rw"))
 		{
-			randomIndexFile = new RandomAccessFile(indexFile, "rw");
-			randomDataFile = new RandomAccessFile(dataFile, "rw");
-
 			result = dataStrategy.set(index, element, randomIndexFile, randomDataFile, codec, indexStrategy);
 			// call processors if available
 			List<ElementProcessor<E>> localProcessors = elementProcessors;
@@ -689,15 +651,12 @@ public class CodecFileBuffer<E>
 		}
 		finally
 		{
-			IOUtilities.closeQuietly(randomDataFile);
-			IOUtilities.closeQuietly(randomIndexFile);
 			lock.unlock();
 		}
 		if(throwable != null)
 		{
 			// it's a really bad idea to log while locked *sigh*
-			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
-			IOUtilities.interruptIfNecessary(throwable);
+			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable); // NOPMD
 		}
 		return result;
 	}

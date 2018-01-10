@@ -17,7 +17,6 @@ project(':sulky-generics') {
 	archivesBaseName = 'de.huxhorn.sulky.generics'
 	description = 'This file is part of the sulky modules. It contains several interfaces that use generics. There\'s a general definition of Serializer/Deserializer and a simple implementation using object serialization.'
 	dependencies {
-		compile project(':sulky-io')
 	}
 }
 
@@ -47,7 +46,6 @@ project(':sulky-codec') {
 	description = 'This file is part of the sulky modules.'
 	dependencies {
 		compile libraries.'slf4j-api'
-		compile project(':sulky-io')
 	}
 }
 
@@ -56,7 +54,6 @@ project(':sulky-buffers') {
 	description = 'This file is part of the sulky modules. It contains the definition of buffers, operations on buffers and certain buffer implementations.'
 	dependencies {
 		compile libraries.'slf4j-api'
-		compile project(':sulky-io')
 	}
 }
 
@@ -76,7 +73,6 @@ project(':sulky-codec-filebuffer') {
 	dependencies {
 		compile libraries.'slf4j-api'
 		compile libraries.'protobuf'
-		compile project(':sulky-io')
 		compile project(':sulky-codec')
 		compile project(':sulky-buffers')
 	}
@@ -111,7 +107,6 @@ project(':sulky-sounds-impl-jlayer') {
 		compile libraries.'slf4j-api'
 		compile libraries.'jlayer'
 		compile project(':sulky-sounds-api')
-		compile project(':sulky-io')
 	}
 }
 
@@ -157,7 +152,6 @@ project(':sulky-tasks') {
 	description = 'This file is part of the sulky modules. It contains a TaskManager and support classes.'
 	dependencies {
 		compile libraries.'slf4j-api'
-		compile project(':sulky-io')
 	}
 }
 
@@ -166,7 +160,6 @@ project(':sulky-buffers-filtering') {
 	description = 'This file is part of the sulky modules. It contains the definition of buffers, operations on buffers and certain buffer implementations.'
 	dependencies {
 		compile libraries.'slf4j-api'
-		compile project(':sulky-io')
 		compile project(':sulky-buffers')
 		compile project(':sulky-conditions')
 		compile project(':sulky-tasks')

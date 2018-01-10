@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,9 @@
 
 package de.huxhorn.sulky.codec;
 
-import de.huxhorn.sulky.io.IOUtilities;
 import java.beans.XMLDecoder;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
 public class XmlDecoder<E>
@@ -66,20 +66,8 @@ public class XmlDecoder<E>
 
 	public E decode(byte[] bytes)
 	{
-		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-		XMLDecoder decoder;
-		try
+		try(XMLDecoder decoder=createXMLDecoder(bytes))
 		{
-			if(compressing)
-			{
-				GZIPInputStream gis = new GZIPInputStream(bis);
-				decoder = new XMLDecoder(gis);
-			}
-			else
-			{
-				decoder = new XMLDecoder(bis);
-			}
-
 			Object result = decoder.readObject();
 			@SuppressWarnings({"unchecked"})
 			E e = (E) result;
@@ -87,14 +75,21 @@ public class XmlDecoder<E>
 		}
 		catch(Throwable e)
 		{
-			IOUtilities.interruptIfNecessary(e);
 			// silently ignore any problems
 			return null;
 		}
-		finally
+	}
+
+	private XMLDecoder createXMLDecoder(byte[] bytes)
+			throws IOException
+	{
+		ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+		if(compressing)
 		{
-			IOUtilities.closeQuietly(bis);
+			GZIPInputStream gis = new GZIPInputStream(bis);
+			return new XMLDecoder(gis);
 		}
+		return new XMLDecoder(bis);
 	}
 
 	public String toString()

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@
 
 package de.huxhorn.sulky.buffers;
 
-import de.huxhorn.sulky.io.IOUtilities;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -103,17 +102,16 @@ public class SerializingFileBuffer<E>
 
 	public long getSize()
 	{
-		RandomAccessFile raf = null;
+		if(!indexFile.canRead())
+		{
+			return 0;
+		}
+
 		Throwable throwable;
 		Lock lock = readWriteLock.readLock();
 		lock.lock(); // FindBugs "Multithreaded correctness - Method does not release lock on all exception paths" is a false positive
-		try
+		try(RandomAccessFile raf = new RandomAccessFile(indexFile, "r"))
 		{
-			if(!indexFile.canRead())
-			{
-				return 0;
-			}
-			raf = new RandomAccessFile(indexFile, "r");
 			return internalGetSize(raf);
 		}
 		catch(Throwable e)
@@ -122,34 +120,28 @@ public class SerializingFileBuffer<E>
 		}
 		finally
 		{
-			IOUtilities.closeQuietly(raf);
 			lock.unlock();
 		}
 		// it's a really bad idea to log while locked *sigh*
-		if(throwable != null)
-		{
-			if(logger.isDebugEnabled()) logger.debug("Couldn't retrieve size!", throwable);
-			IOUtilities.interruptIfNecessary(throwable);
-		}
+		if(logger.isDebugEnabled()) logger.debug("Couldn't retrieve size!", throwable);
 		return 0;
 	}
 
 	public E get(long index)
 	{
-		RandomAccessFile randomSerializeIndexFile = null;
-		RandomAccessFile randomSerializeFile = null;
+		if(!dataFile.canRead() || !indexFile.canRead())
+		{
+			return null;
+		}
+
 		Lock lock = readWriteLock.readLock();
 		lock.lock();
 		Throwable throwable = null;
-		long elementsCount = 0;
-		try
+		long elementsCount;
+		try(RandomAccessFile randomSerializeIndexFile = new RandomAccessFile(indexFile, "r");
+			RandomAccessFile randomSerializeFile = new RandomAccessFile(dataFile, "r")
+		)
 		{
-			if(!dataFile.canRead() || !indexFile.canRead())
-			{
-				return null;
-			}
-			randomSerializeIndexFile = new RandomAccessFile(indexFile, "r");
-			randomSerializeFile = new RandomAccessFile(dataFile, "r");
 			elementsCount = internalGetSize(randomSerializeIndexFile);
 			if(index >= 0 && index < elementsCount)
 			{
@@ -163,8 +155,6 @@ public class SerializingFileBuffer<E>
 		}
 		finally
 		{
-			IOUtilities.closeQuietly(randomSerializeFile);
-			IOUtilities.closeQuietly(randomSerializeIndexFile);
 			lock.unlock();
 		}
 
@@ -181,22 +171,18 @@ public class SerializingFileBuffer<E>
 		{
 			if(logger.isWarnEnabled()) logger.warn("Couldn't retrieve element at index {}!", index, throwable);
 		}
-		IOUtilities.interruptIfNecessary(throwable);
 
 		return null;
 	}
 
 	public void add(E element)
 	{
-		RandomAccessFile randomSerializeIndexFile = null;
-		RandomAccessFile randomSerializeFile = null;
 		Throwable throwable = null;
 		Lock lock = readWriteLock.writeLock();
 		lock.lock(); // FindBugs "Multithreaded correctness - Method does not release lock on all exception paths" is a false positive
-		try
+		try(RandomAccessFile randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
+			RandomAccessFile randomSerializeFile = new RandomAccessFile(dataFile, "rw"))
 		{
-			randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
-			randomSerializeFile = new RandomAccessFile(dataFile, "rw");
 			long elementsCount = internalGetSize(randomSerializeIndexFile);
 
 			long offset = 0;
@@ -215,15 +201,12 @@ public class SerializingFileBuffer<E>
 		}
 		finally
 		{
-			IOUtilities.closeQuietly(randomSerializeFile);
-			IOUtilities.closeQuietly(randomSerializeIndexFile);
 			lock.unlock();
 		}
 		if(throwable != null)
 		{
 			// it's a really bad idea to log while locked *sigh*
-			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
-			IOUtilities.interruptIfNecessary(throwable);
+			if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable); // NOPMD
 		}
 
 	}
@@ -235,16 +218,13 @@ public class SerializingFileBuffer<E>
 			int newElementCount = elements.size();
 			if(newElementCount > 0)
 			{
-				RandomAccessFile randomSerializeIndexFile = null;
-				RandomAccessFile randomSerializeFile = null;
+
 				Throwable throwable = null;
 				Lock lock = readWriteLock.writeLock();
 				lock.lock(); // FindBugs "Multithreaded correctness - Method does not release lock on all exception paths" is a false positive
-				try
+				try(RandomAccessFile randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
+					RandomAccessFile randomSerializeFile = new RandomAccessFile(dataFile, "rw"))
 				{
-					randomSerializeIndexFile = new RandomAccessFile(indexFile, "rw");
-					randomSerializeFile = new RandomAccessFile(dataFile, "rw");
-
 					long elementsCount = internalGetSize(randomSerializeIndexFile);
 
 					long offset = 0;
@@ -276,15 +256,12 @@ public class SerializingFileBuffer<E>
 				}
 				finally
 				{
-					IOUtilities.closeQuietly(randomSerializeFile);
-					IOUtilities.closeQuietly(randomSerializeIndexFile);
 					lock.unlock();
 				}
 				if(throwable != null)
 				{
 					// it's a really bad idea to log while locked *sigh*
-					if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable);
-					IOUtilities.interruptIfNecessary(throwable);
+					if(logger.isWarnEnabled()) logger.warn("Couldn't write element!", throwable); // NOPMD
 				}
 			}
 

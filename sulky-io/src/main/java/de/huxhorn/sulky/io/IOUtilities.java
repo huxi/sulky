@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package de.huxhorn.sulky.io;
 
 import java.io.IOException;
@@ -71,6 +72,8 @@ import java.io.Writer;
  * @see InterruptedException
  * @see InterruptedIOException
  * @see Thread#interrupt()
+ * @deprecated The issue circumvented by this class has been fixed in Java 7. Please use the try-with-resources statement or handle
+ * exceptions manually.
  */
 public final class IOUtilities
 {
@@ -87,6 +90,8 @@ public final class IOUtilities
 	 * catch(Throwable) block.
 	 *
 	 * @param t the Throwable to be checked for interruption. Does nothing if null.
+	 * @deprecated The issue circumvented by this class has been fixed in Java 7. Please use the try-with-resources statement or handle
+	 * exceptions manually.
 	 */
 	public static void interruptIfNecessary(Throwable t)
 	{
@@ -115,6 +120,8 @@ public final class IOUtilities
 	 * This is typically used in finally blocks.
 	 *
 	 * @param x  the InputStream to close, may be null or already closed
+	 * @deprecated The issue circumvented by this class has been fixed in Java 7. Please use the try-with-resources statement or handle
+	 * exceptions manually.
 	 */
 	public static void closeQuietly(InputStream x)
 	{
@@ -140,6 +147,8 @@ public final class IOUtilities
 	 * This is typically used in finally blocks.
 	 *
 	 * @param x  the Reader to close, may be null or already closed
+	 * @deprecated The issue circumvented by this class has been fixed in Java 7. Please use the try-with-resources statement or handle
+	 * exceptions manually.
 	 */
 	public static void closeQuietly(Reader x)
 	{
@@ -165,6 +174,8 @@ public final class IOUtilities
 	 * This is typically used in finally blocks.
 	 *
 	 * @param x  the OutputStream to close, may be null or already closed
+	 * @deprecated The issue circumvented by this class has been fixed in Java 7. Please use the try-with-resources statement or handle
+	 * exceptions manually.
 	 */
 	public static void closeQuietly(OutputStream x)
 	{
@@ -190,6 +201,8 @@ public final class IOUtilities
 	 * This is typically used in finally blocks.
 	 *
 	 * @param x  the Writer to close, may be null or already closed
+	 * @deprecated The issue circumvented by this class has been fixed in Java 7. Please use the try-with-resources statement or handle
+	 * exceptions manually.
 	 */
 	public static void closeQuietly(Writer x)
 	{
@@ -215,6 +228,8 @@ public final class IOUtilities
 	 * This is typically used in finally blocks.
 	 *
 	 * @param x  the RandomAccessFile to close, may be null or already closed
+	 * @deprecated The issue circumvented by this class has been fixed in Java 7. Please use the try-with-resources statement or handle
+	 * exceptions manually.
 	 */
 	public static void closeQuietly(RandomAccessFile x)
 	{

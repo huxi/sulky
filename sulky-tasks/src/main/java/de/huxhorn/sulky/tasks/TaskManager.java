@@ -34,7 +34,6 @@
 
 package de.huxhorn.sulky.tasks;
 
-import de.huxhorn.sulky.io.IOUtilities;
 import java.awt.EventQueue;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -477,7 +476,6 @@ public class TaskManager<T>
 				catch(InterruptedException e)
 				{
 					if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
-					IOUtilities.interruptIfNecessary(e);
 					break;
 				}
 			}
@@ -597,7 +595,6 @@ public class TaskManager<T>
 						catch(InterruptedException e)
 						{
 							if(logger.isInfoEnabled()) logger.info("Interrupted...", e);
-							IOUtilities.interruptIfNecessary(e);
 						}
 						catch(ExecutionException e)
 						{
@@ -620,8 +617,6 @@ public class TaskManager<T>
 				catch(Throwable t)
 				{
 					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while taskCreated was called!", listener, t);
-
-					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}
@@ -637,8 +632,6 @@ public class TaskManager<T>
 				catch(Throwable t)
 				{
 					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while progressUpdated was called!", listener, t);
-
-					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}
@@ -654,8 +647,6 @@ public class TaskManager<T>
 				catch(Throwable t)
 				{
 					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while executionFailed was called!", listener, t);
-
-					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}
@@ -671,8 +662,6 @@ public class TaskManager<T>
 				catch(Throwable t)
 				{
 					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while executionFinished was called!", listener, t);
-
-					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}
@@ -688,8 +677,6 @@ public class TaskManager<T>
 				catch(Throwable t)
 				{
 					if(logger.isErrorEnabled()) logger.error("TaskListener {} threw an exception while executionCanceled was called!", listener, t);
-
-					IOUtilities.interruptIfNecessary(t);
 				}
 			}
 		}

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@
 
 package de.huxhorn.sulky.codec;
 
-import de.huxhorn.sulky.io.IOUtilities;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -69,18 +68,9 @@ public class SerializableEncoder<E extends Serializable>
 	public byte[] encode(E object)
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = null;
-		try
+
+		try(ObjectOutputStream oos = createObjectOutputStream(bos))
 		{
-			if(compressing)
-			{
-				GZIPOutputStream gos = new GZIPOutputStream(bos);
-				oos = new ObjectOutputStream(gos);
-			}
-			else
-			{
-				oos = new ObjectOutputStream(bos);
-			}
 			oos.writeObject(object);
 			oos.flush();
 			oos.close();
@@ -91,11 +81,17 @@ public class SerializableEncoder<E extends Serializable>
 			e.printStackTrace(); // NOPMD
 			return null;
 		}
-		finally
+	}
+
+	private ObjectOutputStream createObjectOutputStream(ByteArrayOutputStream bos)
+			throws IOException
+	{
+		if(compressing)
 		{
-			IOUtilities.closeQuietly(oos);
-			IOUtilities.closeQuietly(bos);
+			GZIPOutputStream gos = new GZIPOutputStream(bos);
+			return new ObjectOutputStream(gos);
 		}
+		return new ObjectOutputStream(bos);
 	}
 
 	public String toString()

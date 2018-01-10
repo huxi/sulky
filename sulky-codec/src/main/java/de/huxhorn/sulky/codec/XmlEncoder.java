@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,11 +34,9 @@
 
 package de.huxhorn.sulky.codec;
 
-import de.huxhorn.sulky.io.IOUtilities;
 import java.beans.XMLEncoder;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -52,10 +50,7 @@ import java.util.zip.GZIPOutputStream;
 public class XmlEncoder<E>
 	implements Encoder<E>
 {
-	private static final Class[] NO_ENUMS = {};
 	private boolean compressing;
-	private final Class[] enums;
-	private EnumPersistenceDelegate enumDelegate;
 
 	public XmlEncoder()
 	{
@@ -64,7 +59,7 @@ public class XmlEncoder<E>
 
 	public XmlEncoder(boolean compressing)
 	{
-		this(compressing, NO_ENUMS);
+		this.compressing = compressing;
 	}
 
 	/**
@@ -72,16 +67,13 @@ public class XmlEncoder<E>
 	 * You have to list all enum types.
 	 *
 	 * @param compressing if the data is supposed to be gzipped.
-	 * @param enums       a list of all enum classes that need to be handles.
+	 * @param ignored     a list of all enum classes that need to be handles.
+	 * @deprecated use XmlEncoder(boolean) instead.
 	 */
-	public XmlEncoder(boolean compressing, Class... enums)
+	@SuppressWarnings("PMD.UnusedFormalParameter")
+	public XmlEncoder(boolean compressing, Class... ignored)
 	{
-		setCompressing(compressing);
-		this.enums = enums;
-		if(this.enums != null && this.enums.length > 0)
-		{
-			enumDelegate = new EnumPersistenceDelegate();
-		}
+		this(compressing);
 	}
 
 	public boolean isCompressing()
@@ -97,26 +89,9 @@ public class XmlEncoder<E>
 	public byte[] encode(E object)
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		XMLEncoder encoder;
-		try
-		{
-			if(compressing)
-			{
-				GZIPOutputStream gos = new GZIPOutputStream(bos);
-				encoder = new XMLEncoder(gos);
-			}
-			else
-			{
-				encoder = new XMLEncoder(bos);
-			}
-			if(enums != null)
-			{
-				for(Class c : enums)
-				{
-					encoder.setPersistenceDelegate(c, enumDelegate);
-				}
-			}
 
+		try(XMLEncoder encoder=createXmlEncoder(bos))
+		{
 			encoder.writeObject(object);
 			encoder.close();
 			return bos.toByteArray();
@@ -126,15 +101,21 @@ public class XmlEncoder<E>
 			e.printStackTrace(); // NOPMD
 			return null;
 		}
-		finally
-		{
-			IOUtilities.closeQuietly(bos);
-		}
 	}
 
+	private XMLEncoder createXmlEncoder(ByteArrayOutputStream bos)
+			throws IOException
+	{
+		if(compressing)
+		{
+			GZIPOutputStream gos = new GZIPOutputStream(bos);
+			return new XMLEncoder(gos);
+		}
+		return new XMLEncoder(bos);
+	}
 
 	public String toString()
 	{
-		return "XmlEncoder[compressing=" + compressing + ", enums=" + Arrays.toString(enums) + "]";
+		return "XmlEncoder[compressing=" + compressing + "]";
 	}
 }

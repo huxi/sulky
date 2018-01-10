@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ import de.huxhorn.sulky.buffers.CircularBuffer;
 import de.huxhorn.sulky.buffers.Dispose;
 import de.huxhorn.sulky.buffers.DisposeOperation;
 import de.huxhorn.sulky.buffers.Reset;
-import de.huxhorn.sulky.io.IOUtilities;
 import de.huxhorn.sulky.swing.RowBasedTableModel;
 import java.awt.EventQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -264,7 +263,6 @@ public abstract class BufferTableModel<T>
 					catch(Throwable ex)
 					{
 						if(logger.isWarnEnabled()) logger.warn("Exception while firing change!", ex);
-						IOUtilities.interruptIfNecessary(ex);
 					}
 				}
 			}
@@ -328,7 +326,6 @@ public abstract class BufferTableModel<T>
 					catch(InterruptedException e)
 					{
 						if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
-						IOUtilities.interruptIfNecessary(e);
 						return;
 					}
                     continue;
@@ -348,7 +345,6 @@ public abstract class BufferTableModel<T>
                         catch(InterruptedException e)
                         {
                             if(logger.isDebugEnabled()) logger.debug("Interrupted...", e);
-	                        IOUtilities.interruptIfNecessary(e);
                             return;
                         }
                     }
