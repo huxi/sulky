@@ -45,6 +45,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+@SuppressWarnings("PMD.AvoidThrowingNullPointerException") // target is Java 1.6
 public class ClassFileScanner
 {
 	private static final String CLASS_EXTENSION = ".class";

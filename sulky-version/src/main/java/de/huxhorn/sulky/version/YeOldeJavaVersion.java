@@ -49,6 +49,7 @@ import java.util.regex.Pattern;
  *
  * This class does not handle the proposed version string suggested in http://openjdk.java.net/jeps/223
  */
+@SuppressWarnings("PMD.AvoidThrowingNullPointerException") // target is Java 1.6
 public final class YeOldeJavaVersion
 	extends JavaVersion
 	implements Comparable<YeOldeJavaVersion>, Serializable

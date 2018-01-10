@@ -21,7 +21,6 @@
 	
 	<rule ref="category/java/design.xml">
 		<exclude name="AvoidCatchingGenericException"/>
-		<exclude name="AvoidThrowingNullPointerException"/>
 		<exclude name="CyclomaticComplexity"/>
 		<exclude name="DataClass"/>
 		<exclude name="ExcessiveClassLength"/>
