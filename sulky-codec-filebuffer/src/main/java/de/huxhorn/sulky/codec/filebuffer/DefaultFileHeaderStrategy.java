@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,11 +60,8 @@ public class DefaultFileHeaderStrategy
 	public Integer readMagicValue(File dataFile)
 		throws IOException
 	{
-		RandomAccessFile raf = null;
-		Integer result = null;
-		try
+		try(RandomAccessFile raf = new RandomAccessFile(dataFile, "r"))
 		{
-			raf = new RandomAccessFile(dataFile, "r");
 			long fileLength = raf.length();
 			if(fileLength >= MAGIC_VALUE_SIZE)
 			{
@@ -72,37 +69,30 @@ public class DefaultFileHeaderStrategy
 				int codecMagic = raf.readInt();
 				if(codecMagic == CODEC_FILE_HEADER_MAGIC_VALUE)
 				{
-					result = raf.readInt();
+					return raf.readInt();
 				}
-				else
-				{
-					if(logger.isWarnEnabled()) logger.warn("Couldn't read magic value because codecMagic was 0x{} instead of 0x{}!",
-							Integer.toHexString(codecMagic), Integer.toHexString(CODEC_FILE_HEADER_MAGIC_VALUE));
-				}
+				if(logger.isWarnEnabled()) logger.warn("Couldn't read magic value because codecMagic was 0x{} instead of 0x{}!",
+						Integer.toHexString(codecMagic),
+						Integer.toHexString(CODEC_FILE_HEADER_MAGIC_VALUE));
 			}
 			else
 			{
 				if(logger.isWarnEnabled()) logger.warn("Couldn't read magic value because file size is {}!", fileLength);
 			}
 		}
-		finally
-		{
-			closeQuietly(raf);
-		}
-		return result;
+		return null;
 	}
 
 	public FileHeader writeFileHeader(File dataFile, int magicValue, Map<String, String> metaData, boolean sparse)
 		throws IOException
 	{
-		RandomAccessFile raf = null;
 		if(dataFile.isFile() && dataFile.length() > 0)
 		{
 			throw new IllegalArgumentException("File '" + dataFile.getAbsolutePath() + "' already exists and has a size of " + dataFile.length() + ".");
 		}
-		try
+
+		try(RandomAccessFile raf = new RandomAccessFile(dataFile, "rw"))
 		{
-			raf = new RandomAccessFile(dataFile, "rw");
 			raf.seek(0);
 			raf.writeInt(CODEC_FILE_HEADER_MAGIC_VALUE);
 			raf.writeInt(magicValue);
@@ -124,24 +114,15 @@ public class DefaultFileHeaderStrategy
 			{
 				raf.write(buffer);
 			}
-			raf.close();
-			raf = null;
 			return new FileHeader(magicValue, resultMetaData, MAGIC_VALUE_SIZE + META_LENGTH_SIZE + length);
-		}
-		finally
-		{
-			closeQuietly(raf);
 		}
 	}
 
 	public FileHeader readFileHeader(File dataFile)
 		throws IOException
 	{
-		RandomAccessFile raf = null;
-		FileHeader result = null;
-		try
+		try(RandomAccessFile raf = new RandomAccessFile(dataFile, "r"))
 		{
-			raf = new RandomAccessFile(dataFile, "r");
 			if(raf.length() >= MAGIC_VALUE_SIZE)
 			{
 				raf.seek(0);
@@ -162,42 +143,21 @@ public class DefaultFileHeaderStrategy
 						byte[] buffer = new byte[metaLength];
 						raf.readFully(buffer);
 
-						result = new FileHeader(magicValue, metaCodec.decode(buffer), offset + META_LENGTH_SIZE + metaLength);
+						return new FileHeader(magicValue, metaCodec.decode(buffer), offset + META_LENGTH_SIZE + metaLength);
 					}
 					else
 					{
-						result = new FileHeader(magicValue, new MetaData(false), offset + META_LENGTH_SIZE);
+						return new FileHeader(magicValue, new MetaData(false), offset + META_LENGTH_SIZE);
 					}
 				}
 			}
 		}
-		finally
-		{
-			closeQuietly(raf);
-		}
-		return result;
+		return null;
 	}
 
 	public int getMinimalSize()
 	{
 		return MAGIC_VALUE_SIZE + META_LENGTH_SIZE;
-	}
-
-	private static void closeQuietly(RandomAccessFile raf)
-	{
-		final Logger logger = LoggerFactory.getLogger(CodecFileBuffer.class);
-
-		if(raf != null)
-		{
-			try
-			{
-				raf.close();
-			}
-			catch(IOException e)
-			{
-				if(logger.isDebugEnabled()) logger.debug("Close on random access file threw exception!", e);
-			}
-		}
 	}
 
 }

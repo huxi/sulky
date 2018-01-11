@@ -56,7 +56,6 @@
 		<exclude name="LongVariable"/>
 		<exclude name="MethodArgumentCouldBeFinal"/>
 		<exclude name="OnlyOneReturn"/>
-		<exclude name="PrematureDeclaration"/>
 		<exclude name="ShortVariable"/>
 		<exclude name="TooManyStaticImports"/>
 		<exclude name="UselessParentheses"/>

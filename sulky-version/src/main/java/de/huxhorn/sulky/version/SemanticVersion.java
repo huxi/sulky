@@ -139,9 +139,8 @@ public class SemanticVersion
 		{
 			throw new IllegalArgumentException("patch must not be negative!");
 		}
-		String[] preReleaseCopy = preProcess(preRelease);
-		String[] buildMetadataCopy = preProcess(buildMetadata);
 
+		String[] preReleaseCopy = preProcess(preRelease);
 		for (String current : preReleaseCopy)
 		{
 			if(current == null)
@@ -154,6 +153,7 @@ public class SemanticVersion
 			}
 		}
 
+		String[] buildMetadataCopy = preProcess(buildMetadata);
 		for (String current : buildMetadataCopy)
 		{
 			if(current == null)
@@ -313,7 +313,6 @@ public class SemanticVersion
 		for(int i=0; i<maxLength; i++)
 		{
 			String a;
-			String b;
 			if(i < preRelease.length)
 			{
 				a = preRelease[i];
@@ -322,6 +321,8 @@ public class SemanticVersion
 			{
 				return -1;
 			}
+
+			String b;
 			if(i < other.preRelease.length)
 			{
 				b = other.preRelease[i];

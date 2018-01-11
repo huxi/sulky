@@ -145,14 +145,13 @@ public final class SimpleXml
 	@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 	public static String replaceNonValidXMLCharacters(String in, char replacementChar)
 	{
-		StringBuilder out = null;
-
 		if (!isValidXMLCharacter(replacementChar))
 		{
 			throw new IllegalArgumentException("Replacement character 0x"
 					+ Integer.toString(replacementChar, 16).toUpperCase(Locale.US) + " is invalid itself!");
 		}
 
+		StringBuilder out = null;
 		for (int i = 0; i < in.length(); i++)
 		{
 			int current = in.codePointAt(i);
@@ -167,10 +166,12 @@ public final class SimpleXml
 			}
 			out.setCharAt(i, replacementChar);
 		}
+
 		if (out != null)
 		{
 			return out.toString();
 		}
+
 		return in; // no change.
 	}
 }

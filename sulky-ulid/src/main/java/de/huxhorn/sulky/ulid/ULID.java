@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -342,12 +342,13 @@ public class ULID
 	static long internalParseCrockford(String input)
 	{
 		Objects.requireNonNull(input, "input must not be null!");
-		long result = 0;
 		int length = input.length();
 		if(length > 12)
 		{
 			throw new IllegalArgumentException("input length must not exceed 12 but was "+length+"!");
 		}
+
+		long result = 0;
 		for(int i=0;i<length;i++)
 		{
 			char current = input.charAt(i);
@@ -403,7 +404,7 @@ public class ULID
 		internalAppendCrockford(builder, random.nextLong(), 8);
 	}
 
-	static Value internalNextValue(long timeStamp, Random random)
+	private static Value internalNextValue(long timeStamp, Random random)
 	{
 		// could use nextBytes(byte[] bytes) instead
 		long mostSignificantBits = random.nextLong();

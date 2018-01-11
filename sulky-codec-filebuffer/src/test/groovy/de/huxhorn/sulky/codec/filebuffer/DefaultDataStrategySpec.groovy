@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ class DefaultDataStrategySpec
 
   @Override
   void initInstance() {
-    instance = new DefaultDataStrategy<String>();
+    instance = new DefaultDataStrategy<String>()
   }
 
   def "set"() {
@@ -47,7 +47,7 @@ class DefaultDataStrategySpec
     instance.set(0, null, null, null, null, null)
 
     then:
-    UnsupportedOperationException e = thrown()
+    thrown(UnsupportedOperationException)
   }
 
   def "isSetSupported"() {
