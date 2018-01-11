@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,14 +55,14 @@ public class OrTest
 	{
 		Or condition = new Or();
 		assertNull(condition.getConditions());
-		assertEquals(false, condition.isTrue(null));
+		assertFalse(condition.isTrue(null));
 		internalTestCondition(condition);
 
 		List<Condition> conditions = new ArrayList<>();
 		condition.setConditions(conditions);
 		assertNotNull(condition.getConditions());
 		assertEquals(conditions, condition.getConditions());
-		assertEquals(false, condition.isTrue(null));
+		assertFalse(condition.isTrue(null));
 		internalTestCondition(condition);
 	}
 
@@ -76,12 +76,12 @@ public class OrTest
 
 		conditions.add(BooleanValues.TRUE);
 
-		assertEquals(true, condition.isTrue(null));
+		assertTrue(condition.isTrue(null));
 		internalTestCondition(condition);
 
 		conditions.add(BooleanValues.FALSE);
 		conditions.add(BooleanValues.FALSE);
-		assertEquals(true, condition.isTrue(null));
+		assertTrue(condition.isTrue(null));
 		internalTestCondition(condition);
 	}
 
@@ -95,13 +95,13 @@ public class OrTest
 
 		conditions.add(BooleanValues.FALSE);
 
-		assertEquals(false, condition.isTrue(null));
+		assertFalse(condition.isTrue(null));
 		internalTestCondition(condition);
 
 
 		conditions.add(BooleanValues.FALSE);
 		conditions.add(BooleanValues.FALSE);
-		assertEquals(false, condition.isTrue(null));
+		assertFalse(condition.isTrue(null));
 		internalTestCondition(condition);
 	}
 

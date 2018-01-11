@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -153,12 +153,14 @@ public class TaskManagerTest
 	@Test(expected = IllegalArgumentException.class)
 	public void missingExecutor()
 	{
+		//noinspection ConstantConditions
 		new TaskManager(null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void missingExecutor2()
 	{
+		//noinspection ConstantConditions
 		new TaskManager(null, true);
 	}
 
@@ -246,14 +248,14 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskByCallable(callable));
 
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
-		assertEquals(false, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertFalse(future.isCancelled());
+		assertTrue(future.isDone());
 		tasks = instance.getTasks();
 		assertEquals(0, tasks.size());
 	}
@@ -302,14 +304,14 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
-		assertEquals(false, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertFalse(future.isCancelled());
+		assertTrue(future.isDone());
 		tasks = instance.getTasks();
 		assertEquals(0, tasks.size());
 	}
@@ -357,14 +359,14 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(1500);
-		assertEquals(false, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertFalse(future.isCancelled());
+		assertTrue(future.isDone());
 		tasks = instance.getTasks();
 		assertEquals(0, tasks.size());
 	}
@@ -412,14 +414,14 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
-		assertEquals(false, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertFalse(future.isCancelled());
+		assertTrue(future.isDone());
 		tasks = instance.getTasks();
 		assertEquals(0, tasks.size());
 	}
@@ -438,14 +440,14 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
-		assertEquals(false, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertFalse(future.isCancelled());
+		assertTrue(future.isDone());
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
@@ -471,14 +473,14 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
-		assertEquals(false, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertFalse(future.isCancelled());
+		assertTrue(future.isDone());
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
@@ -515,14 +517,14 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
-		assertEquals(false, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertFalse(future.isCancelled());
+		assertTrue(future.isDone());
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
@@ -548,14 +550,14 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(2500);
-		assertEquals(false, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertFalse(future.isCancelled());
+		assertTrue(future.isDone());
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
@@ -584,15 +586,15 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		future.cancel(true);
 		Thread.sleep(2500);
-		assertEquals(true, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertTrue(future.isCancelled());
+		assertTrue(future.isDone());
 		tasks = instance.getTasks();
 		assertEquals(0, tasks.size());
 	}
@@ -609,15 +611,15 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		future.cancel(true);
 		Thread.sleep(2500);
-		assertEquals(true, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertTrue(future.isCancelled());
+		assertTrue(future.isDone());
 		tasks = instance.getTasks();
 		assertEquals(0, tasks.size());
 	}
@@ -636,15 +638,15 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		future.cancel(true);
 		Thread.sleep(2500);
-		assertEquals(true, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertTrue(future.isCancelled());
+		assertTrue(future.isDone());
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
@@ -668,16 +670,16 @@ public class TaskManagerTest
 		assertSame(task, instance.getTaskById(taskId));
 		assertSame(task, instance.getTaskByCallable(callable));
 		Future<Integer> future = task.getFuture();
-		assertEquals(false, future.isCancelled());
-		assertEquals(false, future.isDone());
+		assertFalse(future.isCancelled());
+		assertFalse(future.isDone());
 		Map<Long, Task<Integer>> tasks = instance.getTasks();
 		assertEquals(1, tasks.size());
 		assertTrue(tasks.containsValue(task));
 		Thread.sleep(500);
 		future.cancel(true);
 		Thread.sleep(2000);
-		assertEquals(true, future.isCancelled());
-		assertEquals(true, future.isDone());
+		assertTrue(future.isCancelled());
+		assertTrue(future.isDone());
 
 		List<String> messages = taskListener.getMessages();
 		if(logger.isInfoEnabled()) logger.info("Messages: {}", messages);
