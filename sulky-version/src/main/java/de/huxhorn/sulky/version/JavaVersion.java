@@ -215,6 +215,60 @@ public abstract class JavaVersion
 	}
 
 	/**
+	 * The feature-release counter, incremented for every feature release
+	 * regardless of release content. Features may be added in a feature
+	 * release; they may also be removed, if advance notice was given
+	 * at least one feature release ahead of time. Incompatible
+	 * changes may be made when justified.
+	 *
+	 * (Formerly Major.)
+	 *
+	 * @return the feature-release counter
+	 */
+	public int getFeature()
+	{
+		return getMajor();
+	}
+
+	/**
+	 * The interim-release counter, incremented for non-feature releases
+	 * that contain compatible bug fixes and enhancements but no incompatible
+	 * changes, no feature removals, and no changes to standard APIs.
+	 *
+	 * (Formerly Minor.)
+	 *
+	 * @return the interim-release counter
+	 */
+	public int getInterim()
+	{
+		return getMinor();
+	}
+
+	/**
+	 * The update-release counter, incremented for compatible update releases
+	 * that fix security issues, regressions, and bugs in newer features.
+	 *
+	 * (Formerly Security and Patch, but with a non-trivial incrementation rule.)
+	 *
+	 * @return the update-release counter
+	 */
+	public int getUpdate()
+	{
+		return getPatch();
+	}
+
+	/**
+	 * The emergency patch-release counter, incremented only when it's necessary
+	 * to produce an emergency release to fix a critical issue.
+	 *
+	 * (Using an additional element for this purpose minimizes disruption to
+	 * both developers and users of in-flight update releases.)
+	 *
+	 * @return the emergency patch-release counter
+	 */
+	public abstract int getEmergencyPatch();
+
+	/**
 	 * Returns the "major" part of this version.
 	 *
 	 * @return the "major" part of this version.

@@ -207,6 +207,15 @@ public final class YeOldeJavaVersion
 	}
 
 	/**
+	 *
+	 * @return always 0
+	 */
+	public int getEmergencyPatch()
+	{
+		return 0;
+	}
+
+	/**
 	 * Returns the "preReleaseIdentifier" part of this version, e.g. "ea" in case of 1.8.0_25-ea.
 	 *
 	 * @return the "preReleaseIdentifier" part of this version.

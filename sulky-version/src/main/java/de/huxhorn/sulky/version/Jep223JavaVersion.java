@@ -47,6 +47,9 @@ import java.util.regex.Pattern;
  * https://bugs.openjdk.java.net/browse/JDK-8061493
  *
  * http://mail.openjdk.java.net/pipermail/verona-dev/2015-July/000071.html
+ *
+ * JEP 322: Time-Based Release Versioning
+ * http://openjdk.java.net/jeps/322
  */
 @SuppressWarnings("PMD.AvoidThrowingNullPointerException") // target is Java 1.6
 public class Jep223JavaVersion
@@ -128,14 +131,14 @@ public class Jep223JavaVersion
 
 
 	/*
-	$OPT, matching ([-a-zA-Z0-9\.]+)
+	$OPT, matching ([-a-zA-Z0-9.]+)
 	Additional build information, if desired. In the case of an internal
 	build this will often contain the date and time of the build.
 
 	When comparing two version strings the value of $OPT, if present, is
 	always ignored.
 	*/
-	private static final String OPT_PATTERN_STRING = "([-a-zA-Z0-9\\.]+)";
+	private static final String OPT_PATTERN_STRING = "([-a-zA-Z0-9.]+)";
 
 	/*
 	A version string $VSTR consists of a version number $VNUM, as described
@@ -159,6 +162,7 @@ public class Jep223JavaVersion
 	private static final int MAJOR_INDEX = 0;
 	private static final int MINOR_INDEX = 1;
 	private static final int SECURITY_INDEX = 2;
+	private static final int EMERGENCY_PATCH_INDEX = 3;
 
 	private final Integer[] versionNumbers;
 	private final String preReleaseIdentifier;
@@ -336,6 +340,24 @@ public class Jep223JavaVersion
 	}
 
 	/**
+	 * The emergency patch-release counter, incremented only when it's necessary
+	 * to produce an emergency release to fix a critical issue.
+	 *
+	 * (Using an additional element for this purpose minimizes disruption to
+	 * both developers and users of in-flight update releases.)
+	 *
+	 * @return the emergency patch-release counter
+	 */
+	public int getEmergencyPatch()
+	{
+		if(versionNumbers.length > EMERGENCY_PATCH_INDEX)
+		{
+			return versionNumbers[EMERGENCY_PATCH_INDEX];
+		}
+		return 0;
+	}
+
+	/**
 	 * A pre-release identifier. Typically ea, for an early-access release
 	 * that's under active development and potentially unstable, or internal,
 	 * for an internal developer build.
@@ -468,12 +490,17 @@ public class Jep223JavaVersion
 		result.append(getMajor());
 		int minor = getMinor();
 		int security = getSecurity();
-		if(minor != 0 || security != 0)
+		int emergencyPatch = getEmergencyPatch();
+		if(minor != 0 || security != 0 || emergencyPatch != 0)
 		{
 			result.append('.').append(minor);
-			if(security != 0)
+			if(security != 0 || emergencyPatch != 0)
 			{
 				result.append('.').append(security);
+				if(emergencyPatch != 0)
+				{
+					result.append('.').append(emergencyPatch);
+				}
 			}
 		}
 		if(preReleaseIdentifier != null)

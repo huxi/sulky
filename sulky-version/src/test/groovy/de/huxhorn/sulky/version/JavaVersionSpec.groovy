@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import spock.lang.Unroll
 @SuppressWarnings("GrEqualsBetweenInconvertibleTypes")
 class JavaVersionSpec extends Specification {
 
-    private static final String CURRENT_VERSION_STRING = JavaVersion.systemJavaVersion.toVersionString()
+	private static final String CURRENT_VERSION_STRING = JavaVersion.systemJavaVersion.toVersionString()
 
 	/**
 	 * A JEP 223 version is always "bigger" than an old version.
@@ -52,255 +52,245 @@ class JavaVersionSpec extends Specification {
 	 */
 	private static final boolean CURRENT_VERSION_IS_JEP223 = JavaVersion.systemJavaVersion instanceof Jep223JavaVersion
 
-    @Unroll
-    def 'parse("#versionString") throws an exception'(String versionString) {
-        when:
-        JavaVersion.parse(versionString)
+	@Unroll
+	'parse("#versionString") throws an exception'(String versionString) {
+		when:
+		JavaVersion.parse(versionString)
 
-        then:
-        IllegalArgumentException ex = thrown()
-        ex.message == "versionString '${versionString}' is invalid."
+		then:
+		IllegalArgumentException ex = thrown()
+		ex.message == "versionString '${versionString}' is invalid."
 
-        where:
-        versionString << ['1x', '1.2x', '1.2.3x', '1.2.3.4', '1.2.3_4x', '1.2.3_4-', '-1.6']
-    }
+		where:
+		versionString << ['1x', '1.2x', '1.2.3x', '1.2.3.4', '1.2.3_4x', '1.2.3_4-', '-1.6']
+	}
 
-    def 'parse(null) throws an exception'() {
-        when:
-        JavaVersion.parse(null)
+	def 'parse(null) throws an exception'() {
+		when:
+		JavaVersion.parse(null)
 
-        then:
-        NullPointerException ex = thrown()
-        ex.message == 'versionString must not be null!'
-    }
+		then:
+		NullPointerException ex = thrown()
+		ex.message == 'versionString must not be null!'
+	}
 
-    @Unroll('JVM #jvmString is#compareString at least #versionString')
-    def 'isAtLeast(String) works'() {
-        when:
-        boolean result = JavaVersion.isAtLeast(versionString)
+	@Unroll('JVM #jvmString is#compareString at least #versionString')
+	'isAtLeast(String) works'() {
+		when:
+		boolean result = JavaVersion.isAtLeast(versionString)
 
-        then:
-        result == expectedResult
+		then:
+		result == expectedResult
 
-        where:
-        // @formatter:off
-        versionString                                   | expectedResult
-        "1.0.0"                                         | true
-        JavaVersion.systemJavaVersion.toVersionString() | true
-        "17.0"                                          | false
-        // @formatter:on
+		where:
+		versionString                                   | expectedResult
+		"1.0.0"                                         | true
+		JavaVersion.systemJavaVersion.toVersionString() | true
+		"17.0"                                          | false
 
-        compareString = expectedResult? '' : 'n\'t'
-        jvmString = JavaVersion.systemJavaVersion.toVersionString()
-    }
+		compareString = expectedResult ? '' : 'n\'t'
+		jvmString = JavaVersion.systemJavaVersion.toVersionString()
+	}
 
-    @Unroll('JVM #jvmString is#compareString at least #version')
-    def 'isAtLeast(JavaVersion) works'() {
-        expect:
-		expectedResult == JavaVersion.isAtLeast(version)
-
-        where:
-        // @formatter:off
-		version                                                            | expectedResult
-		new YeOldeJavaVersion(1, 0, 0)                                     | true
-		JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString()) | true
-		new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)          | false
-		// @formatter:on
-
-        compareString = expectedResult? '' : 'n\'t'
-        jvmString = JavaVersion.systemJavaVersion.toVersionString()
-    }
-
-	@Unroll('JVM #jvmString is#compareString at least #version for huge old version')
-	def 'isAtLeast(JavaVersion) works for huge old version'() {
+	@Unroll('JVM #jvmString is#compareString at least #version')
+	'isAtLeast(JavaVersion) works'() {
 		expect:
 		expectedResult == JavaVersion.isAtLeast(version)
 
 		where:
-		// @formatter:off
+		version                                                            | expectedResult
+		new YeOldeJavaVersion(1, 0, 0)                                     | true
+		JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString()) | true
+		new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)          | false
+
+		compareString = expectedResult ? '' : 'n\'t'
+		jvmString = JavaVersion.systemJavaVersion.toVersionString()
+	}
+
+	@Unroll('JVM #jvmString is#compareString at least #version for huge old version')
+	'isAtLeast(JavaVersion) works for huge old version'() {
+		expect:
+		expectedResult == JavaVersion.isAtLeast(version)
+
+		where:
 		version                      | expectedResult
 		new YeOldeJavaVersion(17, 0) | CURRENT_VERSION_IS_JEP223
-		// @formatter:on
 
-		compareString = expectedResult? '' : 'n\'t'
+		compareString = expectedResult ? '' : 'n\'t'
 		jvmString = JavaVersion.systemJavaVersion.toVersionString()
 	}
 
 	@Unroll('JVM #jvmString is#compareString at least #version - ignoring pre-release identifier')
-    def 'isAtLeast(JavaVersion) works without pre-release'() {
-        expect:
-		expectedResult == JavaVersion.isAtLeast(version, true)
-
-        where:
-        // @formatter:off
-		version                                                            | expectedResult
-		new YeOldeJavaVersion(1, 0, 0)                                     | true
-		JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString()) | true
-		new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)          | false
-		// @formatter:on
-
-        compareString = expectedResult? '' : 'n\'t'
-        jvmString = JavaVersion.systemJavaVersion.toVersionString()
-    }
-
-	@Unroll('JVM #jvmString is#compareString at least #version for huge old version - ignoring pre-release identifier')
-	def 'isAtLeast(JavaVersion) works for huge old version without pre-release'() {
+	'isAtLeast(JavaVersion) works without pre-release'() {
 		expect:
 		expectedResult == JavaVersion.isAtLeast(version, true)
 
 		where:
-		// @formatter:off
-		version                      | expectedResult
-		new YeOldeJavaVersion(17, 0) | CURRENT_VERSION_IS_JEP223
-		// @formatter:on
+		version                                                            | expectedResult
+		new YeOldeJavaVersion(1, 0, 0)                                     | true
+		JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString()) | true
+		new Jep223JavaVersion([42, 7, 9] as int[], null, 0, null)          | false
 
-		compareString = expectedResult? '' : 'n\'t'
+		compareString = expectedResult ? '' : 'n\'t'
 		jvmString = JavaVersion.systemJavaVersion.toVersionString()
 	}
 
-	@IgnoreIf({CURRENT_VERSION_STRING.contains('-')})
-    @Unroll('JVM #jvmString is#compareString at least #version')
-    def 'isAtLeast(JavaVersion) works - special'() {
-        when:
-        boolean result = JavaVersion.isAtLeast(version)
+	@Unroll('JVM #jvmString is#compareString at least #version for huge old version - ignoring pre-release identifier')
+	'isAtLeast(JavaVersion) works for huge old version without pre-release'() {
+		expect:
+		expectedResult == JavaVersion.isAtLeast(version, true)
 
-        then:
-        result == expectedResult
+		where:
+		version                      | expectedResult
+		new YeOldeJavaVersion(17, 0) | CURRENT_VERSION_IS_JEP223
 
-        where:
-        // @formatter:off
-        version                                                                    | expectedResult
-        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
-        // @formatter:on
+		compareString = expectedResult ? '' : 'n\'t'
+		jvmString = JavaVersion.systemJavaVersion.toVersionString()
+	}
 
-        compareString = expectedResult? '' : 'n\'t'
-        jvmString = JavaVersion.systemJavaVersion.toVersionString()
-    }
+	@IgnoreIf({ CURRENT_VERSION_STRING.contains('-') })
+	@Unroll('JVM #jvmString is#compareString at least #version')
+	'isAtLeast(JavaVersion) works - special'() {
+		when:
+		boolean result = JavaVersion.isAtLeast(version)
 
-    @IgnoreIf({CURRENT_VERSION_STRING.contains('-')})
-    @Unroll('JVM #jvmString is#compareString at least #version - ignoring pre-release identifier')
-    def 'isAtLeast(JavaVersion) works without pre-release - special'() {
-        when:
-        boolean result = JavaVersion.isAtLeast(version, true)
+		then:
+		result == expectedResult
 
-        then:
-        result == expectedResult
+		where:
+		version                                                                    | expectedResult
+		JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
 
-        where:
-        // @formatter:off
-        version                                                                    | expectedResult
-        JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
-        // @formatter:on
+		compareString = expectedResult ? '' : 'n\'t'
+		jvmString = JavaVersion.systemJavaVersion.toVersionString()
+	}
 
-        compareString = expectedResult? '' : 'n\'t'
-        jvmString = JavaVersion.systemJavaVersion.toVersionString()
-    }
+	@IgnoreIf({ CURRENT_VERSION_STRING.contains('-') })
+	@Unroll('JVM #jvmString is#compareString at least #version - ignoring pre-release identifier')
+	'isAtLeast(JavaVersion) works without pre-release - special'() {
+		when:
+		boolean result = JavaVersion.isAtLeast(version, true)
 
-    @Unroll
-    def 'isAtLeast("#versionString") throws an exception'(String versionString) {
-        when:
-        JavaVersion.isAtLeast(versionString)
+		then:
+		result == expectedResult
 
-        then:
-        IllegalArgumentException ex = thrown()
-        ex.message == "versionString '${versionString}' is invalid."
+		where:
+		version                                                                    | expectedResult
+		JavaVersion.parse(JavaVersion.systemJavaVersion.toVersionString() + '-ea') | true
 
-        where:
-        versionString << ['1x', '1.2x', '1.2.3x', '1.2.3.4', '1.2.3_4x', '1.2.3_4-', '-1.6']
-    }
+		compareString = expectedResult ? '' : 'n\'t'
+		jvmString = JavaVersion.systemJavaVersion.toVersionString()
+	}
 
-    def 'isAtLeast((String)null) throws an exception'() {
-        when:
-        JavaVersion.isAtLeast((String)null)
+	@Unroll
+	'isAtLeast("#versionString") throws an exception'(String versionString) {
+		when:
+		JavaVersion.isAtLeast(versionString)
 
-        then:
-        NullPointerException ex = thrown()
-        ex.message == 'versionString must not be null!'
-    }
+		then:
+		IllegalArgumentException ex = thrown()
+		ex.message == "versionString '${versionString}' is invalid."
 
-    def 'isAtLeast((JavaVersion)null) throws an exception'() {
-        when:
-        JavaVersion.isAtLeast((JavaVersion)null)
+		where:
+		versionString << ['1x', '1.2x', '1.2.3x', '1.2.3.4', '1.2.3_4x', '1.2.3_4-', '-1.6']
+	}
 
-        then:
-        NullPointerException ex = thrown()
-        ex.message == 'version must not be null!'
-    }
+	def 'isAtLeast((String)null) throws an exception'() {
+		when:
+		JavaVersion.isAtLeast((String) null)
 
-    @Unroll('COMPARATOR works for #versionA and #versionB')
-    def 'comparator'(JavaVersion versionA, JavaVersion versionB, int expectedResult) {
-        when:
-        int result1 = JavaVersion.COMPARATOR.compare(versionA, versionB)
-        int result2 = JavaVersion.COMPARATOR.compare(versionB, versionA)
+		then:
+		NullPointerException ex = thrown()
+		ex.message == 'versionString must not be null!'
+	}
 
-        then:
-        expectedResult == result1
-        expectedResult == result2 * -1
+	def 'isAtLeast((JavaVersion)null) throws an exception'() {
+		when:
+		JavaVersion.isAtLeast((JavaVersion) null)
 
-        where:
-        versionA                                                  | versionB                                                  | expectedResult
-        new YeOldeJavaVersion(1, 8, 0, 45)                        | new YeOldeJavaVersion(1, 8, 0, 45)                        | 0
-        new YeOldeJavaVersion(1, 8, 0, 45)                        | new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | -1
-        new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | 0
-        null                                                      | null                                                      | 0
-        new YeOldeJavaVersion(1, 8, 0, 45)                        | null                                                      | 1
-        new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | null                                                      | 1
-    }
+		then:
+		NullPointerException ex = thrown()
+		ex.message == 'version must not be null!'
+	}
 
-    def 'comparator exception'(JavaVersion versionA, JavaVersion versionB) {
-        when:
-        JavaVersion.COMPARATOR.compare(versionA, versionB)
+	@Unroll('COMPARATOR works for #versionA and #versionB')
+	'comparator'(JavaVersion versionA, JavaVersion versionB, int expectedResult) {
+		when:
+		int result1 = JavaVersion.COMPARATOR.compare(versionA, versionB)
+		int result2 = JavaVersion.COMPARATOR.compare(versionB, versionA)
 
-        then:
-        ClassCastException ex = thrown()
-        ex.message == 'Unexpected JavaVersion of class de.huxhorn.sulky.version.JavaVersionSpec$FooVersion!'
+		then:
+		expectedResult == result1
+		expectedResult == result2 * -1
 
-        where:
-        versionA                                                  | versionB
-        new YeOldeJavaVersion(1, 8, 0, 45)                        | new FooVersion()
-        new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | new FooVersion()
-        new FooVersion()                                          | new YeOldeJavaVersion(1, 8, 0, 45)
-        new FooVersion()                                          | new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null)
-    }
+		where:
+		versionA                                                  | versionB                                                  | expectedResult
+		new YeOldeJavaVersion(1, 8, 0, 45)                        | new YeOldeJavaVersion(1, 8, 0, 45)                        | 0
+		new YeOldeJavaVersion(1, 8, 0, 45)                        | new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | -1
+		new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | 0
+		null                                                      | null                                                      | 0
+		new YeOldeJavaVersion(1, 8, 0, 45)                        | null                                                      | 1
+		new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | null                                                      | 1
+	}
+
+	def 'comparator exception'(JavaVersion versionA, JavaVersion versionB) {
+		when:
+		JavaVersion.COMPARATOR.compare(versionA, versionB)
+
+		then:
+		ClassCastException ex = thrown()
+		ex.message == 'Unexpected JavaVersion of class de.huxhorn.sulky.version.JavaVersionSpec$FooVersion!'
+
+		where:
+		versionA                                                  | versionB
+		new YeOldeJavaVersion(1, 8, 0, 45)                        | new FooVersion()
+		new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null) | new FooVersion()
+		new FooVersion()                                          | new YeOldeJavaVersion(1, 8, 0, 45)
+		new FooVersion()                                          | new Jep223JavaVersion([8, 0, 45] as int[], null, 0, null)
+	}
 
 
-    class FooVersion
-        extends JavaVersion
-    {
+	class FooVersion
+			extends JavaVersion {
 
-        @Override
-        int getMajor() {
-            return 0
-        }
+		@Override
+		int getMajor() {
+			return 0
+		}
 
-        @Override
-        int getMinor() {
-            return 0
-        }
+		@Override
+		int getMinor() {
+			return 0
+		}
 
-        @Override
-        int getPatch() {
-            return 0
-        }
+		@Override
+		int getPatch() {
+			return 0
+		}
 
-        @Override
-        String getPreReleaseIdentifier() {
-            return null
-        }
+		@Override
+		int getEmergencyPatch() {
+			return 0
+		}
 
-        @Override
-        String toVersionString() {
-            return null
-        }
+		@Override
+		String getPreReleaseIdentifier() {
+			return null
+		}
 
-        @Override
-        String toShortVersionString() {
-            return null
-        }
+		@Override
+		String toVersionString() {
+			return null
+		}
 
-        @Override
-        JavaVersion withoutPreReleaseIdentifier() {
-            return this
-        }
-    }
+		@Override
+		String toShortVersionString() {
+			return null
+		}
+
+		@Override
+		JavaVersion withoutPreReleaseIdentifier() {
+			return this
+		}
+	}
 }
