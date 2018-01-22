@@ -50,9 +50,11 @@ public class DetectSplitPackagesPlugin implements Plugin<Project> {
 	public void apply(Project project) {
 		def tasks = project.tasks
 		Task detectSplitPackages = tasks.create("detectSplitPackages", DetectSplitPackagesTask.class)
+		/*
 		if (tasks.asMap.containsKey("check")) {
 			tasks.getByName("check").dependsOn detectSplitPackages
 		}
+		*/
 	}
 }
 
