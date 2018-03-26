@@ -90,14 +90,7 @@ public class TaskManagerTest
 	@Test(expected = IllegalStateException.class)
 	public void notRunning()
 	{
-		instance.startTask(new Callable<Integer>()
-		{
-			public Integer call()
-				throws Exception
-			{
-				return null;
-			}
-		}, "Won't work");
+		instance.startTask(() -> null, "Won't work");
 	}
 
 	@Test
@@ -140,14 +133,7 @@ public class TaskManagerTest
 	public void missingName()
 	{
 		instance.startUp();
-		instance.startTask(new Callable<Integer>()
-		{
-			public Integer call()
-				throws Exception
-			{
-				return null;
-			}
-		}, null);
+		instance.startTask(() -> null, null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -170,14 +156,7 @@ public class TaskManagerTest
 		instance.startUp();
 		String name = "TaskName";
 		String description = "Task description";
-		Task<Integer> task = instance.startTask(new Callable<Integer>()
-		{
-			public Integer call()
-				throws Exception
-			{
-				return null;
-			}
-		}, name, description);
+		Task<Integer> task = instance.startTask(() -> null, name, description);
 		assertEquals(name, task.getName());
 		assertEquals(description, task.getDescription());
 		assertNull(task.getMetaData());
@@ -191,14 +170,7 @@ public class TaskManagerTest
 		String description = "Task description";
 		Map<String, String> metaData = new HashMap<>();
 		metaData.put("foo", "bar");
-		Task<Integer> task = instance.startTask(new Callable<Integer>()
-		{
-			public Integer call()
-				throws Exception
-			{
-				return null;
-			}
-		}, name, description, metaData);
+		Task<Integer> task = instance.startTask(() -> null, name, description, metaData);
 		assertEquals(name, task.getName());
 		assertEquals(description, task.getDescription());
 		assertEquals(metaData, task.getMetaData());
@@ -922,11 +894,11 @@ public class TaskManagerTest
 	private static class TestTaskListener
 		implements TaskListener<Integer>
 	{
-		public static final String CREATED = "Created: ";
-		public static final String FAILED = "Failed: ";
-		public static final String FINISHED = "Finished: ";
-		public static final String CANCELED = "Canceled: ";
-		public static final String PROGRESS = "Progress: ";
+		static final String CREATED = "Created: ";
+		static final String FAILED = "Failed: ";
+		static final String FINISHED = "Finished: ";
+		static final String CANCELED = "Canceled: ";
+		static final String PROGRESS = "Progress: ";
 
 		private final Logger logger = LoggerFactory.getLogger(TestTaskListener.class);
 
@@ -968,7 +940,7 @@ public class TaskManagerTest
 			messages.add(PROGRESS + task.getCallable() + " " + progress);
 		}
 
-		public List<String> getMessages()
+		List<String> getMessages()
 		{
 			return messages;
 		}
@@ -1031,7 +1003,7 @@ public class TaskManagerTest
 			checkThread();
 		}
 
-		public boolean isFailed()
+		boolean isFailed()
 		{
 			return failed;
 		}

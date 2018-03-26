@@ -36,7 +36,6 @@ package de.huxhorn.sulky.io;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import org.easymock.IAnswer;
 import org.junit.Test;
 
 import static org.easymock.EasyMock.createStrictMock;
@@ -404,14 +403,9 @@ public class TimeoutOutputStreamTest
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		makeThreadSafe(mockStream, true);
 		mockStream.write(eq(17));
-		expectLastCall().andAnswer(new IAnswer<Object>()
-		{
-			public Object answer()
-				throws Throwable
-			{
-				Thread.sleep(300);
-				return null;
-			}
+		expectLastCall().andAnswer(() -> {
+			Thread.sleep(300);
+			return null;
 		});
 		mockStream.close();
 
@@ -436,14 +430,9 @@ public class TimeoutOutputStreamTest
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		makeThreadSafe(mockStream, true);
 		mockStream.write(eq(bytes));
-		expectLastCall().andAnswer(new IAnswer<Object>()
-		{
-			public Object answer()
-				throws Throwable
-			{
-				Thread.sleep(300);
-				return null;
-			}
+		expectLastCall().andAnswer(() -> {
+			Thread.sleep(300);
+			return null;
 		});
 		mockStream.close();
 
@@ -468,14 +457,9 @@ public class TimeoutOutputStreamTest
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		makeThreadSafe(mockStream, true);
 		mockStream.write(eq(bytes), eq(0), eq(5));
-		expectLastCall().andAnswer(new IAnswer<Object>()
-		{
-			public Object answer()
-				throws Throwable
-			{
-				Thread.sleep(300);
-				return null;
-			}
+		expectLastCall().andAnswer(() -> {
+			Thread.sleep(300);
+			return null;
 		});
 		mockStream.close();
 
@@ -499,14 +483,9 @@ public class TimeoutOutputStreamTest
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		makeThreadSafe(mockStream, true);
 		mockStream.flush();
-		expectLastCall().andAnswer(new IAnswer<Object>()
-		{
-			public Object answer()
-				throws Throwable
-			{
-				Thread.sleep(300);
-				return null;
-			}
+		expectLastCall().andAnswer(() -> {
+			Thread.sleep(300);
+			return null;
 		});
 		mockStream.close();
 
@@ -530,14 +509,9 @@ public class TimeoutOutputStreamTest
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		makeThreadSafe(mockStream, true);
 		mockStream.close();
-		expectLastCall().andAnswer(new IAnswer<Object>()
-		{
-			public Object answer()
-				throws Throwable
-			{
-				Thread.sleep(300);
-				return null;
-			}
+		expectLastCall().andAnswer(() -> {
+			Thread.sleep(300);
+			return null;
 		});
 
 		replay(mockStream);

@@ -60,6 +60,11 @@
 		<exclude name="TooManyStaticImports"/>
 		<exclude name="UselessParentheses"/>
 	</rule>
+	<rule ref="category/java/codestyle.xml/ControlStatementBraces">
+		<properties>
+			<property name="checkIfElseStmt" value="false"/>
+		</properties>
+	</rule>
 	
 	<rule ref="category/java/errorprone.xml">
 		<exclude name="AvoidCatchingThrowable"/>
