@@ -127,7 +127,7 @@ public class ReadOnlyExclusiveCodecFileBuffer<E>
 	/**
 	 * If no element is found, null is returned.
 	 *
-	 * @param index must be in the range <tt>[0..(getSize()-1)]</tt>.
+	 * @param index must be in the range <code>[0..(getSize()-1)]</code>.
 	 * @return the element at the given index.
 	 * @throws IllegalStateException if no Decoder has been set.
 	 */

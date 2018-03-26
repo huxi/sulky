@@ -38,12 +38,12 @@ public interface Buffer<E>
 	extends Iterable<E>
 {
 	/**
-	 * Returns the value at the given <tt>index</tt>.
-	 * <tt>index</tt> must be in the range <tt>[0..(getSize()-1)]</tt>.
-	 * Returns <tt>null</tt> if a value couldn't be resolved, e.g. in case of a volatile buffer.
+	 * Returns the value at the given <code>index</code>.
+	 * <code>index</code> must be in the range <code>[0..(getSize()-1)]</code>.
+	 * Returns <code>null</code> if a value couldn't be resolved, e.g. in case of a volatile buffer.
 	 *
-	 * @param index must be in the range <tt>[0..(getSize()-1)]</tt>.
-	 * @return the value at the given <tt>index</tt>.
+	 * @param index must be in the range <code>[0..(getSize()-1)]</code>.
+	 * @return the value at the given <code>index</code>.
 	 */
 	E get(long index);
 

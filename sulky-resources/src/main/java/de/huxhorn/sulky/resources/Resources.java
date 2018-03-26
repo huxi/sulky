@@ -287,7 +287,7 @@ public final class Resources
 	 * </p>
 	 *
 	 * Example:
-	 * <pre><tt>
+	 * <pre><code>
 	 * package foobar;
 	 *
 	 * public class Foo
@@ -296,15 +296,15 @@ public final class Resources
 	 *      {
 	 *      }
 	 * }
-	 * </tt></pre>
-	 * <pre><tt>
+	 * </code></pre>
+	 * <pre><code>
 	 * // in some method...
 	 * Class c=foobar.Foo.Bar.class;
 	 * String resourceBaseName="resource";
 	 * String[] suffixes=new String[]{".txt", ".html"};
 	 * Locale.setDefault(new Locale("en_US"));
 	 * Locale locale=new Locale("de_DE");
-	 * </tt></pre>
+	 * </code></pre>
 	 * <p>
 	 * Result of the call getResources(c, resourceBaseName, suffixes, locale) if ALL files really exist:
 	 * </p>

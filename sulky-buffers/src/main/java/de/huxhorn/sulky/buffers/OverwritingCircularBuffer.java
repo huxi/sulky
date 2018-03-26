@@ -353,10 +353,10 @@ public final class OverwritingCircularBuffer<E>
 	}
 
 	/**
-	 * Returns a shallow copy of this <tt>OverwritingCircularBuffer</tt> instance.  (The
+	 * Returns a shallow copy of this <code>OverwritingCircularBuffer</code> instance.  (The
 	 * elements themselves are not cloned.)
 	 *
-	 * @return a clone of this <tt>OverwritingCircularBuffer</tt> instance
+	 * @return a clone of this <code>OverwritingCircularBuffer</code> instance
 	 */
 	public OverwritingCircularBuffer<E> clone()
 		throws CloneNotSupportedException
@@ -368,7 +368,7 @@ public final class OverwritingCircularBuffer<E>
 	}
 
 	/*
-	 * Save the state of the <tt>OverwritingCircularBuffer</tt> instance to a stream (that
+	 * Save the state of the <code>OverwritingCircularBuffer</code> instance to a stream (that
 	 * is, serialize it).
 	 */
 	private void writeObject(java.io.ObjectOutputStream s)
@@ -389,7 +389,7 @@ public final class OverwritingCircularBuffer<E>
 	}
 
 	/*
-	 * Reconstitute the <tt>ArrayList</tt> instance from a stream (that is,
+	 * Reconstitute the <code>ArrayList</code> instance from a stream (that is,
 	 * deserialize it).
 	 */
 	private void readObject(java.io.ObjectInputStream s)

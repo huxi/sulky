@@ -216,7 +216,6 @@ subprojects {
 	compileTestJava.options.encoding = sourceEncoding
 	compileGroovy.options.encoding = sourceEncoding
 	compileTestGroovy.options.encoding = sourceEncoding
-	javadoc.options.encoding = sourceEncoding
 
 	signing {
 		required = { !version.endsWith("SNAPSHOT") }
@@ -350,6 +349,19 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 coveralls {
 	jacocoReportPath = "${buildDir}/reports/jacoco/report.xml"
 	sourceDirs += jacocoRootReport.sourceDirectories
+}
+
+allprojects {
+	tasks.each { task ->
+		if (task instanceof Javadoc) {
+			//println task
+			if (JavaVersion.current().isJava10Compatible()) {
+				task.options.optionFiles << rootProject.file('config/javadoc10.options')
+			} else {
+				task.options.optionFiles << rootProject.file('config/javadoc.options')
+			}
+		}
+	}
 }
 
 project.ext.deleteClosure = {

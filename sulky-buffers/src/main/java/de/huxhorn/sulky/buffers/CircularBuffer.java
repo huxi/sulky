@@ -38,8 +38,8 @@ public interface CircularBuffer<E>
 	extends Buffer<E>, AppendOperation<E>, RemoveOperation<E>, ResetOperation
 {
 	/**
-	 * Returns the element at the given <tt>index</tt>. <tt>index</tt> must be in the
-	 * range <tt>[0..(getAvailableElements()-1)]</tt>.
+	 * Returns the element at the given <code>index</code>. <code>index</code> must be in the
+	 * range <code>[0..(getAvailableElements()-1)]</code>.
 	 *
 	 * @param index must be in the range [0..(getAvailableElements()-1)].
 	 * @return the entry.
@@ -47,8 +47,8 @@ public interface CircularBuffer<E>
 	E getRelative(int index);
 
 	/**
-	 * Sets the element at the given <tt>index</tt>. <tt>index</tt> must be in the
-	 * range <tt>[0..(getAvailableElements()-1)]</tt>.
+	 * Sets the element at the given <code>index</code>. <code>index</code> must be in the
+	 * range <code>[0..(getAvailableElements()-1)]</code>.
 	 *
 	 * @param element the element to be set.
 	 * @param index must be in the range [0..(getAvailableElements()-1)].

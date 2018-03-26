@@ -152,7 +152,7 @@ public class BlockingCircularBuffer<E>
 	}
 
 	/**
-	 * @return either <tt>null</tt> or a List containing all accumulated events.
+	 * @return either <code>null</code> or a List containing all accumulated events.
 	 */
 	public List<E> removeAll()
 	{
