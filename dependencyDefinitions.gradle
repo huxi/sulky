@@ -6,7 +6,7 @@ project.ext.versions = [
 ]
 
 project.ext.libraries = [
-'byte-buddy':             'net.bytebuddy:byte-buddy:1.8.0',
+'byte-buddy':             'net.bytebuddy:byte-buddy:1.8.1',
 'commons-codec':          'commons-codec:commons-codec:1.11',
 'commons-io':             'commons-io:commons-io:2.6',
 'easymock':               'org.easymock:easymock:3.5',
