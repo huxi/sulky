@@ -52,102 +52,40 @@ public class ULID
 			'Y','Z',
 	};
 
-	private static final byte[] DECODING_CHARS = new byte[128];
-	static
-	{
-		for(int i=0;i<DECODING_CHARS.length;i++)
-		{
-			DECODING_CHARS[i] = -1; // illegal value
-		}
-
-		DECODING_CHARS['0'] = 0;
-		DECODING_CHARS['O'] = 0;
-		DECODING_CHARS['o'] = 0;
-
-		DECODING_CHARS['1'] = 1;
-		DECODING_CHARS['I'] = 1;
-		DECODING_CHARS['i'] = 1;
-		DECODING_CHARS['L'] = 1;
-		DECODING_CHARS['l'] = 1;
-
-		DECODING_CHARS['2'] = 2;
-		DECODING_CHARS['3'] = 3;
-		DECODING_CHARS['4'] = 4;
-		DECODING_CHARS['5'] = 5;
-		DECODING_CHARS['6'] = 6;
-		DECODING_CHARS['7'] = 7;
-		DECODING_CHARS['8'] = 8;
-		DECODING_CHARS['9'] = 9;
-
-		DECODING_CHARS['A'] = 10;
-		DECODING_CHARS['a'] = 10;
-
-		DECODING_CHARS['B'] = 11;
-		DECODING_CHARS['b'] = 11;
-
-		DECODING_CHARS['C'] = 12;
-		DECODING_CHARS['c'] = 12;
-
-		DECODING_CHARS['D'] = 13;
-		DECODING_CHARS['d'] = 13;
-
-		DECODING_CHARS['E'] = 14;
-		DECODING_CHARS['e'] = 14;
-
-		DECODING_CHARS['F'] = 15;
-		DECODING_CHARS['f'] = 15;
-
-		DECODING_CHARS['G'] = 16;
-		DECODING_CHARS['g'] = 16;
-
-		DECODING_CHARS['H'] = 17;
-		DECODING_CHARS['h'] = 17;
-
-		DECODING_CHARS['J'] = 18;
-		DECODING_CHARS['j'] = 18;
-
-		DECODING_CHARS['K'] = 19;
-		DECODING_CHARS['k'] = 19;
-
-		DECODING_CHARS['M'] = 20;
-		DECODING_CHARS['m'] = 20;
-
-		DECODING_CHARS['N'] = 21;
-		DECODING_CHARS['n'] = 21;
-
-		DECODING_CHARS['P'] = 22;
-		DECODING_CHARS['p'] = 22;
-
-		DECODING_CHARS['P'] = 22;
-		DECODING_CHARS['p'] = 22;
-
-		DECODING_CHARS['Q'] = 23;
-		DECODING_CHARS['q'] = 23;
-
-		DECODING_CHARS['R'] = 24;
-		DECODING_CHARS['r'] = 24;
-
-		DECODING_CHARS['S'] = 25;
-		DECODING_CHARS['s'] = 25;
-
-		DECODING_CHARS['T'] = 26;
-		DECODING_CHARS['t'] = 26;
-
-		DECODING_CHARS['V'] = 27;
-		DECODING_CHARS['v'] = 27;
-
-		DECODING_CHARS['W'] = 28;
-		DECODING_CHARS['w'] = 28;
-
-		DECODING_CHARS['X'] = 29;
-		DECODING_CHARS['x'] = 29;
-
-		DECODING_CHARS['Y'] = 30;
-		DECODING_CHARS['y'] = 30;
-
-		DECODING_CHARS['Z'] = 31;
-		DECODING_CHARS['z'] = 31;
-	}
+	private static final byte[] DECODING_CHARS = new byte[] {
+			// 0
+			-1, -1, -1, -1, -1, -1, -1, -1,
+			// 8
+			-1, -1, -1, -1, -1, -1, -1, -1,
+			// 16
+			-1, -1, -1, -1, -1, -1, -1, -1,
+			// 24
+			-1, -1, -1, -1, -1, -1, -1, -1,
+			// 32
+			-1, -1, -1, -1, -1, -1, -1, -1,
+			// 40
+			-1, -1, -1, -1, -1, -1, -1, -1,
+			// 48
+			0, 1, 2, 3, 4, 5, 6, 7,
+			// 56
+			8, 9, -1, -1, -1, -1, -1, -1,
+			// 64
+			-1, 10, 11, 12, 13, 14, 15, 16,
+			// 72
+			17, 1, 18, 19, 1, 20, 21, 0,
+			// 80
+			22, 23, 24, 25, 26, -1, 27, 28,
+			// 88
+			29, 30, 31, -1, -1, -1, -1, -1,
+			// 96
+			-1, 10, 11, 12, 13, 14, 15, 16,
+			// 104
+			17, 1, 18, 19, 1, 20, 21, 0,
+			// 112
+			22, 23, 24, 25, 26, -1, 27, 28,
+			// 120
+			29, 30, 31,
+	};
 
 	private static final int MASK = 0x1F;
 	private static final int MASK_BITS = 5;

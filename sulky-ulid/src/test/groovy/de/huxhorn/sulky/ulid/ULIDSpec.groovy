@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2016 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2016 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,6 +68,7 @@ class ULIDSpec extends Specification {
 
 	private static final long ALL_BITS_SET = 0xFFFF_FFFF_FFFF_FFFFL
 
+	@SuppressWarnings("GroovyAssignabilityCheck")
 	@Unroll
 	def 'internalAppendCrockford(StringBuilder, #inputValue, #length) returns "#expectedResult".'() {
 		given:
@@ -81,9 +82,42 @@ class ULIDSpec extends Specification {
 
 		where:
 		inputValue             | length | expectedResult
-		0L                     | 13     | '0000000000000'
 		0L                     | 1      | '0'
 		1L                     | 1      | '1'
+		2L                     | 1      | '2'
+		3L                     | 1      | '3'
+		4L                     | 1      | '4'
+		5L                     | 1      | '5'
+		6L                     | 1      | '6'
+		7L                     | 1      | '7'
+		8L                     | 1      | '8'
+		9L                     | 1      | '9'
+		10L                    | 1      | 'A'
+		11L                    | 1      | 'B'
+		12L                    | 1      | 'C'
+		13L                    | 1      | 'D'
+		14L                    | 1      | 'E'
+		15L                    | 1      | 'F'
+		16L                    | 1      | 'G'
+		17L                    | 1      | 'H'
+		18L                    | 1      | 'J'
+		19L                    | 1      | 'K'
+		20L                    | 1      | 'M'
+		21L                    | 1      | 'N'
+		22L                    | 1      | 'P'
+		23L                    | 1      | 'Q'
+		24L                    | 1      | 'R'
+		25L                    | 1      | 'S'
+		26L                    | 1      | 'T'
+		27L                    | 1      | 'V'
+		28L                    | 1      | 'W'
+		29L                    | 1      | 'X'
+		30L                    | 1      | 'Y'
+		31L                    | 1      | 'Z'
+		32L                    | 1      | '0'
+		32L                    | 2      | '10'
+		0L                     | 0      | ''
+		0L                     | 13     | '0000000000000'
 		194L                   | 2      | '62'
 		45_678L                | 4      | '1CKE'
 		393_619L               | 4      | 'C0CK'
@@ -103,11 +137,11 @@ class ULIDSpec extends Specification {
 		0x1FL << 55            | 13     | '0Z00000000000'
 		0x1FL << 60            | 13     | 'F000000000000'
 		ALL_BITS_SET           | 13     | 'FZZZZZZZZZZZZ'
-		0x1FL                  | 0      | ''
 		PAST_TIMESTAMP         | 10     | PAST_TIMESTAMP_PART
 		MAX_TIMESTAMP          | 10     | MAX_TIMESTAMP_PART
 	}
 
+	@SuppressWarnings("GroovyAssignabilityCheck")
 	@Unroll
 	def 'internalWriteCrockford(char[#bufferSize], #inputValue, #length, #offset) returns "#expectedResult".'() {
 		given:
@@ -125,9 +159,43 @@ class ULIDSpec extends Specification {
 
 		where:
 		inputValue             | bufferSize | length | offset | expectedResult
-		0L                     | 13         | 13     | 0      | '0000000000000'
 		0L                     | 1          | 1      | 0      | '0'
 		1L                     | 1          | 1      | 0      | '1'
+		2L                     | 1          | 1      | 0      | '2'
+		3L                     | 1          | 1      | 0      | '3'
+		4L                     | 1          | 1      | 0      | '4'
+		5L                     | 1          | 1      | 0      | '5'
+		6L                     | 1          | 1      | 0      | '6'
+		7L                     | 1          | 1      | 0      | '7'
+		8L                     | 1          | 1      | 0      | '8'
+		9L                     | 1          | 1      | 0      | '9'
+		10L                    | 1          | 1      | 0      | 'A'
+		11L                    | 1          | 1      | 0      | 'B'
+		12L                    | 1          | 1      | 0      | 'C'
+		13L                    | 1          | 1      | 0      | 'D'
+		14L                    | 1          | 1      | 0      | 'E'
+		15L                    | 1          | 1      | 0      | 'F'
+		16L                    | 1          | 1      | 0      | 'G'
+		17L                    | 1          | 1      | 0      | 'H'
+		18L                    | 1          | 1      | 0      | 'J'
+		19L                    | 1          | 1      | 0      | 'K'
+		20L                    | 1          | 1      | 0      | 'M'
+		21L                    | 1          | 1      | 0      | 'N'
+		22L                    | 1          | 1      | 0      | 'P'
+		23L                    | 1          | 1      | 0      | 'Q'
+		24L                    | 1          | 1      | 0      | 'R'
+		25L                    | 1          | 1      | 0      | 'S'
+		26L                    | 1          | 1      | 0      | 'T'
+		27L                    | 1          | 1      | 0      | 'V'
+		28L                    | 1          | 1      | 0      | 'W'
+		29L                    | 1          | 1      | 0      | 'X'
+		30L                    | 1          | 1      | 0      | 'Y'
+		31L                    | 1          | 1      | 0      | 'Z'
+		32L                    | 1          | 1      | 0      | '0'
+		32L                    | 2          | 2      | 0      | '10'
+		0L                     | 0          | 0      | 0      | ''
+		0L                     | 2          | 0      | 0      | '##'
+		0L                     | 13         | 13     | 0      | '0000000000000'
 		194L                   | 2          | 2      | 0      | '62'
 		45_678L                | 4          | 4      | 0      | '1CKE'
 		393_619L               | 4          | 4      | 0      | 'C0CK'
@@ -147,7 +215,6 @@ class ULIDSpec extends Specification {
 		0x1FL << 55            | 13         | 13     | 0      | '0Z00000000000'
 		0x1FL << 60            | 13         | 13     | 0      | 'F000000000000'
 		ALL_BITS_SET           | 13         | 13     | 0      | 'FZZZZZZZZZZZZ'
-		0x1FL                  | 0          | 0      | 0      | ''
 		PAST_TIMESTAMP         | 10         | 10     | 0      | PAST_TIMESTAMP_PART
 		MAX_TIMESTAMP          | 10         | 10     | 0      | MAX_TIMESTAMP_PART
 		45_678L                | 8          | 4      | 3      | '###1CKE#'
@@ -416,6 +483,7 @@ class ULIDSpec extends Specification {
 		ex.message == 'stringBuilder must not be null!'
 	}
 
+	@SuppressWarnings("GroovyAssignabilityCheck")
 	@Unroll
 	def 'ULID.Value(#most, #least).toString() returns expected #expectedResult.'() {
 		when:
@@ -572,6 +640,27 @@ class ULIDSpec extends Specification {
 	}
 
 	@Unroll
+	def 'parseULID("#input") and toString() works as expected for invalid but acceptable values.'() {
+		when:
+		ULID.Value value = ULID.parseULID(input)
+
+		then:
+		value.toString() == expectedString
+
+		and:
+		value.timestamp() == expectedTimestamp
+
+		where:
+		input                                    | expectedString                           | expectedTimestamp
+		PAST_TIMESTAMP_PART + '0l00000000000000' | PAST_TIMESTAMP_PART + '0100000000000000' | PAST_TIMESTAMP
+		PAST_TIMESTAMP_PART + '0L00000000000000' | PAST_TIMESTAMP_PART + '0100000000000000' | PAST_TIMESTAMP
+		PAST_TIMESTAMP_PART + '0i00000000000000' | PAST_TIMESTAMP_PART + '0100000000000000' | PAST_TIMESTAMP
+		PAST_TIMESTAMP_PART + '0I00000000000000' | PAST_TIMESTAMP_PART + '0100000000000000' | PAST_TIMESTAMP
+		PAST_TIMESTAMP_PART + '0o00000000000000' | PAST_TIMESTAMP_PART + '0000000000000000' | PAST_TIMESTAMP
+		PAST_TIMESTAMP_PART + '0O00000000000000' | PAST_TIMESTAMP_PART + '0000000000000000' | PAST_TIMESTAMP
+	}
+
+	@Unroll
 	def 'parseULID("#input") fails as expected.'() {
 		when:
 		ULID.parseULID(input)
@@ -631,6 +720,7 @@ class ULIDSpec extends Specification {
 		ex.message == 'data must not be null!'
 	}
 
+	@SuppressWarnings("GroovyAssignabilityCheck")
 	@Unroll
 	def 'ULID.Value(#mostSignificantBits, #leastSignificantBits).toBytes() works as expected.'() {
 		given:
@@ -689,6 +779,7 @@ class ULIDSpec extends Specification {
 		value.equals(value)
 	}
 
+	@SuppressWarnings("GrEqualsBetweenInconvertibleTypes")
 	def 'ULID.Value is not equal to special cases.'() {
 		given:
 		def value = new ULID.Value(0, 0)
