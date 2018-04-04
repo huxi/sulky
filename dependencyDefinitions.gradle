@@ -1,12 +1,13 @@
 project.ext.versions = [
-'groovy':   '2.4.15',
-'logback':  '1.2.3',
-'slf4j':    '1.7.25',
-'spock':    '1.1-groovy-2.4'
+'bytebuddy': '1.8.3',
+'groovy':    '2.4.15',
+'logback':   '1.2.3',
+'slf4j':     '1.7.25',
+'spock':     '1.1-groovy-2.4'
 ]
 
 project.ext.libraries = [
-'byte-buddy':             'net.bytebuddy:byte-buddy:1.8.1',
+'byte-buddy':             "net.bytebuddy:byte-buddy:${versions.bytebuddy}",
 'commons-codec':          'commons-codec:commons-codec:1.11',
 'commons-io':             'commons-io:commons-io:2.6',
 'easymock':               'org.easymock:easymock:3.5',
