@@ -38,6 +38,8 @@ import de.huxhorn.sulky.junit.JUnitTools
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.security.SecureRandom
+
 @SuppressWarnings("ChangeToOperator")
 class ULIDSpec extends Specification {
 
@@ -347,7 +349,7 @@ class ULIDSpec extends Specification {
 		MIN_RANDOM_PART.compareTo(randomPart) <= 0
 		MAX_RANDOM_PART.compareTo(randomPart) >= 0
 	}
-// xxxxxxx
+
 	def 'nextValue() with 0 as random values returns expected result.'() {
 		given:
 		Random random = Mock(Random)
@@ -667,10 +669,13 @@ class ULIDSpec extends Specification {
 
 		then:
 		IllegalArgumentException ex = thrown()
-		ex.message == 'ulidString must be exactly 26 chars long.'
+		ex.message == expectedMessage
 
 		where:
-		input << ['0000000000000000000000000', '000000000000000000000000000']
+		input                         | expectedMessage
+		'0000000000000000000000000'   | 'ulidString must be exactly 26 chars long.'
+		'000000000000000000000000000' | 'ulidString must be exactly 26 chars long.'
+		'80000000000000000000000000'  | 'ulidString must not exceed \'7ZZZZZZZZZZZZZZZZZZZZZZZZZ\'!'
 	}
 
 	def 'parseULID(null) fails as expected.'() {
@@ -802,5 +807,42 @@ class ULIDSpec extends Specification {
 		0L                            | 0L
 		ALL_BITS_SET                  | ALL_BITS_SET
 		PATTERN_MOST_SIGNIFICANT_BITS | PATTERN_LEAST_SIGNIFICANT_BITS
+	}
+
+	def 'internalUIDString(..) with 0x0001_0000_0000_0000L as timestamp explodes as expected.'() {
+		given:
+		Random random = new SecureRandom()
+
+		when:
+		ULID.internalUIDString(0x0001_0000_0000_0000L, random)
+
+		then:
+		IllegalArgumentException ex = thrown()
+		ex.message == 'ULID does not support timestamps after +10889-08-02T05:31:50.655Z!'
+	}
+
+	def 'internalAppendULID(..) with 0x0001_0000_0000_0000L as timestamp explodes as expected.'() {
+		given:
+		StringBuilder stringBuilder = new StringBuilder()
+		Random random = new SecureRandom()
+
+		when:
+		ULID.internalAppendULID(stringBuilder, 0x0001_0000_0000_0000L, random)
+
+		then:
+		IllegalArgumentException ex = thrown()
+		ex.message == 'ULID does not support timestamps after +10889-08-02T05:31:50.655Z!'
+	}
+
+	def 'internalNextValue(..) with 0x0001_0000_0000_0000L as timestamp explodes as expected.'() {
+		given:
+		Random random = new SecureRandom()
+
+		when:
+		ULID.internalNextValue(0x0001_0000_0000_0000L, random)
+
+		then:
+		IllegalArgumentException ex = thrown()
+		ex.message == 'ULID does not support timestamps after +10889-08-02T05:31:50.655Z!'
 	}
 }

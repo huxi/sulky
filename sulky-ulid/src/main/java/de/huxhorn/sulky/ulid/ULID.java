@@ -40,7 +40,7 @@ import java.util.Objects;
 import java.util.Random;
 
 /*
- * https://github.com/alizain/ulid
+ * https://github.com/ulid/spec
  */
 @SuppressWarnings("PMD.ShortClassName")
 public class ULID
@@ -89,7 +89,7 @@ public class ULID
 
 	private static final int MASK = 0x1F;
 	private static final int MASK_BITS = 5;
-	private static final long TIMESTAMP_MASK = 0x0000_FFFF_FFFF_FFFFL;
+	private static final long TIMESTAMP_OVERFLOW_MASK = 0xFFFF_0000_0000_0000L;
 
 	private final Random random;
 
@@ -129,9 +129,13 @@ public class ULID
 		}
 
 		String timeString = ulidString.substring(0, 10);
+		long time = internalParseCrockford(timeString);
+		if ((time & TIMESTAMP_OVERFLOW_MASK) != 0)
+		{
+			throw new IllegalArgumentException("ulidString must not exceed '7ZZZZZZZZZZZZZZZZZZZZZZZZZ'!");
+		}
 		String part1String = ulidString.substring(10, 18);
 		String part2String = ulidString.substring(18);
-		long time = internalParseCrockford(timeString);
 		long part1 = internalParseCrockford(part1String);
 		long part2 = internalParseCrockford(part2String);
 
@@ -316,14 +320,13 @@ public class ULID
 		}
 	}
 
-	static String internalUIDString(long timeStamp, Random random)
+	static String internalUIDString(long timestamp, Random random)
 	{
-		// this will be extremely important in the summer of 10889.
-		timeStamp = timeStamp & TIMESTAMP_MASK;
+		checkTimestamp(timestamp);
 
 		char[] buffer = new char[26];
 
-		internalWriteCrockford(buffer, timeStamp, 10, 0);
+		internalWriteCrockford(buffer, timestamp, 10, 0);
 		// could use nextBytes(byte[] bytes) instead
 		internalWriteCrockford(buffer, random.nextLong(), 8, 10);
 		internalWriteCrockford(buffer, random.nextLong(), 8, 18);
@@ -331,24 +334,32 @@ public class ULID
 		return new String(buffer);
 	}
 
-	static void internalAppendULID(StringBuilder builder, long timeStamp, Random random)
+	static void internalAppendULID(StringBuilder builder, long timestamp, Random random)
 	{
-		// this will be extremely important in the summer of 10889.
-		timeStamp = timeStamp & TIMESTAMP_MASK;
+		checkTimestamp(timestamp);
 
-		internalAppendCrockford(builder, timeStamp, 10);
+		internalAppendCrockford(builder, timestamp, 10);
 		// could use nextBytes(byte[] bytes) instead
 		internalAppendCrockford(builder, random.nextLong(), 8);
 		internalAppendCrockford(builder, random.nextLong(), 8);
 	}
 
-	private static Value internalNextValue(long timeStamp, Random random)
+	static Value internalNextValue(long timestamp, Random random)
 	{
+		checkTimestamp(timestamp);
 		// could use nextBytes(byte[] bytes) instead
 		long mostSignificantBits = random.nextLong();
 		long leastSignificantBits = random.nextLong();
 		mostSignificantBits &= 0xFFFF;
-		mostSignificantBits |= (timeStamp << 16);
+		mostSignificantBits |= (timestamp << 16);
 		return new Value(mostSignificantBits, leastSignificantBits);
+	}
+
+	private static void checkTimestamp(long timestamp)
+	{
+		if((timestamp & TIMESTAMP_OVERFLOW_MASK) != 0)
+		{
+			throw new IllegalArgumentException("ULID does not support timestamps after +10889-08-02T05:31:50.655Z!");
+		}
 	}
 }
