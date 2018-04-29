@@ -45,11 +45,13 @@ import java.beans.PersistenceDelegate;
 public class EnumPersistenceDelegate
 	extends PersistenceDelegate
 {
+	@Override
 	protected boolean mutatesTo(Object oldInstance, Object newInstance)
 	{
 		return oldInstance == newInstance; // NOPMD
 	}
 
+	@Override
 	protected Expression instantiate(Object oldInstance, Encoder out)
 	{
 		Enum e = (Enum) oldInstance;

@@ -74,6 +74,7 @@ public class CyclicLinkException
 		return result.toString();
 	}
 
+	@Override
 	public String toString()
 	{
 		return "CyclicLinkException: " +

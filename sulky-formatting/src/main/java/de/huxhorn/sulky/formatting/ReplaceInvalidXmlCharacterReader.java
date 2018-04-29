@@ -89,6 +89,7 @@ public class ReplaceInvalidXmlCharacterReader
 	 *
 	 * @exception IOException  If an I/O error occurs
 	 */
+	@Override
 	public int read()
 			throws IOException
 	{
@@ -105,6 +106,7 @@ public class ReplaceInvalidXmlCharacterReader
 	 *
 	 * @exception  IOException  If an I/O error occurs
 	 */
+	@Override
 	public int read(char[] cbuf, int off, int len)
 			throws IOException
 	{

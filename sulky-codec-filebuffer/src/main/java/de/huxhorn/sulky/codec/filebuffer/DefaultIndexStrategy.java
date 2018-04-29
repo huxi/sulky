@@ -42,6 +42,7 @@ public class DefaultIndexStrategy
 {
 	public static final long DATA_OFFSET_SIZE = 8;
 
+	@Override
 	public void setOffset(RandomAccessFile indexFile, long index, long offset)
 		throws IOException
 	{
@@ -61,6 +62,7 @@ public class DefaultIndexStrategy
 		indexFile.writeLong(offset);
 	}
 
+	@Override
 	public long getOffset(RandomAccessFile indexFile, long index)
 		throws IOException
 	{
@@ -77,6 +79,7 @@ public class DefaultIndexStrategy
 		return indexFile.readLong();
 	}
 
+	@Override
 	public long getSize(RandomAccessFile indexFile)
 		throws IOException
 	{

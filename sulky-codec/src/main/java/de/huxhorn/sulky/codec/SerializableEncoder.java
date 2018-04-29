@@ -65,6 +65,7 @@ public class SerializableEncoder<E extends Serializable>
 		this.compressing = compressing;
 	}
 
+	@Override
 	public byte[] encode(E object)
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -94,6 +95,7 @@ public class SerializableEncoder<E extends Serializable>
 		return new ObjectOutputStream(bos);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "SerializableEncoder[compressing=" + compressing + "]";

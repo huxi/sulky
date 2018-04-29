@@ -57,6 +57,7 @@ public class DefaultFileHeaderStrategy
 		this.metaCodec = new MetaDataCodec();
 	}
 
+	@Override
 	public Integer readMagicValue(File dataFile)
 		throws IOException
 	{
@@ -83,6 +84,7 @@ public class DefaultFileHeaderStrategy
 		return null;
 	}
 
+	@Override
 	public FileHeader writeFileHeader(File dataFile, int magicValue, Map<String, String> metaData, boolean sparse)
 		throws IOException
 	{
@@ -118,6 +120,7 @@ public class DefaultFileHeaderStrategy
 		}
 	}
 
+	@Override
 	public FileHeader readFileHeader(File dataFile)
 		throws IOException
 	{
@@ -155,6 +158,7 @@ public class DefaultFileHeaderStrategy
 		return null;
 	}
 
+	@Override
 	public int getMinimalSize()
 	{
 		return MAGIC_VALUE_SIZE + META_LENGTH_SIZE;

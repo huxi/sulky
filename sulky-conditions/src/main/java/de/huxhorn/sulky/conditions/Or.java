@@ -58,11 +58,13 @@ public class Or
 		this.conditions = conditions;
 	}
 
+	@Override
 	public List<Condition> getConditions()
 	{
 		return conditions;
 	}
 
+	@Override
 	public void setConditions(List<Condition> conditions)
 	{
 		this.conditions = conditions;
@@ -76,6 +78,7 @@ public class Or
 	 * @param element the object to be evaluated.
 	 * @return true if any of the contained conditions is true.
 	 */
+	@Override
 	public boolean isTrue(Object element)
 	{
 		if(conditions != null)
@@ -91,6 +94,7 @@ public class Or
 		return false;
 	}
 
+	@Override
 	public Or clone()
 		throws CloneNotSupportedException
 	{
@@ -108,6 +112,7 @@ public class Or
 	}
 
 
+	@Override
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder();
@@ -136,6 +141,7 @@ public class Or
 		return result.toString();
 	}
 
+	@Override
 	public boolean equals(Object o)
 	{
 		if(this == o) return true;
@@ -146,6 +152,7 @@ public class Or
 		return !(conditions != null ? !conditions.equals(or.conditions) : or.conditions != null);
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return (conditions != null ? conditions.hashCode() : 0);

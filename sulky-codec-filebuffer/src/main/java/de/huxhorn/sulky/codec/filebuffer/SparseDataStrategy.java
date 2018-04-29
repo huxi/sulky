@@ -74,6 +74,7 @@ public class SparseDataStrategy<E>
 		this.supportingOverwrite = supportingOverwrite;
 	}
 
+	@Override
 	public void add(E element,
 	                RandomAccessFile indexFile,
 	                RandomAccessFile dataFile,
@@ -90,6 +91,7 @@ public class SparseDataStrategy<E>
 		indexStrategy.setOffset(indexFile, elementsCount, offset);
 	}
 
+	@Override
 	public void addAll(List<E> elements,
 	                   RandomAccessFile indexFile,
 	                   RandomAccessFile dataFile,
@@ -126,6 +128,7 @@ public class SparseDataStrategy<E>
 		}
 	}
 
+	@Override
 	public boolean set(long index, E element, RandomAccessFile indexFile, RandomAccessFile dataFile, Codec<E> codec, IndexStrategy indexStrategy)
 		throws IOException, UnsupportedOperationException
 	{
@@ -150,11 +153,13 @@ public class SparseDataStrategy<E>
 		}
 	}
 
+	@Override
 	public boolean isSetSupported()
 	{
 		return true;
 	}
 
+	@Override
 	public E get(long index,
 	             RandomAccessFile indexFile,
 	             RandomAccessFile dataFile,

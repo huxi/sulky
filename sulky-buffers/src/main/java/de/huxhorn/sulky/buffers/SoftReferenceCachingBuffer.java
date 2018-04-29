@@ -77,6 +77,7 @@ public class SoftReferenceCachingBuffer<E>
 		return buffer;
 	}
 
+	@Override
 	public E get(long index)
 	{
 		if(disposed)
@@ -109,22 +110,26 @@ public class SoftReferenceCachingBuffer<E>
 		return result;
 	}
 
+	@Override
 	public long getSize()
 	{
 		return buffer.getSize();
 	}
 
+	@Override
 	public Iterator<E> iterator()
 	{
 		return buffer.iterator();
 	}
 
+	@Override
 	public void reset()
 	{
 		Reset.reset(buffer);
 		cache.clear();
 	}
 
+	@Override
 	public void dispose()
 	{
 		disposed = true;
@@ -132,11 +137,13 @@ public class SoftReferenceCachingBuffer<E>
 		Dispose.dispose(buffer);
 	}
 
+	@Override
 	public boolean isDisposed()
 	{
 		return disposed;
 	}
 
+	@Override
 	public void flush()
 	{
 		Flush.flush(buffer);
@@ -175,6 +182,7 @@ public class SoftReferenceCachingBuffer<E>
 		implements Runnable
 	{
 
+		@Override
 		public void run()
 		{
 			final Logger logger = LoggerFactory.getLogger(SoftReferenceCachingBuffer.class);

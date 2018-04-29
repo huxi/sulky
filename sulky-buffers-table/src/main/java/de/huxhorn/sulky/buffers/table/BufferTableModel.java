@@ -129,11 +129,13 @@ public abstract class BufferTableModel<T>
 		return false;
 	}
 
+	@Override
 	public int getRowCount()
 	{
 		return lastRowCount.get();
 	}
 
+	@Override
 	public void dispose()
 	{
 		disposed.set(true);
@@ -144,6 +146,7 @@ public abstract class BufferTableModel<T>
 		}
 	}
 
+	@Override
 	public boolean isDisposed()
 	{
 		return disposed.get();
@@ -170,6 +173,7 @@ public abstract class BufferTableModel<T>
 		return (int) rows;
 	}
 
+	@Override
 	public T getValueAt(int row)
 	{
 		if(circularBuffer != null)
@@ -180,17 +184,22 @@ public abstract class BufferTableModel<T>
 		return buffer.get(row);
 	}
 
+	@Override
 	public abstract int getColumnCount();
 
+	@Override
 	public abstract String getColumnName(int columnIndex);
 
+	@Override
 	public abstract Class<?> getColumnClass(int columnIndex);
 
+	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex)
 	{
 		return false;
 	}
 
+	@Override
 	public Object getValueAt(int rowIndex, int columnIndex)
 	{
 		T value = getValueAt(rowIndex);
@@ -198,6 +207,7 @@ public abstract class BufferTableModel<T>
 		return value;
 	}
 
+	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex)
 	{
 		// read-only
@@ -238,6 +248,7 @@ public abstract class BufferTableModel<T>
 			this.event = event;
 		}
 
+		@Override
 		public void run()
 		{
 			Object[] listeners;
@@ -270,6 +281,7 @@ public abstract class BufferTableModel<T>
 
 	}
 
+	@Override
 	public void addTableModelListener(TableModelListener l)
 	{
 		synchronized(eventListenerList)
@@ -278,6 +290,7 @@ public abstract class BufferTableModel<T>
 		}
 	}
 
+	@Override
 	public void removeTableModelListener(TableModelListener l)
 	{
 		synchronized(eventListenerList)
@@ -291,6 +304,7 @@ public abstract class BufferTableModel<T>
 	{
 		private static final int UPDATE_INTERVAL = 500;
 
+		@Override
 		public void run()
 		{
 			for(;;)

@@ -53,6 +53,7 @@ public class EncoderBridge<E>
 		this.wrapped = Objects.requireNonNull(wrapped, "wrapped must not be null!");
 	}
 
+	@Override
 	@SuppressWarnings("PMD.ReturnEmptyArrayRatherThanNull")
 	public byte[] encode(E object)
 	{

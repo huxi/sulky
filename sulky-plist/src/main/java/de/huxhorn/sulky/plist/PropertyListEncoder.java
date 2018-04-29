@@ -68,6 +68,7 @@ public class PropertyListEncoder
 {
 	private final Logger logger = LoggerFactory.getLogger(PropertyListEncoder.class);
 
+	@Override
 	public void encode(PropertyList obj, OutputStream into)
 		throws IOException
 	{
@@ -86,6 +87,7 @@ public class PropertyListEncoder
 		}
 	}
 
+	@Override
 	public byte[] encode(PropertyList object)
 	{
 		ByteArrayOutputStream into=new ByteArrayOutputStream();

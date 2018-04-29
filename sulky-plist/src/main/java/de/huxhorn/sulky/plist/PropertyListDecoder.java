@@ -77,6 +77,7 @@ public class PropertyListDecoder
 {
 	private final Logger logger = LoggerFactory.getLogger(PropertyListDecoder.class);
 
+	@Override
 	public PropertyList decode(InputStream from)
 		throws IOException
 	{
@@ -99,6 +100,7 @@ public class PropertyListDecoder
 		}
 	}
 
+	@Override
 	public PropertyList decode(byte[] bytes)
 	{
 		try

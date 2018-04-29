@@ -89,6 +89,7 @@ public class TimeoutOutputStream
 		}
 	}
 
+	@Override
 	public void write(byte[] b)
 		throws IOException
 	{
@@ -105,6 +106,7 @@ public class TimeoutOutputStream
 		}
 	}
 
+	@Override
 	public void write(byte[] b, int off, int len)
 		throws IOException
 	{
@@ -121,6 +123,7 @@ public class TimeoutOutputStream
 		}
 	}
 
+	@Override
 	public void write(int b)
 		throws IOException
 	{
@@ -137,6 +140,7 @@ public class TimeoutOutputStream
 		}
 	}
 
+	@Override
 	public void flush()
 		throws IOException
 	{
@@ -153,6 +157,7 @@ public class TimeoutOutputStream
 		}
 	}
 
+	@Override
 	public void close()
 		throws IOException
 	{
@@ -193,6 +198,7 @@ public class TimeoutOutputStream
 	private class TimeoutRunnable
 		implements Runnable
 	{
+		@Override
 		public void run()
 		{
 			watchdogThreadRunning.set(true);

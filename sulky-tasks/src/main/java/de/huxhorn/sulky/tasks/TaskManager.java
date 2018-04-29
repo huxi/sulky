@@ -407,6 +407,7 @@ public class TaskManager<T>
 
 		private static final long POLL_INTERVAL = 200;
 
+		@Override
 		@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 		public void run()
 		{
@@ -538,6 +539,7 @@ public class TaskManager<T>
 			this.progressChanges = progressChanges;
 		}
 
+		@Override
 		public void run()
 		{
 			ReentrantReadWriteLock.ReadLock lock = taskListenersLock.readLock();
@@ -686,6 +688,7 @@ public class TaskManager<T>
 		implements PropertyChangeListener
 	{
 
+		@Override
 		public void propertyChange(PropertyChangeEvent evt)
 		{
 			Object source = evt.getSource();
@@ -746,21 +749,25 @@ public class TaskManager<T>
 			}
 		}
 
+		@Override
 		public long getId()
 		{
 			return id;
 		}
 
+		@Override
 		public String getName()
 		{
 			return name;
 		}
 
+		@Override
 		public String getDescription()
 		{
 			return description;
 		}
 
+		@Override
 		public Map<String, String> getMetaData()
 		{
 			if(metaData == null)
@@ -770,21 +777,25 @@ public class TaskManager<T>
 			return Collections.unmodifiableMap(metaData);
 		}
 
+		@Override
 		public Future<V> getFuture()
 		{
 			return future;
 		}
 
+		@Override
 		public Callable<V> getCallable()
 		{
 			return callable;
 		}
 
+		@Override
 		public TaskManager<V> getTaskManager()
 		{
 			return taskManager;
 		}
 
+		@Override
 		public int getProgress()
 		{
 			if(callable instanceof ProgressingCallable)

@@ -68,26 +68,31 @@ public class JLayerSounds
 		t.start();
 	}
 
+	@Override
 	public boolean isMute()
 	{
 		return mute;
 	}
 
+	@Override
 	public void setMute(boolean mute)
 	{
 		this.mute = mute;
 	}
 
+	@Override
 	public Map<String, String> getSoundLocations()
 	{
 		return soundLocations;
 	}
 
+	@Override
 	public void setSoundLocations(Map<String, String> soundLocations)
 	{
 		this.soundLocations = soundLocations;
 	}
 
+	@Override
 	public void play(String soundName, boolean ignoreDuplicates)
 	{
 		if(!isMute())
@@ -105,6 +110,7 @@ public class JLayerSounds
 		}
 	}
 
+	@Override
 	public void play(String soundName)
 	{
 		play(soundName, true);
@@ -168,6 +174,7 @@ public class JLayerSounds
 	private class PlayRunnable
 		implements Runnable
 	{
+		@Override
 		public void run()
 		{
 			for(;;)

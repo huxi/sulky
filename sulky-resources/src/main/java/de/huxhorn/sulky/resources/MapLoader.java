@@ -173,6 +173,7 @@ public abstract class MapLoader
 			super(new String[]{PROPERTY_BUNDLE_SUFFIX});
 		}
 
+		@Override
 		public Map<String, Object> loadMap(URL url)
 				throws IOException
 		{

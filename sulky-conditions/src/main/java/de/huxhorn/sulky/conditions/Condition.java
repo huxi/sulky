@@ -47,6 +47,7 @@ public interface Condition
 	 * @return a clone of the Condition.
 	 * @throws CloneNotSupportedException Guess what?
 	 */
+	@SuppressWarnings("PMD.MissingOverride")
 	Condition clone()
 		throws CloneNotSupportedException;
 }

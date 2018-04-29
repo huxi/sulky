@@ -62,7 +62,12 @@
 	</rule>
 	<rule ref="category/java/codestyle.xml/ControlStatementBraces">
 		<properties>
-			<property name="checkIfElseStmt" value="false"/>
+			<property name="checkSingleIfStmt" value="false"/>
+		</properties>
+	</rule>
+	<rule ref="category/java/codestyle.xml/ClassNamingConventions">
+		<properties>
+			<property name="utilityClassPattern" value="[A-Z][a-zA-Z]+"/>
 		</properties>
 	</rule>
 	

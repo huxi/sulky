@@ -753,6 +753,7 @@ public class TaskManagerTest
 		 * @return computed result
 		 * @throws Exception if unable to compute a result
 		 */
+		@Override
 		public Integer call()
 			throws Exception
 		{
@@ -790,6 +791,7 @@ public class TaskManagerTest
 		 * @return computed result
 		 * @throws Exception if unable to compute a result
 		 */
+		@Override
 		public Integer call()
 			throws Exception
 		{
@@ -834,6 +836,7 @@ public class TaskManagerTest
 		 * @return computed result
 		 * @throws Exception if unable to compute a result
 		 */
+		@Override
 		public Integer call()
 			throws Exception
 		{
@@ -869,6 +872,7 @@ public class TaskManagerTest
 		 * @return computed result
 		 * @throws Exception if unable to compute a result
 		 */
+		@Override
 		public Integer call()
 			throws Exception
 		{
@@ -909,12 +913,14 @@ public class TaskManagerTest
 			messages = new ArrayList<>();
 		}
 
+		@Override
 		public void taskCreated(Task<Integer> task)
 		{
 			if(logger.isInfoEnabled()) logger.info("Task created.");
 			messages.add(CREATED + task.getCallable());
 		}
 
+		@Override
 		public void executionFailed(Task<Integer> task, ExecutionException exception)
 		{
 			Throwable cause = exception.getCause();
@@ -922,18 +928,21 @@ public class TaskManagerTest
 			messages.add(FAILED + task.getCallable() + " " + cause.getClass().getName());
 		}
 
+		@Override
 		public void executionFinished(Task<Integer> task, Integer result)
 		{
 			if(logger.isInfoEnabled()) logger.info("Execution finished. Result={}", result);
 			messages.add(FINISHED + task.getCallable());
 		}
 
+		@Override
 		public void executionCanceled(Task<Integer> task)
 		{
 			if(logger.isInfoEnabled()) logger.info("Execution canceled.");
 			messages.add(CANCELED + task.getCallable());
 		}
 
+		@Override
 		public void progressUpdated(Task<Integer> task, int progress)
 		{
 			if(logger.isInfoEnabled()) logger.info("Progress update: {}", progress);
@@ -978,26 +987,31 @@ public class TaskManagerTest
 			}
 		}
 
+		@Override
 		public void taskCreated(Task<Integer> integerTask)
 		{
 			checkThread();
 		}
 
+		@Override
 		public void executionFailed(Task<Integer> task, ExecutionException exception)
 		{
 			checkThread();
 		}
 
+		@Override
 		public void executionFinished(Task<Integer> task, Integer result)
 		{
 			checkThread();
 		}
 
+		@Override
 		public void executionCanceled(Task<Integer> task)
 		{
 			checkThread();
 		}
 
+		@Override
 		public void progressUpdated(Task<Integer> task, int progress)
 		{
 			checkThread();

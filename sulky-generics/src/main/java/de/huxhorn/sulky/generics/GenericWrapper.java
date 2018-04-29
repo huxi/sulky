@@ -49,6 +49,7 @@ public class GenericWrapper<T>
 		return wrapped;
 	}
 
+	@Override
 	public <C> C unwrap(Class<C> iface)
 		throws IllegalArgumentException
 	{
@@ -68,6 +69,7 @@ public class GenericWrapper<T>
 		throw new IllegalArgumentException("This Wrapper does not wrap an instance of the given interface!");
 	}
 
+	@Override
 	public boolean isWrapperFor(Class<?> iface)
 	{
 		return iface.isInstance(wrapped)
@@ -75,6 +77,7 @@ public class GenericWrapper<T>
 				&& Wrapper.class.cast(wrapped).isWrapperFor(iface);
 	}
 
+	@Override
 	public boolean equals(Object o)
 	{
 		if(this == o) return true;
@@ -86,11 +89,13 @@ public class GenericWrapper<T>
 
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return (wrapped != null ? wrapped.hashCode() : 0);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "wrapper-" + (wrapped == null ? null : wrapped.getClass().getSimpleName()) + "[wrapped=" + wrapped + "]";

@@ -55,11 +55,13 @@ public class Not
 		this.condition = condition;
 	}
 
+	@Override
 	public Condition getCondition()
 	{
 		return condition;
 	}
 
+	@Override
 	public void setCondition(Condition condition)
 	{
 		this.condition = condition;
@@ -73,6 +75,7 @@ public class Not
 	 * @param element the object to be evaluated.
 	 * @return true if the contained condition returns false.
 	 */
+	@Override
 	public boolean isTrue(Object element)
 	{
 		if(condition != null)
@@ -82,6 +85,7 @@ public class Not
 		return false;
 	}
 
+	@Override
 	public Not clone()
 		throws CloneNotSupportedException
 	{
@@ -93,6 +97,7 @@ public class Not
 		return result;
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder();
@@ -107,6 +112,7 @@ public class Not
 		return result.toString();
 	}
 
+	@Override
 	public boolean equals(Object o)
 	{
 		if(this == o) return true;
@@ -117,6 +123,7 @@ public class Not
 		return !(condition != null ? !condition.equals(not.condition) : not.condition != null);
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return (condition != null ? condition.hashCode() : 0);

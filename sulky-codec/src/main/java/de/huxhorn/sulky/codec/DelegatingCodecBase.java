@@ -71,6 +71,7 @@ public class DelegatingCodecBase<E>
 		this.decoder = decoder;
 	}
 
+	@Override
 	public byte[] encode(E object)
 	{
 		if(encoder == null)
@@ -80,6 +81,7 @@ public class DelegatingCodecBase<E>
 		return encoder.encode(object);
 	}
 
+	@Override
 	public E decode(byte[] bytes)
 	{
 		if(decoder == null)

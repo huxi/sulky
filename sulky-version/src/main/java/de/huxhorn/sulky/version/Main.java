@@ -281,12 +281,14 @@ public final class Main
 			this.msg = msg;
 		}
 
+		@Override
 		public void run()
 		{
 			final String message = msg + "\n\nPlease upgrade your Java version.";
 			JOptionPane.showOptionDialog(null, message, TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE, null, null, null);
 		}
 
+		@Override
 		public boolean isStartingAnyway()
 		{
 			return false;
@@ -308,6 +310,7 @@ public final class Main
 			this.msg = msg;
 		}
 
+		@Override
 		public void run()
 		{
 			final String message = msg + "\n\nStart anyway?";
@@ -316,6 +319,7 @@ public final class Main
 			startingAnyway = result == JOptionPane.YES_OPTION;
 		}
 
+		@Override
 		public boolean isStartingAnyway()
 		{
 			return startingAnyway;

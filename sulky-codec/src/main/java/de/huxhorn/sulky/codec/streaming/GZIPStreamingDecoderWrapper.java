@@ -48,6 +48,7 @@ public class GZIPStreamingDecoderWrapper<E>
 		this.wrapped = wrapped;
 	}
 
+	@Override
 	public E decode(InputStream from) throws IOException
 	{
 		GZIPInputStream gis=new GZIPInputStream(from);

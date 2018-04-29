@@ -263,6 +263,7 @@ public class SemanticVersion
 		return versionString;
 	}
 
+	@Override
 	public int compareTo(SemanticVersion other)
 	{
 		if(other == null)

@@ -56,6 +56,7 @@ public class FilteringCallable<E>
 		this.filterDelay = filterDelay;
 	}
 
+	@Override
 	public Long call()
 		throws Exception
 	{

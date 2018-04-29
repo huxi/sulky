@@ -100,6 +100,7 @@ public class SerializingFileBuffer<E>
 		setIndexFile(indexFile);
 	}
 
+	@Override
 	public long getSize()
 	{
 		if(!indexFile.canRead())
@@ -127,6 +128,7 @@ public class SerializingFileBuffer<E>
 		return 0;
 	}
 
+	@Override
 	public E get(long index)
 	{
 		if(!dataFile.canRead() || !indexFile.canRead())
@@ -175,6 +177,7 @@ public class SerializingFileBuffer<E>
 		return null;
 	}
 
+	@Override
 	public void add(E element)
 	{
 		Throwable throwable = null;
@@ -211,6 +214,7 @@ public class SerializingFileBuffer<E>
 
 	}
 
+	@Override
 	public void addAll(List<E> elements)
 	{
 		if(elements != null)
@@ -268,12 +272,14 @@ public class SerializingFileBuffer<E>
 		}
 	}
 
+	@Override
 	public void addAll(E[] elements)
 	{
 		addAll(Arrays.asList(elements));
 	}
 
 
+	@Override
 	public void reset()
 	{
 		boolean dataDeleted;
@@ -302,16 +308,19 @@ public class SerializingFileBuffer<E>
 	/**
 	 * @return will always return false, i.e. it does not check for diskspace!
 	 */
+	@Override
 	public boolean isFull()
 	{
 		return false;
 	}
 
+	@Override
 	public Iterator<E> iterator()
 	{
 		return new BasicBufferIterator<>(this);
 	}
 
+	@Override
 	public File getDataFile()
 	{
 		return dataFile;
@@ -439,6 +448,7 @@ public class SerializingFileBuffer<E>
 		}
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder(200);

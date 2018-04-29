@@ -65,6 +65,7 @@ public class SerializableDecoder<E extends Serializable>
 		this.compressing = compressing;
 	}
 
+	@Override
 	public E decode(byte[] bytes)
 	{
 		try(ObjectInputStream ois = createObjectInputStream(bytes))
@@ -93,6 +94,7 @@ public class SerializableDecoder<E extends Serializable>
 		return new ObjectInputStream(bis);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "SerializableDecoder[compressing=" + compressing + "]";

@@ -58,6 +58,7 @@ public class LoggingPropertyChangeListener
 		}
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent event)
 	{
 		if(logger.isInfoEnabled()) logger.info("PropertyChangeEvent:\n\tpropertyName='{}'\n\toldValue={}\n\tnewValue={}", event.getPropertyName(), event.getOldValue(), event.getNewValue());

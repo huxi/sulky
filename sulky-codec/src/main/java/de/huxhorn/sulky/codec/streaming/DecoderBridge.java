@@ -53,6 +53,7 @@ public class DecoderBridge<E>
 		this.wrapped = Objects.requireNonNull(wrapped, "wrapped must not be null!");
 	}
 
+	@Override
 	public E decode(byte[] bytes)
 	{
 		ByteArrayInputStream bis=new ByteArrayInputStream(bytes);

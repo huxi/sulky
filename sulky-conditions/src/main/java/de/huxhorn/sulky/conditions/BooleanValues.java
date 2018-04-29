@@ -64,6 +64,7 @@ public final class BooleanValues
 	 * @param element the element to be evaluated.
 	 * @return either true or false, depending on the instance.
 	 */
+	@Override
 	public boolean isTrue(Object element)
 	{
 		return value;

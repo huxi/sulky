@@ -48,6 +48,7 @@ public class GZIPStreamingEncoderWrapper<E>
 		this.wrapped = wrapped;
 	}
 
+	@Override
 	public void encode(E obj, OutputStream into) throws IOException
 	{
 		GZIPOutputStream gos=new GZIPOutputStream(into);

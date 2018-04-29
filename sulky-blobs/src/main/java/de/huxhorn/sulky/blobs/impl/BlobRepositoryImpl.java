@@ -136,6 +136,7 @@ public class BlobRepositoryImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String put(InputStream input)
 		throws IOException
 	{
@@ -197,6 +198,7 @@ public class BlobRepositoryImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String put(byte[] bytes)
 		throws IOException
 	{
@@ -214,6 +216,7 @@ public class BlobRepositoryImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public InputStream get(String id)
 		throws AmbiguousIdException, IOException
 	{
@@ -242,6 +245,7 @@ public class BlobRepositoryImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean delete(String id)
 		throws AmbiguousIdException
 	{
@@ -267,6 +271,7 @@ public class BlobRepositoryImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public boolean contains(String id)
 		throws AmbiguousIdException
 	{
@@ -278,6 +283,7 @@ public class BlobRepositoryImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public long sizeOf(String id) throws AmbiguousIdException
 	{
 		prepare();
@@ -293,6 +299,7 @@ public class BlobRepositoryImpl
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Set<String> idSet()
 	{
 		prepare();
@@ -560,6 +567,7 @@ public class BlobRepositoryImpl
 			this.filenamePart = filenamePart;
 		}
 
+		@Override
 		public boolean accept(File file)
 		{
 			return file.isFile() && file.getName().startsWith(filenamePart);
@@ -571,6 +579,7 @@ public class BlobRepositoryImpl
 	{
 		static final FileFilter INSTANCE = new MatchingDirectoriesFileFilter();
 
+		@Override
 		public boolean accept(File file)
 		{
 			return file.isDirectory() && file.getName().length() == HASH_DIRECTORY_NAME_LENGTH;
@@ -582,6 +591,7 @@ public class BlobRepositoryImpl
 	{
 		static final FileFilter INSTANCE = new MatchingFilesFileFilter();
 
+		@Override
 		public boolean accept(File file)
 		{
 			return file.isFile() && file.getName().length() == HASH_REMAINDER_NAME_LENGTH;

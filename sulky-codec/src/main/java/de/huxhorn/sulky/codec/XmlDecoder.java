@@ -64,6 +64,7 @@ public class XmlDecoder<E>
 		this.compressing = compressing;
 	}
 
+	@Override
 	public E decode(byte[] bytes)
 	{
 		try(XMLDecoder decoder=createXMLDecoder(bytes))
@@ -92,6 +93,7 @@ public class XmlDecoder<E>
 		return new XMLDecoder(bis);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "XmlDecoder[compressing=" + compressing + "]";

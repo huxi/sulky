@@ -111,6 +111,7 @@ public final class MetaData
 		return "MetaData[sparse=" + sparse + ", data=" + data + "]";
 	}
 
+	@Override
 	public MetaData clone()
 		throws CloneNotSupportedException
 	{

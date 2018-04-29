@@ -60,6 +60,7 @@ public class ListComboBoxModel
 		this.store = new ArrayList(store);
 	}
 
+	@Override
 	public Object getElementAt(int index)
 	{
 		if(index >= 0 && index < store.size())
@@ -69,16 +70,19 @@ public class ListComboBoxModel
 		return null;
 	}
 
+	@Override
 	public int getSize()
 	{
 		return store.size();
 	}
 
+	@Override
 	public Object getSelectedItem()
 	{
 		return this.selectedItem;
 	}
 
+	@Override
 	public void setSelectedItem(Object anObject)
 	{
 		if ((selectedItem != null && !selectedItem.equals(anObject)) ||
@@ -89,6 +93,7 @@ public class ListComboBoxModel
 		}
 	}
 
+	@Override
 	public void addElement(Object anObject)
 	{
 		store.add(anObject);
@@ -99,12 +104,14 @@ public class ListComboBoxModel
 		}
 	}
 
+	@Override
 	public void insertElementAt(Object anObject, int index)
 	{
 		store.add(index, anObject);
 		fireIntervalAdded(this, index, index);
 	}
 
+	@Override
 	public void removeElementAt(int index)
 	{
 		if (getElementAt(index) == selectedItem)
@@ -124,6 +131,7 @@ public class ListComboBoxModel
 		fireIntervalRemoved(this, index, index);
 	}
 
+	@Override
 	public void removeElement(Object anObject)
 	{
 		int index = store.indexOf(anObject);

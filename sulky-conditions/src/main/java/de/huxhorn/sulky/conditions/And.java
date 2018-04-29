@@ -58,11 +58,13 @@ public class And
 		this.conditions = conditions;
 	}
 
+	@Override
 	public List<Condition> getConditions()
 	{
 		return conditions;
 	}
 
+	@Override
 	public void setConditions(List<Condition> conditions)
 	{
 		this.conditions = conditions;
@@ -76,6 +78,7 @@ public class And
 	 * @param element the object to be evaluated.
 	 * @return false if any of the contained conditions is false.
 	 */
+	@Override
 	public boolean isTrue(Object element)
 	{
 		if(conditions != null)
@@ -91,6 +94,7 @@ public class And
 		return true;
 	}
 
+	@Override
 	public boolean equals(Object o)
 	{
 		if(this == o) return true;
@@ -101,11 +105,13 @@ public class And
 		return !(conditions != null ? !conditions.equals(and.conditions) : and.conditions != null);
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return (conditions != null ? conditions.hashCode() : 0);
 	}
 
+	@Override
 	public And clone()
 		throws CloneNotSupportedException
 	{
@@ -122,6 +128,7 @@ public class And
 		return result;
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder();

@@ -75,11 +75,13 @@ public class DelegatingStreamingCodecBase<E>
 		this.decoder = decoder;
 	}
 
+	@Override
 	public E decode(InputStream from) throws IOException
 	{
 		return decoder.decode(from);
 	}
 
+	@Override
 	public void encode(E obj, OutputStream into) throws IOException
 	{
 		encoder.encode(obj, into);

@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
  * JEP 322: Time-Based Release Versioning
  * http://openjdk.java.net/jeps/322
  */
-@SuppressWarnings("PMD.AvoidThrowingNullPointerException") // target is Java 1.6
+@SuppressWarnings({"PMD.AvoidThrowingNullPointerException", "PMD.ClassNamingConventions"}) // target is Java 1.6
 public class Jep223JavaVersion
 	extends JavaVersion
 	implements Comparable<Jep223JavaVersion>, Serializable
@@ -169,6 +169,7 @@ public class Jep223JavaVersion
 	private final int buildNumber;
 	private final String additionalBuildInformation;
 
+	@SuppressWarnings("PMD.MissingOverride")
 	public static Jep223JavaVersion parse(String versionString)
 	{
 		if(versionString == null)
@@ -289,6 +290,7 @@ public class Jep223JavaVersion
 	 *
 	 * @return the major version number.
 	 */
+	@Override
 	public int getMajor()
 	{
 		return versionNumbers[MAJOR_INDEX];
@@ -305,6 +307,7 @@ public class Jep223JavaVersion
 	 *
 	 * @return the minor version number.
 	 */
+	@Override
 	public int getMinor()
 	{
 		if(versionNumbers.length > MINOR_INDEX)
@@ -348,6 +351,7 @@ public class Jep223JavaVersion
 	 *
 	 * @return the emergency patch-release counter
 	 */
+	@Override
 	public int getEmergencyPatch()
 	{
 		if(versionNumbers.length > EMERGENCY_PATCH_INDEX)
@@ -484,6 +488,7 @@ public class Jep223JavaVersion
 	 *
 	 * @return the short version string.
 	 */
+	@Override
 	public String toShortVersionString()
 	{
 		StringBuilder result = new StringBuilder();

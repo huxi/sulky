@@ -195,6 +195,7 @@ public abstract class AbstractProgressingCallable<T>
 	 *
 	 * @return the progress of the operation.
 	 */
+	@Override
 	public int getProgress()
 	{
 		ReentrantReadWriteLock.ReadLock lock = rwLock.readLock();
@@ -209,12 +210,14 @@ public abstract class AbstractProgressingCallable<T>
 		}
 	}
 
+	@Override
 	public void addPropertyChangeListener(PropertyChangeListener listener)
 	{
 		changeSupport.addPropertyChangeListener(listener);
 
 	}
 
+	@Override
 	public void removePropertyChangeListener(PropertyChangeListener listener)
 	{
 		changeSupport.removePropertyChangeListener(listener);

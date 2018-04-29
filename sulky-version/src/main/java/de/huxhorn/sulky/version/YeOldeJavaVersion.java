@@ -181,6 +181,7 @@ public final class YeOldeJavaVersion
 	 *
 	 * @return the "major" part of this version.
 	 */
+	@Override
 	public int getMajor()
 	{
 		return major;
@@ -191,6 +192,7 @@ public final class YeOldeJavaVersion
 	 *
 	 * @return the "minor" part of this version.
 	 */
+	@Override
 	public int getMinor()
 	{
 		return minor;
@@ -201,6 +203,7 @@ public final class YeOldeJavaVersion
 	 *
 	 * @return the "patch" (or update) part of this version.
 	 */
+	@Override
 	public int getPatch()
 	{
 		return patch;
@@ -210,6 +213,7 @@ public final class YeOldeJavaVersion
 	 *
 	 * @return always 0
 	 */
+	@Override
 	public int getEmergencyPatch()
 	{
 		return 0;
@@ -220,6 +224,7 @@ public final class YeOldeJavaVersion
 	 *
 	 * @return the "preReleaseIdentifier" part of this version.
 	 */
+	@Override
 	public String getPreReleaseIdentifier()
 	{
 		return preReleaseIdentifier;
@@ -230,6 +235,7 @@ public final class YeOldeJavaVersion
 	 *
 	 * @return the full version string of this version.
 	 */
+	@Override
 	public String toVersionString()
 	{
 		StringBuilder result = new StringBuilder();
@@ -394,6 +400,7 @@ public final class YeOldeJavaVersion
 	 * @throws java.lang.NullPointerException if versionString is null.
 	 * @throws java.lang.IllegalArgumentException if versionString is invalid.
 	 */
+	@SuppressWarnings("PMD.MissingOverride")
 	public static YeOldeJavaVersion parse(String versionString)
 	{
 		if(versionString == null)

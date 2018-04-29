@@ -357,12 +357,14 @@ public final class MemoryStatus
 		repaint();
 	}
 
+	@Override
 	public void addNotify()
 	{
 		super.addNotify();
 		setPaused(false);
 	}
 
+	@Override
 	public void removeNotify()
 	{
 		super.removeNotify();
@@ -380,6 +382,7 @@ public final class MemoryStatus
 			updateRunnable = new UpdateRunnable();
 		}
 
+		@Override
 		public void run()
 		{
 			for (;;)
@@ -416,6 +419,7 @@ public final class MemoryStatus
 	class UpdateRunnable
 			implements Runnable
 	{
+		@Override
 		public void run()
 		{
 			updateMemoryBar();
@@ -426,6 +430,7 @@ public final class MemoryStatus
 	class GcMouseListener
 			extends MouseAdapter
 	{
+		@Override
 		@SuppressWarnings("PMD.DoNotCallGarbageCollectionExplicitly")
 		public void mouseClicked(MouseEvent evt)
 		{

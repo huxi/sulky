@@ -254,6 +254,7 @@ public class ULID
 											0))));
 		}
 
+		@Override
 		public String toString()
 		{
 			char[] buffer = new char[26];

@@ -86,6 +86,7 @@ public class XmlEncoder<E>
 		this.compressing = compressing;
 	}
 
+	@Override
 	public byte[] encode(E object)
 	{
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -114,6 +115,7 @@ public class XmlEncoder<E>
 		return new XMLEncoder(bos);
 	}
 
+	@Override
 	public String toString()
 	{
 		return "XmlEncoder[compressing=" + compressing + "]";

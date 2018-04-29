@@ -52,6 +52,7 @@ public class PropertyChangeWrapper
 		super(wrapped);
 	}
 
+	@Override
 	public void propertyChange(final PropertyChangeEvent evt)
 	{
 		final PropertyChangeListener wrapped = getWrapped();
@@ -75,6 +76,7 @@ public class PropertyChangeWrapper
 			this.event=event;
 		}
 
+		@Override
 		public void run()
 		{
 			getWrapped().propertyChange(event);

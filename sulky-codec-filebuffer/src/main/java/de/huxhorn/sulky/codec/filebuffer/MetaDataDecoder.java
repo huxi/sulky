@@ -63,6 +63,7 @@ public class MetaDataDecoder
 		this.compressing = compressing;
 	}
 
+	@Override
 	public MetaData decode(byte[] bytes)
 	{
 		if(bytes == null)

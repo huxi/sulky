@@ -44,6 +44,7 @@ import java.io.Serializable;
 public class StreamingSerializableCodec<E extends Serializable>
 	implements StreamingCodec<E>
 {
+	@Override
 	public E decode(InputStream from) throws IOException
 	{
 		ObjectInputStream ois = new ObjectInputStream(from);
@@ -60,6 +61,7 @@ public class StreamingSerializableCodec<E extends Serializable>
 		}
 	}
 
+	@Override
 	public void encode(E obj, OutputStream into) throws IOException
 	{
 		ObjectOutputStream oos = new ObjectOutputStream(into);

@@ -58,6 +58,7 @@ public class PropertyListWriter
 
 	private final DateTimeFormatter staxDateTimeFormatter = new DateTimeFormatter();
 
+	@Override
 	public void write(XMLStreamWriter writer, PropertyList object, boolean isRoot) throws XMLStreamException
 	{
 		if(isRoot)

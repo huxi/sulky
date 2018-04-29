@@ -69,6 +69,7 @@ public final class OverwritingCircularBuffer<E>
 		reset();
 	}
 
+	@Override
 	public void add(E element)
 	{
 		internalAdd(element);
@@ -94,6 +95,7 @@ public final class OverwritingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public void addAll(List<E> elements)
 	{
 		for(E element : elements)
@@ -102,6 +104,7 @@ public final class OverwritingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public void addAll(E[] elements)
 	{
 		for(E element : elements)
@@ -110,6 +113,7 @@ public final class OverwritingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public E get(long index)
 	{
 		if(index < 0 || index >= size)
@@ -124,6 +128,7 @@ public final class OverwritingCircularBuffer<E>
 		return getRelative(realIndex);
 	}
 
+	@Override
 	public E getRelative(int index)
 	{
 		long availableElements = getAvailableElements();
@@ -137,6 +142,7 @@ public final class OverwritingCircularBuffer<E>
 		return result;
 	}
 
+	@Override
 	public E setRelative(int index, E element)
 	{
 		long availableElements = getAvailableElements();
@@ -151,6 +157,7 @@ public final class OverwritingCircularBuffer<E>
 		return result;
 	}
 
+	@Override
 	public E removeFirst()
 	{
 		if(isEmpty())
@@ -170,6 +177,7 @@ public final class OverwritingCircularBuffer<E>
 		return result;
 	}
 
+	@Override
 	public List<E> removeAll()
 	{
 		long availableElements = getAvailableElements();
@@ -183,16 +191,19 @@ public final class OverwritingCircularBuffer<E>
 		return result;
 	}
 
+	@Override
 	public boolean isEmpty()
 	{
 		return (!full && startIndex == endIndex);
 	}
 
+	@Override
 	public boolean isFull()
 	{
 		return (full && startIndex == endIndex);
 	}
 
+	@Override
 	public void clear()
 	{
 		startIndex = 0;
@@ -206,6 +217,7 @@ public final class OverwritingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public void reset()
 	{
 		clear();
@@ -214,11 +226,13 @@ public final class OverwritingCircularBuffer<E>
 	}
 
 
+	@Override
 	public long getSize()
 	{
 		return size;
 	}
 
+	@Override
 	public int getAvailableElements()
 	{
 		if(startIndex == endIndex)
@@ -238,16 +252,19 @@ public final class OverwritingCircularBuffer<E>
 	}
 
 
+	@Override
 	public int getBufferSize()
 	{
 		return bufferSize;
 	}
 
+	@Override
 	public long getOverflowCounter()
 	{
 		return overflowCounter;
 	}
 
+	@Override
 	public Iterator<E> iterator()
 	{
 		return new BufferIterator();
@@ -263,11 +280,13 @@ public final class OverwritingCircularBuffer<E>
 			current = 0;
 		}
 
+		@Override
 		public boolean hasNext()
 		{
 			return current < getAvailableElements();
 		}
 
+		@Override
 		public E next()
 		{
 			if(!hasNext())
@@ -279,12 +298,14 @@ public final class OverwritingCircularBuffer<E>
 			return result;
 		}
 
+		@Override
 		public void remove()
 		{
 			throw new UnsupportedOperationException("Buffer does not support removal of arbitrary elements!");
 		}
 	}
 
+	@Override
 	public boolean equals(Object o)
 	{
 		if(this == o) return true;
@@ -318,6 +339,7 @@ public final class OverwritingCircularBuffer<E>
 		return true;
 	}
 
+	@Override
 	public int hashCode()
 	{
 		int result = 17;
@@ -331,6 +353,7 @@ public final class OverwritingCircularBuffer<E>
 		return result;
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder();
@@ -358,6 +381,7 @@ public final class OverwritingCircularBuffer<E>
 	 *
 	 * @return a clone of this <code>OverwritingCircularBuffer</code> instance
 	 */
+	@Override
 	public OverwritingCircularBuffer<E> clone()
 		throws CloneNotSupportedException
 	{

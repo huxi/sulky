@@ -61,6 +61,7 @@ public class MetaDataEncoder
 		this.compressing = compressing;
 	}
 
+	@Override
 	@SuppressWarnings("PMD.ReturnEmptyArrayRatherThanNull")
 	public byte[] encode(MetaData data)
 	{

@@ -53,11 +53,13 @@ import java.awt.image.ColorModel;
 public abstract class AbstractFilter
 	implements BufferedImageOp
 {
+	@Override
 	public abstract BufferedImage filter(BufferedImage src, BufferedImage dest);
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Rectangle2D getBounds2D(BufferedImage src)
 	{
 		return new Rectangle(0, 0, src.getWidth(), src.getHeight());
@@ -66,6 +68,7 @@ public abstract class AbstractFilter
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public BufferedImage createCompatibleDestImage(BufferedImage src,
 	                                               ColorModel destCM)
 	{
@@ -83,6 +86,7 @@ public abstract class AbstractFilter
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Point2D getPoint2D(Point2D srcPt, Point2D dstPt)
 	{
 		return (Point2D) srcPt.clone();
@@ -91,6 +95,7 @@ public abstract class AbstractFilter
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public RenderingHints getRenderingHints()
 	{
 		return null;

@@ -47,6 +47,7 @@ public class DefaultDataStrategy<E>
 	 */
 	public static final long DATA_LENGTH_SIZE = 4;
 
+	@Override
 	public void add(E element,
 	                RandomAccessFile indexFile,
 	                RandomAccessFile dataFile,
@@ -64,6 +65,7 @@ public class DefaultDataStrategy<E>
 
 	}
 
+	@Override
 	public void addAll(List<E> elements,
 	                   RandomAccessFile indexFile,
 	                   RandomAccessFile dataFile,
@@ -99,17 +101,20 @@ public class DefaultDataStrategy<E>
 		}
 	}
 
+	@Override
 	public boolean set(long index, E element, RandomAccessFile indexFile, RandomAccessFile dataFile, Codec<E> codec, IndexStrategy indexStrategy)
 		throws IOException, UnsupportedOperationException
 	{
 		throw new UnsupportedOperationException("DefaultDataStrategy does not support set!");
 	}
 
+	@Override
 	public boolean isSetSupported()
 	{
 		return false;
 	}
 
+	@Override
 	public E get(long index,
 	             RandomAccessFile indexFile,
 	             RandomAccessFile dataFile,

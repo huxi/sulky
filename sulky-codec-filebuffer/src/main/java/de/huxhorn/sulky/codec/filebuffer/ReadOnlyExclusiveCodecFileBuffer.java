@@ -131,6 +131,7 @@ public class ReadOnlyExclusiveCodecFileBuffer<E>
 	 * @return the element at the given index.
 	 * @throws IllegalStateException if no Decoder has been set.
 	 */
+	@Override
 	public E get(long index)
 	{
 		Throwable throwable = null;

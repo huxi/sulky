@@ -53,6 +53,7 @@ public class PropertyListReader
 {
 	private final DateTimeFormatter staxDateTimeFormatter = new DateTimeFormatter();
 
+	@Override
 	public PropertyList read(XMLStreamReader reader)
 		throws XMLStreamException
 	{

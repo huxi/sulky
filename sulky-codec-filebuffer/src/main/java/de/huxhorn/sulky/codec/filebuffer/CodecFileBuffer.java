@@ -292,6 +292,7 @@ public class CodecFileBuffer<E>
 		return Collections.unmodifiableMap(preferredMetaData);
 	}
 
+	@Override
 	public File getDataFile()
 	{
 		return dataFile;
@@ -302,6 +303,7 @@ public class CodecFileBuffer<E>
 		return indexFile;
 	}
 
+	@Override
 	public long getSize()
 	{
 		if(!indexFile.canRead())
@@ -336,6 +338,7 @@ public class CodecFileBuffer<E>
 	 * @return the element at the given index.
 	 * @throws IllegalStateException if no Decoder has been set.
 	 */
+	@Override
 	public E get(long index)
 	{
 		if(!dataFile.canRead() || !indexFile.canRead())
@@ -383,6 +386,7 @@ public class CodecFileBuffer<E>
 	 * @param element to add.
 	 * @throws IllegalStateException if no Encoder has been set.
 	 */
+	@Override
 	public void add(E element)
 	{
 		initFilesIfNecessary();
@@ -425,6 +429,7 @@ public class CodecFileBuffer<E>
 	 * @param elements to add.
 	 * @throws IllegalStateException if no Encoder has been set.
 	 */
+	@Override
 	public void addAll(List<E> elements)
 	{
 		if(elements != null)
@@ -466,12 +471,14 @@ public class CodecFileBuffer<E>
 		}
 	}
 
+	@Override
 	public void addAll(E[] elements)
 	{
 		addAll(Arrays.asList(elements));
 	}
 
 
+	@Override
 	public void reset()
 	{
 		Throwable t=null;
@@ -517,11 +524,13 @@ public class CodecFileBuffer<E>
 	/**
 	 * @return will always return false, i.e. it does not check for disk space!
 	 */
+	@Override
 	public boolean isFull()
 	{
 		return false;
 	}
 
+	@Override
 	public Iterator<E> iterator()
 	{
 		return new BasicBufferIterator<>(this);
@@ -560,6 +569,7 @@ public class CodecFileBuffer<E>
 		}
 	}
 
+	@Override
 	public String toString()
 	{
 		StringBuilder result = new StringBuilder(300);
@@ -591,6 +601,7 @@ public class CodecFileBuffer<E>
 		return result.toString();
 	}
 
+	@Override
 	public void dispose()
 	{
 
@@ -604,6 +615,7 @@ public class CodecFileBuffer<E>
 		// TODO: implement dispose()
 	}
 
+	@Override
 	public boolean isDisposed()
 	{
 		return false;  // TODO: implement isDisposed()
@@ -623,6 +635,7 @@ public class CodecFileBuffer<E>
 		this.fileHeader = fileHeader;
 	}
 
+	@Override
 	public boolean set(long index, E element)
 	{
 		initFilesIfNecessary();
@@ -661,6 +674,7 @@ public class CodecFileBuffer<E>
 		return result;
 	}
 
+	@Override
 	public boolean isSetSupported()
 	{
 		return dataStrategy != null && dataStrategy.isSetSupported();

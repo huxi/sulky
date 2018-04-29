@@ -52,11 +52,13 @@ public class BasicBufferIterator<E>
 		this.current = 0;
 	}
 
+	@Override
 	public boolean hasNext()
 	{
 		return current < size;
 	}
 
+	@Override
 	public E next()
 	{
 		if(!hasNext())
@@ -68,6 +70,7 @@ public class BasicBufferIterator<E>
 		return result;
 	}
 
+	@Override
 	public void remove()
 	{
 		throw new UnsupportedOperationException("Buffer does not support removal of arbitrary elements!");

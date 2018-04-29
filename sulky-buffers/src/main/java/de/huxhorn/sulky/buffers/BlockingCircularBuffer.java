@@ -77,6 +77,7 @@ public class BlockingCircularBuffer<E>
 		this.congestionDelay = congestionDelay;
 	}
 
+	@Override
 	public void add(E element)
 	{
 		lock.lock();
@@ -109,6 +110,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public void addAll(List<E> elements)
 	{
 		for(E element : elements)
@@ -117,6 +119,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public void addAll(E[] elements)
 	{
 		for(E element : elements)
@@ -125,6 +128,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public boolean isFull()
 	{
 		lock.lock();
@@ -138,6 +142,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public E removeFirst()
 	{
 		lock.lock();
@@ -154,6 +159,7 @@ public class BlockingCircularBuffer<E>
 	/**
 	 * @return either <code>null</code> or a List containing all accumulated events.
 	 */
+	@Override
 	public List<E> removeAll()
 	{
 		lock.lock();
@@ -171,6 +177,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public void clear()
 	{
 		lock.lock();
@@ -184,6 +191,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public boolean isEmpty()
 	{
 		lock.lock();
@@ -197,6 +205,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public E getRelative(int index)
 	{
 		lock.lock();
@@ -210,6 +219,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public E setRelative(int index, E element)
 	{
 		lock.lock();
@@ -223,11 +233,13 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public long getOverflowCounter()
 	{
 		return 0;
 	}
 
+	@Override
 	public int getAvailableElements()
 	{
 		lock.lock();
@@ -241,11 +253,13 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public int getBufferSize()
 	{
 		return events.getBufferSize();
 	}
 
+	@Override
 	public E get(long index)
 	{
 		lock.lock();
@@ -259,6 +273,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public long getSize()
 	{
 		lock.lock();
@@ -272,6 +287,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public void reset()
 	{
 		lock.lock();
@@ -285,6 +301,7 @@ public class BlockingCircularBuffer<E>
 		}
 	}
 
+	@Override
 	public Iterator<E> iterator()
 	{
 		lock.lock();

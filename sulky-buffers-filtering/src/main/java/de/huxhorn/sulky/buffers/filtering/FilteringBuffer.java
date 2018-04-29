@@ -68,6 +68,7 @@ public class FilteringBuffer<E>
 		this.disposed = false;
 	}
 
+	@Override
 	public E get(long index)
 	{
 		long realIndex = getSourceIndex(index);
@@ -98,6 +99,7 @@ public class FilteringBuffer<E>
 		return realIndex;
 	}
 
+	@Override
 	public long getSize()
 	{
 		ReentrantReadWriteLock.ReadLock lock = indicesLock.readLock();
@@ -145,6 +147,7 @@ public class FilteringBuffer<E>
 		}
 	}
 
+	@Override
 	public Iterator<E> iterator()
 	{
 		return new BasicBufferIterator<>(this);
@@ -160,16 +163,19 @@ public class FilteringBuffer<E>
 		return condition;
 	}
 
+	@Override
 	public void dispose()
 	{
 		this.disposed = true;
 	}
 
+	@Override
 	public boolean isDisposed()
 	{
 		return disposed;
 	}
 
+	@Override
 	public void reset()
 	{
 		boolean reset = Reset.reset(sourceBuffer);

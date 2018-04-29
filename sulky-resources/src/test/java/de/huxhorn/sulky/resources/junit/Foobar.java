@@ -124,11 +124,13 @@ public class Foobar
 {
 	private Locale locale = null;
 
+	@Override
 	public void setLocale(Locale locale)
 	{
 		this.locale = locale;
 	}
 
+	@Override
 	public Locale getLocale()
 	{
 		return locale;

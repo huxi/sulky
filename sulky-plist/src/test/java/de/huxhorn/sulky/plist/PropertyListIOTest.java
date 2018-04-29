@@ -412,6 +412,7 @@ public class PropertyListIOTest
 
 	private static class ToStringExample
 	{
+		@Override
 		public String toString()
 		{
 			return "ToString";
