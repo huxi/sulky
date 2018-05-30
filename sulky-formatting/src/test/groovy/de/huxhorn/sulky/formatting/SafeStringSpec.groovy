@@ -86,10 +86,12 @@ class SafeStringSpec extends Specification {
 				'[[' + SafeString.RECURSION_PREFIX + SafeString.identityToString(aList) + SafeString.RECURSION_SUFFIX + ']]'
 
 		Object[] array = new Object[2]
-		array[1] = array
+		Object[] innerArray = new Object[2]
+		innerArray[1] = array
+		array[1] = innerArray
 		RECURSIVE_OBJECT_ARRAY = array
 		RECURSIVE_OBJECT_ARRAY_EXPECTED_RESULT =
-				'[null, '+SafeString.RECURSION_PREFIX + SafeString.identityToString(array) + SafeString.RECURSION_SUFFIX + ']'
+				'[null, [null, '+SafeString.RECURSION_PREFIX + SafeString.identityToString(array) + SafeString.RECURSION_SUFFIX + ']]'
 
 		PROBLEMATIC_1=new ProblematicToString(null)
 		PROBLEMATIC_1_EXPECTED_RESULT =

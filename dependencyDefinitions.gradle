@@ -1,6 +1,6 @@
 project.ext.versions = [
 'bytebuddy': '1.8.11',
-'groovy':    '2.4.15',
+'groovy':    '2.5.0',
 'logback':   '1.2.3',
 'slf4j':     '1.7.25',
 'spock':     '1.1-groovy-2.4'
