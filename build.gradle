@@ -158,7 +158,7 @@ subprojects {
 				'configDir': rootProject.file('config/checkstyle'),
 				'baseDir': rootDir,
 			]
-		toolVersion = '8.10.1'
+		toolVersion = '8.11'
 		//ignoreFailures = true
 	}
 	
