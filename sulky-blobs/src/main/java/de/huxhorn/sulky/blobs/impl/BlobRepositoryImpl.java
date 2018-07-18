@@ -327,6 +327,15 @@ public class BlobRepositoryImpl
 		return result;
 	}
 
+	@Override
+	public String toString() {
+		return "BlobRepositoryImpl{" +
+				"baseDirectory=" + baseDirectory +
+				", validating=" + validating +
+				", caseSensitive=" + caseSensitive +
+				'}';
+	}
+
 	private void prepare()
 	{
 		if(baseDirectory == null)
