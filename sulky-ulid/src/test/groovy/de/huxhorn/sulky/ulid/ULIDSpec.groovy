@@ -934,4 +934,42 @@ class ULIDSpec extends Specification {
 		then:
 		nextValue.get().timestamp() > 0
 	}
+
+	def 'nextMonotonicValue(null) throws expected exception'() {
+		given:
+		ULID ulid = new ULID()
+
+		when:
+		ulid.nextMonotonicValue(null)
+
+		then:
+		NullPointerException ex = thrown()
+		ex.message == 'previousUlid must not be null!'
+
+		when:
+		ulid.nextMonotonicValue(null, 0)
+
+		then:
+		ex = thrown()
+		ex.message == 'previousUlid must not be null!'
+	}
+
+	def 'nextStrictlyMonotonicValue(null) throws expected exception'() {
+		given:
+		ULID ulid = new ULID()
+
+		when:
+		ulid.nextStrictlyMonotonicValue(null)
+
+		then:
+		NullPointerException ex = thrown()
+		ex.message == 'previousUlid must not be null!'
+
+		when:
+		ulid.nextStrictlyMonotonicValue(null, 0)
+
+		then:
+		ex = thrown()
+		ex.message == 'previousUlid must not be null!'
+	}
 }
