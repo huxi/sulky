@@ -845,4 +845,93 @@ class ULIDSpec extends Specification {
 		IllegalArgumentException ex = thrown()
 		ex.message == 'ULID does not support timestamps after +10889-08-02T05:31:50.655Z!'
 	}
+
+	@Unroll
+	def 'increment(#value) returns expected result #expectedResult'() {
+		expect:
+		expectedResult.equals(value.increment())
+
+		where:
+		value                                             | expectedResult
+		new ULID.Value(0, 0)                              | new ULID.Value(0, 1)
+		new ULID.Value(0, 0xFFFF_FFFF_FFFF_FFFEL)         | new ULID.Value(0, 0xFFFF_FFFF_FFFF_FFFFL)
+		new ULID.Value(0, 0xFFFF_FFFF_FFFF_FFFFL)         | new ULID.Value(1, 0)
+		new ULID.Value(0xFFFFL, 0xFFFF_FFFF_FFFF_FFFFL)   | new ULID.Value(0, 0)
+		new ULID.Value(0x1_FFFFL, 0xFFFF_FFFF_FFFF_FFFFL) | new ULID.Value(0x1_0000L, 0)
+	}
+
+	@Unroll
+	def 'nextMonotonicValue(#previousValue, 0) returns #expectedResult'() {
+		given:
+		ULID ulid = new ULID()
+
+
+		when:
+		ULID.Value nextValue = ulid.nextMonotonicValue(previousValue, 0)
+
+		then:
+		nextValue == expectedResult
+
+		where:
+		previousValue                                     | expectedResult
+		new ULID.Value(0, 0)                              | new ULID.Value(0, 1)
+		new ULID.Value(0, 0xFFFF_FFFF_FFFF_FFFEL)         | new ULID.Value(0, 0xFFFF_FFFF_FFFF_FFFFL)
+		new ULID.Value(0, 0xFFFF_FFFF_FFFF_FFFFL)         | new ULID.Value(1, 0)
+		new ULID.Value(0xFFFFL, 0xFFFF_FFFF_FFFF_FFFFL)   | new ULID.Value(0, 0)
+	}
+
+	def 'nextMonotonicValue(..) returns new value in case of timestamp mismatch.'() {
+		given:
+		ULID ulid = new ULID()
+		ULID.Value previousValue = new ULID.Value(0,0)
+
+		when:
+		ULID.Value nextValue = ulid.nextMonotonicValue(previousValue, 1)
+
+		then:
+		nextValue.timestamp() == 1
+
+		when:
+		nextValue = ulid.nextMonotonicValue(previousValue)
+
+		then:
+		nextValue.timestamp() > 0
+	}
+
+	@Unroll
+	def 'nextStrictlyMonotonicValue(#previousValue, 0) returns #expectedResult'() {
+		given:
+		ULID ulid = new ULID()
+
+		when:
+		Optional<ULID.Value> nextValue = ulid.nextStrictlyMonotonicValue(previousValue, 0)
+
+		then:
+		nextValue == expectedResult
+
+		where:
+		previousValue                                     | expectedResult
+		new ULID.Value(0, 0)                              | Optional.of(new ULID.Value(0, 1))
+		new ULID.Value(0, 0xFFFF_FFFF_FFFF_FFFEL)         | Optional.of(new ULID.Value(0, 0xFFFF_FFFF_FFFF_FFFFL))
+		new ULID.Value(0, 0xFFFF_FFFF_FFFF_FFFFL)         | Optional.of(new ULID.Value(1, 0))
+		new ULID.Value(0xFFFFL, 0xFFFF_FFFF_FFFF_FFFFL)   | Optional.empty()
+	}
+
+	def 'nextStrictlyMonotonicValue(..) returns new value in case of timestamp mismatch.'() {
+		given:
+		ULID ulid = new ULID()
+		ULID.Value previousValue = new ULID.Value(0,0)
+
+		when:
+		Optional<ULID.Value> nextValue = ulid.nextStrictlyMonotonicValue(previousValue, 1)
+
+		then:
+		nextValue.get().timestamp() == 1
+
+		when:
+		nextValue = ulid.nextStrictlyMonotonicValue(previousValue)
+
+		then:
+		nextValue.get().timestamp() > 0
+	}
 }

@@ -37,6 +37,7 @@ package de.huxhorn.sulky.ulid;
 import java.io.Serializable;
 import java.security.SecureRandom;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 
 /*
@@ -90,6 +91,8 @@ public class ULID
 	private static final int MASK = 0x1F;
 	private static final int MASK_BITS = 5;
 	private static final long TIMESTAMP_OVERFLOW_MASK = 0xFFFF_0000_0000_0000L;
+	private static final long TIMESTAMP_MSB_MASK = 0xFFFF_FFFF_FFFF_0000L;
+	private static final long RANDOM_MSB_MASK = 0xFFFFL;
 
 	private final Random random;
 
@@ -112,12 +115,84 @@ public class ULID
 
 	public String nextULID()
 	{
-		return internalUIDString(System.currentTimeMillis(), random);
+		return nextULID(System.currentTimeMillis());
+	}
+
+	public String nextULID(long timestamp)
+	{
+		return internalUIDString(timestamp, random);
 	}
 
 	public Value nextValue()
 	{
-		return internalNextValue(System.currentTimeMillis(), random);
+		return nextValue(System.currentTimeMillis());
+	}
+
+	public Value nextValue(long timestamp)
+	{
+		return internalNextValue(timestamp, random);
+	}
+
+	/**
+	 * Returns the next monotonic value. If an overflow happened while incrementing
+	 * the random part of the given previous ULID value then the returned value will
+	 * have a zero random part.
+	 *
+	 * @param previousUlid the previous ULID value.
+	 * @return the next monotonic value.
+	 */
+	public Value nextMonotonicValue(Value previousUlid)
+	{
+		return nextMonotonicValue(previousUlid, System.currentTimeMillis());
+	}
+
+	/**
+	 * Returns the next monotonic value. If an overflow happened while incrementing
+	 * the random part of the given previous ULID value then the returned value will
+	 * have a zero random part.
+	 *
+	 * @param previousUlid the previous ULID value.
+	 * @param timestamp the timestamp of the next ULID value.
+	 * @return the next monotonic value.
+	 */
+	public Value nextMonotonicValue(Value previousUlid, long timestamp)
+	{
+		Objects.requireNonNull(previousUlid, "previousUlid must not be null!");
+		if(previousUlid.timestamp() == timestamp)
+		{
+			return previousUlid.increment();
+		}
+		return nextValue(timestamp);
+	}
+
+	/**
+	 * Returns the next monotonic value or empty if an overflow happened while incrementing
+	 * the random part of the given previous ULID value.
+	 *
+	 * @param previousUlid the previous ULID value.
+	 * @return the next monotonic value or empty if an overflow happened.
+	 */
+	public Optional<Value> nextStrictlyMonotonicValue(Value previousUlid)
+	{
+		return nextStrictlyMonotonicValue(previousUlid, System.currentTimeMillis());
+	}
+
+	/**
+	 * Returns the next monotonic value or empty if an overflow happened while incrementing
+	 * the random part of the given previous ULID value.
+	 *
+	 * @param previousUlid the previous ULID value.
+	 * @param timestamp the timestamp of the next ULID value.
+	 * @return the next monotonic value or empty if an overflow happened.
+	 */
+	public Optional<Value> nextStrictlyMonotonicValue(Value previousUlid, long timestamp)
+	{
+		Value result = nextMonotonicValue(previousUlid, timestamp);
+		if(result.compareTo(previousUlid) < 1)
+		{
+			return Optional.empty();
+		}
+		return Optional.of(result);
 	}
 
 	public static Value parseULID(String ulidString)
@@ -222,6 +297,21 @@ public class ULID
 			}
 
 			return result;
+		}
+
+		public Value increment()
+		{
+			long lsb = leastSignificantBits;
+			if(lsb != 0xFFFF_FFFF_FFFF_FFFFL)
+			{
+				return new Value(mostSignificantBits, lsb+1);
+			}
+			long msb = mostSignificantBits;
+			if((msb & RANDOM_MSB_MASK) != RANDOM_MSB_MASK)
+			{
+				return new Value(msb + 1, 0);
+			}
+			return new Value(msb & TIMESTAMP_MSB_MASK, 0);
 		}
 
 		@Override
