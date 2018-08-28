@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2016 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2016 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,10 +44,24 @@ public enum ClassFileVersion
 	JAVA_1_3((char) 0x2F, "1.3"),
 	JAVA_1_4((char) 0x30, "1.4"),
 	JAVA_1_5((char) 0x31, "1.5"),
-	JAVA_1_6((char) 0x32, "1.6"),
-	JAVA_1_7((char) 0x33, "1.7"),
-	JAVA_1_8((char) 0x34, "1.8"),
-	JAVA_9((char) 0x35, "1.9");
+	JAVA_1_6((char) 0x32, "6"),
+	JAVA_1_7((char) 0x33, "7"),
+	JAVA_1_8((char) 0x34, "8"),
+	JAVA_9((char) 0x35, "9"),
+	JAVA_10((char) 0x36, "10"),
+	JAVA_11((char) 0x37, "11"),
+	JAVA_12((char) 0x38, "12"),
+	JAVA_13((char) 0x39, "13"),
+	JAVA_14((char) 0x40, "14"),
+	JAVA_15((char) 0x41, "15"),
+	JAVA_16((char) 0x42, "16"),
+	JAVA_17((char) 0x43, "17"),
+	JAVA_18((char) 0x44, "18"),
+	JAVA_19((char) 0x45, "19"),
+	JAVA_20((char) 0x46, "20"),
+	JAVA_21((char) 0x47, "21"),
+	JAVA_22((char) 0x48, "22"),
+	JAVA_23((char) 0x49, "23");
 
 	private char majorVersionCharacter;
 	private String sourceName;
