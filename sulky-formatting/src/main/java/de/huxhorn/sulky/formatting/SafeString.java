@@ -589,7 +589,6 @@ public final class SafeString
 
 	private static void appendByte(int byteIndex, StringBuilder stringBuilder)
 	{
-		stringBuilder.append(BYTE_PREFIX);
-		stringBuilder.append(BYTE_STRINGS[0x000000FF & byteIndex]);
+		stringBuilder.append(BYTE_PREFIX).append(BYTE_STRINGS[0x000000FF & byteIndex]);
 	}
 }

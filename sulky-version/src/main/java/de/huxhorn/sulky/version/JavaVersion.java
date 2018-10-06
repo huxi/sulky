@@ -52,7 +52,7 @@ import java.util.Comparator;
  *
  * The COMPARATOR
  */
-@SuppressWarnings({"TryWithIdenticalCatches", "Convert2Lambda", "PMD.AvoidThrowingNullPointerException"})
+@SuppressWarnings({"TryWithIdenticalCatches", "Convert2Lambda", "PMD.AvoidThrowingNullPointerException", "PMD.IdenticalCatchBranches"})
 // this is compiled with source and target 1.6
 public abstract class JavaVersion
 {

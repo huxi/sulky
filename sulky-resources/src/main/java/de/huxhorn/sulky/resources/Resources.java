@@ -873,7 +873,7 @@ public final class Resources
 	{
 		final Logger logger = LoggerFactory.getLogger(Resources.class);
 		Class currentClass = clazz;
-		while(currentClass != java.lang.Object.class)
+		while(currentClass != Object.class)
 		{
 			if(logger.isDebugEnabled()) logger.debug("currentClass = {}", currentClass.getName());
 			URL[] urls = getLocalResources(currentClass, resourceBaseName, suffixes, locale, firstOnly);

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2017 Joern Huxhorn
+ * Copyright (C) 2007-2018 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2017 Joern Huxhorn
+ * Copyright 2007-2018 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,9 +41,9 @@ import java.util.Set;
 
 public class TestSecurityManager extends SecurityManager
 {
-	private static final java.lang.String PROPERTY_RW_ACTION = "read,write";
-	private static final java.lang.String PROPERTY_READ_ACTION = "read";
-	private static final java.lang.String PROPERTY_WRITE_ACTION = "write";
+	private static final String PROPERTY_RW_ACTION = "read,write";
+	private static final String PROPERTY_READ_ACTION = "read";
+	private static final String PROPERTY_WRITE_ACTION = "write";
 	private static final String ACCESS_DENIED_BASE = "access denied ";
 
 	private Set<String> deniedProperties;

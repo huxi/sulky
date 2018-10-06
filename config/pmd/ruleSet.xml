@@ -52,6 +52,7 @@
 		<exclude name="DefaultPackage"/>
 		<exclude name="EmptyMethodInAbstractClassShouldBeAbstract"/>
 		<exclude name="IfStmtsMustUseBraces"/>
+		<exclude name="LinguisticNaming"/>
 		<exclude name="LocalVariableCouldBeFinal"/>
 		<exclude name="LongVariable"/>
 		<exclude name="MethodArgumentCouldBeFinal"/>
