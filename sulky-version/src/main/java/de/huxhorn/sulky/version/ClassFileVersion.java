@@ -66,7 +66,10 @@ public enum ClassFileVersion
 	private char majorVersionCharacter;
 	private String sourceName;
 
+	@SuppressWarnings("PMD.UseDiamondOperator") // target is Java 1.6
 	private static final Map<Character, ClassFileVersion> MAJOR_VERSION_MAPPING = new HashMap<Character, ClassFileVersion>();
+
+	@SuppressWarnings("PMD.UseDiamondOperator") // target is Java 1.6
 	private static final Map<String, ClassFileVersion> SOURCE_NAME_MAPPING = new HashMap<String, ClassFileVersion>();
 
 	static

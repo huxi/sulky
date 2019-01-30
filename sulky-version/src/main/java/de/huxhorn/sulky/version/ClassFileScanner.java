@@ -51,6 +51,7 @@ public class ClassFileScanner
 	private static final String CLASS_EXTENSION = ".class";
 	private static final int MAGIC_NUMBER_CLASS = 0xCAFEBABE;
 
+	@SuppressWarnings("PMD.UseDiamondOperator") // target is Java 1.6
 	private final List<ClassStatisticMapper> classStatisticMappers =new ArrayList<ClassStatisticMapper>();
 
 	public List<ClassStatisticMapper> getClassStatisticMappers()

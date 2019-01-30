@@ -44,10 +44,14 @@ import java.util.TreeSet;
 public class DuplicateClassMapper
 	implements ClassStatisticMapper
 {
+	@SuppressWarnings("PMD.UseDiamondOperator") // target is Java 1.6
 	private final Map<ClassInfo, Set<String>> classSourceMapping=new HashMap<ClassInfo, Set<String>>();
+
+	@SuppressWarnings("PMD.UseDiamondOperator") // target is Java 1.6
 	private final Set<ClassInfo> duplicates = new TreeSet<ClassInfo>();
 
 	@Override
+	@SuppressWarnings("PMD.UseDiamondOperator") // target is Java 1.6
 	public void evaluate(String source, String packageName, String className, char majorVersion)
 	{
 		if(source == null)

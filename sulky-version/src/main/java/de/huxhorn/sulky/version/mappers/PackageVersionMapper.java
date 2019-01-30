@@ -44,6 +44,7 @@ import java.util.TreeSet;
 public class PackageVersionMapper
 	implements ClassStatisticMapper
 {
+	@SuppressWarnings("PMD.UseDiamondOperator") // target is Java 1.6
 	private final Map<String, Set<Character>> packageVersions=new HashMap<String, Set<Character>>();
 
 	public Map<String, Set<Character>> getPackageVersions()
@@ -52,6 +53,7 @@ public class PackageVersionMapper
 	}
 
 	@Override
+	@SuppressWarnings("PMD.UseDiamondOperator") // target is Java 1.6
 	public void evaluate(String source, String packageName, String className, char majorVersion)
 	{
 		if(source == null)
