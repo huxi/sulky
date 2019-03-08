@@ -94,12 +94,9 @@ project(':sulky-codec-filebuffer') {
 	archivesBaseName = 'de.huxhorn.sulky.codec.filebuffer'
 	description = 'This file is part of the sulky modules. It contains a Codec-aware filebuffer.'
 
-	/*
-	protobuf-java-3.5.1 jdeps failure
 	jar {
 		manifest.attributes 'Automatic-Module-Name': archivesBaseName
 	}
-	*/
 
 	javadoc {
 		// disable doclint for protobuf

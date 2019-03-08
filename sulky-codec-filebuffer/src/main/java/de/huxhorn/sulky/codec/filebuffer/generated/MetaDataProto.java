@@ -65,7 +65,6 @@ public final class MetaDataProto {
     }
     private MetaData() {
       entry_ = java.util.Collections.emptyList();
-      sparse_ = false;
     }
 
     @java.lang.Override
@@ -93,7 +92,7 @@ public final class MetaDataProto {
               done = true;
               break;
             case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
                 entry_ = new java.util.ArrayList<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry>();
                 mutable_bitField0_ |= 0x00000001;
               }
@@ -121,7 +120,7 @@ public final class MetaDataProto {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
           entry_ = java.util.Collections.unmodifiableList(entry_);
         }
         this.unknownFields = unknownFields.build();
@@ -183,7 +182,7 @@ public final class MetaDataProto {
      * <code>optional bool sparse = 2 [default = false];</code>
      */
     public boolean hasSparse() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>optional bool sparse = 2 [default = false];</code>
@@ -215,7 +214,7 @@ public final class MetaDataProto {
       for (int i = 0; i < entry_.size(); i++) {
         output.writeMessage(1, entry_.get(i));
       }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         output.writeBool(2, sparse_);
       }
       unknownFields.writeTo(output);
@@ -231,7 +230,7 @@ public final class MetaDataProto {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, entry_.get(i));
       }
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(2, sparse_);
       }
@@ -250,16 +249,15 @@ public final class MetaDataProto {
       }
       de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData other = (de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MetaData) obj;
 
-      boolean result = true;
-      result = result && getEntryList()
-          .equals(other.getEntryList());
-      result = result && (hasSparse() == other.hasSparse());
+      if (!getEntryList()
+          .equals(other.getEntryList())) return false;
+      if (hasSparse() != other.hasSparse()) return false;
       if (hasSparse()) {
-        result = result && (getSparse()
-            == other.getSparse());
+        if (getSparse()
+            != other.getSparse()) return false;
       }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -449,7 +447,7 @@ public final class MetaDataProto {
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (entryBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          if (((bitField0_ & 0x00000001) != 0)) {
             entry_ = java.util.Collections.unmodifiableList(entry_);
             bitField0_ = (bitField0_ & ~0x00000001);
           }
@@ -457,10 +455,10 @@ public final class MetaDataProto {
         } else {
           result.entry_ = entryBuilder_.build();
         }
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+        if (((from_bitField0_ & 0x00000002) != 0)) {
+          result.sparse_ = sparse_;
           to_bitField0_ |= 0x00000001;
         }
-        result.sparse_ = sparse_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -468,35 +466,35 @@ public final class MetaDataProto {
 
       @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
       @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
       @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
       @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
       @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
       @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -577,7 +575,7 @@ public final class MetaDataProto {
       private java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry> entry_ =
         java.util.Collections.emptyList();
       private void ensureEntryIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+        if (!((bitField0_ & 0x00000001) != 0)) {
           entry_ = new java.util.ArrayList<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry>(entry_);
           bitField0_ |= 0x00000001;
          }
@@ -806,7 +804,7 @@ public final class MetaDataProto {
           entryBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
               de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry, de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry.Builder, de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder>(
                   entry_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  ((bitField0_ & 0x00000001) != 0),
                   getParentForChildren(),
                   isClean());
           entry_ = null;
@@ -819,7 +817,7 @@ public final class MetaDataProto {
        * <code>optional bool sparse = 2 [default = false];</code>
        */
       public boolean hasSparse() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>optional bool sparse = 2 [default = false];</code>
@@ -1022,7 +1020,7 @@ public final class MetaDataProto {
      * <code>required string key = 1;</code>
      */
     public boolean hasKey() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>required string key = 1;</code>
@@ -1064,7 +1062,7 @@ public final class MetaDataProto {
      * <code>optional string value = 2;</code>
      */
     public boolean hasValue() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>optional string value = 2;</code>
@@ -1118,10 +1116,10 @@ public final class MetaDataProto {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, key_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, value_);
       }
       unknownFields.writeTo(output);
@@ -1133,10 +1131,10 @@ public final class MetaDataProto {
       if (size != -1) return size;
 
       size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+      if (((bitField0_ & 0x00000001) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, key_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      if (((bitField0_ & 0x00000002) != 0)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, value_);
       }
       size += unknownFields.getSerializedSize();
@@ -1154,19 +1152,18 @@ public final class MetaDataProto {
       }
       de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry other = (de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry) obj;
 
-      boolean result = true;
-      result = result && (hasKey() == other.hasKey());
+      if (hasKey() != other.hasKey()) return false;
       if (hasKey()) {
-        result = result && getKey()
-            .equals(other.getKey());
+        if (!getKey()
+            .equals(other.getKey())) return false;
       }
-      result = result && (hasValue() == other.hasValue());
+      if (hasValue() != other.hasValue()) return false;
       if (hasValue()) {
-        result = result && getValue()
-            .equals(other.getValue());
+        if (!getValue()
+            .equals(other.getValue())) return false;
       }
-      result = result && unknownFields.equals(other.unknownFields);
-      return result;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
     }
 
     @java.lang.Override
@@ -1349,11 +1346,11 @@ public final class MetaDataProto {
         de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry result = new de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+        if (((from_bitField0_ & 0x00000001) != 0)) {
           to_bitField0_ |= 0x00000001;
         }
         result.key_ = key_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+        if (((from_bitField0_ & 0x00000002) != 0)) {
           to_bitField0_ |= 0x00000002;
         }
         result.value_ = value_;
@@ -1364,35 +1361,35 @@ public final class MetaDataProto {
 
       @java.lang.Override
       public Builder clone() {
-        return (Builder) super.clone();
+        return super.clone();
       }
       @java.lang.Override
       public Builder setField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.setField(field, value);
+        return super.setField(field, value);
       }
       @java.lang.Override
       public Builder clearField(
           com.google.protobuf.Descriptors.FieldDescriptor field) {
-        return (Builder) super.clearField(field);
+        return super.clearField(field);
       }
       @java.lang.Override
       public Builder clearOneof(
           com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-        return (Builder) super.clearOneof(oneof);
+        return super.clearOneof(oneof);
       }
       @java.lang.Override
       public Builder setRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           int index, java.lang.Object value) {
-        return (Builder) super.setRepeatedField(field, index, value);
+        return super.setRepeatedField(field, index, value);
       }
       @java.lang.Override
       public Builder addRepeatedField(
           com.google.protobuf.Descriptors.FieldDescriptor field,
           java.lang.Object value) {
-        return (Builder) super.addRepeatedField(field, value);
+        return super.addRepeatedField(field, value);
       }
       @java.lang.Override
       public Builder mergeFrom(com.google.protobuf.Message other) {
@@ -1454,7 +1451,7 @@ public final class MetaDataProto {
        * <code>required string key = 1;</code>
        */
       public boolean hasKey() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+        return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>required string key = 1;</code>
@@ -1530,7 +1527,7 @@ public final class MetaDataProto {
        * <code>optional string value = 2;</code>
        */
       public boolean hasValue() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>optional string value = 2;</code>
