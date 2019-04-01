@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2019 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2019 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,7 +130,7 @@ public class SparseDataStrategy<E>
 
 	@Override
 	public boolean set(long index, E element, RandomAccessFile indexFile, RandomAccessFile dataFile, Codec<E> codec, IndexStrategy indexStrategy)
-		throws IOException, UnsupportedOperationException
+		throws IOException
 	{
 		long offset = indexStrategy.getOffset(indexFile, index);
 		if(!supportingOverwrite && offset >= 0)
@@ -201,7 +201,7 @@ public class SparseDataStrategy<E>
 	}
 
 	private E internalReadElement(RandomAccessFile dataFile, long offset, Codec<E> codec)
-		throws IOException, ClassNotFoundException, ClassCastException
+		throws IOException
 	{
 		if(codec == null)
 		{
