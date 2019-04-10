@@ -59,7 +59,6 @@ project(':sulky-version') {
 
 	dependencies {
 		compile libraries.'slf4j-api'
-		testCompile project(':sulky-junit')
 		testCompile libraries.'commons-io'
 	}
 }
