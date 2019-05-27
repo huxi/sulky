@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2018 Joern Huxhorn
+ * Copyright (C) 2007-2019 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2018 Joern Huxhorn
+ * Copyright 2007-2019 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ public class TimeoutOutputStreamTest
 	public void normalUse()
 		throws IOException
 	{
-		byte[] bytes = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+		byte[] bytes = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		mockStream.write(eq(bytes));
 		mockStream.flush();
@@ -119,7 +119,7 @@ public class TimeoutOutputStreamTest
 	public void exceptionInWriteByteArray()
 		throws IOException
 	{
-		byte[] bytes = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+		byte[] bytes = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		mockStream.write(eq(bytes));
 		//noinspection ThrowableInstanceNeverThrown
@@ -151,7 +151,7 @@ public class TimeoutOutputStreamTest
 	public void exceptionInWriteByteArrayOffset()
 		throws IOException
 	{
-		byte[] bytes = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+		byte[] bytes = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		mockStream.write(eq(bytes), eq(0), eq(5));
 		//noinspection ThrowableInstanceNeverThrown
@@ -275,7 +275,7 @@ public class TimeoutOutputStreamTest
 	public void runtimeExceptionInWriteByteArray()
 		throws IOException
 	{
-		byte[] bytes = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+		byte[] bytes = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		mockStream.write(eq(bytes));
 		//noinspection ThrowableInstanceNeverThrown
@@ -307,7 +307,7 @@ public class TimeoutOutputStreamTest
 	public void runtimeExceptionInWriteByteArrayOffset()
 		throws IOException
 	{
-		byte[] bytes = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+		byte[] bytes = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		mockStream.write(eq(bytes), eq(0), eq(5));
 		//noinspection ThrowableInstanceNeverThrown
@@ -426,7 +426,7 @@ public class TimeoutOutputStreamTest
 	public void timeoutInWriteByteArray()
 		throws IOException
 	{
-		byte[] bytes = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+		byte[] bytes = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		makeThreadSafe(mockStream, true);
 		mockStream.write(eq(bytes));
@@ -453,7 +453,7 @@ public class TimeoutOutputStreamTest
 	public void timeoutInWriteByteArrayOffset()
 		throws IOException
 	{
-		byte[] bytes = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+		byte[] bytes = {1, 2, 3, 4, 5, 6, 7, 8, 9};
 		OutputStream mockStream = createStrictMock(OutputStream.class);
 		makeThreadSafe(mockStream, true);
 		mockStream.write(eq(bytes), eq(0), eq(5));

@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2018 Joern Huxhorn
+ * Copyright (C) 2007-2019 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2018 Joern Huxhorn
+ * Copyright 2007-2019 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -175,7 +175,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		long[] value=new long[]{17, 18, 19};
+		long[] value = {17, 18, 19};
 		list.setRoot(value);
 		List<Long> expected=new ArrayList<>();
 		expected.add(17L);
@@ -190,7 +190,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		int[] value=new int[]{17, 18, 19};
+		int[] value = {17, 18, 19};
 		list.setRoot(value);
 		List<Long> expected=new ArrayList<>();
 		expected.add(17L);
@@ -205,7 +205,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		short[] value=new short[]{17, 18, 19};
+		short[] value = {17, 18, 19};
 		list.setRoot(value);
 		List<Long> expected=new ArrayList<>();
 		expected.add(17L);
@@ -220,7 +220,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		char[] value=new char[]{'F', 'o', 'o'};
+		char[] value = {'F', 'o', 'o'};
 		list.setRoot(value);
 		PropertyList read = check(list, false);
 		assertEquals("Foo", read.getRoot());
@@ -231,7 +231,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		boolean[] value=new boolean[]{true, false, true};
+		boolean[] value = {true, false, true};
 		list.setRoot(value);
 		List<Boolean> expected=new ArrayList<>();
 		expected.add(true);
@@ -246,7 +246,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		double[] value=new double[]{1.0, 2.5, 13.37};
+		double[] value = {1.0, 2.5, 13.37};
 		list.setRoot(value);
 		List<Double> expected=new ArrayList<>();
 		expected.add(1.0);
@@ -262,7 +262,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		float[] value=new float[]{1.0f, 2.5f, 13.37f};
+		float[] value = {1.0f, 2.5f, 13.37f};
 		list.setRoot(value);
 
 		PropertyList read = check(list, false);
@@ -280,7 +280,7 @@ public class PropertyListIOTest
 		throws Throwable
 	{
 		PropertyList list=new PropertyList();
-		Object[] value=new Object[]{"Foo", 17, true};
+		Object[] value = {"Foo", 17, true};
 		list.setRoot(value);
 
 		PropertyList read = check(list, false);
