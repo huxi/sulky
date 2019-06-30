@@ -48,6 +48,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+@SuppressWarnings("PMD.CloseResource") // because of Mock
 public class TimeoutOutputStreamTest
 {
 

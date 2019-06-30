@@ -139,10 +139,9 @@ public class GroovyInstance
 		long fileSize = groovyFile.length();
 		if(previousFileTimestamp != fileTimestamp || previousFileSize != fileSize)
 		{
-			GroovyClassLoader gcl = new GroovyClassLoader();
-			gcl.setShouldRecompile(true);
-			try
+			try(GroovyClassLoader gcl = new GroovyClassLoader())
 			{
+				gcl.setShouldRecompile(true);
 				previousFileTimestamp = fileTimestamp;
 				previousFileSize = fileSize;
 				instanceClass = gcl.parseClass(groovyFile);

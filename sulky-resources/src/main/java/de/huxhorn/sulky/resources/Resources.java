@@ -717,17 +717,14 @@ public final class Resources
 		final Logger logger = LoggerFactory.getLogger(Resources.class);
 
 		List<String> result = new ArrayList<>();
-		BufferedReader br = null;
-		IOException exception = null;
-		try
-		{
-			InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
-			br = new BufferedReader(isr);
 
-			String sl;
+		try(InputStreamReader isr = new InputStreamReader(is, StandardCharsets.UTF_8);
+			BufferedReader br = new BufferedReader(isr)
+		)
+		{
 			for(;;)
 			{
-				sl = br.readLine();
+				String sl = br.readLine();
 				if(sl == null)
 				{
 					break;
@@ -745,29 +742,7 @@ public final class Resources
 				result.add(sl);
 			}
 		}
-		catch(IOException ex)
-		{
-			exception = ex;
-		}
-		finally
-		{
-			if(br != null)
-			{
-				try
-				{
-					br.close();
-				}
-				catch(IOException ex)
-				{
-					// ignore
-				}
-			}
-		}
-		if(exception != null)
-		{
-			// rethrow after correct close...
-			throw exception;
-		}
+
 		return result;
 	}
 
@@ -778,7 +753,7 @@ public final class Resources
 		return recursiveResolve(stack, clazz, resourcePath);
 	}
 
-	@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+	@SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.CloseResource"})
 	private static URL recursiveResolve(List<String> stack, Class clazz, String resourcePath)
 	{
 		final Logger logger = LoggerFactory.getLogger(Resources.class);

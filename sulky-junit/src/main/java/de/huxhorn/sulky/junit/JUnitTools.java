@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2018 Joern Huxhorn
+ * Copyright (C) 2007-2019 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2018 Joern Huxhorn
+ * Copyright 2007-2019 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,15 +101,19 @@ public final class JUnitTools
 	public static <T extends Serializable> T serialize(T original)
 		throws IOException, ClassNotFoundException
 	{
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(os);
-		oos.writeObject(original);
-		oos.close();
-		ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-		ObjectInputStream ois = new ObjectInputStream(is);
-		@SuppressWarnings({"unchecked"})
-		T t =(T) ois.readObject();
-		return t;
+		try(ByteArrayOutputStream os = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(os))
+		{
+			oos.writeObject(original);
+			oos.close();
+			try(ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
+				ObjectInputStream ois = new ObjectInputStream(is))
+			{
+				@SuppressWarnings({"unchecked"})
+				T t = (T) ois.readObject();
+				return t;
+			}
+		}
 	}
 
 	/**
@@ -121,23 +125,29 @@ public final class JUnitTools
 	 * @param unused   was only needed in Java &lt;1.6.
 	 * @return the deserialized instance.
 	 * @throws java.io.IOException    In case of error during (de)serialization.
-	 * @throws ClassNotFoundException In case of error during (de)serialization.
 	 * @see java.beans.PersistenceDelegate
 	 */
 	public static <T extends Serializable> T serializeXml(T original, Class... unused)
-		throws IOException, ClassNotFoundException
+		throws IOException
 	{
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		XMLEncoder e = new XMLEncoder(os);
-		e.writeObject(original);
-		e.close();
+		try(ByteArrayOutputStream os = new ByteArrayOutputStream())
+		{
+			try(XMLEncoder e = new XMLEncoder(os))
+			{
+				e.writeObject(original);
+			}
 
-		ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
-		XMLDecoder d = new XMLDecoder(is);
-		@SuppressWarnings({"unchecked"})
-		T result = (T) d.readObject();
-		d.close();
-		return result;
+			try(ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray()))
+			{
+				try(XMLDecoder d = new XMLDecoder(is))
+				{
+					@SuppressWarnings({"unchecked"})
+					T result = (T) d.readObject();
+					return result;
+				}
+			}
+		}
+
 	}
 
 	public static <T extends Serializable> T testSerialization(T original)

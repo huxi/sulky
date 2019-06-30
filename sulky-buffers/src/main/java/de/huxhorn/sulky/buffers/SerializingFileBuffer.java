@@ -361,12 +361,14 @@ public class SerializingFileBuffer<E>
 		}
 		byte[] buffer = new byte[bufferSize];
 		randomSerializeFile.readFully(buffer);
-		ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
-		GZIPInputStream gis = new GZIPInputStream(bis);
-		ObjectInputStream ois = new ObjectInputStream(gis);
-		@SuppressWarnings({"unchecked"})
-		E e= (E) ois.readObject();
-		return e;
+		try(ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
+			GZIPInputStream gis = new GZIPInputStream(bis);
+			ObjectInputStream ois = new ObjectInputStream(gis))
+		{
+			@SuppressWarnings({"unchecked"})
+			E e = (E) ois.readObject();
+			return e;
+		}
 	}
 
 	private void internalWriteOffset(RandomAccessFile randomSerializeIndexFile, long index, long offset)
@@ -384,29 +386,22 @@ public class SerializingFileBuffer<E>
 	private int internalWriteElement(RandomAccessFile randomSerializeFile, long offset, E element)
 		throws IOException
 	{
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		GZIPOutputStream gos = new GZIPOutputStream(bos);
-		ObjectOutputStream out = new ObjectOutputStream(gos);
-		out.writeObject(element);
-		out.flush();
-		out.close();
-		gos.finish();
-		byte[] buffer = bos.toByteArray();
-		//int uncompressed=cos.getCount();
-
-		int bufferSize = buffer.length;
-		/*
-		if(logger.isDebugEnabled())
+		try(ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			GZIPOutputStream gos = new GZIPOutputStream(bos);
+			ObjectOutputStream out = new ObjectOutputStream(gos))
 		{
-			int packedPercent=(int)(((double)bufferSize/(double)uncompressed)*100f);
-			logger.debug("Uncompressed size: {}", uncompressed);
-			logger.debug("Compressed size  : {} ({}%)", bufferSize, packedPercent);
+			out.writeObject(element);
+			out.flush();
+			out.close();
+			gos.finish();
+			byte[] buffer = bos.toByteArray();
+
+			int bufferSize = buffer.length;
+			randomSerializeFile.seek(offset);
+			randomSerializeFile.writeInt(bufferSize);
+			randomSerializeFile.write(buffer);
+			return bufferSize;
 		}
-		*/
-		randomSerializeFile.seek(offset);
-		randomSerializeFile.writeInt(bufferSize);
-		randomSerializeFile.write(buffer);
-		return bufferSize;
 	}
 
 	private long internalReadElementSize(RandomAccessFile randomSerializeFile, long offset)

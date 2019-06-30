@@ -49,6 +49,7 @@ import static org.junit.Assert.assertSame;
 /**
  * Copy of JUnitTools to prevent complaining about Java version 8 vs. 6
  */
+@SuppressWarnings("PMD.CloseResource")
 public final class JUnitTools {
 	static {
 		new JUnitTools(); // stfu, coverage.

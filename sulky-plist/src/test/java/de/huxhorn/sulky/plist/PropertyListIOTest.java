@@ -398,8 +398,10 @@ public class PropertyListIOTest
 	private PropertyList read(byte[] bytes)
 		throws IOException
 	{
-		ByteArrayInputStream bis=new ByteArrayInputStream(bytes);
-		return decoder.decode(bis);
+		try(ByteArrayInputStream bis=new ByteArrayInputStream(bytes))
+		{
+			return decoder.decode(bis);
+		}
 	}
 
 	private byte[] write(PropertyList list)

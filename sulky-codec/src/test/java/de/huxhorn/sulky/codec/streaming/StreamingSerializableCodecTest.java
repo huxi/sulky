@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2011 Joern Huxhorn
+ * Copyright (C) 2007-2019 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2011 Joern Huxhorn
+ * Copyright 2007-2019 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,10 +48,14 @@ public class StreamingSerializableCodecTest
 	{
 		String obj = "Foo";
 		StreamingSerializableCodec<String> instance = new StreamingSerializableCodec<>();
-		ByteArrayOutputStream bos=new ByteArrayOutputStream();
-		instance.encode(obj, bos);
-		ByteArrayInputStream bis=new ByteArrayInputStream(bos.toByteArray());
-		String decoded = instance.decode(bis);
-		assertEquals(obj, decoded);
+		try(ByteArrayOutputStream bos=new ByteArrayOutputStream())
+		{
+			instance.encode(obj, bos);
+			try(ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray()))
+			{
+				String decoded = instance.decode(bis);
+				assertEquals(obj, decoded);
+			}
+		}
 	}
 }

@@ -1,6 +1,6 @@
 /*
  * sulky-resources - inheritance-safe class resources.
- * Copyright (C) 2002-2016 Joern Huxhorn
+ * Copyright (C) 2002-2019 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2002-2016 Joern Huxhorn
+ * Copyright 2002-2019 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -182,10 +182,12 @@ public abstract class MapLoader
 				return null;
 			}
 			Map<String, Object> result = new HashMap<>();
-			InputStream is = url.openStream();
 
 			Properties bundle = new Properties();
-			bundle.load(is);
+			try(InputStream is = url.openStream())
+			{
+				bundle.load(is);
+			}
 
 			Enumeration e = bundle.keys();
 			while(e.hasMoreElements())

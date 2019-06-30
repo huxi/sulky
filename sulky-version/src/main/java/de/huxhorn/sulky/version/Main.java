@@ -82,6 +82,7 @@ public final class Main
 
 	private Main() {}
 
+	@SuppressWarnings("PMD.CloseResource")
 	public static void main(String[] args)
 	{
 		statusCode = NO_ERROR_STATUS_CODE;

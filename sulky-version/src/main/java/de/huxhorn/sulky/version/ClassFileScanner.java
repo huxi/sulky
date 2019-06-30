@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2018 Joern Huxhorn
+ * Copyright (C) 2007-2019 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2018 Joern Huxhorn
+ * Copyright 2007-2019 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -157,6 +157,7 @@ public class ClassFileScanner
 
 	}
 
+	@SuppressWarnings("PMD.CloseResource")
 	public void scanJar(File jarFile)
 			throws IOException
 	{
@@ -222,6 +223,7 @@ public class ClassFileScanner
 		}
 	}
 
+	@SuppressWarnings("PMD.CloseResource")
 	private void scanClass(InputStream is, String classFileName, String sourceName)
 			throws IOException
 	{
@@ -235,10 +237,13 @@ public class ClassFileScanner
 		if(MAGIC_NUMBER_CLASS != magic)
 		{
 			//if(logger.isDebugEnabled()) logger.debug("Wrong magic number for class in {}. Ignoring.", classFileName);
+			dis.close();
 			return;
 		}
 		/*char minor = */dis.readChar();
 		char currentMajor = dis.readChar();
+		dis.close();
+
 		int slashIndex = classFileName.lastIndexOf('/');
 		String packageString="";
 		String className = classFileName;
