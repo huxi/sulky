@@ -2,7 +2,7 @@ apply from: 'dependencyDefinitions.gradle'
 apply from: 'projectDependencies.gradle'
 
 wrapper {
-	gradleVersion = '5.5.1'
+	gradleVersion = '5.6-rc-1'
 }
 
 def globalSourceCompatibility = 1.8
@@ -166,8 +166,7 @@ subprojects {
 		ruleSetFiles = files(rootProject.file('config/pmd/ruleSet.xml'))
 		ruleSets = []
 		toolVersion = '6.17.0'
-		// https://github.com/gradle/gradle/pull/3125#issuecomment-352442432
-		//incrementalAnalysis = true
+		incrementalAnalysis = true
 		//ignoreFailures = true
 	}
 	
