@@ -51,7 +51,7 @@ buildscript {
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
 		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
 		classpath 'me.champeau.gradle:jmh-gradle-plugin:0.4.7'
-		classpath 'de.thetaphi:forbiddenapis:2.6'
+		classpath 'de.thetaphi:forbiddenapis:2.7'
 		//classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.3.0'
 	}
 }
