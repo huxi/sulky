@@ -14,7 +14,7 @@ project(':sulky-io') {
 	}
 
 	dependencies {
-		testCompile libraries.easymock
+		testImplementation libraries.'easymock'
 	}
 }
 
@@ -42,10 +42,10 @@ project(':sulky-junit') {
 	*/
 
 	dependencies {
-		compile libraries.junit
-		compile libraries.'slf4j-api'
-		compile libraries.'logback-core'
-		compile libraries.'logback-classic'
+		implementation libraries.'junit'
+		implementation libraries.'logback-classic'
+		implementation libraries.'logback-core'
+		implementation libraries.'slf4j-api'
 	}
 }
 
@@ -58,8 +58,8 @@ project(':sulky-version') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
-		testCompile libraries.'commons-io'
+		implementation libraries.'slf4j-api'
+		testImplementation libraries.'commons-io'
 	}
 }
 
@@ -72,7 +72,7 @@ project(':sulky-codec') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
+		implementation libraries.'slf4j-api'
 	}
 }
 
@@ -85,7 +85,7 @@ project(':sulky-buffers') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
+		implementation libraries.'slf4j-api'
 	}
 }
 
@@ -107,10 +107,10 @@ project(':sulky-codec-filebuffer') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
-		compile libraries.'protobuf'
-		compile project(':sulky-codec')
-		compile project(':sulky-buffers')
+		implementation libraries.'protobuf'
+		implementation libraries.'slf4j-api'
+		implementation project(':sulky-buffers')
+		implementation project(':sulky-codec')
 	}
 }
 
@@ -123,7 +123,7 @@ project(':sulky-stax') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
+		implementation libraries.'slf4j-api'
 	}
 }
 
@@ -154,9 +154,9 @@ project(':sulky-sounds-impl-jlayer') {
 	}
 	
 	dependencies {
-		compile libraries.'slf4j-api'
-		compile libraries.'jlayer'
-		compile project(':sulky-sounds-api')
+		implementation libraries.'jlayer'
+		implementation libraries.'slf4j-api'
+		implementation project(':sulky-sounds-api')
 	}
 }
 
@@ -169,8 +169,8 @@ project(':sulky-logging') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
-		testCompile libraries.'logback-classic'
+		implementation libraries.'slf4j-api'
+		testImplementation libraries.'logback-classic'
 	}
 }
 
@@ -183,7 +183,7 @@ project(':sulky-formatting') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
+		implementation libraries.'slf4j-api'
 	}
 }
 
@@ -196,9 +196,9 @@ project(':sulky-swing') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
-		compile project(':sulky-formatting')
-		compile project(':sulky-generics')
+		implementation libraries.'slf4j-api'
+		implementation project(':sulky-formatting')
+		implementation project(':sulky-generics')
 	}
 }
 
@@ -211,9 +211,9 @@ project(':sulky-buffers-table') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
-		compile project(':sulky-buffers')
-		compile project(':sulky-swing')
+		implementation libraries.'slf4j-api'
+		implementation project(':sulky-buffers')
+		implementation project(':sulky-swing')
 	}
 }
 
@@ -226,7 +226,7 @@ project(':sulky-tasks') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
+		implementation libraries.'slf4j-api'
 	}
 }
 
@@ -239,10 +239,10 @@ project(':sulky-buffers-filtering') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
-		compile project(':sulky-buffers')
-		compile project(':sulky-conditions')
-		compile project(':sulky-tasks')
+		implementation libraries.'slf4j-api'
+		implementation project(':sulky-buffers')
+		implementation project(':sulky-conditions')
+		implementation project(':sulky-tasks')
 	}
 }
 
@@ -255,7 +255,7 @@ project(':sulky-resources') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
+		implementation libraries.'slf4j-api'
 	}
 }
 
@@ -268,9 +268,9 @@ project(':sulky-blobs') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
-		compile libraries.'commons-io'
-		testCompile project(':sulky-junit')
+		implementation libraries.'commons-io'
+		implementation libraries.'slf4j-api'
+		testImplementation project(':sulky-junit')
 	}
 }
 
@@ -283,11 +283,11 @@ project(':sulky-plist') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
-		compile libraries.'commons-codec'
-		compile project(':sulky-codec')
-		compile project(':sulky-stax')
-		testCompile project(':sulky-junit')
+		implementation libraries.'commons-codec'
+		implementation libraries.'slf4j-api'
+		implementation project(':sulky-codec')
+		implementation project(':sulky-stax')
+		testImplementation project(':sulky-junit')
 	}
 }
 
@@ -300,10 +300,10 @@ project(':sulky-groovy') {
 	}
 
 	dependencies {
-		compile libraries.'slf4j-api'
-		compile libraries.'groovy'
-		testCompile libraries.'commons-io'
-		testCompile project(':sulky-junit')
+		implementation libraries.'groovy'
+		implementation libraries.'slf4j-api'
+		testImplementation libraries.'commons-io'
+		testImplementation project(':sulky-junit')
 	}
 }
 
@@ -325,6 +325,6 @@ project(':sulky-ulid') {
 	}
 	
 	dependencies {
-		testCompile project(':sulky-junit')
+		testImplementation project(':sulky-junit')
 	}
 }
