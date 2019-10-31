@@ -6,7 +6,6 @@ wrapper {
 	// TODO:
 	// maven -> maven-publish
 	// https://github.com/policeman-tools/forbidden-apis/issues/153
-	// https://github.com/melix/jmh-gradle-plugin/issues/158
 }
 
 def globalSourceCompatibility = 1.8
@@ -54,7 +53,7 @@ buildscript {
 		classpath 'org.apache.maven.wagon:wagon-webdav-jackrabbit:2.9'
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
 		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
-		classpath 'me.champeau.gradle:jmh-gradle-plugin:0.4.8'
+		classpath 'me.champeau.gradle:jmh-gradle-plugin:0.5.0'
 		classpath 'de.thetaphi:forbiddenapis:2.7'
 		//classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.3.0'
 	}
