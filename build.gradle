@@ -168,7 +168,7 @@ subprojects {
 	pmd {
 		ruleSetFiles = files(rootProject.file('config/pmd/ruleSet.xml'))
 		ruleSets = []
-		toolVersion = '6.17.0'
+		toolVersion = '6.19.0'
 		incrementalAnalysis = true
 		//ignoreFailures = true
 	}
