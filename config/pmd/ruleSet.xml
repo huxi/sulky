@@ -79,7 +79,6 @@
 		<exclude name="BeanMembersShouldSerialize"/>
 		<exclude name="DataflowAnomalyAnalysis"/>
 		<exclude name="EmptyCatchBlock"/>
-		<exclude name="InvalidSlf4jMessageFormat"/> <!-- deprecated, InvalidLogMessageFormat is used instead -->
 		<exclude name="LoggerIsNotStaticFinal"/>
 		<exclude name="MoreThanOneLogger"/>
 		<exclude name="NullAssignment"/>
