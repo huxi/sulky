@@ -44,10 +44,12 @@ public final class MetaDataProto {
 
     /**
      * <code>optional bool sparse = 2 [default = false];</code>
+     * @return Whether the sparse field is set.
      */
     boolean hasSparse();
     /**
      * <code>optional bool sparse = 2 [default = false];</code>
+     * @return The sparse.
      */
     boolean getSparse();
   }
@@ -187,12 +189,14 @@ public final class MetaDataProto {
     private boolean sparse_;
     /**
      * <code>optional bool sparse = 2 [default = false];</code>
+     * @return Whether the sparse field is set.
      */
     public boolean hasSparse() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>optional bool sparse = 2 [default = false];</code>
+     * @return The sparse.
      */
     public boolean getSparse() {
       return sparse_;
@@ -822,18 +826,22 @@ public final class MetaDataProto {
       private boolean sparse_ ;
       /**
        * <code>optional bool sparse = 2 [default = false];</code>
+       * @return Whether the sparse field is set.
        */
       public boolean hasSparse() {
         return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>optional bool sparse = 2 [default = false];</code>
+       * @return The sparse.
        */
       public boolean getSparse() {
         return sparse_;
       }
       /**
        * <code>optional bool sparse = 2 [default = false];</code>
+       * @param value The sparse to set.
+       * @return This builder for chaining.
        */
       public Builder setSparse(boolean value) {
         bitField0_ |= 0x00000002;
@@ -843,6 +851,7 @@ public final class MetaDataProto {
       }
       /**
        * <code>optional bool sparse = 2 [default = false];</code>
+       * @return This builder for chaining.
        */
       public Builder clearSparse() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -909,28 +918,34 @@ public final class MetaDataProto {
 
     /**
      * <code>required string key = 1;</code>
+     * @return Whether the key field is set.
      */
     boolean hasKey();
     /**
      * <code>required string key = 1;</code>
+     * @return The key.
      */
     java.lang.String getKey();
     /**
      * <code>required string key = 1;</code>
+     * @return The bytes for key.
      */
     com.google.protobuf.ByteString
         getKeyBytes();
 
     /**
      * <code>optional string value = 2;</code>
+     * @return Whether the value field is set.
      */
     boolean hasValue();
     /**
      * <code>optional string value = 2;</code>
+     * @return The value.
      */
     java.lang.String getValue();
     /**
      * <code>optional string value = 2;</code>
+     * @return The bytes for value.
      */
     com.google.protobuf.ByteString
         getValueBytes();
@@ -1032,12 +1047,14 @@ public final class MetaDataProto {
     private volatile java.lang.Object key_;
     /**
      * <code>required string key = 1;</code>
+     * @return Whether the key field is set.
      */
     public boolean hasKey() {
       return ((bitField0_ & 0x00000001) != 0);
     }
     /**
      * <code>required string key = 1;</code>
+     * @return The key.
      */
     public java.lang.String getKey() {
       java.lang.Object ref = key_;
@@ -1055,6 +1072,7 @@ public final class MetaDataProto {
     }
     /**
      * <code>required string key = 1;</code>
+     * @return The bytes for key.
      */
     public com.google.protobuf.ByteString
         getKeyBytes() {
@@ -1074,12 +1092,14 @@ public final class MetaDataProto {
     private volatile java.lang.Object value_;
     /**
      * <code>optional string value = 2;</code>
+     * @return Whether the value field is set.
      */
     public boolean hasValue() {
       return ((bitField0_ & 0x00000002) != 0);
     }
     /**
      * <code>optional string value = 2;</code>
+     * @return The value.
      */
     public java.lang.String getValue() {
       java.lang.Object ref = value_;
@@ -1097,6 +1117,7 @@ public final class MetaDataProto {
     }
     /**
      * <code>optional string value = 2;</code>
+     * @return The bytes for value.
      */
     public com.google.protobuf.ByteString
         getValueBytes() {
@@ -1463,12 +1484,14 @@ public final class MetaDataProto {
       private java.lang.Object key_ = "";
       /**
        * <code>required string key = 1;</code>
+       * @return Whether the key field is set.
        */
       public boolean hasKey() {
         return ((bitField0_ & 0x00000001) != 0);
       }
       /**
        * <code>required string key = 1;</code>
+       * @return The key.
        */
       public java.lang.String getKey() {
         java.lang.Object ref = key_;
@@ -1486,6 +1509,7 @@ public final class MetaDataProto {
       }
       /**
        * <code>required string key = 1;</code>
+       * @return The bytes for key.
        */
       public com.google.protobuf.ByteString
           getKeyBytes() {
@@ -1502,6 +1526,8 @@ public final class MetaDataProto {
       }
       /**
        * <code>required string key = 1;</code>
+       * @param value The key to set.
+       * @return This builder for chaining.
        */
       public Builder setKey(
           java.lang.String value) {
@@ -1515,6 +1541,7 @@ public final class MetaDataProto {
       }
       /**
        * <code>required string key = 1;</code>
+       * @return This builder for chaining.
        */
       public Builder clearKey() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -1524,6 +1551,8 @@ public final class MetaDataProto {
       }
       /**
        * <code>required string key = 1;</code>
+       * @param value The bytes for key to set.
+       * @return This builder for chaining.
        */
       public Builder setKeyBytes(
           com.google.protobuf.ByteString value) {
@@ -1539,12 +1568,14 @@ public final class MetaDataProto {
       private java.lang.Object value_ = "";
       /**
        * <code>optional string value = 2;</code>
+       * @return Whether the value field is set.
        */
       public boolean hasValue() {
         return ((bitField0_ & 0x00000002) != 0);
       }
       /**
        * <code>optional string value = 2;</code>
+       * @return The value.
        */
       public java.lang.String getValue() {
         java.lang.Object ref = value_;
@@ -1562,6 +1593,7 @@ public final class MetaDataProto {
       }
       /**
        * <code>optional string value = 2;</code>
+       * @return The bytes for value.
        */
       public com.google.protobuf.ByteString
           getValueBytes() {
@@ -1578,6 +1610,8 @@ public final class MetaDataProto {
       }
       /**
        * <code>optional string value = 2;</code>
+       * @param value The value to set.
+       * @return This builder for chaining.
        */
       public Builder setValue(
           java.lang.String value) {
@@ -1591,6 +1625,7 @@ public final class MetaDataProto {
       }
       /**
        * <code>optional string value = 2;</code>
+       * @return This builder for chaining.
        */
       public Builder clearValue() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -1600,6 +1635,8 @@ public final class MetaDataProto {
       }
       /**
        * <code>optional string value = 2;</code>
+       * @param value The bytes for value to set.
+       * @return This builder for chaining.
        */
       public Builder setValueBytes(
           com.google.protobuf.ByteString value) {
