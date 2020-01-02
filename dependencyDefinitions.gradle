@@ -14,7 +14,7 @@ project.ext.libraries = [
 'groovy':                 "org.codehaus.groovy:groovy:${versions.groovy}",
 'jcl-over-slf4j':         "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
 'jlayer':                 'de.huxhorn.sulky:de.huxhorn.sulky.3rdparty.jlayer:1.0',
-'junit':                  'junit:junit:4.12',
+'junit':                  'junit:junit:4.13',
 'logback-access':         "ch.qos.logback:logback-access:${versions.logback}",
 'logback-classic':        "ch.qos.logback:logback-classic:${versions.logback}",
 'logback-core':           "ch.qos.logback:logback-core:${versions.logback}",
