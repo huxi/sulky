@@ -2,7 +2,7 @@ apply from: 'dependencyDefinitions.gradle'
 apply from: 'projectDependencies.gradle'
 
 wrapper {
-	gradleVersion = '6.2.2'
+	gradleVersion = '6.3'
 	// TODO:
 	// maven -> maven-publish
 	// https://github.com/policeman-tools/forbidden-apis/issues/153
