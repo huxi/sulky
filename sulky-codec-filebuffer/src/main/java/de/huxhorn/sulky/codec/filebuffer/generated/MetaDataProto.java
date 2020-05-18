@@ -56,7 +56,7 @@ public final class MetaDataProto {
   /**
    * Protobuf type {@code de.huxhorn.sulky.codec.filebuffer.MetaData}
    */
-  public  static final class MetaData extends
+  public static final class MetaData extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:de.huxhorn.sulky.codec.filebuffer.MetaData)
       MetaDataOrBuilder {
@@ -155,12 +155,14 @@ public final class MetaDataProto {
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
      */
+    @java.lang.Override
     public java.util.List<de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry> getEntryList() {
       return entry_;
     }
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
      */
+    @java.lang.Override
     public java.util.List<? extends de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder> 
         getEntryOrBuilderList() {
       return entry_;
@@ -168,18 +170,21 @@ public final class MetaDataProto {
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
      */
+    @java.lang.Override
     public int getEntryCount() {
       return entry_.size();
     }
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
      */
+    @java.lang.Override
     public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntry getEntry(int index) {
       return entry_.get(index);
     }
     /**
      * <code>repeated .de.huxhorn.sulky.codec.filebuffer.MapEntry entry = 1;</code>
      */
+    @java.lang.Override
     public de.huxhorn.sulky.codec.filebuffer.generated.MetaDataProto.MapEntryOrBuilder getEntryOrBuilder(
         int index) {
       return entry_.get(index);
@@ -191,6 +196,7 @@ public final class MetaDataProto {
      * <code>optional bool sparse = 2 [default = false];</code>
      * @return Whether the sparse field is set.
      */
+    @java.lang.Override
     public boolean hasSparse() {
       return ((bitField0_ & 0x00000001) != 0);
     }
@@ -198,6 +204,7 @@ public final class MetaDataProto {
      * <code>optional bool sparse = 2 [default = false];</code>
      * @return The sparse.
      */
+    @java.lang.Override
     public boolean getSparse() {
       return sparse_;
     }
@@ -828,6 +835,7 @@ public final class MetaDataProto {
        * <code>optional bool sparse = 2 [default = false];</code>
        * @return Whether the sparse field is set.
        */
+      @java.lang.Override
       public boolean hasSparse() {
         return ((bitField0_ & 0x00000002) != 0);
       }
@@ -835,6 +843,7 @@ public final class MetaDataProto {
        * <code>optional bool sparse = 2 [default = false];</code>
        * @return The sparse.
        */
+      @java.lang.Override
       public boolean getSparse() {
         return sparse_;
       }
@@ -953,7 +962,7 @@ public final class MetaDataProto {
   /**
    * Protobuf type {@code de.huxhorn.sulky.codec.filebuffer.MapEntry}
    */
-  public  static final class MapEntry extends
+  public static final class MapEntry extends
       com.google.protobuf.GeneratedMessageV3 implements
       // @@protoc_insertion_point(message_implements:de.huxhorn.sulky.codec.filebuffer.MapEntry)
       MapEntryOrBuilder {
@@ -1049,6 +1058,7 @@ public final class MetaDataProto {
      * <code>required string key = 1;</code>
      * @return Whether the key field is set.
      */
+    @java.lang.Override
     public boolean hasKey() {
       return ((bitField0_ & 0x00000001) != 0);
     }
@@ -1056,6 +1066,7 @@ public final class MetaDataProto {
      * <code>required string key = 1;</code>
      * @return The key.
      */
+    @java.lang.Override
     public java.lang.String getKey() {
       java.lang.Object ref = key_;
       if (ref instanceof java.lang.String) {
@@ -1074,6 +1085,7 @@ public final class MetaDataProto {
      * <code>required string key = 1;</code>
      * @return The bytes for key.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getKeyBytes() {
       java.lang.Object ref = key_;
@@ -1094,6 +1106,7 @@ public final class MetaDataProto {
      * <code>optional string value = 2;</code>
      * @return Whether the value field is set.
      */
+    @java.lang.Override
     public boolean hasValue() {
       return ((bitField0_ & 0x00000002) != 0);
     }
@@ -1101,6 +1114,7 @@ public final class MetaDataProto {
      * <code>optional string value = 2;</code>
      * @return The value.
      */
+    @java.lang.Override
     public java.lang.String getValue() {
       java.lang.Object ref = value_;
       if (ref instanceof java.lang.String) {
@@ -1119,6 +1133,7 @@ public final class MetaDataProto {
      * <code>optional string value = 2;</code>
      * @return The bytes for value.
      */
+    @java.lang.Override
     public com.google.protobuf.ByteString
         getValueBytes() {
       java.lang.Object ref = value_;
