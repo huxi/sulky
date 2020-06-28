@@ -67,6 +67,7 @@ public final class LocalizableFactory
 	 * @return either the original <code>object</code> or a proxy wrapping the given <code>object</code>.
 	 * @throws NullPointerException if <code>object</code> is <code>null</code>.
 	 */
+	@SuppressWarnings("PMD.UseProperClassLoader")
 	public static Localizable getLocalizable(Object object)
 	{
 		final Logger logger = LoggerFactory.getLogger(MapLoader.class);
