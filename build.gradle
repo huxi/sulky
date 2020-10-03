@@ -2,7 +2,7 @@ apply from: 'dependencyDefinitions.gradle'
 apply from: 'projectDependencies.gradle'
 
 wrapper {
-	gradleVersion = '6.6'
+	gradleVersion = '6.6.1'
 	// TODO:
 	// maven -> maven-publish
 }
