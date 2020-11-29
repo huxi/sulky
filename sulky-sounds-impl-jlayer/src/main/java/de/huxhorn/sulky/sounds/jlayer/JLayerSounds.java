@@ -116,6 +116,7 @@ public class JLayerSounds
 		play(soundName, true);
 	}
 
+	@SuppressWarnings("PMD.CloseResource")
 	private Player resolvePlayer(String soundName)
 	{
 		String soundLocation = null;
