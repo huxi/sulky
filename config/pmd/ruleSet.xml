@@ -20,6 +20,7 @@
 	
 	<rule ref="category/java/design.xml">
 		<exclude name="AvoidCatchingGenericException"/>
+		<exclude name="CognitiveComplexity"/>
 		<exclude name="CyclomaticComplexity"/>
 		<exclude name="DataClass"/>
 		<exclude name="ExcessiveClassLength"/>
