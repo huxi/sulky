@@ -83,6 +83,8 @@ public class PropertyListWriter
 		}
 	}
 
+	@SuppressWarnings("PMD.UseArraysAsList")
+	// https://github.com/pmd/pmd/issues/3379
 	private void writeValue(XMLStreamWriter writer, Object value)
 		throws XMLStreamException
 	{
@@ -145,19 +147,19 @@ public class PropertyListWriter
 
 		if(value instanceof Map)
 		{
-			Map map = (Map) value;
+			Map<?,?> map = (Map<?,?>) value;
 			writeDict(writer, map);
 			return;
 		}
 
 		if(value instanceof Collection)
 		{
-			Collection collection = (Collection) value;
+			Collection<?> collection = (Collection<?>) value;
 			writeArray(writer, collection);
 			return;
 		}
 
-		Class valueClass = value.getClass();
+		Class<?> valueClass = value.getClass();
 		if(valueClass.isArray())
 		{
 			List<?> list;
@@ -242,7 +244,7 @@ public class PropertyListWriter
 		StaxUtilities.writeSimpleTextNode(writer, null, null, STRING_NODE, value.toString());
 	}
 
-	private void writeArray(XMLStreamWriter writer, Collection collection)
+	private void writeArray(XMLStreamWriter writer, Collection<?> collection)
 		throws XMLStreamException
 	{
 		StaxUtilities.writeStartElement(writer, null, null, ARRAY_NODE);
@@ -260,7 +262,7 @@ public class PropertyListWriter
 	{
 		StaxUtilities.writeStartElement(writer, null, null, DICT_NODE);
 
-		for(Map.Entry current:map.entrySet())
+		for(Map.Entry<?,?> current:map.entrySet())
 		{
 			Object key=current.getKey();
 			if(key != null)
