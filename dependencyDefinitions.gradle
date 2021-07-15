@@ -10,7 +10,7 @@ project.ext.versions = [
 project.ext.libraries = [
 'byte-buddy':             "net.bytebuddy:byte-buddy:${versions.bytebuddy}",
 'commons-codec':          'commons-codec:commons-codec:1.15',
-'commons-io':             'commons-io:commons-io:2.10.0',
+'commons-io':             'commons-io:commons-io:2.11.0',
 'easymock':               'org.easymock:easymock:3.6',
 'groovy':                 "org.codehaus.groovy:groovy:${versions.groovy}",
 'jcl-over-slf4j':         "org.slf4j:jcl-over-slf4j:${versions.slf4j}",
