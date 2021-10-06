@@ -95,6 +95,7 @@ public abstract class AbstractFilter
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("PMD.ReturnEmptyCollectionRatherThanNull") // wat?
 	@Override
 	public RenderingHints getRenderingHints()
 	{
