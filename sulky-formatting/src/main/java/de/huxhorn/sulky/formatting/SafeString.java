@@ -1,6 +1,6 @@
 /*
  * sulky-modules - several general-purpose modules.
- * Copyright (C) 2007-2019 Joern Huxhorn
+ * Copyright (C) 2007-2021 Joern Huxhorn
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -17,7 +17,7 @@
  */
 
 /*
- * Copyright 2007-2019 Joern Huxhorn
+ * Copyright 2007-2021 Joern Huxhorn
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.IdentityHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -163,7 +164,7 @@ public final class SafeString
 					.optionalStart()
 					.appendFraction(ChronoField.MILLI_OF_SECOND, 3, 3, true)
 					.appendZoneId()
-					.toFormatter()
+					.toFormatter(Locale.US)
 					.withZone(ZoneOffset.UTC);
 
 	private static final String BYTE_PREFIX = "0x";
