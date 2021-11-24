@@ -353,6 +353,9 @@ coveralls {
 }
 
 allprojects {
+    tasks.withType(Test).configureEach {
+	forkEvery = 100
+    }
 	tasks.each { task ->
 		if (task instanceof Javadoc) {
 			//println task
