@@ -95,12 +95,7 @@ gradle.taskGraph.whenReady { taskGraph ->
 	if(taskGraph.allTasks.any { it instanceof Sign && it.required }) {
 		String pgpPassword = System.properties.'pgpPassword'
 		if(!pgpPassword) {
-			// name clash with org.gradle.api.tasks.Console
-			java.io.Console console = System.console()
-			if(!console) {
-				throw new IllegalStateException('System.console() returned null. Restart with --no-daemon.')
-			}
-			pgpPassword = new String(console.readPassword("\nPGP Private Key Password: "))
+			throw new IllegalStateException('Set pgpPassword system property!')
 		}
 
 		allprojects { ext.'signing.keyId' = '740A1840' }
