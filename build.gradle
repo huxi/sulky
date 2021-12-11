@@ -117,7 +117,7 @@ allprojects {
 	apply plugin: 'jacoco'
 
 	group = 'de.huxhorn.sulky'
-	version = '8.3.0'
+	version = '8.4.0'
 	def prereleaseIdentifier = System.properties.'prerelease'
 	if(prereleaseIdentifier) {
 		version = version + '-' + prereleaseIdentifier
