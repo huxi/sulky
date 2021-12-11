@@ -237,7 +237,7 @@ public final class Main
 				+ " but JVM is "
 				+ JavaVersion.getSystemJavaVersion().toVersionString()
 				+ "!\n\n"
-				+ "Find the latest Java versions at https://adoptopenjdk.net/";
+				+ "Find the latest Java versions at https://adoptium.net/";
 
 		VersionRunnable versionRunnable=null;
 		if(showingErrorDialog)
