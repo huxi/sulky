@@ -35,6 +35,7 @@
 package de.huxhorn.sulky.buffers;
 
 import java.io.File;
+import java.nio.file.Files;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,9 +58,7 @@ public class SerializingFileBufferTest
 	public void setUp()
 		throws Exception
 	{
-		tempOutputPath = File.createTempFile("sfb-testing", "rulez");
-		tempOutputPath.delete();
-		tempOutputPath.mkdirs();
+		tempOutputPath = Files.createTempDirectory("sfb-testing" + "rulez").toFile();
 		serializeFile = new File(tempOutputPath, "dump");
 		serializeIndexFile = new File(tempOutputPath, "dump.index");
 		instance = new SerializingFileBuffer<>(serializeFile, serializeIndexFile);
