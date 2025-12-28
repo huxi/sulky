@@ -67,11 +67,10 @@ public final class KeyStrokes
 
 	static
 	{
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		String keyMaskString = "control";
 		try
 		{
-			int keyMask = toolkit.getMenuShortcutKeyMask();
+			int keyMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
 			keyMaskString = AWTKeyStroke.getAWTKeyStroke(KeyEvent.VK_A, keyMask).toString();
 			keyMaskString = keyMaskString.substring(0, keyMaskString.length()-" pressed A".length());
 			if(LOGGER.isDebugEnabled()) LOGGER.debug("Resolved system-dependent command modifiers '{}'.", keyMaskString);

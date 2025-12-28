@@ -57,10 +57,10 @@ public class ResourcesTest
 {
 	private final Logger logger = LoggerFactory.getLogger(ResourcesTest.class);
 
-	private static final Locale US_LOCALE = new Locale("en", "US");
-	private static final Locale GERMANY_LOCALE = new Locale("de", "DE");
-	private static final Locale HESSIAN_LOCALE = new Locale("de", "DE", "hessisch");
-	private static final Locale EMPTY_LOCALE = new Locale("", "", "");
+	private static final Locale US_LOCALE = Locale.of("en", "US");
+	private static final Locale GERMANY_LOCALE = Locale.of("de", "DE");
+	private static final Locale HESSIAN_LOCALE = Locale.of("de", "DE", "hessisch");
+	private static final Locale EMPTY_LOCALE = Locale.of("", "", "");
 	private static Locale prevDefault;
 
 	private void internalGetLocalResources(Class clazz, String resourceBaseName, String[] suffixes, Locale locale, String[] resultEndsWith)
@@ -885,13 +885,13 @@ public class ResourcesTest
 				"en",
 			});
 
-		internalGetLocaleSuffixArray(new Locale("", "", "foo"), new String[]
+		internalGetLocaleSuffixArray(Locale.of("", "", "foo"), new String[]
 			{
 				"__foo",
 				"en_US",
 				"en",
 			});
-		internalGetLocaleSuffixArray(new Locale("foo", "", "bar"), new String[]
+		internalGetLocaleSuffixArray(Locale.of("foo", "", "bar"), new String[]
 			{
 				"foo__bar",
 				"foo",
@@ -938,11 +938,11 @@ public class ResourcesTest
 				"de",
 			});
 
-		internalGetSingleLocaleSuffixArray(new Locale("", "", "foo"), new String[]
+		internalGetSingleLocaleSuffixArray(Locale.of("", "", "foo"), new String[]
 			{
 				"__foo",
 			});
-		internalGetSingleLocaleSuffixArray(new Locale("foo", "", "bar"), new String[]
+		internalGetSingleLocaleSuffixArray(Locale.of("foo", "", "bar"), new String[]
 			{
 				"foo__bar",
 				"foo",

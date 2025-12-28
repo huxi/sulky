@@ -38,6 +38,7 @@ import de.huxhorn.sulky.sounds.Sounds;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -149,7 +150,7 @@ public class JLayerSounds
 			{
 				try
 				{
-					URL url = new URL(soundLocation);
+					URL url = URI.create(soundLocation).toURL();
 					soundStream = url.openStream();
 				}
 				catch(IOException e)

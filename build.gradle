@@ -7,8 +7,8 @@ wrapper {
 	// maven -> maven-publish
 }
 
-def globalSourceCompatibility = 1.8
-def globalTargetCompatibility = 1.8
+def globalSourceCompatibility = 21
+def globalTargetCompatibility = 21
 
 apply plugin: 'idea'
 
@@ -35,7 +35,6 @@ buildscript {
 	project.ext.localReleaseRepo = localReleaseRepoFile.toURL().toString()
 	project.ext.localSnapshotRepo = localSnapshotRepoFile.toURL().toString()
 	repositories {
-		jcenter()
 		maven {
 			url "https://plugins.gradle.org/m2/"
 		}
@@ -53,7 +52,7 @@ buildscript {
 		classpath 'com.github.ben-manes:gradle-versions-plugin:0.20.0'
 		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.2'
 		classpath 'me.champeau.gradle:jmh-gradle-plugin:0.5.0'
-		classpath 'de.thetaphi:forbiddenapis:3.2'
+		classpath 'de.thetaphi:forbiddenapis:3.10'
 		//classpath 'org.kordamp.gradle:jdeps-gradle-plugin:0.3.0'
 	}
 }
@@ -76,12 +75,12 @@ task javadocAll(type: Javadoc) {
 }
 
 task sourceZip(type: Zip) {
-	classifier = 'sources'
+	archiveClassifier = 'sources'
 	from { subprojects.collect { it.sourceSets.main.allSource } }
 }
 
 task javadocZip(type: Zip) {
-	classifier = 'javadoc'
+	archiveClassifier = 'javadoc'
 	from javadocAll.outputs.files
 }
 
@@ -105,9 +104,9 @@ gradle.taskGraph.whenReady { taskGraph ->
 }
 
 if(!System.properties.'release' && !System.properties.'prerelease') {
-	defaultTasks 'build', 'uploadPublished'
+	defaultTasks 'build', 'publish'
 } else {
-	defaultTasks 'build', 'uploadPublished', 'signJavadocZip', 'signSourceZip'
+	defaultTasks 'build', 'publish', 'signJavadocZip', 'signSourceZip'
 }
 
 allprojects {
@@ -136,13 +135,13 @@ allprojects {
 	}
 
 	jacoco {
-		toolVersion = '0.8.7'
+		toolVersion = '0.8.11'
 	}
 }
 
 subprojects {
 	apply plugin: 'groovy'
-	apply plugin: 'maven'
+	apply plugin: 'maven-publish'
 	apply plugin: 'signing'
 	apply plugin: 'de.thetaphi.forbiddenapis'
 	apply plugin: 'checkstyle'
@@ -169,9 +168,9 @@ subprojects {
 	
 	forbiddenApis {
 		bundledSignatures = [
-			'jdk-unsafe-1.8',
-			'jdk-deprecated-1.8',
-			'jdk-internal-1.8',
+			'jdk-unsafe-21',
+			'jdk-deprecated-21',
+			'jdk-internal-21',
 			'jdk-non-portable',
 			//'jdk-system-out',
 			'jdk-reflection',
@@ -186,12 +185,12 @@ subprojects {
 		sourceDirectories.from(files(sourceSets.main.allSource.srcDirs))
 		classDirectories.from(files(sourceSets.main.output))
 		reports {
-			html.enabled = true
-			xml.enabled = true
-			csv.enabled = false
+			html.required = true
+			xml.required = true
+			csv.required = false
 		}
 	}
-	defaultTasks 'build', 'uploadPublished'
+	defaultTasks 'build', 'publish'
 
 	sourceCompatibility = globalSourceCompatibility
 	targetCompatibility = globalTargetCompatibility
@@ -215,70 +214,21 @@ subprojects {
 
 	signing {
 		required = { !version.endsWith("SNAPSHOT") }
-		sign configurations.archives
+		sign publishing.publications
 	}
 
-	task sourceJar(type: Jar) { from sourceSets.main.allSource; classifier = 'sources' }
-	task javadocJar(type: Jar) { from javadoc.outputs.files; classifier = 'javadoc' }
-
-	artifacts { archives sourceJar, javadocJar }
-
-	project.ext.defaultProject= {
-		url 'http://sulky.huxhorn.de'
-		name project.name
-		description project.description
-		inceptionYear '2007'
-
-		scm {
-			connection 'scm:git:git://github.com/huxi/sulky.git'
-			developerConnection 'scm:git:ssh://git@github.com:huxi/sulky.git'
-			url 'http://github.com/huxi/sulky/'
-		}
-
-		licenses {
-			license {
-				name 'GNU Lesser General Public License v3 (LGPL)'
-				url 'http://www.gnu.org/copyleft/lesser.html'
-				distribution 'repo'
-			}
-
-			license {
-				name 'The Apache Software License, Version 2.0'
-				url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-				distribution 'repo'
-			}
-		}
-
-		issueManagement {
-			system 'Github'
-			url 'https://github.com/huxi/sulky/issues'
-		}
-
-		developers {
-			developer {
-				id 'huxhorn'
-				email 'huxhorn@users.sourceforge.net'
-				name 'Joern Huxhorn'
-				organization = 'Joern Huxhorn'
-				organizationUrl 'http://sulky.huxhorn.de'
-				roles {
-					role 'Developer'
-				}
-			}
-		}
-
-		properties {
-			'project.build.sourceEncoding' 'UTF-8'
-			'project.reporting.outputEncoding' 'UTF-8'
-		}
+	task sourceJar(type: Jar) {
+		from sourceSets.main.allSource
+		archiveClassifier = 'sources'
 	}
-
+	task javadocJar(type: Jar) {
+		from javadoc.outputs.files
+		archiveClassifier = 'javadoc'
+	}
 
 	configurations {
 		all*.exclude group: 'commons-logging', module: 'commons-logging'
 		all*.exclude group: 'org.codehaus.groovy', module: 'groovy-all'
-
-		published.extendsFrom archives, signatures
 	}
 
 	dependencies {
@@ -287,35 +237,65 @@ subprojects {
 		testImplementation libraries.'junit'
 		testImplementation libraries.'slf4j-api'
 		testImplementation libraries.'spock-core', {
-			exclude group: 'org.codehaus.groovy', module: 'groovy-all' 
+			exclude group: 'org.codehaus.groovy', module: 'groovy-all'
 		}
 		testRuntimeOnly libraries.'logback-classic'
 	}
 
-	def deployer = null
+	publishing {
+		publications {
+			maven(MavenPublication) {
+				artifactId = project.archivesBaseName
+				from components.java
+				artifact sourceJar
+				artifact javadocJar
 
-	uploadPublished {
-		deployer = repositories.mavenDeployer {
-			repository(url: localReleaseRepo)
-			snapshotRepository(url: localSnapshotRepo)
-			beforeDeployment { MavenDeployment deployment ->
-				signing.signPom(deployment)
+				pom {
+					url = 'http://sulky.huxhorn.de'
+					name = project.name
+					description = project.description
+					inceptionYear = '2007'
+					scm {
+						connection = 'scm:git:git://github.com/huxi/sulky.git'
+						developerConnection = 'scm:git:ssh://git@github.com:huxi/sulky.git'
+						url = 'http://github.com/huxi/sulky/'
+					}
+					licenses {
+						license {
+							name = 'GNU Lesser General Public License v3 (LGPL)'
+							url = 'http://www.gnu.org/copyleft/lesser.html'
+							distribution = 'repo'
+						}
+						license {
+							name = 'The Apache Software License, Version 2.0'
+							url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+							distribution = 'repo'
+						}
+					}
+					issueManagement {
+						system = 'Github'
+						url = 'https://github.com/huxi/sulky/issues'
+					}
+					developers {
+						developer {
+							id = 'huxhorn'
+							email = 'huxhorn@users.sourceforge.net'
+							name = 'Joern Huxhorn'
+							organization = 'Joern Huxhorn'
+							organizationUrl = 'http://sulky.huxhorn.de'
+						}
+					}
+				}
+			}
+		}
+		repositories {
+			maven {
+				url = version.endsWith('SNAPSHOT') ? localSnapshotRepo : localReleaseRepo
 			}
 		}
 	}
-
-	project.ext.installer = install.repositories.mavenInstaller
-
-	installer.pom.project defaultProject
-
-	deployer.pom.project defaultProject
 }
 
-project(':sulky-version') {
-	// override for sulky-version after subprojects
-	sourceCompatibility = 1.6
-	targetCompatibility = 1.6
-}
 
 
 // source: https://gist.github.com/aalmiray/e6f54aa4b3803be0bcac
@@ -327,10 +307,10 @@ task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
 	classDirectories.from(files(subprojects.sourceSets.main.output))
 	executionData.from(files(subprojects.jacocoTestReport.executionData))
 	reports {
-		html.enabled = true
-		xml.enabled = true
+		html.required = true
+		xml.required = true
 		xml.destination file("${buildDir}/reports/jacoco/report.xml")
-		csv.enabled = false
+		csv.required = false
 	}
 	onlyIf = {
 		true

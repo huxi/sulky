@@ -68,7 +68,7 @@ public class LocalizableFactoryTest
 	public void getLocalizable()
 		throws Exception
 	{
-		Locale locale = new Locale("de_DE");
+		Locale locale = Locale.of("de_DE");
 		Localizable loc;
 
 		Locale l;

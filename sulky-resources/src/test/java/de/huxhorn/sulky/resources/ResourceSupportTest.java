@@ -62,9 +62,9 @@ public class ResourceSupportTest
 
 	private ResourceSupport resourcesupport = null;
 
-	private static final Locale US_LOCALE = new Locale("en", "US");
-	private static final Locale GERMANY_LOCALE = new Locale("de", "DE");
-	private static final Locale HESSIAN_LOCALE = new Locale("de", "DE", "hessisch");
+	private static final Locale US_LOCALE = Locale.of("en", "US");
+	private static final Locale GERMANY_LOCALE = Locale.of("de", "DE");
+	private static final Locale HESSIAN_LOCALE = Locale.of("de", "DE", "hessisch");
 	private static Locale prevDefault;
 
 
